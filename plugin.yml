@@ -1,0 +1,22 @@
+name: PwnFilter
+main: com.pwn9.PwnFilter.PwnFilter
+author: tremor77
+website: http://pwn9.com
+version: 1.6
+description: >
+             Filter chat messages using regular expressions
+
+commands:
+   pwnfilter:
+         description: Reloads the config of PwnFilter.
+         usage: /<command> [reload]  
+         permission: pwnfilter.reload    
+         permission-message: You don't have permission for this command
+
+permissions:
+   pwnfilter.reload:
+        description: Can reload the rules.txt file
+        default: false
+   pwnfilter.bypass:
+        description: Can bypass the PwnFilter from filtering chat
+        default: false        
