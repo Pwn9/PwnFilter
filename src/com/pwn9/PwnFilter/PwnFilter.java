@@ -8,13 +8,8 @@ import java.util.regex.*;
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.command.*;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.plugin.PluginManager;
-
 
 /**
 * A Regular Expression (REGEX) Chat Filter For Bukkit with many great features
@@ -24,64 +19,55 @@ import org.bukkit.plugin.PluginManager;
 public class PwnFilter extends JavaPlugin {
     
     String baseDir = "plugins/PwnFilter";
-    String configFile = "config.yml";
 
     public CopyOnWriteArrayList<String> rules = new CopyOnWriteArrayList<String>();
     private ConcurrentHashMap<String, Pattern> patterns = new ConcurrentHashMap<String, Pattern>(); 
-	public final Logger logger = Logger.getLogger("Minecraft.PwnFilter");
+	public final Logger logger = Logger.getLogger("Minecraft.PwnFilter");    
 	
+	public void onEnable() {	
+    	loadRules();	
+    	
+        // Eventually I will add this - save the configuration file, if there are no values, write the defaults.
+        this.getConfig().options().copyDefaults(true);
+        this.saveConfig();
+    	
+        // Register our events
+    	new PwnFilterPlayerListener(this);
+    }
+    
     public void onDisable() {
     	rules.clear();
     	patterns.clear();
-
-        // NOTE: All registered events are automatically unregistered when a plugin is disabled
-        // EXAMPLE: Custom code, here we just output some info so we can check all is well
-    	PluginDescriptionFile pdfFile = this.getDescription();
-		logger.info( pdfFile.getName() + " version " + pdfFile.getVersion() + " is disabled!" );
     }
-
-    public void onEnable() {
-    	loadRules();
-    	
-        // Register our events
-        PluginManager pm = getServer().getPluginManager();
-        pm.registerEvents(new PwnFilterPlayerListener(this), this);
-        
-    	// EXAMPLE: Custom code, here we just output some info so we can check all is well
-        PluginDescriptionFile pdfFile = this.getDescription();
-		logger.info( pdfFile.getName() + " version " + pdfFile.getVersion() + " is enabled!" );
-    }
-     
+          
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args ) {
-    	String cmdname = cmd.getName().toLowerCase();
-        Player player = null;
-        if (sender instanceof Player) {
-        	player = (Player)sender;
-        }
-        
-        // Reload rules.txt command
-        if (cmdname.equals("pwnfilter") && args.length > 0) {
-        	if (player == null || player.isOp() || player.hasPermission("pwnfilter.reload")) {
-	        	if (args[0].equalsIgnoreCase("reload")) {
-	        		if (player != null) {	        		
-	        			player.sendMessage(ChatColor.RED + "[PwnFilter] Reloading rules.txt");       			
-		        		logger.info("[PwnFilter] rules.txt reloaded by " + player.getName());
-	        		} else {
-		        		logger.info("[PwnFilter] rules.txt reloaded from server console");
-	        		}
-	        		rules.clear();
-	        		patterns.clear();
-	        		loadRules();
-	        	}
-        	} else {
-        		player.sendMessage(ChatColor.RED + "[PwnFilter] You do not have permission for this command.");
-        		logger.info("[PwnFilter] Command access denied for " + player.getName());
-        	}
+
+        if (cmd.getName().equalsIgnoreCase("pfreload")) { 		   		
+            sender.sendMessage(ChatColor.RED + "[PwnFilter] Reloading rules.txt");
+            this.getLogger().info("[PwnFilter] rules.txt reloaded by " + sender.getName());
+            
+    		rules.clear();
+    		patterns.clear();
+    		loadRules();
+    		
     		return true;
-        }      
+        }
+
+		else if (cmd.getName().equalsIgnoreCase("pfcls")) {  
+            sender.sendMessage(ChatColor.RED + "[PwnFilter] Clearing chat screen");
+            this.getLogger().info("[PwnFilter] Chat screen cleared by " + sender.getName());
+			
+            int i = 0;
+            while (i <= 120) {
+              getServer().broadcastMessage(" ");
+              i++;
+            }    
+            
+    		return true;
+    	}   
         return false;
-    }
+    } 
     
     private void loadRules() {
     	String fname = "plugins/PwnFilter/rules.txt";
@@ -161,6 +147,7 @@ public class PwnFilter extends JavaPlugin {
     		e.printStackTrace();
     	}
     }
+       
     private void compilePattern(String re) {
     	// Do not re-compile if we already have this pattern 
     	if (patterns.get(re) == null) {
@@ -179,6 +166,7 @@ public class PwnFilter extends JavaPlugin {
     		}
     	}
     }  
+   
     public Boolean matchPattern(String msg, String re_from) {
     	Pattern pattern_from = patterns.get(re_from);
     	if (pattern_from == null) {
@@ -189,6 +177,7 @@ public class PwnFilter extends JavaPlugin {
     	Matcher matcher = pattern_from.matcher(msg);
     	return matcher.find();
     }
+    
     public String replacePattern(String msg, String re_from, String to) {
     	Pattern pattern_from = patterns.get(re_from);
     	if (pattern_from == null) {

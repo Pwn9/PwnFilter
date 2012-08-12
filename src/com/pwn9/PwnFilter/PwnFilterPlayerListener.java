@@ -5,7 +5,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.player.PlayerChatEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.Listener;
 
 /**
@@ -19,13 +19,16 @@ import org.bukkit.event.Listener;
 public class PwnFilterPlayerListener implements Listener {
     private final PwnFilter plugin;
 
-    public PwnFilterPlayerListener(PwnFilter instance) {
-        plugin = instance;
-    }
-    
-    // Insert Player related code here  Set to lowest instead of highest? 
+    // This listener needs to know about the plugin which it came from
+	public PwnFilterPlayerListener(PwnFilter plugin) {
+	    // Register the listener
+	    plugin.getServer().getPluginManager().registerEvents(this, plugin);    
+	    this.plugin = plugin;
+	}
+
+    // Insert Player related code here  Set to lowest instead of highest to get at chat first
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onPlayerChat(PlayerChatEvent event) {
+    public void onPlayerChat(AsyncPlayerChatEvent event) {
         String message = event.getMessage();
         Player player = event.getPlayer();
         String pname = player.getName();
@@ -55,8 +58,6 @@ public class PwnFilterPlayerListener implements Listener {
 	    		    
 	    		if (line.startsWith("match ")) {
 	    			regex = line.substring(6); 			
-	    			//matched = plugin.matchPattern(message, regex);
-	    			//replaced ^ with this to get matches with color codes inside
 	    			matched = plugin.matchPattern(ChatColor.stripColor(message.replaceAll("\\$([0-9a-fk-or])", "\u00A7$1")), regex); 			
 	    			if (matched) {
 	    				matched_msg = message;
@@ -64,7 +65,7 @@ public class PwnFilterPlayerListener implements Listener {
 	    			valid = true;
 	    		}
 	    		if (matched) {  	
-	    			//if a match occurs what do we do now!?  			
+	    			// If a match occurs what do we do now!?  			
 	        		if (line.startsWith("ignore user ")) {
 	        			String users = line.substring(12);
 	    				valid = true;
