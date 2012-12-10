@@ -7,7 +7,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.*;
 import java.util.logging.Logger;
 
+//import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+//import org.bukkit.entity.Player;
 import org.bukkit.command.*;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -39,6 +41,16 @@ public class PwnFilter extends JavaPlugin {
     	rules.clear();
     	patterns.clear();
     }
+
+/*    
+  	public static void PwnKick(final Player player, final String reason){
+        Bukkit.getScheduler().scheduleSyncDelayedTask(PwnFilter, new Runnable() {
+        public void run() {
+        	player.sendMessage(reason);
+        }
+        }, 1L);
+    } 
+*/
           
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args ) {

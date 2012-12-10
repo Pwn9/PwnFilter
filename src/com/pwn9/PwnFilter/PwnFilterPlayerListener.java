@@ -232,9 +232,16 @@ public class PwnFilterPlayerListener implements Listener {
 	    	else {
 				event.setMessage(message);
 			}     	
-	    	if (kick) {
-	    		player.kickPlayer(reason);
-	    		plugin.logger.info("[PwnFilter] Kicked " + player.getName() + ": " + reason);
+	    	if (kick) {	
+	    		//PwnFilter.PwnKick(player, reason);
+	    		final Player fplayer = player;
+	    		final String freason = reason;
+	            Bukkit.getScheduler().runTask(plugin, new Runnable() {
+	                public void run() {
+	                	fplayer.kickPlayer(freason);
+	                	plugin.logger.info("[PwnFilter] Kicked " + fplayer.getName() + ": " + freason);
+	                }
+	                });	    		
 	    	}  	
 	    	if (console) {
 	    		consolecmd = consolecmd.replaceAll("&world", player.getLocation().getWorld().getName());
@@ -244,5 +251,5 @@ public class PwnFilterPlayerListener implements Listener {
 	    		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), consolecmd);
 	    	}       	   	  	   	
         }   	
-    }    
+    }   
 }
