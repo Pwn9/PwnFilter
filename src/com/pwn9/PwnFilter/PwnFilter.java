@@ -1,39 +1,32 @@
 package com.pwn9.PwnFilter;
 
 import java.io.*;
-
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.*;
 import java.util.logging.Logger;
-
-//import org.bukkit.Bukkit;
+import java.util.Random;
 import org.bukkit.ChatColor;
-//import org.bukkit.entity.Player;
 import org.bukkit.command.*;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
 * A Regular Expression (REGEX) Chat Filter For Bukkit with many great features
-*
 * @author tremor77
-*/
+**/
 public class PwnFilter extends JavaPlugin {
     
     String baseDir = "plugins/PwnFilter";
-
+    
     public CopyOnWriteArrayList<String> rules = new CopyOnWriteArrayList<String>();
     private ConcurrentHashMap<String, Pattern> patterns = new ConcurrentHashMap<String, Pattern>(); 
 	public final Logger logger = Logger.getLogger("Minecraft.PwnFilter");    
 	
 	public void onEnable() {	
     	loadRules();	
-    	
-        // Eventually I will add this - save the configuration file, if there are no values, write the defaults.
-        this.getConfig().options().copyDefaults(true);
-        this.saveConfig();
-    	
-        // Register our events
+        //this.getConfig().options().copyDefaults(true);
+        //this.saveConfig();
+    	this.saveDefaultConfig();
     	new PwnFilterPlayerListener(this);
     }
     
@@ -42,40 +35,24 @@ public class PwnFilter extends JavaPlugin {
     	patterns.clear();
     }
 
-/*    
-  	public static void PwnKick(final Player player, final String reason){
-        Bukkit.getScheduler().scheduleSyncDelayedTask(PwnFilter, new Runnable() {
-        public void run() {
-        	player.sendMessage(reason);
-        }
-        }, 1L);
-    } 
-*/
-          
-    @Override
+    @Override   
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args ) {
-
         if (cmd.getName().equalsIgnoreCase("pfreload")) { 		   		
             sender.sendMessage(ChatColor.RED + "[PwnFilter] Reloading rules.txt");
-            this.getLogger().info("[PwnFilter] rules.txt reloaded by " + sender.getName());
-            
+            this.getLogger().info("[PwnFilter] rules.txt reloaded by " + sender.getName());        
     		rules.clear();
     		patterns.clear();
     		loadRules();
-    		
     		return true;
         }
-
 		else if (cmd.getName().equalsIgnoreCase("pfcls")) {  
             sender.sendMessage(ChatColor.RED + "[PwnFilter] Clearing chat screen");
             this.getLogger().info("[PwnFilter] Chat screen cleared by " + sender.getName());
-			
             int i = 0;
             while (i <= 120) {
               getServer().broadcastMessage(" ");
               i++;
             }    
-            
     		return true;
     	}   
         return false;
@@ -84,7 +61,6 @@ public class PwnFilter extends JavaPlugin {
     private void loadRules() {
     	String fname = "plugins/PwnFilter/rules.txt";
     	File f;
-    	
     	// Ensure that directory exists
     	String pname = "plugins/PwnFilter";
     	f = new File(pname);
@@ -106,7 +82,7 @@ public class PwnFilter extends JavaPlugin {
 				output.write("# Each rule must have one 'match' statement and atleast one 'then' statement" + newline);
 				output.write("# match <regular expression>" + newline);
 				output.write("# ignore|require <user|permission|string> *(optional)" + newline);				
-				output.write("# then <replace|rewrite|warn|log|deny|debug|kick|command|console> <string>" + newline);
+				output.write("# then <replace|rewrite|warn|log|deny|debug|kick|kill|burn|command|console> <string>" + newline);
 				output.write("# For more details visit http://dev.bukkit.org/server-mods/pwnfilter/" + newline);
 				output.write("" + newline);
 				output.write("# EXAMPLES" + newline);
@@ -198,5 +174,35 @@ public class PwnFilter extends JavaPlugin {
     	}
     	Matcher matcher = pattern_from.matcher(msg);
     	return matcher.replaceAll(to);
-    }    
+    }
+
+    public String replacePatternLower(String msg, String re_from) {
+    	String text = msg;
+    	Matcher m = Pattern.compile(re_from).matcher(text);
+    	
+    	StringBuilder sb = new StringBuilder();
+    	int last = 0;
+    	while (m.find()) {
+    		sb.append(text.substring(last, m.start()));
+    		sb.append(m.group(0).toLowerCase());
+    		last = m.end();
+    	}
+    	sb.append(text.substring(last));
+    	return sb.toString();
+    }
+
+    public String replacePatternRandom(String msg, String re_from, String to) {
+    	Pattern pattern_from = patterns.get(re_from);
+    	if (pattern_from == null) {
+    		// Pattern failed to compile, ignore
+    		return msg;
+    	}
+    	Matcher matcher = pattern_from.matcher(msg);
+    	
+    	String[] toRand = to.split("\\|");
+    	
+		Random random = new Random();
+		int randomInt = random.nextInt(toRand.length);
+    	return matcher.replaceAll(toRand[randomInt]);
+    }
 }

@@ -10,15 +10,11 @@ import org.bukkit.event.Listener;
 
 /**
 * A Regular Expression (REGEX) Chat Filter For Bukkit with many great features
-*
 * Handle events for all Player related events
-*
 * @author tremor77
-*/
-
+**/
 public class PwnFilterPlayerListener implements Listener {
     private final PwnFilter plugin;
-
     // This listener needs to know about the plugin which it came from
 	public PwnFilterPlayerListener(PwnFilter plugin) {
 	    // Register the listener
@@ -26,7 +22,7 @@ public class PwnFilterPlayerListener implements Listener {
 	    this.plugin = plugin;
 	}
 
-    // Insert Player related code here  Set to lowest instead of highest to get at chat first
+    // Insert Player related code here, set to lowest instead of highest to get at chat first
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerChat(AsyncPlayerChatEvent event) {
         String message = event.getMessage();
@@ -37,6 +33,8 @@ public class PwnFilterPlayerListener implements Listener {
         if (!(player.hasPermission("pwnfilter.bypass"))) {
 	    	Boolean cancel = false;
 	    	Boolean kick = false;
+	    	Boolean kill = false;
+	    	Boolean burn = false;
 	    	Boolean console = false;
 	    	String consolecmd = "";
 	    	String reason = "PwnFilter";
@@ -86,7 +84,6 @@ public class PwnFilterPlayerListener implements Listener {
 	    					}
 	        			}
 	        		} 		
-	        		// New for 1.4 - Ignore String, test 2
 	        		if (line.startsWith("ignore string ")) {
 	        			String ignorestring = line.substring(14);
 	    				valid = true;
@@ -120,7 +117,7 @@ public class PwnFilterPlayerListener implements Listener {
 		        			}
 	    				}
 	        			matched = found;
-	        		}             		
+	        		}           		
 					if (line.startsWith("then replace ")) {	
 						// clean out the color codes for the replacement
 						message = ChatColor.stripColor(message.replaceAll("\\$([0-9a-fk-or])", "\u00A7$1"));
@@ -146,15 +143,30 @@ public class PwnFilterPlayerListener implements Listener {
 						message = message.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
 		    			valid = true;
 					}
+					if (line.startsWith("then randrep ")) {									
+						// check and replace message for pattern matches while ignoring color codes
+						message = plugin.replacePatternRandom(message, regex, line.substring(13));
+						// re-write message with &color replacements
+						message = message.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
+		    			valid = true;
+					}					
 					if (line.matches("then rewrite")) {
 						// check and replace message for pattern matches while ignoring color codes
 						message = plugin.replacePattern(message, regex, "");
 						// re-write message with &color replacements
 						message = message.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
 						valid = true;
-					}					
+					}			
+					if (line.startsWith("then lower")) {
+						// check and replace message for pattern matches while ignoring color codes
+						message = plugin.replacePatternLower(message, regex);
+						// re-write message with &color replacements
+						message = message.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
+						valid = true;
+					}
 					if (line.startsWith("then warn ")) {
 						warning = line.substring(10);
+						warning = warning.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
 		    			valid = true;
 					}
 					if (line.matches("then warn")) {
@@ -197,6 +209,24 @@ public class PwnFilterPlayerListener implements Listener {
 						kick = true;
 		    			valid = true;
 					}
+					if (line.startsWith("then kill ")) {
+						warning = line.substring(10);
+						warning = warning.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
+		    			valid = true;
+					}
+					if (line.startsWith("then kill")) {
+						kill = true;
+		    			valid = true;
+					}		
+					if (line.startsWith("then burn ")) {
+						warning = line.substring(10);
+						warning = warning.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
+		    			valid = true;
+					}
+					if (line.startsWith("then burn")) {
+						burn = true;
+		    			valid = true;
+					}						
 					if (line.startsWith("then console ")) {
 						consolecmd = line.substring(13);
 						console = true;
@@ -216,7 +246,7 @@ public class PwnFilterPlayerListener implements Listener {
 	    		plugin.logger.info("[PwnFilter] " +  player.getName() + "> " + event.getMessage());
 	    	}	
 	    	if (!warning.matches("")) {
-	    		player.sendMessage(ChatColor.RED + "[PwnFilter] " + warning);
+	    		player.sendMessage(warning);
 	    	}
 	    	if (cancel == true) {
 	    		event.setCancelled(true);
@@ -233,7 +263,6 @@ public class PwnFilterPlayerListener implements Listener {
 				event.setMessage(message);
 			}     	
 	    	if (kick) {	
-	    		//PwnFilter.PwnKick(player, reason);
 	    		final Player fplayer = player;
 	    		final String freason = reason;
 	            Bukkit.getScheduler().runTask(plugin, new Runnable() {
@@ -242,7 +271,33 @@ public class PwnFilterPlayerListener implements Listener {
 	                	plugin.logger.info("[PwnFilter] Kicked " + fplayer.getName() + ": " + freason);
 	                }
 	                });	    		
-	    	}  	
+	    	}
+	    	if (kill) {	
+	    		final Player fplayer = player;
+	    		final String fwarning = warning;
+	            Bukkit.getScheduler().runTask(plugin, new Runnable() {
+	                public void run() {
+	                	fplayer.setHealth(0);
+	                	plugin.logger.info("[PwnFilter] Killed " + fplayer.getName() + ": " + fwarning);
+	        	    	if (!fwarning.matches("")) {
+	        	    		fplayer.sendMessage(fwarning);
+	        	    	}
+	                }
+	                });	    		
+	    	}	
+	    	if (burn) {	
+	    		final Player fplayer = player;
+	    		final String fwarning = warning;
+	            Bukkit.getScheduler().runTask(plugin, new Runnable() {
+	                public void run() {
+	                	fplayer.setFireTicks(5000);
+	                	plugin.logger.info("[PwnFilter] Burned " + fplayer.getName() + ": " + fwarning);
+	        	    	if (!fwarning.matches("")) {
+	        	    		fplayer.sendMessage(fwarning);
+	        	    	}
+	                }
+	                });	    		
+	    	}	    	
 	    	if (console) {
 	    		consolecmd = consolecmd.replaceAll("&world", player.getLocation().getWorld().getName());
 	            consolecmd = consolecmd.replaceAll("&player", player.getName());
