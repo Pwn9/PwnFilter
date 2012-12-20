@@ -256,6 +256,7 @@ public class PwnFilter extends JavaPlugin {
 	    	String consolecmd = "";
 	    	String reason = "PwnFilter";
 	    	Boolean command = false;
+	    	Boolean commandchain = false;	    	
 	    	String commandcmd = "";
 	    	Boolean matched = false;
 	    	String regex = "";
@@ -408,6 +409,11 @@ public class PwnFilter extends JavaPlugin {
 						command = true;
 		    			valid = true;
 					}
+					if (line.startsWith("then cmdchain ")) {		
+						commandcmd = line.substring(14);
+						commandchain = true;
+		    			valid = true;
+					}					
 					if (line.matches("then debug")) {
 						System.out.println("[PwnFilter] Debug match: " + regex);
 						System.out.println("[PwnFilter] Debug original: " + event.getMessage());
@@ -479,10 +485,18 @@ public class PwnFilter extends JavaPlugin {
 	            commandcmd = commandcmd.replaceAll("&string", message);           
 	            this.getLogger().info("helped " + player.getName() + " execute command: " + commandcmd);				
 				player.chat("/" + commandcmd);		
-			} 
-	    	else {
-				event.setMessage(message);
-			}     	
+			}
+	    	if (commandchain == true) {
+				event.setCancelled(true);
+	    		commandcmd = commandcmd.replaceAll("&world", player.getLocation().getWorld().getName());
+	            commandcmd = commandcmd.replaceAll("&player", player.getName());
+	            commandcmd = commandcmd.replaceAll("&string", message);           
+	            String cmdchain[] = commandcmd.split("\\|");
+	            for (String cmds : cmdchain) {
+		            this.getLogger().info("helped " + player.getName() + " execute command: " + cmds);				
+					player.chat("/" + cmds);	            	
+	            }
+			}  	    	
 	    	if (kick) {	
 	    		final Player fplayer = player;
 	    		final String freason = reason;
@@ -525,7 +539,11 @@ public class PwnFilter extends JavaPlugin {
 	            consolecmd = consolecmd.replaceAll("&string", message);
 	            this.getLogger().info("sending console command: " + consolecmd);
 	    		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), consolecmd);
-	    	}       	   	  	   	
+	    	} 
+	    	// why is this here and what does it do?
+	    	else {
+				event.setMessage(message);
+			}
         }   	
     }     
     
