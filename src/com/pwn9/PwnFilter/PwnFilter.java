@@ -284,185 +284,193 @@ public class PwnFilter extends JavaPlugin {
 	    			}
 	    			valid = true;
 	    		}
-	    		if (matched) {  	
-	    			// If a match occurs what do we do now!?  			
-	        		if (line.startsWith("ignore user ")) {
-	        			String users = line.substring(12);
-	    				valid = true;
-	        			for (String check : users.split(" ")) {
-	        				if (pname.equalsIgnoreCase(check)) {
-	        					matched = false;
-	        					break;
-	        				}
-	        			}
-	        		}
-	        		if (line.startsWith("ignore permission ")) {
-	        			String perms = line.substring(18);
-	    				valid = true;
-	    				for (String check : perms.split(" ")) {
-	    					if (player.hasPermission(check)) {
-		        				matched = false;
-		        				break;
-	    					}
-	        			}
-	        		} 		
-	        		if (line.startsWith("ignore string ")) {
-	        			String ignorestring = line.substring(14);
-	    				valid = true;
-	    				for (String check : ignorestring.split("\\|")) {
-	    					if (ChatColor.stripColor(message.replaceAll("\\$([0-9a-fk-or])", "\u00A7$1")).toUpperCase().indexOf(check.toUpperCase()) != -1) {
-		        				matched = false;
-		        				break;
-	                        }	
-	        			}
-	        		}       	
-	        		if (line.startsWith("require user ")) {
-	        			String users = line.substring(13);
-	    				valid = true;
-	    				Boolean found = false;
-	        			for (String check : users.split(" ")) {
-	        				if (pname.equalsIgnoreCase(check)) {
-	        					found = true;
-	        					break;
-	        				}
-	        			}
-	        			matched = found;
-	        		}
-	        		if (line.startsWith("require permission ")) {
-	        			String perms = line.substring(19);
-	    				valid = true;
-	    				Boolean found = false;
-	    				for (String check : perms.split(" ")) {
-		        			if (player.hasPermission(check)) {
-		        				found = true;
-		        				break;
+	    		if (matched) {  
+	    			// Check for any ignore statements, made faster by grouping together v2.1.1
+	    			if (line.startsWith("ignore")) {		
+		        		if (line.startsWith("ignore user ")) {
+		        			String users = line.substring(12);
+		    				valid = true;
+		        			for (String check : users.split(" ")) {
+		        				if (pname.equalsIgnoreCase(check)) {
+		        					matched = false;
+		        					break;
+		        				}
 		        			}
-	    				}
-	        			matched = found;
-	        		}           		
-					if (line.startsWith("then replace ")) {	
-						// clean out the color codes for the replacement
-						message = ChatColor.stripColor(message.replaceAll("\\$([0-9a-fk-or])", "\u00A7$1"));
-						// check and replace cleaned message for pattern matches
-						message = this.replacePattern(message, regex, line.substring(13));
-						// re-write message with &color replacements
-						message = message.replaceAll("&([0-9a-fk-or])", "\u00A7$1");						
-		    			valid = true;
-					}
-					if (line.matches("then replace")) {	
-						// clean out the color codes for the replacement
-						message = ChatColor.stripColor(message.replaceAll("\\$([[0-9a-fk-or]])", "\u00A7$1"));						
-						// check and replace cleaned message for pattern matches
-						message = this.replacePattern(message, regex, "");						
-						// re-write message with &color replacements
-						message = message.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
-						valid = true;
-					}
-					if (line.startsWith("then rewrite ")) {									
-						// check and replace message for pattern matches while ignoring color codes
-						message = this.replacePattern(message, regex, line.substring(13));
-						// re-write message with &color replacements
-						message = message.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
-		    			valid = true;
-					}
-					if (line.startsWith("then randrep ")) {									
-						// check and replace message for pattern matches while ignoring color codes
-						message = this.replacePatternRandom(message, regex, line.substring(13));
-						// re-write message with &color replacements
-						message = message.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
-		    			valid = true;
-					}					
-					if (line.matches("then rewrite")) {
-						// check and replace message for pattern matches while ignoring color codes
-						message = this.replacePattern(message, regex, "");
-						// re-write message with &color replacements
-						message = message.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
-						valid = true;
-					}			
-					if (line.startsWith("then lower")) {
-						// check and replace message for pattern matches while ignoring color codes
-						message = this.replacePatternLower(message, regex);
-						// re-write message with &color replacements
-						message = message.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
-						valid = true;
-					}
-					if (line.startsWith("then warn ")) {
-						warning = line.substring(10);
-						warning = warning.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
-		    			valid = true;
-					}
-					if (line.matches("then warn")) {
-						warning = message;
-		    			valid = true;
-					}
-					if (line.matches("then log")) {
-						log = true;
-		    			valid = true;
-					}
-					if (line.startsWith("then command ")) {		
-						commandcmd = line.substring(13);
-						command = true;
-		    			valid = true;
-					}
-					if (line.matches("then command")) {
-						commandcmd = message;
-						command = true;
-		    			valid = true;
-					}
-					if (line.startsWith("then cmdchain ")) {		
-						commandcmd = line.substring(14);
-						commandchain = true;
-		    			valid = true;
-					}					
-					if (line.matches("then debug")) {
-						System.out.println("[PwnFilter] Debug match: " + regex);
-						System.out.println("[PwnFilter] Debug original: " + event.getMessage());
-						System.out.println("[PwnFilter] Debug matched: " + matched_msg);
-						System.out.println("[PwnFilter] Debug current: " + message);
-						System.out.println("[PwnFilter] Debug warning: " + (warning.equals("")?"(none)":warning));
-						System.out.println("[PwnFilter] Debug log: " + (log?"yes":"no"));
-						System.out.println("[PwnFilter] Debug deny: " + (cancel?"yes":"no"));
-		    			valid = true;
-					}
-					if (line.startsWith("then deny")) {
-						cancel = true;
-		    			valid = true;
-					}
-					if (line.startsWith("then kick ")) {
-						reason = line.substring(10);
-		    			valid = true;
-					}
-					if (line.startsWith("then kick")) {
-						kick = true;
-		    			valid = true;
-					}
-					if (line.startsWith("then kill ")) {
-						warning = line.substring(10);
-						warning = warning.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
-		    			valid = true;
-					}
-					if (line.startsWith("then kill")) {
-						kill = true;
-		    			valid = true;
-					}		
-					if (line.startsWith("then burn ")) {
-						warning = line.substring(10);
-						warning = warning.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
-		    			valid = true;
-					}
-					if (line.startsWith("then burn")) {
-						burn = true;
-		    			valid = true;
-					}						
-					if (line.startsWith("then console ")) {
-						consolecmd = line.substring(13);
-						console = true;
-						valid = true;
-					}
-					if (line.startsWith("then abort")) {
-						aborted = true;
-		    			valid = true;
-					}
+		        		}
+		        		if (line.startsWith("ignore permission ")) {
+		        			String perms = line.substring(18);
+		    				valid = true;
+		    				for (String check : perms.split(" ")) {
+		    					if (player.hasPermission(check)) {
+			        				matched = false;
+			        				break;
+		    					}
+		        			}
+		        		} 		
+		        		if (line.startsWith("ignore string ")) {
+		        			String ignorestring = line.substring(14);
+		    				valid = true;
+		    				for (String check : ignorestring.split("\\|")) {
+		    					if (ChatColor.stripColor(message.replaceAll("\\$([0-9a-fk-or])", "\u00A7$1")).toUpperCase().indexOf(check.toUpperCase()) != -1) {
+			        				matched = false;
+			        				break;
+		                        }	
+		        			}
+		        		}  
+	    			}
+	    			// Check for any require statements
+	    			if (line.startsWith("require")) {
+		        		if (line.startsWith("require user ")) {
+		        			String users = line.substring(13);
+		    				valid = true;
+		    				Boolean found = false;
+		        			for (String check : users.split(" ")) {
+		        				if (pname.equalsIgnoreCase(check)) {
+		        					found = true;
+		        					break;
+		        				}
+		        			}
+		        			matched = found;
+		        		}
+		        		if (line.startsWith("require permission ")) {
+		        			String perms = line.substring(19);
+		    				valid = true;
+		    				Boolean found = false;
+		    				for (String check : perms.split(" ")) {
+			        			if (player.hasPermission(check)) {
+			        				found = true;
+			        				break;
+			        			}
+		    				}
+		        			matched = found;
+		        		}
+	    			}
+	    			// Finally check for any then statements
+	    			if (line.startsWith("then")) {
+						if (line.startsWith("then replace ")) {	
+							// clean out the color codes for the replacement
+							message = ChatColor.stripColor(message.replaceAll("\\$([0-9a-fk-or])", "\u00A7$1"));
+							// check and replace cleaned message for pattern matches
+							message = this.replacePattern(message, regex, line.substring(13));
+							// re-write message with &color replacements
+							message = message.replaceAll("&([0-9a-fk-or])", "\u00A7$1");						
+			    			valid = true;
+						}
+						if (line.matches("then replace")) {	
+							// clean out the color codes for the replacement
+							message = ChatColor.stripColor(message.replaceAll("\\$([[0-9a-fk-or]])", "\u00A7$1"));						
+							// check and replace cleaned message for pattern matches
+							message = this.replacePattern(message, regex, "");						
+							// re-write message with &color replacements
+							message = message.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
+							valid = true;
+						}
+						if (line.startsWith("then rewrite ")) {									
+							// check and replace message for pattern matches while ignoring color codes
+							message = this.replacePattern(message, regex, line.substring(13));
+							// re-write message with &color replacements
+							message = message.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
+			    			valid = true;
+						}
+						if (line.startsWith("then randrep ")) {									
+							// check and replace message for pattern matches while ignoring color codes
+							message = this.replacePatternRandom(message, regex, line.substring(13));
+							// re-write message with &color replacements
+							message = message.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
+			    			valid = true;
+						}					
+						if (line.matches("then rewrite")) {
+							// check and replace message for pattern matches while ignoring color codes
+							message = this.replacePattern(message, regex, "");
+							// re-write message with &color replacements
+							message = message.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
+							valid = true;
+						}			
+						if (line.startsWith("then lower")) {
+							// check and replace message for pattern matches while ignoring color codes
+							message = this.replacePatternLower(message, regex);
+							// re-write message with &color replacements
+							message = message.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
+							valid = true;
+						}
+						if (line.startsWith("then warn ")) {
+							warning = line.substring(10);
+							warning = warning.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
+			    			valid = true;
+						}
+						if (line.matches("then warn")) {
+							warning = message;
+			    			valid = true;
+						}
+						if (line.matches("then log")) {
+							log = true;
+			    			valid = true;
+						}
+						if (line.startsWith("then command ")) {		
+							commandcmd = line.substring(13);
+							command = true;
+			    			valid = true;
+						}
+						if (line.matches("then command")) {
+							commandcmd = message;
+							command = true;
+			    			valid = true;
+						}
+						if (line.startsWith("then cmdchain ")) {		
+							commandcmd = line.substring(14);
+							commandchain = true;
+			    			valid = true;
+						}					
+						if (line.matches("then debug")) {
+							System.out.println("[PwnFilter] Debug match: " + regex);
+							System.out.println("[PwnFilter] Debug original: " + event.getMessage());
+							System.out.println("[PwnFilter] Debug matched: " + matched_msg);
+							System.out.println("[PwnFilter] Debug current: " + message);
+							System.out.println("[PwnFilter] Debug warning: " + (warning.equals("")?"(none)":warning));
+							System.out.println("[PwnFilter] Debug log: " + (log?"yes":"no"));
+							System.out.println("[PwnFilter] Debug deny: " + (cancel?"yes":"no"));
+			    			valid = true;
+						}
+						if (line.startsWith("then deny")) {
+							cancel = true;
+			    			valid = true;
+						}
+						if (line.startsWith("then kick ")) {
+							reason = line.substring(10);
+			    			valid = true;
+						}
+						if (line.startsWith("then kick")) {
+							kick = true;
+			    			valid = true;
+						}
+						if (line.startsWith("then kill ")) {
+							warning = line.substring(10);
+							warning = warning.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
+			    			valid = true;
+						}
+						if (line.startsWith("then kill")) {
+							kill = true;
+			    			valid = true;
+						}		
+						if (line.startsWith("then burn ")) {
+							warning = line.substring(10);
+							warning = warning.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
+			    			valid = true;
+						}
+						if (line.startsWith("then burn")) {
+							burn = true;
+			    			valid = true;
+						}						
+						if (line.startsWith("then console ")) {
+							consolecmd = line.substring(13);
+							console = true;
+							valid = true;
+						}
+						if (line.startsWith("then abort")) {
+							aborted = true;
+			    			valid = true;
+						}
+	    			}
 		    		if (valid == false) {
 		    			this.getLogger().warning("ignored syntax error in rules.txt: " + line);    			
 		    		}
@@ -475,10 +483,10 @@ public class PwnFilter extends JavaPlugin {
 	    	if (!warning.matches("")) {
 	    		player.sendMessage(warning);
 	    	}
-	    	if (cancel == true) {
+	    	if (cancel) {
 	    		event.setCancelled(true);
 	    	}   	
-	    	if (command == true) {
+	    	if (command) {
 				event.setCancelled(true);
 	    		commandcmd = commandcmd.replaceAll("&world", player.getLocation().getWorld().getName());
 	            commandcmd = commandcmd.replaceAll("&player", player.getName());
@@ -486,7 +494,7 @@ public class PwnFilter extends JavaPlugin {
 	            this.getLogger().info("helped " + player.getName() + " execute command: " + commandcmd);				
 				player.chat("/" + commandcmd);		
 			}
-	    	if (commandchain == true) {
+	    	if (commandchain) {
 				event.setCancelled(true);
 	    		commandcmd = commandcmd.replaceAll("&world", player.getLocation().getWorld().getName());
 	            commandcmd = commandcmd.replaceAll("&player", player.getName());
