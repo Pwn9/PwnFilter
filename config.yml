@@ -1,2 +1,8 @@
 # Plugin Priority Configuration, options: lowest,low,normal,high,highest
 priority: lowest
+
+# Default message setups, can be overridden in rules.txt per match, do not remote quotes around messages!
+warnmsg: '&4[&6PwnFilter&4] &4Warned by PwnFilter!'
+kickmsg: '&4[&6PwnFilter&4] &4Kicked by PwnFilter!'
+burnmsg: '&4[&6PwnFilter&4] &4Burned by PwnFilter!'
+killmsg: '&4[&6PwnFilter&4] &4Killed by PwnFilter!'
