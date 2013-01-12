@@ -31,7 +31,7 @@ public class PwnFilter extends JavaPlugin {
     	loadRules();	
     	this.saveDefaultConfig();
     	String priority = getConfig().getString("priority");
-    	this.getLogger().info("Priority Setting: "+priority);  
+    	logToFile("Priority Setting: "+priority);  
     	if (priority.equals("lowest")) {
     		new PwnFilterPlayerListenerLowest(this);
     	}
@@ -61,7 +61,7 @@ public class PwnFilter extends JavaPlugin {
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args ) {
         if (cmd.getName().equalsIgnoreCase("pfreload")) { 		   		
             sender.sendMessage(ChatColor.RED + "[PwnFilter] Reloading rules.txt");
-            this.getLogger().info("rules.txt reloaded by " + sender.getName());        
+            logToFile("rules.txt reloaded by " + sender.getName());        
     		rules.clear();
     		patterns.clear();
     		loadRules();
@@ -69,7 +69,7 @@ public class PwnFilter extends JavaPlugin {
         }
 		else if (cmd.getName().equalsIgnoreCase("pfcls")) {  
             sender.sendMessage(ChatColor.RED + "[PwnFilter] Clearing chat screen");
-            this.getLogger().info("chat screen cleared by " + sender.getName());
+            logToFile("chat screen cleared by " + sender.getName());
             int i = 0;
             while (i <= 120) {
               getServer().broadcastMessage(" ");
@@ -80,12 +80,12 @@ public class PwnFilter extends JavaPlugin {
 		else if (cmd.getName().equalsIgnoreCase("pfmute")) {
 			if (pwnMute) {
 				getServer().broadcastMessage(ChatColor.RED + "Global mute cancelled by " + sender.getName());
-	            this.getLogger().info("global mute cancelled by " + sender.getName());	
+	            logToFile("global mute cancelled by " + sender.getName());	
 	            pwnMute = false;
 			}
 			else {
 				getServer().broadcastMessage(ChatColor.RED + "Global mute initiated by " + sender.getName());
-	            this.getLogger().info("global mute initiated by " + sender.getName());
+	            logToFile("global mute initiated by " + sender.getName());
 	            pwnMute = true;
 			}
     		return true;
@@ -101,7 +101,7 @@ public class PwnFilter extends JavaPlugin {
     	f = new File(pname);
     	if (!f.exists()) {
     		if (f.mkdir()) {
-    			this.getLogger().info("created directory '" + pname + "'" );
+    			logToFile("created directory '" + pname + "'" );
     		}
     	}
     	// Ensure that rules.txt exists
@@ -143,7 +143,7 @@ public class PwnFilter extends JavaPlugin {
 				output.write("require user tremor77" + newline);
 				output.write("then rewrite &bt&cREM&bor&f" + newline);
 				output.close();
-				this.getLogger().info("created config file '" + fname + "'" );
+				logToFile("created config file '" + fname + "'" );
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -164,7 +164,7 @@ public class PwnFilter extends JavaPlugin {
     		input.close();
     	}
     	catch (FileNotFoundException e) {
-    		this.getLogger().warning("error reading config file '" + fname + "': " + e.getLocalizedMessage());
+    		this.getLogger().warning("Error reading config file '" + fname + "': " + e.getLocalizedMessage());
     	}
     	catch (Exception e) {
     		e.printStackTrace();
@@ -177,14 +177,14 @@ public class PwnFilter extends JavaPlugin {
     		try {
     			Pattern pattern = Pattern.compile(re, Pattern.CASE_INSENSITIVE);
     			patterns.put(re, pattern);
-    			this.getLogger().fine("successfully compiled regex: " + re);
+    			this.getLogger().fine("Successfully compiled regex: " + re);
     		}
     		catch (PatternSyntaxException e) {
-    			this.getLogger().warning("failed to compile regex: " + re);
+    			this.getLogger().warning("Failed to compile regex: " + re);
     			this.getLogger().warning(e.getMessage());
     		}
     		catch (Exception e) {
-    			this.getLogger().severe("unexpected error while compiling expression '" + re + "'");
+    			this.getLogger().severe("Unexpected error while compiling expression '" + re + "'");
     			e.printStackTrace();
     		}
     	}
@@ -194,7 +194,7 @@ public class PwnFilter extends JavaPlugin {
     	Pattern pattern_from = patterns.get(re_from);
     	if (pattern_from == null) {
     		// Pattern failed to compile, ignore
-    		this.getLogger().info("ignoring invalid regex: " + re_from);
+    		logToFile("ignoring invalid regex: " + re_from);
     		return false;
     	}
     	Matcher matcher = pattern_from.matcher(msg);
@@ -401,6 +401,7 @@ public class PwnFilter extends JavaPlugin {
 							valid = true;
 						}
 						if (line.startsWith("then deny")) {
+							message = "Message Blocked by PwnFilter DENY Rule";
 							cancel = true;
 			    			valid = true;
 						}
@@ -485,13 +486,14 @@ public class PwnFilter extends JavaPlugin {
 						}						
 	    			}
 		    		if (valid == false) {
-		    			this.getLogger().warning("ignored syntax error in rules.txt: " + line);    			
+		    			this.getLogger().warning("Ignored syntax error in rules.txt: " + line);    			
 		    		}	    		
 	    		}
 	    	}	
 	    	// Perform flagged actions
 	    	if (log) {
-	    		this.getLogger().info(player.getName() + "> " + event.getMessage());
+	    		logToFile("ORIGINAL <"+player.getName() + "> " + event.getMessage());
+	    		logToFile("SENT <"+player.getName() + "> " + message);
 	    	}	
 	    	if (cancel) {
 	    		event.setCancelled(true);
@@ -501,7 +503,7 @@ public class PwnFilter extends JavaPlugin {
 	    		commandcmd = commandcmd.replaceAll("&world", player.getLocation().getWorld().getName());
 	            commandcmd = commandcmd.replaceAll("&player", player.getName());
 	            commandcmd = commandcmd.replaceAll("&string", message);           
-	            this.getLogger().info("helped " + player.getName() + " execute command: " + commandcmd);				
+	            logToFile("Helped " + player.getName() + " execute command: " + commandcmd);				
 				player.chat("/" + commandcmd);		
 			}
 	    	if (commandchain) {
@@ -511,7 +513,7 @@ public class PwnFilter extends JavaPlugin {
 	            commandcmd = commandcmd.replaceAll("&string", message);           
 	            String cmdchain[] = commandcmd.split("\\|");
 	            for (String cmds : cmdchain) {
-		            this.getLogger().info("helped " + player.getName() + " execute command: " + cmds);				
+		            logToFile("Helped " + player.getName() + " execute command: " + cmds);				
 					player.chat("/" + cmds);	            	
 	            }
 			}  	
@@ -523,7 +525,7 @@ public class PwnFilter extends JavaPlugin {
 	    		consolecmd = consolecmd.replaceAll("&world", player.getLocation().getWorld().getName());
 	            consolecmd = consolecmd.replaceAll("&player", player.getName());
 	            consolecmd = consolecmd.replaceAll("&string", message);
-	            this.getLogger().info("sending console command: " + consolecmd);
+	            logToFile("Sending console command: " + consolecmd);
 	    		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), consolecmd);
 	    	}	    	
 	    	if (warn) {
@@ -532,7 +534,7 @@ public class PwnFilter extends JavaPlugin {
 	    		final String fwarning = warnmsg;
 	            Bukkit.getScheduler().runTask(this, new Runnable() {
 	                public void run() {
-	                	logger.info("[PwnFilter] warned " + fplayer.getName() + ": " + fwarning);
+	                	logToFile("Warned " + fplayer.getName() + ": " + fwarning);
 	        	    	if (!fwarning.matches("")) {
 	        	    		fplayer.sendMessage(fwarning);
 	        	    	}
@@ -546,7 +548,7 @@ public class PwnFilter extends JavaPlugin {
 	            Bukkit.getScheduler().runTask(this, new Runnable() {
 	                public void run() {
 	                	fplayer.kickPlayer(freason);
-	                	logger.info("[PwnFilter] kicked " + fplayer.getName() + ": " + freason);
+	                	logToFile("Kicked " + fplayer.getName() + ": " + freason);
 	                }
 	            });	    		
 	    	}
@@ -557,7 +559,7 @@ public class PwnFilter extends JavaPlugin {
 	            Bukkit.getScheduler().runTask(this, new Runnable() {
 	                public void run() {
 	                	fplayer.setHealth(0);
-	                	logger.info("[PwnFilter] killed " + fplayer.getName() + ": " + fwarning);
+	                	logToFile("Killed " + fplayer.getName() + ": " + fwarning);
 	        	    	if (!fwarning.matches("")) {
 	        	    		fplayer.sendMessage(fwarning);
 	        	    	}
@@ -571,7 +573,7 @@ public class PwnFilter extends JavaPlugin {
 	            Bukkit.getScheduler().runTask(this, new Runnable() {
 	                public void run() {
 	                	fplayer.setFireTicks(5000);
-	                	logger.info("[PwnFilter] burned " + fplayer.getName() + ": " + fwarning);
+	                	logToFile("Burned " + fplayer.getName() + ": " + fwarning);
 	        	    	if (!fwarning.matches("")) {
 	        	    		fplayer.sendMessage(fwarning);
 	        	    	}
@@ -579,6 +581,32 @@ public class PwnFilter extends JavaPlugin {
 	            });	    		
 	    	}	    		    	
         }   	
-    }      
+    }
+
+    public void logToFile(String message) {   
+    	// send to the console as info any logTofiles
+    	this.getLogger().info(message);
+    	
+    	try {
+		    File dataFolder = getDataFolder();
+		    if(!dataFolder.exists()) {
+		    	dataFolder.mkdir();
+		    }
+		     
+		    File saveTo = new File(getDataFolder(), "pwnfilter.log");
+		    if (!saveTo.exists())  {
+		    	saveTo.createNewFile();
+		    }
+		   
+		    FileWriter fw = new FileWriter(saveTo, true);
+		    PrintWriter pw = new PrintWriter(fw);
+		    pw.println(message);
+		    pw.flush();
+		    pw.close();
+	    } 
+	    catch (IOException e) {
+	    	e.printStackTrace();
+	    }
+    }    
 }
 
