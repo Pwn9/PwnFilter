@@ -6,6 +6,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.*;
 import java.util.logging.Logger;
 import java.util.Random;
+import java.util.Date;
+import java.text.*;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -256,7 +258,8 @@ public class PwnFilter extends JavaPlugin {
 	    	Boolean warn = false;
 	    	Boolean console = false;
 	    	Boolean command = false;
-	    	Boolean commandchain = false;	    	
+	    	Boolean consolechain = false;	    	
+	    	Boolean commandchain = false;
 	    	Boolean matched = false;
 	    	Boolean log = false;
 	    	Boolean aborted = false;
@@ -401,7 +404,7 @@ public class PwnFilter extends JavaPlugin {
 							valid = true;
 						}
 						if (line.startsWith("then deny")) {
-							message = "Message Blocked by PwnFilter DENY Rule";
+							//message = "Message Blocked by PwnFilter DENY Rule";
 							cancel = true;
 			    			valid = true;
 						}
@@ -426,7 +429,12 @@ public class PwnFilter extends JavaPlugin {
 							consolecmd = line.substring(13);
 							console = true;
 							valid = true;
-						}					
+						}	
+						if (line.startsWith("then conchain ")) {		
+							consolecmd = line.substring(14);
+							consolechain = true;
+			    			valid = true;
+						}							
 						
 						// Punishment stuffs start here
 						if (line.startsWith("then warn ")) {
@@ -516,18 +524,29 @@ public class PwnFilter extends JavaPlugin {
 		            logToFile("Helped " + player.getName() + " execute command: " + cmds);				
 					player.chat("/" + cmds);	            	
 	            }
-			}  	
+			}   	
+	    	// why is this here and not at the end, any particular reason?
 	    	else {
 				event.setMessage(message);
 			}	
-	    	
 	    	if (console) {
 	    		consolecmd = consolecmd.replaceAll("&world", player.getLocation().getWorld().getName());
 	            consolecmd = consolecmd.replaceAll("&player", player.getName());
 	            consolecmd = consolecmd.replaceAll("&string", message);
 	            logToFile("Sending console command: " + consolecmd);
 	    		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), consolecmd);
-	    	}	    	
+	    	}
+	    	if (consolechain) {
+				event.setCancelled(true);
+	    		consolecmd = consolecmd.replaceAll("&world", player.getLocation().getWorld().getName());
+	    		consolecmd = consolecmd.replaceAll("&player", player.getName());
+	    		consolecmd = consolecmd.replaceAll("&string", message);           
+	            String conchain[] = consolecmd.split("\\|");
+	            for (String cmds : conchain) {
+		            logToFile("Sending console command: " + cmds);
+		    		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmds);
+	            }
+			} 	    		    	
 	    	if (warn) {
 				warnmsg = warnmsg.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
 	    		final Player fplayer = player;
@@ -585,28 +604,39 @@ public class PwnFilter extends JavaPlugin {
 
     public void logToFile(String message) {   
     	// send to the console as info any logTofiles
-    	this.getLogger().info(message);
-    	
-    	try {
-		    File dataFolder = getDataFolder();
-		    if(!dataFolder.exists()) {
-		    	dataFolder.mkdir();
+    	this.getLogger().info(message);  	
+    	String logEnabled = getConfig().getString("logfile");
+    	if (logEnabled == "true") {	
+	    	try {
+			    File dataFolder = getDataFolder();
+			    if(!dataFolder.exists()) {
+			    	dataFolder.mkdir();
+			    }
+			     
+			    File saveTo = new File(getDataFolder(), "pwnfilter.log");
+			    if (!saveTo.exists())  {
+			    	saveTo.createNewFile();
+			    }
+			    
+			    FileWriter fw = new FileWriter(saveTo, true);
+			    PrintWriter pw = new PrintWriter(fw);
+			    pw.println(getDate() +" "+ message);
+			    pw.flush();
+			    pw.close();
+		    } 
+		    catch (IOException e) {
+		    	e.printStackTrace();
 		    }
-		     
-		    File saveTo = new File(getDataFolder(), "pwnfilter.log");
-		    if (!saveTo.exists())  {
-		    	saveTo.createNewFile();
-		    }
-		   
-		    FileWriter fw = new FileWriter(saveTo, true);
-		    PrintWriter pw = new PrintWriter(fw);
-		    pw.println(message);
-		    pw.flush();
-		    pw.close();
-	    } 
-	    catch (IOException e) {
-	    	e.printStackTrace();
-	    }
-    }    
+    	}
+    }
+    
+    public String getDate() {
+    	  String s;
+    	  Format formatter;
+    	  Date date = new Date(); 
+    	  formatter = new SimpleDateFormat("[yyyy/MM/dd HH:mm:ss]");
+    	  s = formatter.format(date);
+    	  return s;
+    }
 }
 
