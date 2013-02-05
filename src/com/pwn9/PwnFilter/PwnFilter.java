@@ -501,6 +501,9 @@ public class PwnFilter extends JavaPlugin {
 	    	// Perform flagged actions
 	    	if (log) {
 	    		logToFile("ORIGINAL <"+player.getName() + "> " + event.getMessage());
+	    		if (cancel){
+	    			logToFile("SENT <"+player.getName() + "> message cancelled by deny rule.");	
+	    		}
 	    		logToFile("SENT <"+player.getName() + "> " + message);
 	    	}	
 	    	if (cancel) {
