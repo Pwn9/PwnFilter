@@ -130,10 +130,10 @@ public class PwnFilter extends JavaPlugin {
 				output.write("then warn Watch your language please" + newline);
 				output.write("then log" + newline);
 				output.write("" + newline);
-				output.write("# Replace a list of naughty words with meep! Let a certain permission swear." + newline);
+				output.write("# Replace a list of naughty words with random word! Let a certain permission swear." + newline);
 				output.write("match cunt|whore|fag|slut|queer|bitch|bastard" + newline);
 				output.write("ignore permission permission.node" + newline);
-				output.write("then replace meep" + newline);
+				output.write("then randrep meep|beep|bleep|herp|derp" + newline);
 				output.write("" + newline);
 				output.write("# FIX the .command typo with /command" + newline);
 				output.write("match ^\\.(?=[a-z]+)" + newline);
@@ -157,7 +157,7 @@ public class PwnFilter extends JavaPlugin {
     			line = line.trim();
     			if (!line.matches("^#.*") && !line.matches("")) {
     				rules.add(line);
-    				if (line.startsWith("match ") || line.startsWith("replace ") || line.startsWith("rewrite ")) {
+    				if (line.startsWith("match ") || line.startsWith("catch ") || line.startsWith("replace ") || line.startsWith("rewrite ")) {
     					String[] parts = line.split(" ", 2);
     					compilePattern(parts[1]);
     				}
@@ -263,13 +263,15 @@ public class PwnFilter extends JavaPlugin {
 	    	Boolean matched = false;
 	    	Boolean log = false;
 	    	Boolean aborted = false;
+	    	Boolean decolor = getConfig().getBoolean("decolor");
 	    	Boolean valid;	
-	    	
+
 	    	// Strings	    	
 	    	String consolecmd = "";
 	    	String commandcmd = "";
 	    	String regex = "";
 	    	String matched_msg = "";
+	    	String matchLogMsg = "";
 	    	
 	    	// More Strings (for warns, kick, etc)
 	    	String warnmsg = getConfig().getString("warnmsg");
@@ -277,8 +279,14 @@ public class PwnFilter extends JavaPlugin {
 	    	String killmsg = getConfig().getString("killmsg");
 	    	String burnmsg = getConfig().getString("burnmsg");
 	    	
-	    	if (pwnMute) {
-	    		event.setCancelled(true);
+	    	// Global mute
+	    	if ((pwnMute) && (!(player.hasPermission("pwnfilter.bypassmute")))) {
+	    			event.setCancelled(true);
+	    	}
+	    	
+	    	// Global decolor
+	    	if ((decolor) && (!(player.hasPermission("pwnfilter.color")))) {
+	    		message = ChatColor.stripColor(message);
 	    	}
 	    	
 	    	// Apply rules 
@@ -288,12 +296,13 @@ public class PwnFilter extends JavaPlugin {
 	    		    
 	    		if (line.startsWith("match ")) {
 	    			regex = line.substring(6); 			
-	    			matched = this.matchPattern(ChatColor.stripColor(message.replaceAll("\\$([0-9a-fk-or])", "\u00A7$1")), regex); 			
+	    			matched = this.matchPattern(ChatColor.stripColor(message.replaceAll("&([0-9a-fk-or])", "\u00A7$1")), regex); 			
 	    			if (matched) {
 	    				matched_msg = message;
+	    				matchLogMsg = "MATCH <"+player.getName() + "> " + event.getMessage();
 	    			}
 	    			valid = true;
-	    		}
+	    		}    		
 	    		if (matched) {  
 	    			// Check for any ignore statements, made faster by grouping together v2.1.1
 	    			if (line.startsWith("ignore")) {		
@@ -321,7 +330,7 @@ public class PwnFilter extends JavaPlugin {
 		        			String ignorestring = line.substring(14);
 		    				valid = true;
 		    				for (String check : ignorestring.split("\\|")) {
-		    					if (ChatColor.stripColor(message.replaceAll("\\$([0-9a-fk-or])", "\u00A7$1")).toUpperCase().indexOf(check.toUpperCase()) != -1) {
+		    					if (ChatColor.stripColor(message.replaceAll("&([0-9a-fk-or])", "\u00A7$1")).toUpperCase().indexOf(check.toUpperCase()) != -1) {
 			        				matched = false;
 			        				break;
 		                        }	
@@ -358,57 +367,43 @@ public class PwnFilter extends JavaPlugin {
 	    			// Finally check for any then statements
 	    			if (line.startsWith("then")) {
 						if (line.startsWith("then replace ")) {	
-							// clean out the color codes for the replacement
-							message = ChatColor.stripColor(message.replaceAll("\\$([0-9a-fk-or])", "\u00A7$1"));
-							// check and replace cleaned message for pattern matches
+							message = ChatColor.stripColor(message.replaceAll("&([0-9a-fk-or])", "\u00A7$1"));
 							message = this.replacePattern(message, regex, line.substring(13));
-							// re-write message with &color replacements
 							message = message.replaceAll("&([0-9a-fk-or])", "\u00A7$1");						
 			    			valid = true;
 						}
 						if (line.matches("then replace")) {	
-							// clean out the color codes for the replacement
-							message = ChatColor.stripColor(message.replaceAll("\\$([[0-9a-fk-or]])", "\u00A7$1"));						
-							// check and replace cleaned message for pattern matches
+							message = ChatColor.stripColor(message.replaceAll("&([0-9a-fk-or])", "\u00A7$1"));						
 							message = this.replacePattern(message, regex, "");						
-							// re-write message with &color replacements
 							message = message.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
 							valid = true;
 						}
 						if (line.startsWith("then rewrite ")) {									
-							// check and replace message for pattern matches while ignoring color codes
 							message = this.replacePattern(message, regex, line.substring(13));
-							// re-write message with &color replacements
 							message = message.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
 			    			valid = true;
 						}
 						if (line.matches("then rewrite")) {
-							// check and replace message for pattern matches while ignoring color codes
 							message = this.replacePattern(message, regex, "");
-							// re-write message with &color replacements
 							message = message.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
 							valid = true;
 						}							
-						if (line.startsWith("then randrep ")) {									
-							// check and replace message for pattern matches while ignoring color codes
+						if (line.startsWith("then randrep ")) {	
+                            message = ChatColor.stripColor(message.replaceAll("&([0-9a-fk-or])", "\u00A7$1"));
 							message = this.replacePatternRandom(message, regex, line.substring(13));
-							// re-write message with &color replacements
 							message = message.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
 			    			valid = true;
 						}							
 						if (line.startsWith("then lower")) {
-							// check and replace message for pattern matches while ignoring color codes
-							message = this.replacePatternLower(message, regex);
-							// re-write message with &color replacements
+                            message = ChatColor.stripColor(message.replaceAll("&([0-9a-fk-or])", "\u00A7$1"));							
+							message = this.replacePatternLower(message, regex);							
 							message = message.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
 							valid = true;
 						}
 						if (line.startsWith("then deny")) {
-							//message = "Message Blocked by PwnFilter DENY Rule";
 							cancel = true;
 			    			valid = true;
 						}
-						
 						// aliasing, commands and console
 						if (line.startsWith("then command ")) {		
 							commandcmd = line.substring(13);
@@ -500,7 +495,7 @@ public class PwnFilter extends JavaPlugin {
 	    	}	
 	    	// Perform flagged actions
 	    	if (log) {
-	    		logToFile("ORIGINAL <"+player.getName() + "> " + event.getMessage());
+	    		logToFile(matchLogMsg);
 	    		if (cancel){
 	    			logToFile("SENT <"+player.getName() + "> message cancelled by deny rule.");	
 	    		}
@@ -608,8 +603,8 @@ public class PwnFilter extends JavaPlugin {
     public void logToFile(String message) {   
     	// send to the console as info any logTofiles
     	this.getLogger().info(message);  	
-    	String logEnabled = getConfig().getString("logfile");
-    	if (logEnabled == "true") {	
+    	Boolean logEnabled = getConfig().getBoolean("logfile");
+    	if (logEnabled) {	
 	    	try {
 			    File dataFolder = getDataFolder();
 			    if(!dataFolder.exists()) {

@@ -1,5 +1,5 @@
 # Plugin Priority Configuration, options: lowest,low,normal,high,highest
-priority: lowest
+priority: highest
 
 # Default message setups, can be overridden in rules.txt per match, do not remove quotes around messages!
 warnmsg: '&4[&6PwnFilter&4] &4Warned by PwnFilter!'
@@ -9,3 +9,6 @@ killmsg: '&4[&6PwnFilter&4] &4Killed by PwnFilter!'
 
 # Logfile Enabling set to true or false
 logfile: true
+
+# Strip color from chat. Permission to bypass pwnfilter.color or pwnfilter.bypass
+decolor: true
