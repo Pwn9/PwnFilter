@@ -12,3 +12,6 @@ logfile: true
 
 # Strip color from chat. Permission to bypass pwnfilter.color or pwnfilter.bypass
 decolor: true
+
+# Experimental, filter commands as well as chat true/false
+commandfilter: true

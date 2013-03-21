@@ -14,6 +14,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -51,6 +52,10 @@ public class PwnFilter extends JavaPlugin {
     	}
     	else {
 			new PwnFilterPlayerListenerLowest(this);
+    	}
+    	Boolean filterCommands = getConfig().getBoolean("commandfilter");
+    	if (filterCommands) {
+    		new PwnFilterCommandListenerHighest(this);
     	}
     }
     
@@ -508,7 +513,8 @@ public class PwnFilter extends JavaPlugin {
 				event.setCancelled(true);
 	    		commandcmd = commandcmd.replaceAll("&world", player.getLocation().getWorld().getName());
 	            commandcmd = commandcmd.replaceAll("&player", player.getName());
-	            commandcmd = commandcmd.replaceAll("&string", message);           
+	            commandcmd = commandcmd.replaceAll("&string", message); 
+	            commandcmd = commandcmd.replaceAll("&rawstring", event.getMessage());
 	            logToFile("Helped " + player.getName() + " execute command: " + commandcmd);				
 				player.chat("/" + commandcmd);		
 			}
@@ -516,7 +522,8 @@ public class PwnFilter extends JavaPlugin {
 				event.setCancelled(true);
 	    		commandcmd = commandcmd.replaceAll("&world", player.getLocation().getWorld().getName());
 	            commandcmd = commandcmd.replaceAll("&player", player.getName());
-	            commandcmd = commandcmd.replaceAll("&string", message);           
+	            commandcmd = commandcmd.replaceAll("&string", message); 
+	            commandcmd = commandcmd.replaceAll("&rawstring", event.getMessage());
 	            String cmdchain[] = commandcmd.split("\\|");
 	            for (String cmds : cmdchain) {
 		            logToFile("Helped " + player.getName() + " execute command: " + cmds);				
@@ -531,6 +538,7 @@ public class PwnFilter extends JavaPlugin {
 	    		consolecmd = consolecmd.replaceAll("&world", player.getLocation().getWorld().getName());
 	            consolecmd = consolecmd.replaceAll("&player", player.getName());
 	            consolecmd = consolecmd.replaceAll("&string", message);
+	            commandcmd = commandcmd.replaceAll("&rawstring", event.getMessage());
 	            logToFile("Sending console command: " + consolecmd);
 	    		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), consolecmd);
 	    	}
@@ -538,7 +546,8 @@ public class PwnFilter extends JavaPlugin {
 				event.setCancelled(true);
 	    		consolecmd = consolecmd.replaceAll("&world", player.getLocation().getWorld().getName());
 	    		consolecmd = consolecmd.replaceAll("&player", player.getName());
-	    		consolecmd = consolecmd.replaceAll("&string", message);           
+	    		consolecmd = consolecmd.replaceAll("&string", message);  
+	    		commandcmd = commandcmd.replaceAll("&rawstring", event.getMessage());
 	            String conchain[] = consolecmd.split("\\|");
 	            for (String cmds : conchain) {
 		            logToFile("Sending console command: " + cmds);
@@ -599,7 +608,368 @@ public class PwnFilter extends JavaPlugin {
 	    	}	    		    	
         }   	
     }
+  
+    public void filterCommand(PlayerCommandPreprocessEvent event) {
+        String message = event.getMessage();
+        Player player = event.getPlayer();
+        String pname = player.getName();
 
+        // Permissions Check, if player has bypass permissions, then skip everything.
+        if (!(player.hasPermission("pwnfilter.bypass"))) {
+	    	// Booleans
+        	Boolean cancel = false;
+	    	Boolean kick = false;
+	    	Boolean kill = false;
+	    	Boolean burn = false;
+	    	Boolean warn = false;
+	    	Boolean console = false;
+	    	Boolean command = false;
+	    	Boolean consolechain = false;	    	
+	    	Boolean commandchain = false;
+	    	Boolean matched = false;
+	    	Boolean log = false;
+	    	Boolean aborted = false;
+	    	Boolean decolor = getConfig().getBoolean("decolor");
+	    	Boolean valid;	
+
+	    	// Strings	    	
+	    	String consolecmd = "";
+	    	String commandcmd = "";
+	    	String regex = "";
+	    	String matched_msg = "";
+	    	String matchLogMsg = "";
+	    	
+	    	// More Strings (for warns, kick, etc)
+	    	String warnmsg = getConfig().getString("warnmsg");
+	    	String kickmsg = getConfig().getString("kickmsg");
+	    	String killmsg = getConfig().getString("killmsg");
+	    	String burnmsg = getConfig().getString("burnmsg");
+	    	
+	    	// Global mute
+	    	if ((pwnMute) && (!(player.hasPermission("pwnfilter.bypassmute")))) {
+	    			event.setCancelled(true);
+	    	}
+	    	
+	    	// Global decolor
+	    	if ((decolor) && (!(player.hasPermission("pwnfilter.color")))) {
+	    		message = ChatColor.stripColor(message);
+	    	}
+	    	
+	    	// Apply rules 
+	    	for (String line : this.rules) {
+	    		if (aborted) { break; } 
+	    		valid = false;
+	    		    
+	    		if (line.startsWith("match ")) {
+	    			regex = line.substring(6); 			
+	    			matched = this.matchPattern(ChatColor.stripColor(message.replaceAll("&([0-9a-fk-or])", "\u00A7$1")), regex); 			
+	    			if (matched) {
+	    				matched_msg = message;
+	    				matchLogMsg = "MATCH <"+player.getName() + "> " + event.getMessage();
+	    			}
+	    			valid = true;
+	    		}    		
+	    		if (matched) {  
+	    			// Check for any ignore statements, made faster by grouping together v2.1.1
+	    			if (line.startsWith("ignore")) {		
+		        		if (line.startsWith("ignore user ")) {
+		        			String users = line.substring(12);
+		    				valid = true;
+		        			for (String check : users.split(" ")) {
+		        				if (pname.equalsIgnoreCase(check)) {
+		        					matched = false;
+		        					break;
+		        				}
+		        			}
+		        		}
+		        		if (line.startsWith("ignore permission ")) {
+		        			String perms = line.substring(18);
+		    				valid = true;
+		    				for (String check : perms.split(" ")) {
+		    					if (player.hasPermission(check)) {
+			        				matched = false;
+			        				break;
+		    					}
+		        			}
+		        		} 		
+		        		if (line.startsWith("ignore string ")) {
+		        			String ignorestring = line.substring(14);
+		    				valid = true;
+		    				for (String check : ignorestring.split("\\|")) {
+		    					if (ChatColor.stripColor(message.replaceAll("&([0-9a-fk-or])", "\u00A7$1")).toUpperCase().indexOf(check.toUpperCase()) != -1) {
+			        				matched = false;
+			        				break;
+		                        }	
+		        			}
+		        		}  
+	    			}
+	    			// Check for any require statements
+	    			if (line.startsWith("require")) {
+		        		if (line.startsWith("require user ")) {
+		        			String users = line.substring(13);
+		    				valid = true;
+		    				Boolean found = false;
+		        			for (String check : users.split(" ")) {
+		        				if (pname.equalsIgnoreCase(check)) {
+		        					found = true;
+		        					break;
+		        				}
+		        			}
+		        			matched = found;
+		        		}
+		        		if (line.startsWith("require permission ")) {
+		        			String perms = line.substring(19);
+		    				valid = true;
+		    				Boolean found = false;
+		    				for (String check : perms.split(" ")) {
+			        			if (player.hasPermission(check)) {
+			        				found = true;
+			        				break;
+			        			}
+		    				}
+		        			matched = found;
+		        		}
+	    			}
+	    			// Finally check for any then statements
+	    			if (line.startsWith("then")) {
+						if (line.startsWith("then replace ")) {	
+							message = ChatColor.stripColor(message.replaceAll("&([0-9a-fk-or])", "\u00A7$1"));
+							message = this.replacePattern(message, regex, line.substring(13));
+							message = message.replaceAll("&([0-9a-fk-or])", "\u00A7$1");						
+			    			valid = true;
+						}
+						if (line.matches("then replace")) {	
+							message = ChatColor.stripColor(message.replaceAll("&([0-9a-fk-or])", "\u00A7$1"));						
+							message = this.replacePattern(message, regex, "");						
+							message = message.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
+							valid = true;
+						}
+						if (line.startsWith("then rewrite ")) {									
+							message = this.replacePattern(message, regex, line.substring(13));
+							message = message.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
+			    			valid = true;
+						}
+						if (line.matches("then rewrite")) {
+							message = this.replacePattern(message, regex, "");
+							message = message.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
+							valid = true;
+						}							
+						if (line.startsWith("then randrep ")) {	
+                            message = ChatColor.stripColor(message.replaceAll("&([0-9a-fk-or])", "\u00A7$1"));
+							message = this.replacePatternRandom(message, regex, line.substring(13));
+							message = message.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
+			    			valid = true;
+						}							
+						if (line.startsWith("then lower")) {
+                            message = ChatColor.stripColor(message.replaceAll("&([0-9a-fk-or])", "\u00A7$1"));							
+							message = this.replacePatternLower(message, regex);							
+							message = message.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
+							valid = true;
+						}
+						if (line.startsWith("then deny")) {
+							cancel = true;
+			    			valid = true;
+						}
+						// aliasing, commands and console
+						if (line.startsWith("then command ")) {		
+							commandcmd = line.substring(13);
+							command = true;
+			    			valid = true;
+						}
+						if (line.matches("then command")) {
+							commandcmd = message;
+							command = true;
+			    			valid = true;
+						}
+						if (line.startsWith("then cmdchain ")) {		
+							commandcmd = line.substring(14);
+							commandchain = true;
+			    			valid = true;
+						}	
+						if (line.startsWith("then console ")) {
+							consolecmd = line.substring(13);
+							console = true;
+							valid = true;
+						}	
+						if (line.startsWith("then conchain ")) {		
+							consolecmd = line.substring(14);
+							consolechain = true;
+			    			valid = true;
+						}							
+						
+						// Punishment stuffs start here
+						if (line.startsWith("then warn ")) {
+							warnmsg = line.substring(10);
+							warn = true;
+			    			valid = true;
+						}
+						if (line.matches("then warn")) {
+							warn = true;
+			    			valid = true;
+						}						
+						if (line.startsWith("then kick ")) {
+							kickmsg = line.substring(10);
+							kick = true;
+			    			valid = true;
+						}
+						if (line.matches("then kick")) {
+							kick = true;
+			    			valid = true;
+						}
+						if (line.startsWith("then kill ")) {
+							killmsg = line.substring(10);
+							kill = true;
+			    			valid = true;							
+						}
+						if (line.matches("then kill")) {							
+							kill = true;
+			    			valid = true;
+						}		
+						if (line.startsWith("then burn ")) {
+							burnmsg = line.substring(10);
+							burn = true;
+			    			valid = true;
+						}
+						if (line.matches("then burn")) {
+							burn = true;
+			    			valid = true;
+						}	
+						
+						// abort, log, debug stuff
+						if (line.startsWith("then abort")) {
+							aborted = true;
+			    			valid = true;
+						}
+						if (line.matches("then log")) {
+							log = true;
+			    			valid = true;
+						}	
+						if (line.matches("then debug")) {
+							System.out.println("[PwnFilter] Debug match: " + regex);
+							System.out.println("[PwnFilter] Debug original: " + event.getMessage());
+							System.out.println("[PwnFilter] Debug matched: " + matched_msg);
+							System.out.println("[PwnFilter] Debug current: " + message);
+							System.out.println("[PwnFilter] Debug log: " + (log?"yes":"no"));
+							System.out.println("[PwnFilter] Debug deny: " + (cancel?"yes":"no"));
+			    			valid = true;
+						}						
+	    			}
+		    		if (valid == false) {
+		    			this.getLogger().warning("Ignored syntax error in rules.txt: " + line);    			
+		    		}	    		
+	    		}
+	    	}	
+	    	// Perform flagged actions
+	    	if (log) {
+	    		logToFile(matchLogMsg);
+	    		if (cancel){
+	    			logToFile("SENT <"+player.getName() + "> message cancelled by deny rule.");	
+	    		}
+	    		logToFile("SENT <"+player.getName() + "> " + message);
+	    	}	
+	    	if (cancel) {
+	    		event.setCancelled(true);
+	    	}   	
+	    	if (command) {
+				event.setCancelled(true);
+	    		commandcmd = commandcmd.replaceAll("&world", player.getLocation().getWorld().getName());
+	            commandcmd = commandcmd.replaceAll("&player", player.getName());
+	            commandcmd = commandcmd.replaceAll("&string", message);   
+	            commandcmd = commandcmd.replaceAll("&rawstring", event.getMessage());
+	            logToFile("Helped " + player.getName() + " execute command: " + commandcmd);				
+				player.chat("/" + commandcmd);		
+			}
+	    	if (commandchain) {
+				event.setCancelled(true);
+	    		commandcmd = commandcmd.replaceAll("&world", player.getLocation().getWorld().getName());
+	            commandcmd = commandcmd.replaceAll("&player", player.getName());
+	            commandcmd = commandcmd.replaceAll("&string", message); 
+	            commandcmd = commandcmd.replaceAll("&rawstring", event.getMessage());         
+	            String cmdchain[] = commandcmd.split("\\|");
+	            for (String cmds : cmdchain) {
+		            logToFile("Helped " + player.getName() + " execute command: " + cmds);				
+					player.chat("/" + cmds);	            	
+	            }
+			}   	
+	    	// why is this here and not at the end, any particular reason?
+	    	else {
+				event.setMessage(message);
+			}	
+	    	if (console) {
+	    		consolecmd = consolecmd.replaceAll("&world", player.getLocation().getWorld().getName());
+	            consolecmd = consolecmd.replaceAll("&player", player.getName());
+	            consolecmd = consolecmd.replaceAll("&string", message);
+	            commandcmd = commandcmd.replaceAll("&rawstring", event.getMessage());
+	            logToFile("Sending console command: " + consolecmd);
+	    		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), consolecmd);
+	    	}
+	    	if (consolechain) {
+				event.setCancelled(true);
+	    		consolecmd = consolecmd.replaceAll("&world", player.getLocation().getWorld().getName());
+	    		consolecmd = consolecmd.replaceAll("&player", player.getName());
+	    		consolecmd = consolecmd.replaceAll("&string", message);  
+	    		commandcmd = commandcmd.replaceAll("&rawstring", event.getMessage());
+	            String conchain[] = consolecmd.split("\\|");
+	            for (String cmds : conchain) {
+		            logToFile("Sending console command: " + cmds);
+		    		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmds);
+	            }
+			} 	    		    	
+	    	if (warn) {
+				warnmsg = warnmsg.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
+	    		final Player fplayer = player;
+	    		final String fwarning = warnmsg;
+	            Bukkit.getScheduler().runTask(this, new Runnable() {
+	                public void run() {
+	                	logToFile("Warned " + fplayer.getName() + ": " + fwarning);
+	        	    	if (!fwarning.matches("")) {
+	        	    		fplayer.sendMessage(fwarning);
+	        	    	}
+	                }
+	            });	 
+	    	}	    	
+	    	if (kick) {	
+				kickmsg = kickmsg.replaceAll("&([0-9a-fk-or])", "\u00A7$1");	    		
+	    		final Player fplayer = player;
+	    		final String freason = kickmsg;
+	            Bukkit.getScheduler().runTask(this, new Runnable() {
+	                public void run() {
+	                	fplayer.kickPlayer(freason);
+	                	logToFile("Kicked " + fplayer.getName() + ": " + freason);
+	                }
+	            });	    		
+	    	}
+	    	if (kill) {	
+				killmsg = killmsg.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
+	    		final Player fplayer = player;
+	    		final String fwarning = killmsg;
+	            Bukkit.getScheduler().runTask(this, new Runnable() {
+	                public void run() {
+	                	fplayer.setHealth(0);
+	                	logToFile("Killed " + fplayer.getName() + ": " + fwarning);
+	        	    	if (!fwarning.matches("")) {
+	        	    		fplayer.sendMessage(fwarning);
+	        	    	}
+	                }
+	            });	    		
+	    	}	
+	    	if (burn) {	
+				burnmsg = burnmsg.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
+	    		final Player fplayer = player;
+	    		final String fwarning = burnmsg;
+	            Bukkit.getScheduler().runTask(this, new Runnable() {
+	                public void run() {
+	                	fplayer.setFireTicks(5000);
+	                	logToFile("Burned " + fplayer.getName() + ": " + fwarning);
+	        	    	if (!fwarning.matches("")) {
+	        	    		fplayer.sendMessage(fwarning);
+	        	    	}
+	                }
+	            });	    		
+	    	}	    		    	
+        }   	
+    }
+    
     public void logToFile(String message) {   
     	// send to the console as info any logTofiles
     	this.getLogger().info(message);  	
