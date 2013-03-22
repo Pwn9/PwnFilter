@@ -250,6 +250,7 @@ public class PwnFilter extends JavaPlugin {
     
     public void filterChat(AsyncPlayerChatEvent event) {
         String message = event.getMessage();
+        String rawmessage = event.getMessage();
         Player player = event.getPlayer();
         String pname = player.getName();
 
@@ -304,7 +305,7 @@ public class PwnFilter extends JavaPlugin {
 	    			matched = this.matchPattern(ChatColor.stripColor(message.replaceAll("&([0-9a-fk-or])", "\u00A7$1")), regex); 			
 	    			if (matched) {
 	    				matched_msg = message;
-	    				matchLogMsg = "MATCH <"+player.getName() + "> " + event.getMessage();
+	    				matchLogMsg = "MATCH <"+player.getName() + "> " + rawmessage;
 	    			}
 	    			valid = true;
 	    		}    		
@@ -485,7 +486,7 @@ public class PwnFilter extends JavaPlugin {
 						}	
 						if (line.matches("then debug")) {
 							System.out.println("[PwnFilter] Debug match: " + regex);
-							System.out.println("[PwnFilter] Debug original: " + event.getMessage());
+							System.out.println("[PwnFilter] Debug original: " + rawmessage);
 							System.out.println("[PwnFilter] Debug matched: " + matched_msg);
 							System.out.println("[PwnFilter] Debug current: " + message);
 							System.out.println("[PwnFilter] Debug log: " + (log?"yes":"no"));
@@ -514,7 +515,7 @@ public class PwnFilter extends JavaPlugin {
 	    		commandcmd = commandcmd.replaceAll("&world", player.getLocation().getWorld().getName());
 	            commandcmd = commandcmd.replaceAll("&player", player.getName());
 	            commandcmd = commandcmd.replaceAll("&string", message); 
-	            commandcmd = commandcmd.replaceAll("&rawstring", event.getMessage());
+	            commandcmd = commandcmd.replaceAll("&rawstring", rawmessage);
 	            logToFile("Helped " + player.getName() + " execute command: " + commandcmd);				
 				player.chat("/" + commandcmd);		
 			}
@@ -523,7 +524,7 @@ public class PwnFilter extends JavaPlugin {
 	    		commandcmd = commandcmd.replaceAll("&world", player.getLocation().getWorld().getName());
 	            commandcmd = commandcmd.replaceAll("&player", player.getName());
 	            commandcmd = commandcmd.replaceAll("&string", message); 
-	            commandcmd = commandcmd.replaceAll("&rawstring", event.getMessage());
+	            commandcmd = commandcmd.replaceAll("&rawstring", rawmessage);
 	            String cmdchain[] = commandcmd.split("\\|");
 	            for (String cmds : cmdchain) {
 		            logToFile("Helped " + player.getName() + " execute command: " + cmds);				
@@ -538,7 +539,7 @@ public class PwnFilter extends JavaPlugin {
 	    		consolecmd = consolecmd.replaceAll("&world", player.getLocation().getWorld().getName());
 	            consolecmd = consolecmd.replaceAll("&player", player.getName());
 	            consolecmd = consolecmd.replaceAll("&string", message);
-	            commandcmd = commandcmd.replaceAll("&rawstring", event.getMessage());
+	            consolecmd = consolecmd.replaceAll("&rawstring", rawmessage);
 	            logToFile("Sending console command: " + consolecmd);
 	    		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), consolecmd);
 	    	}
@@ -547,7 +548,7 @@ public class PwnFilter extends JavaPlugin {
 	    		consolecmd = consolecmd.replaceAll("&world", player.getLocation().getWorld().getName());
 	    		consolecmd = consolecmd.replaceAll("&player", player.getName());
 	    		consolecmd = consolecmd.replaceAll("&string", message);  
-	    		commandcmd = commandcmd.replaceAll("&rawstring", event.getMessage());
+	    		consolecmd = consolecmd.replaceAll("&rawstring", rawmessage);
 	            String conchain[] = consolecmd.split("\\|");
 	            for (String cmds : conchain) {
 		            logToFile("Sending console command: " + cmds);
@@ -611,6 +612,7 @@ public class PwnFilter extends JavaPlugin {
   
     public void filterCommand(PlayerCommandPreprocessEvent event) {
         String message = event.getMessage();
+        String rawmessage = event.getMessage();
         Player player = event.getPlayer();
         String pname = player.getName();
 
@@ -665,7 +667,7 @@ public class PwnFilter extends JavaPlugin {
 	    			matched = this.matchPattern(ChatColor.stripColor(message.replaceAll("&([0-9a-fk-or])", "\u00A7$1")), regex); 			
 	    			if (matched) {
 	    				matched_msg = message;
-	    				matchLogMsg = "MATCH <"+player.getName() + "> " + event.getMessage();
+	    				matchLogMsg = "MATCH <"+player.getName() + "> " + rawmessage;
 	    			}
 	    			valid = true;
 	    		}    		
@@ -846,7 +848,7 @@ public class PwnFilter extends JavaPlugin {
 						}	
 						if (line.matches("then debug")) {
 							System.out.println("[PwnFilter] Debug match: " + regex);
-							System.out.println("[PwnFilter] Debug original: " + event.getMessage());
+							System.out.println("[PwnFilter] Debug original: " + rawmessage);
 							System.out.println("[PwnFilter] Debug matched: " + matched_msg);
 							System.out.println("[PwnFilter] Debug current: " + message);
 							System.out.println("[PwnFilter] Debug log: " + (log?"yes":"no"));
@@ -875,7 +877,7 @@ public class PwnFilter extends JavaPlugin {
 	    		commandcmd = commandcmd.replaceAll("&world", player.getLocation().getWorld().getName());
 	            commandcmd = commandcmd.replaceAll("&player", player.getName());
 	            commandcmd = commandcmd.replaceAll("&string", message);   
-	            commandcmd = commandcmd.replaceAll("&rawstring", event.getMessage());
+	            commandcmd = commandcmd.replaceAll("&rawstring", rawmessage);
 	            logToFile("Helped " + player.getName() + " execute command: " + commandcmd);				
 				player.chat("/" + commandcmd);		
 			}
@@ -884,7 +886,7 @@ public class PwnFilter extends JavaPlugin {
 	    		commandcmd = commandcmd.replaceAll("&world", player.getLocation().getWorld().getName());
 	            commandcmd = commandcmd.replaceAll("&player", player.getName());
 	            commandcmd = commandcmd.replaceAll("&string", message); 
-	            commandcmd = commandcmd.replaceAll("&rawstring", event.getMessage());         
+	            commandcmd = commandcmd.replaceAll("&rawstring", rawmessage);         
 	            String cmdchain[] = commandcmd.split("\\|");
 	            for (String cmds : cmdchain) {
 		            logToFile("Helped " + player.getName() + " execute command: " + cmds);				
@@ -899,7 +901,7 @@ public class PwnFilter extends JavaPlugin {
 	    		consolecmd = consolecmd.replaceAll("&world", player.getLocation().getWorld().getName());
 	            consolecmd = consolecmd.replaceAll("&player", player.getName());
 	            consolecmd = consolecmd.replaceAll("&string", message);
-	            commandcmd = commandcmd.replaceAll("&rawstring", event.getMessage());
+	            consolecmd = consolecmd.replaceAll("&rawstring", rawmessage);
 	            logToFile("Sending console command: " + consolecmd);
 	    		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), consolecmd);
 	    	}
@@ -908,7 +910,7 @@ public class PwnFilter extends JavaPlugin {
 	    		consolecmd = consolecmd.replaceAll("&world", player.getLocation().getWorld().getName());
 	    		consolecmd = consolecmd.replaceAll("&player", player.getName());
 	    		consolecmd = consolecmd.replaceAll("&string", message);  
-	    		commandcmd = commandcmd.replaceAll("&rawstring", event.getMessage());
+	    		consolecmd = consolecmd.replaceAll("&rawstring", rawmessage);
 	            String conchain[] = consolecmd.split("\\|");
 	            for (String cmds : conchain) {
 		            logToFile("Sending console command: " + cmds);
