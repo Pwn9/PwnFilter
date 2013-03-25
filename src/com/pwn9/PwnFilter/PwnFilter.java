@@ -7,6 +7,7 @@ import java.util.regex.*;
 import java.util.logging.Logger;
 import java.util.Random;
 import java.util.Date;
+import java.util.List;
 import java.text.*;
 
 import org.bukkit.Bukkit;
@@ -25,6 +26,8 @@ public class PwnFilter extends JavaPlugin {
     
     String baseDir = "plugins/PwnFilter";
     Boolean pwnMute = false;
+    List<String> cmdlist;
+    List<String> cmdblist;
     
     public CopyOnWriteArrayList<String> rules = new CopyOnWriteArrayList<String>();
     private ConcurrentHashMap<String, Pattern> patterns = new ConcurrentHashMap<String, Pattern>(); 
@@ -55,8 +58,29 @@ public class PwnFilter extends JavaPlugin {
     	}
     	Boolean filterCommands = getConfig().getBoolean("commandfilter");
     	if (filterCommands) {
-    		new PwnFilterCommandListenerHighest(this);
+    		String cmdpriority = getConfig().getString("cmdpriority");
+        	if (cmdpriority.equals("lowest")) {
+        		new PwnFilterCommandListenerLowest(this);
+        	}
+        	else if (cmdpriority.equals("low")) {
+    			new PwnFilterCommandListenerLow(this);
+        	}
+        	else if (cmdpriority.equals("normal")) {
+    			new PwnFilterCommandListenerNormal(this);
+        	}
+        	else if (cmdpriority.equals("high")) {
+    			new PwnFilterCommandListenerHigh(this);
+        	}
+        	else if (cmdpriority.equals("highest")) {
+    			new PwnFilterCommandListenerHighest(this);
+        	}
+        	else {
+    			new PwnFilterCommandListenerLowest(this);
+        	}
     	}
+
+    	cmdlist = getConfig().getStringList("cmdlist");
+    	cmdblist = getConfig().getStringList("cmdblist");
     }
     
     public void onDisable() {
@@ -369,6 +393,11 @@ public class PwnFilter extends JavaPlugin {
 		    				}
 		        			matched = found;
 		        		}
+		        		// This rule requires a command and therefor can't be run in chat.
+		        		if (line.startsWith("require command ")) {
+        					matched = false;
+        					break;
+		        		}			        		
 	    			}
 	    			// Finally check for any then statements
 	    			if (line.startsWith("then")) {
@@ -613,10 +642,14 @@ public class PwnFilter extends JavaPlugin {
     public void filterCommand(PlayerCommandPreprocessEvent event) {
         String message = event.getMessage();
         String rawmessage = event.getMessage();
+        //Gets the actual command as a string
+        String cmdmessage = message.substring(1).split(" ")[0];
         Player player = event.getPlayer();
         String pname = player.getName();
-
-        // Permissions Check, if player has bypass permissions, then skip everything.
+        
+        
+        if ((cmdlist.isEmpty()) || (cmdlist.contains(cmdmessage))) {
+        if (!(cmdblist.contains(cmdmessage))) {
         if (!(player.hasPermission("pwnfilter.bypass"))) {
 	    	// Booleans
         	Boolean cancel = false;
@@ -703,7 +736,17 @@ public class PwnFilter extends JavaPlugin {
 			        				break;
 		                        }	
 		        			}
-		        		}  
+		        		}
+		        		if (line.startsWith("ignore command ")) {
+		        			String ignorecmd = line.substring(15);
+		    				valid = true;
+		    				for (String check : ignorecmd.split("\\|")) {
+		    					if (cmdmessage.toUpperCase().equals(check.toUpperCase())) {
+			        				matched = false;
+			        				break;
+		                        }	
+		        			}
+		        		}  		        		
 	    			}
 	    			// Check for any require statements
 	    			if (line.startsWith("require")) {
@@ -731,6 +774,18 @@ public class PwnFilter extends JavaPlugin {
 		    				}
 		        			matched = found;
 		        		}
+		        		if (line.startsWith("require command ")) {
+		        			String reqcmd = line.substring(16);
+		    				valid = true;
+		    				Boolean found = false;
+		    				for (String check : reqcmd.split("\\|")) {
+		    					if (cmdmessage.toUpperCase().equals(check.toUpperCase())) {
+			        				found = true;
+			        				break;
+			        			}
+		    				}
+		        			matched = found;
+		        		}		        		
 	    			}
 	    			// Finally check for any then statements
 	    			if (line.startsWith("then")) {
@@ -969,7 +1024,9 @@ public class PwnFilter extends JavaPlugin {
 	                }
 	            });	    		
 	    	}	    		    	
-        }   	
+        }
+        }
+        }
     }
     
     public void logToFile(String message) {   

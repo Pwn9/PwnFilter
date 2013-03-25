@@ -15,3 +15,16 @@ decolor: true
 
 # Experimental, filter commands as well as chat true/false
 commandfilter: true
+
+# Command Filter Priority, options: lowest,low,normal,high,highest
+cmdpriority: lowest
+
+# Command White List: Commands to filter, if empty, will filter ALL (except blacklist)
+cmdlist: []
+
+# Command Black List: Commands to never filter
+cmdblist: 
+- tp
+- tpa
+- warp
+- help
