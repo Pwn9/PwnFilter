@@ -19,6 +19,13 @@ commandfilter: true
 # Command Filter Priority, options: lowest,low,normal,high,highest
 cmdpriority: lowest
 
+# Filter text applied to signs
+signfilter: true
+
+# Set priority for the onSignChange listener
+signpriority: lowest
+
+
 # Command White List: Commands to filter, if empty, will filter ALL (except blacklist)
 cmdlist: []
 

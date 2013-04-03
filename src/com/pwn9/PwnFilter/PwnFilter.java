@@ -1,22 +1,28 @@
 package com.pwn9.PwnFilter;
 
-import java.io.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.regex.*;
-import java.util.logging.Logger;
-import java.util.Random;
-import java.util.Date;
-import java.util.List;
-import java.text.*;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.*;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.*;
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 /**
 * A Regular Expression (REGEX) Chat Filter For Bukkit with many great features
@@ -78,6 +84,16 @@ public class PwnFilter extends JavaPlugin {
     			new PwnFilterCommandListenerLowest(this);
         	}
     	}
+
+        /* Hook up the listener for onSignChange events, if configured */
+        Boolean filterSigns = getConfig().getBoolean("signfilter");
+        if (filterSigns) {
+            String signPriority = getConfig().getString("signpriority").toUpperCase();
+            EventPriority.valueOf(signPriority);
+            // Now register the listener with the appropriate priority
+            // TODO: Add the priority selection.
+            new PwnFilterSignListener(this);
+        }
 
     	cmdlist = getConfig().getStringList("cmdlist");
     	cmdblist = getConfig().getStringList("cmdblist");
@@ -638,7 +654,37 @@ public class PwnFilter extends JavaPlugin {
 	    	}	    		    	
         }   	
     }
-  
+    public void filterSign(SignChangeEvent event) {
+
+        /* Get the lines in the sign.  Run the filter.  If any of the lines break the rules, replace the offending text
+         */
+        // TODO: Refactor filterCommand and filterChat to remove duplication
+        String[] lines = event.getLines();
+        String regex, matched_msg, matchLogMsg;
+        Boolean matched ;
+
+        for ( int i = 0; i<lines.length ; i++ ) {
+            String line = lines[i];
+
+            for (String rule : this.rules) {
+
+                if (rule.startsWith("match ")) {
+                    regex = rule.substring(6);
+                    matched = this.matchPattern(ChatColor.stripColor(line.replaceAll("&([0-9a-fk-or])", "\u00A7$1")), regex);
+                    if (matched) {
+                        matched_msg = line;
+                        matchLogMsg = "MATCH " + line;
+                        event.setLine(i,"DERP");
+
+                    }
+                }
+
+            }
+        }
+
+
+
+    }
     public void filterCommand(PlayerCommandPreprocessEvent event) {
         String message = event.getMessage();
         String rawmessage = event.getMessage();

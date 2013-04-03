@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>PwnFilter</groupId>
+    <artifactId>PwnFilter</artifactId>
+    <version>2.3.6</version>
+
+    <dependencies>
+    <dependency>
+        <groupId>org.bukkit</groupId>
+        <artifactId>bukkit</artifactId>
+        <version>1.5.1-R0.1-SNAPSHOT</version>
+        <scope>compile</scope>
+    </dependency>
+</dependencies>
+    <repositories>
+        <repository>
+            <id>bukkit-repo</id>
+            <url>http://repo.bukkit.org/content/groups/public/</url>
+        </repository>
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>http://repo.maven.apache.org/maven2</url>
+        </repository>
+    </repositories>
+<pluginRepositories>
+    <pluginRepository>
+        <releases>
+            <updatePolicy>never</updatePolicy>
+        </releases>
+        <snapshots>
+            <enabled>false</enabled>
+        </snapshots>
+        <id>central</id>
+        <name>Central Repository</name>
+        <url>http://repo.maven.apache.org/maven2</url>
+    </pluginRepository>
+</pluginRepositories>
+
+<name>PwnFilter</name>
+<description>Complete chat control with the power of regex.</description>
+<build>
+<sourceDirectory>./src</sourceDirectory>
+<outputDirectory>./dist</outputDirectory>
+<resources>
+    <resource>
+        <directory>.\</directory>
+        <filtering>true</filtering>
+        <includes>
+            <include>config.yml</include>
+            <include>plugin.yml</include>
+        </includes>
+    </resource>
+</resources>
+<directory>.\target</directory>
+<finalName>PwnFilter</finalName>
+</build>
+
+</project>
