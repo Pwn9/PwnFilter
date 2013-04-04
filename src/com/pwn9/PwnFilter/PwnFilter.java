@@ -80,7 +80,7 @@ public class PwnFilter extends JavaPlugin {
             },
             this);
         }
-
+                
     	cmdlist = getConfig().getStringList("cmdlist");
     	cmdblist = getConfig().getStringList("cmdblist");
     }
