@@ -1,5 +1,6 @@
-package com.pwn9.PwnFilter;
+package com.pwn9.PwnFilter.listeners;
 
+import com.pwn9.PwnFilter.PwnFilter;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 

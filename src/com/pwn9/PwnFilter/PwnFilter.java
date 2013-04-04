@@ -1,5 +1,8 @@
 package com.pwn9.PwnFilter;
 
+import com.pwn9.PwnFilter.listeners.PwnFilterCommandListener;
+import com.pwn9.PwnFilter.listeners.PwnFilterPlayerListener;
+import com.pwn9.PwnFilter.listeners.PwnFilterSignListener;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -183,7 +186,7 @@ public class PwnFilter extends JavaPlugin {
     	}
     	try {
         	BufferedReader input =  new BufferedReader(new FileReader(fname));
-    		String line = null;
+    		String line;
     		while (( line = input.readLine()) != null) {
     			line = line.trim();
     			if (!line.matches("^#.*") && !line.matches("")) {
@@ -244,8 +247,7 @@ public class PwnFilter extends JavaPlugin {
     	return matcher.replaceAll(to);
     }
 
-    public String replacePatternLower(String msg, String re_from) {
-    	String text = msg;
+    public String replacePatternLower(String text, String re_from) {
     	Matcher m = Pattern.compile(re_from).matcher(text);
     	
     	StringBuilder sb = new StringBuilder();
@@ -362,7 +364,7 @@ public class PwnFilter extends JavaPlugin {
 		        			String ignorestring = line.substring(14);
 		    				valid = true;
 		    				for (String check : ignorestring.split("\\|")) {
-		    					if (ChatColor.stripColor(message.replaceAll("&([0-9a-fk-or])", "\u00A7$1")).toUpperCase().indexOf(check.toUpperCase()) != -1) {
+		    					if (ChatColor.stripColor(message.replaceAll("&([0-9a-fk-or])", "\u00A7$1")).toUpperCase().contains(check.toUpperCase())) {
 			        				matched = false;
 			        				break;
 		                        }	
@@ -525,7 +527,7 @@ public class PwnFilter extends JavaPlugin {
 			    			valid = true;
 						}						
 	    			}
-		    		if (valid == false) {
+		    		if (!valid) {
 		    			this.getLogger().warning("Ignored syntax error in rules.txt: " + line);    			
 		    		}	    		
 	    		}
@@ -757,7 +759,7 @@ public class PwnFilter extends JavaPlugin {
 		        			String ignorestring = line.substring(14);
 		    				valid = true;
 		    				for (String check : ignorestring.split("\\|")) {
-		    					if (ChatColor.stripColor(message.replaceAll("&([0-9a-fk-or])", "\u00A7$1")).toUpperCase().indexOf(check.toUpperCase()) != -1) {
+		    					if (ChatColor.stripColor(message.replaceAll("&([0-9a-fk-or])", "\u00A7$1")).toUpperCase().contains(check.toUpperCase())) {
 			        				matched = false;
 			        				break;
 		                        }	
@@ -937,7 +939,7 @@ public class PwnFilter extends JavaPlugin {
 			    			valid = true;
 						}						
 	    			}
-		    		if (valid == false) {
+		    		if (!valid) {
 		    			this.getLogger().warning("Ignored syntax error in rules.txt: " + line);    			
 		    		}	    		
 	    		}
@@ -1067,6 +1069,7 @@ public class PwnFilter extends JavaPlugin {
 			    File saveTo = new File(getDataFolder(), "pwnfilter.log");
 			    if (!saveTo.exists())  {
 			    	saveTo.createNewFile();
+
 			    }
 			    
 			    FileWriter fw = new FileWriter(saveTo, true);
