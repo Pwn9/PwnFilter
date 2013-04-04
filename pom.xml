@@ -2,6 +2,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <properties>
+        <powermock.version>1.5</powermock.version>
+    </properties>
+
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>PwnFilter</groupId>
@@ -15,7 +19,32 @@
         <version>1.5.1-R0.1-SNAPSHOT</version>
         <scope>compile</scope>
     </dependency>
-</dependencies>
+    <dependency>
+        <groupId>org.powermock</groupId>
+        <artifactId>powermock-module-junit4</artifactId>
+        <version>${powermock.version}</version>
+        <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.powermock</groupId>
+        <artifactId>powermock-api-easymock</artifactId>
+        <version>${powermock.version}</version>
+        <scope>test</scope>
+    </dependency>
+        <dependency>
+        <groupId>org.easymock</groupId>
+        <artifactId>easymock</artifactId>
+        <version>3.0</version>
+        <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.8.1</version>
+        <scope>test</scope>
+    </dependency>
+
+    </dependencies>
     <repositories>
         <repository>
             <id>bukkit-repo</id>
@@ -29,6 +58,7 @@
             <name>Central Repository</name>
             <url>http://repo.maven.apache.org/maven2</url>
         </repository>
+
     </repositories>
 <pluginRepositories>
     <pluginRepository>
@@ -47,6 +77,15 @@
 <name>PwnFilter</name>
 <description>Complete chat control with the power of regex.</description>
 <build>
+    <pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.14</version>
+            </plugin>
+        </plugins>
+    </pluginManagement>
 <sourceDirectory>./src</sourceDirectory>
 <outputDirectory>./dist</outputDirectory>
 <resources>
