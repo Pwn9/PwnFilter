@@ -1,5 +1,5 @@
 # Plugin Priority Configuration, options: lowest,low,normal,high,highest
-priority: highest
+priority: lowest
 
 # Default message setups, can be overridden in rules.txt per match, do not remove quotes around messages!
 warnmsg: '&4[&6PwnFilter&4] &4Warned by PwnFilter!'
@@ -25,6 +25,8 @@ signfilter: true
 # Set priority for the onSignChange listener
 signpriority: lowest
 
+# Basic spam filter enabled (chat and commands)
+spamfilter: true
 
 # Command White List: Commands to filter, if empty, will filter ALL (except blacklist)
 cmdlist: []

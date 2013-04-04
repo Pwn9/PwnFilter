@@ -80,7 +80,7 @@ public class PwnFilter extends JavaPlugin {
             },
             this);
         }
-
+                
     	cmdlist = getConfig().getStringList("cmdlist");
     	cmdblist = getConfig().getStringList("cmdblist");
     }
@@ -540,7 +540,10 @@ public class PwnFilter extends JavaPlugin {
 	    	}	
 	    	if (cancel) {
 	    		event.setCancelled(true);
-	    	}   	
+	    	}   
+	    	else {
+				event.setMessage(message);
+			}
 	    	if (command) {
 				event.setCancelled(true);
 	    		commandcmd = commandcmd.replaceAll("&world", player.getLocation().getWorld().getName());
@@ -562,10 +565,6 @@ public class PwnFilter extends JavaPlugin {
 					player.chat("/" + cmds);	            	
 	            }
 			}   	
-	    	// why is this here and not at the end, any particular reason?
-	    	else {
-				event.setMessage(message);
-			}	
 	    	if (console) {
 	    		consolecmd = consolecmd.replaceAll("&world", player.getLocation().getWorld().getName());
 	            consolecmd = consolecmd.replaceAll("&player", player.getName());
@@ -575,7 +574,6 @@ public class PwnFilter extends JavaPlugin {
 	    		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), consolecmd);
 	    	}
 	    	if (consolechain) {
-				event.setCancelled(true);
 	    		consolecmd = consolecmd.replaceAll("&world", player.getLocation().getWorld().getName());
 	    		consolecmd = consolecmd.replaceAll("&player", player.getName());
 	    		consolecmd = consolecmd.replaceAll("&string", message);  
@@ -640,10 +638,9 @@ public class PwnFilter extends JavaPlugin {
 	    	}	    		    	
         }   	
     }
+    
     public void filterSign(SignChangeEvent event) {
-
-        /* Get the lines in the sign.  Run the filter.  If any of the lines break the rules, replace the offending text
-         */
+        /* Get the lines in the sign.  Run the filter.  If any of the lines break the rules, replace the offending text   */
         // TODO: Refactor filterCommand and filterChat to remove duplication
         String[] lines = event.getLines();
         String regex, matched_msg, matchLogMsg;
@@ -661,16 +658,13 @@ public class PwnFilter extends JavaPlugin {
                         matched_msg = line;
                         matchLogMsg = "MATCH " + line;
                         event.setLine(i,"DERP");
-
                     }
                 }
-
             }
         }
-
-
-
     }
+    
+    
     public void filterCommand(PlayerCommandPreprocessEvent event) {
         String message = event.getMessage();
         String rawmessage = event.getMessage();
@@ -958,7 +952,10 @@ public class PwnFilter extends JavaPlugin {
 	    	}	
 	    	if (cancel) {
 	    		event.setCancelled(true);
-	    	}   	
+	    	}
+	    	else {
+				event.setMessage(message);
+			}		    	
 	    	if (command) {
 				event.setCancelled(true);
 	    		commandcmd = commandcmd.replaceAll("&world", player.getLocation().getWorld().getName());
@@ -980,10 +977,6 @@ public class PwnFilter extends JavaPlugin {
 					player.chat("/" + cmds);	            	
 	            }
 			}   	
-	    	// why is this here and not at the end, any particular reason?
-	    	else {
-				event.setMessage(message);
-			}	
 	    	if (console) {
 	    		consolecmd = consolecmd.replaceAll("&world", player.getLocation().getWorld().getName());
 	            consolecmd = consolecmd.replaceAll("&player", player.getName());
@@ -993,7 +986,6 @@ public class PwnFilter extends JavaPlugin {
 	    		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), consolecmd);
 	    	}
 	    	if (consolechain) {
-				event.setCancelled(true);
 	    		consolecmd = consolecmd.replaceAll("&world", player.getLocation().getWorld().getName());
 	    		consolecmd = consolecmd.replaceAll("&player", player.getName());
 	    		consolecmd = consolecmd.replaceAll("&string", message);  
