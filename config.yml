@@ -25,7 +25,7 @@ signfilter: true
 # Set priority for the onSignChange listener
 signpriority: lowest
 
-# Basic spam filter enabled (chat only)
+# Basic spam filter enabled (chat and commands)
 spamfilter: true
 
 # Command White List: Commands to filter, if empty, will filter ALL (except blacklist)
