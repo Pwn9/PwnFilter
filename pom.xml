@@ -51,7 +51,7 @@
 <outputDirectory>./dist</outputDirectory>
 <resources>
     <resource>
-        <directory>.\</directory>
+        <directory>./</directory>
         <filtering>true</filtering>
         <includes>
             <include>config.yml</include>
