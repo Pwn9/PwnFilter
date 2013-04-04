@@ -1,9 +1,7 @@
 package com.pwn9.PwnFilter;
 
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 /**
 * A Regular Expression (REGEX) Chat Filter For Bukkit with many great features
@@ -11,13 +9,11 @@ import org.bukkit.event.Listener;
 * @author tremor77
 */
 
-public class PwnFilterCommandListenerHighest implements Listener {
+public class PwnFilterCommandListener implements Listener {
     private final PwnFilter plugin;
-	public PwnFilterCommandListenerHighest(PwnFilter plugin) {
-	    plugin.getServer().getPluginManager().registerEvents(this, plugin);    
+	public PwnFilterCommandListener(PwnFilter plugin) {
 	    this.plugin = plugin;
 	}
-    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
     	plugin.filterCommand(event);
     }  
