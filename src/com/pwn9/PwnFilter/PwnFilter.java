@@ -6,9 +6,13 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Event;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.plugin.EventExecutor;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
@@ -42,57 +46,39 @@ public class PwnFilter extends JavaPlugin {
 	public void onEnable() {	
     	loadRules();	
     	this.saveDefaultConfig();
-    	String priority = getConfig().getString("priority");
-    	logToFile("Priority Setting: "+priority);  
-    	if (priority.equals("lowest")) {
-    		new PwnFilterPlayerListenerLowest(this);
-    	}
-    	else if (priority.equals("low")) {
-			new PwnFilterPlayerListenerLow(this);
-    	}
-    	else if (priority.equals("normal")) {
-			new PwnFilterPlayerListenerNormal(this);
-    	}
-    	else if (priority.equals("high")) {
-			new PwnFilterPlayerListenerHigh(this);
-    	}
-    	else if (priority.equals("highest")) {
-			new PwnFilterPlayerListenerHighest(this);
-    	}
-    	else {
-			new PwnFilterPlayerListenerLowest(this);
-    	}
+        PluginManager pm = this.getServer().getPluginManager();
+
+        EventPriority chatFilterPriority = EventPriority.valueOf(getConfig().getString("priority").toUpperCase());
+        logToFile("Priority Setting: "+chatFilterPriority);
+
+        /* Hook up the Listener for PlayerChat events */
+        pm.registerEvent(AsyncPlayerChatEvent.class, new PwnFilterPlayerListener(this), chatFilterPriority,
+                new EventExecutor() {
+                    public void execute(Listener l, Event e) { ((PwnFilterPlayerListener)l).onPlayerChat((AsyncPlayerChatEvent)e); }
+                },
+                this);
+
+        /* Hook up the listener for PlayerCommand Events, if configured */
     	Boolean filterCommands = getConfig().getBoolean("commandfilter");
     	if (filterCommands) {
-    		String cmdpriority = getConfig().getString("cmdpriority");
-        	if (cmdpriority.equals("lowest")) {
-        		new PwnFilterCommandListenerLowest(this);
-        	}
-        	else if (cmdpriority.equals("low")) {
-    			new PwnFilterCommandListenerLow(this);
-        	}
-        	else if (cmdpriority.equals("normal")) {
-    			new PwnFilterCommandListenerNormal(this);
-        	}
-        	else if (cmdpriority.equals("high")) {
-    			new PwnFilterCommandListenerHigh(this);
-        	}
-        	else if (cmdpriority.equals("highest")) {
-    			new PwnFilterCommandListenerHighest(this);
-        	}
-        	else {
-    			new PwnFilterCommandListenerLowest(this);
-        	}
-    	}
+    		EventPriority cmdFilterPriority = EventPriority.valueOf(getConfig().getString("cmdpriority").toUpperCase());
+            pm.registerEvent(PlayerCommandPreprocessEvent.class, new PwnFilterCommandListener(this), cmdFilterPriority,
+                    new EventExecutor() {
+                        public void execute(Listener l, Event e) { ((PwnFilterCommandListener)l).onPlayerCommandPreprocess((PlayerCommandPreprocessEvent)e); }
+                    },
+                    this);
+        }
 
         /* Hook up the listener for onSignChange events, if configured */
         Boolean filterSigns = getConfig().getBoolean("signfilter");
         if (filterSigns) {
-            String signPriority = getConfig().getString("signpriority").toUpperCase();
-            EventPriority.valueOf(signPriority);
+            EventPriority signFilterPriority = EventPriority.valueOf(getConfig().getString("signpriority").toUpperCase());
             // Now register the listener with the appropriate priority
-            // TODO: Add the priority selection.
-            new PwnFilterSignListener(this);
+            pm.registerEvent(SignChangeEvent.class, new PwnFilterSignListener(this), signFilterPriority,
+            new EventExecutor() {
+                public void execute(Listener l, Event e) { ((PwnFilterSignListener)l).onSignChange((SignChangeEvent)e); }
+            },
+            this);
         }
 
     	cmdlist = getConfig().getStringList("cmdlist");
