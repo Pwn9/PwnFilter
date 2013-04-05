@@ -1,4 +1,4 @@
-package com.pwn9.PwnFilter.listeners;
+package com.pwn9.PwnFilter.listener;
 import com.pwn9.PwnFilter.PwnFilter;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;

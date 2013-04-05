@@ -1,8 +1,8 @@
 package com.pwn9.PwnFilter;
 
-import com.pwn9.PwnFilter.listeners.PwnFilterCommandListener;
-import com.pwn9.PwnFilter.listeners.PwnFilterPlayerListener;
-import com.pwn9.PwnFilter.listeners.PwnFilterSignListener;
+import com.pwn9.PwnFilter.listener.PwnFilterCommandListener;
+import com.pwn9.PwnFilter.listener.PwnFilterPlayerListener;
+import com.pwn9.PwnFilter.listener.PwnFilterSignListener;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -130,62 +130,39 @@ public class PwnFilter extends JavaPlugin {
     } 
     
     private void loadRules() {
-    	String fname = "plugins/PwnFilter/rules.txt";
-    	File f;
-    	// Ensure that directory exists
-    	String pname = "plugins/PwnFilter";
-    	f = new File(pname);
-    	if (!f.exists()) {
-    		if (f.mkdir()) {
-    			logToFile("created directory '" + pname + "'" );
-    		}
+    	String fname = "rules.txt";
+
+        File dataFolder = getDataFolder();
+        File rulesFile = null;
+
+        // Ensure that directory exists
+        if(!dataFolder.exists()) {
+            dataFolder.mkdirs();
+            logToFile("created directory '" + dataFolder.getName() + "'" );
+        }
+
+        rulesFile = new File(dataFolder,fname);
+        // Check to see if rules file exists.  If not, create a basic file from template
+    	if (!rulesFile.exists()) {
+            try{
+                rulesFile.createNewFile();
+                BufferedInputStream fin = new BufferedInputStream(this.getResource(fname));
+                FileOutputStream fout = new FileOutputStream(rulesFile);
+                byte[] data = new byte[1024];
+                int c;
+                while ((c = fin.read(data, 0, 1024)) != -1)
+                    fout.write(data, 0, c);
+                fin.close();
+                fout.close();
+                logToFile("created config file '" + fname + "'" );
+            }catch(Exception ex){
+                ex.printStackTrace();
+            }
     	}
-    	// Ensure that rules.txt exists
-    	f = new File(fname);
-    	if (!f.exists()) {
-			BufferedWriter output;
-			String newline = System.getProperty("line.separator");
-			try {
-				output = new BufferedWriter(new FileWriter(fname));
-				output.write("# PwnFilter rules.txt - Define Regular Expression Rules" + newline);
-				output.write("# SAMPLE RULES http://dev.bukkit.org/server-mods/pwnfilter/" + newline);
-				output.write("# NOTE: ALL MATCHES AUTOMATICALLY IGNORE CASE" + newline);
-				output.write("# Each rule must have one 'match' statement and atleast one 'then' statement" + newline);
-				output.write("# match <regular expression>" + newline);
-				output.write("# ignore|require <user|permission|string> *(optional)" + newline);				
-				output.write("# then <replace|rewrite|warn|log|deny|debug|kick|kill|burn|command|console> <string>" + newline);
-				output.write("# For more details visit http://dev.bukkit.org/server-mods/pwnfilter/" + newline);
-				output.write("" + newline);
-				output.write("# EXAMPLES" + newline);
-				output.write("" + newline);
-				output.write("# Replace F Bomb variants with fudge. Also catches ffffuuuccckkk" + newline);
-				output.write("match f+u+c+k+|f+u+k+|f+v+c+k+|f+u+q+" + newline);
-				output.write("then replace fudge" + newline);
-				output.write("then warn Watch your language please" + newline);
-				output.write("then log" + newline);
-				output.write("" + newline);
-				output.write("# Replace a list of naughty words with random word! Let a certain permission swear." + newline);
-				output.write("match cunt|whore|fag|slut|queer|bitch|bastard" + newline);
-				output.write("ignore permission permission.node" + newline);
-				output.write("then randrep meep|beep|bleep|herp|derp" + newline);
-				output.write("" + newline);
-				output.write("# FIX the .command typo with /command" + newline);
-				output.write("match ^\\.(?=[a-z]+)" + newline);
-				output.write("then replace" + newline);
-				output.write("then command" + newline);
-				output.write("" + newline);
-				output.write("# Fun: rewrite tremor with pretty colors. Only let player tremor77 use it" + newline);
-				output.write("match \\btremor+\\b|\\btrem+\\b" + newline);
-				output.write("require user tremor77" + newline);
-				output.write("then rewrite &bt&cREM&bor&f" + newline);
-				output.close();
-				logToFile("created config file '" + fname + "'" );
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-    	}
+
+        // Now read in the rules.txt file
     	try {
-        	BufferedReader input =  new BufferedReader(new FileReader(fname));
+        	BufferedReader input = new BufferedReader(new FileReader(rulesFile));
     		String line;
     		while (( line = input.readLine()) != null) {
     			line = line.trim();
@@ -206,76 +183,76 @@ public class PwnFilter extends JavaPlugin {
     		e.printStackTrace();
     	}
     }
-       
+
     private void compilePattern(String re) {
-    	// Do not re-compile if we already have this pattern 
-    	if (patterns.get(re) == null) {
-    		try {
-    			Pattern pattern = Pattern.compile(re, Pattern.CASE_INSENSITIVE);
-    			patterns.put(re, pattern);
-    			this.getLogger().fine("Successfully compiled regex: " + re);
-    		}
-    		catch (PatternSyntaxException e) {
-    			this.getLogger().warning("Failed to compile regex: " + re);
-    			this.getLogger().warning(e.getMessage());
-    		}
-    		catch (Exception e) {
-    			this.getLogger().severe("Unexpected error while compiling expression '" + re + "'");
-    			e.printStackTrace();
-    		}
-    	}
-    }  
-    
-    public Boolean matchPattern(String msg, String re_from) {
-    	Pattern pattern_from = patterns.get(re_from);
-    	if (pattern_from == null) {
-    		// Pattern failed to compile, ignore
-    		logToFile("ignoring invalid regex: " + re_from);
-    		return false;
-    	}
-    	Matcher matcher = pattern_from.matcher(msg);
-    	return matcher.find();
+        // Do not re-compile if we already have this pattern
+        if (patterns.get(re) == null) {
+            try {
+                Pattern pattern = Pattern.compile(re, Pattern.CASE_INSENSITIVE);
+                patterns.put(re, pattern);
+                this.getLogger().fine("Successfully compiled regex: " + re);
+            }
+            catch (PatternSyntaxException e) {
+                this.getLogger().warning("Failed to compile regex: " + re);
+                this.getLogger().warning(e.getMessage());
+            }
+            catch (Exception e) {
+                this.getLogger().severe("Unexpected error while compiling expression '" + re + "'");
+                e.printStackTrace();
+            }
+        }
     }
-    
+
+    public Boolean matchPattern(String msg, String re_from) {
+        Pattern pattern_from = patterns.get(re_from);
+        if (pattern_from == null) {
+            // Pattern failed to compile, ignore
+            logToFile("ignoring invalid regex: " + re_from);
+            return false;
+        }
+        Matcher matcher = pattern_from.matcher(msg);
+        return matcher.find();
+    }
+
     public String replacePattern(String msg, String re_from, String to) {
-    	Pattern pattern_from = patterns.get(re_from);
-    	if (pattern_from == null) {
-    		// Pattern failed to compile, ignore
-    		return msg;
-    	}
-    	Matcher matcher = pattern_from.matcher(msg);
-    	return matcher.replaceAll(to);
+        Pattern pattern_from = patterns.get(re_from);
+        if (pattern_from == null) {
+            // Pattern failed to compile, ignore
+            return msg;
+        }
+        Matcher matcher = pattern_from.matcher(msg);
+        return matcher.replaceAll(to);
     }
 
     public String replacePatternLower(String text, String re_from) {
-    	Matcher m = Pattern.compile(re_from).matcher(text);
-    	
-    	StringBuilder sb = new StringBuilder();
-    	int last = 0;
-    	while (m.find()) {
-    		sb.append(text.substring(last, m.start()));
-    		sb.append(m.group(0).toLowerCase());
-    		last = m.end();
-    	}
-    	sb.append(text.substring(last));
-    	return sb.toString();
+        Matcher m = Pattern.compile(re_from).matcher(text);
+
+        StringBuilder sb = new StringBuilder();
+        int last = 0;
+        while (m.find()) {
+            sb.append(text.substring(last, m.start()));
+            sb.append(m.group(0).toLowerCase());
+            last = m.end();
+        }
+        sb.append(text.substring(last));
+        return sb.toString();
     }
 
     public String replacePatternRandom(String msg, String re_from, String to) {
-    	Pattern pattern_from = patterns.get(re_from);
-    	if (pattern_from == null) {
-    		// Pattern failed to compile, ignore
-    		return msg;
-    	}
-    	Matcher matcher = pattern_from.matcher(msg);
-    	
-    	String[] toRand = to.split("\\|");
-    	
-		Random random = new Random();
-		int randomInt = random.nextInt(toRand.length);
-    	return matcher.replaceAll(toRand[randomInt]);
+        Pattern pattern_from = patterns.get(re_from);
+        if (pattern_from == null) {
+            // Pattern failed to compile, ignore
+            return msg;
+        }
+        Matcher matcher = pattern_from.matcher(msg);
+
+        String[] toRand = to.split("\\|");
+
+        Random random = new Random();
+        int randomInt = random.nextInt(toRand.length);
+        return matcher.replaceAll(toRand[randomInt]);
     }
-    
+
     public void filterChat(AsyncPlayerChatEvent event) {
         String message = event.getMessage();
         String rawmessage = event.getMessage();
