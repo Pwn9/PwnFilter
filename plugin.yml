@@ -24,16 +24,47 @@ commands:
 
 permissions:
   pwnfilter.*:
-    description: gives all permissions of the PwnFilter
+    description: gives all permissions of PwnFilter
     default: op
     children:
-      pwnfilter.bypass:
-        description: Gives permission to bypass all rules
-      pwnfilter.reload:
-        description: Gives permission to reload the rules
-      pwnfilter.cls:
-        description: Gives permission to clear chat
-      pwnfilter.bypassmute:
-        description: Gives permission to bypass global mute
-      pwnfilter.color:
-        description: Gives permission to use color if color is blocked                
+      pwnfilter.bypass.chat: true
+      pwnfilter.bypass.commands: true
+      pwnfilter.bypass.signs: true
+      pwnfilter.bypass.mute: true
+      pwnfilter.bypass.color: true 
+      pwnfilter.bypass.spam: true
+      pwnfilter.cls: true
+      pwnfilter.mute: true
+      pwnfilter.reload: true
+  pwnfilter.bypass.*:
+    description: Gives permission to bypass all rules
+    default: op
+    children:
+      pwnfilter.bypass.chat: true
+      pwnfilter.bypass.commands: true
+      pwnfilter.bypass.signs: true
+      pwnfilter.bypass.mute: true
+      pwnfilter.bypass.color: true
+      pwnfilter.bypass.spam: true
+  pwnfilter.bypass.chat: 
+    description: Gives permission to bypass chat filter
+  pwnfilter.bypass.commands: 
+    description: Gives permission to bypass command filter
+  pwnfilter.bypass.signs: 
+    description: Gives permission to bypass sign filter
+  pwnfilter.bypass.spam: 
+    description: Gives permission to bypass spam filter
+  pwnfilter.bypass.mute: 
+    description: Gives permission to bypass mute
+  pwnfilter.bypass.color:   
+    description: Gives permission to bypass color block  
+  pwnfilter.reload: 
+    description: Gives permission to reload the rules
+  pwnfilter.cls: 
+    description: Gives permission to clear chat
+  pwnfilter.mute:
+    description: Gives permission to use pfmute
+        
+    
+        
+          
