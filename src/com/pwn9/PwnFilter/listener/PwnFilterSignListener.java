@@ -21,9 +21,11 @@ public class PwnFilterSignListener implements Listener {
     // This is the handler
     public void onSignChange(SignChangeEvent event) {
 		if (event.getPlayer().hasPermission("pwnfilter.bypass.signs")) {
-			event.setCancelled(false);
+			//event.setCancelled(false);
 			return;
 		}
-        plugin.filterSign(event); 
+		else {
+			plugin.filterSign(event); 
+		}
     }
 }
