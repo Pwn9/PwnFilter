@@ -171,26 +171,26 @@ public class PwnFilter extends JavaPlugin {
            // Now read in the rules.txt file
         try {
             BufferedReader input = new BufferedReader(new FileReader(rulesFile));
-        String line;
-        while (( line = input.readLine()) != null) {
-        line = line.trim();
-        if (!line.matches("^#.*") && !line.matches("")) {
-        rules.add(line);
-        if (line.startsWith("match ") || line.startsWith("catch ") || line.startsWith("replace ") || line.startsWith("rewrite ")) {
-        String[] parts = line.split(" ", 2);
-        compilePattern(parts[1]);
-        }
-        }
-        }
-        input.close();
+	        String line;
+	        while (( line = input.readLine()) != null) {
+	        	line = line.trim();
+	        	if (!line.matches("^#.*") && !line.matches("")) {
+	        		rules.add(line);
+	        		if (line.startsWith("match ") || line.startsWith("catch ") || line.startsWith("replace ") || line.startsWith("rewrite ")) {
+	        			String[] parts = line.split(" ", 2);
+	        			compilePattern(parts[1]);
+	        		}
+	        	}
+	        }
+	        input.close();
         }
         catch (FileNotFoundException e) {
-        this.getLogger().warning("Error reading config file '" + fname + "': " + e.getLocalizedMessage());
+        	this.getLogger().warning("Error reading config file '" + fname + "': " + e.getLocalizedMessage());
         }
         catch (Exception e) {
-        e.printStackTrace();
+        	e.printStackTrace();
         }
-       }
+    }
        
     private void compilePattern(String re) {
     	// Do not re-compile if we already have this pattern 
@@ -354,7 +354,14 @@ public class PwnFilter extends JavaPlugin {
 		        				break;
 	                        }	
 	        			}
-	        		}  
+	        		}
+	        		// are these needed?
+	        		if (line.startsWith("ignore command")) {
+	        			valid = true;
+	        		} 	        		
+	        		if (line.startsWith("ignore signs")) {
+	        			valid = true;
+	        		} 
     			}
     			// Check for any require statements
     			if (line.startsWith("require")) {
@@ -644,10 +651,8 @@ public class PwnFilter extends JavaPlugin {
                 regex = rule.substring(6);
                 matched = this.matchPattern(ChatColor.stripColor(line.replaceAll("&([0-9a-fk-or])", "\u00A7$1")), regex);
         	}
-        	
         	if (matched) {
         		cancel = true; 
-        		
             	if (rule.startsWith("ignore signs")) {
 					matched = false;
 					cancel = false;
@@ -655,12 +660,11 @@ public class PwnFilter extends JavaPlugin {
         		}  
         	}
         }
-        
     	if (cancel) {
     		event.setCancelled(true);
     		player.sendMessage("Your sign broke, there must be something wrong with it.");    		
+    		logToFile("SIGN " + player.getName() + " sign text: " + line);				
     	}
-    	
         //if (matched) {
         //     matched_msg = line;
         //     matchLogMsg = "SIGN MATCH " + line;
@@ -776,7 +780,10 @@ public class PwnFilter extends JavaPlugin {
 			        				break;
 		                        }	
 		        			}
-		        		}  		        		
+		        		}
+		        		if (line.startsWith("ignore signs")) {
+		        			valid = true;
+		        		} 		        		
 	    			}
 	    			// Check for any require statements
 	    			if (line.startsWith("require")) {
