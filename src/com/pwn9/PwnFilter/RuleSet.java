@@ -109,7 +109,8 @@ public class RuleSet {
         runFilter(state);
 
         if (state.messageChanged()){
-            String[] words = state.message.getColoredString().split("\\b");
+            // TODO: Can colors be placed on signs?  Wasn't working. Find out why.
+            String[] words = state.message.getPlainString().split("\\b");
             String[] lines = new String[4];
 
             int wordIndex = 0;
@@ -117,7 +118,7 @@ public class RuleSet {
                 lines[i] = "";
               while (wordIndex < words.length) {
                   if (lines[i].length() + words[wordIndex].length() < 15) {
-                      lines[i] = lines[i] + " " + words[wordIndex];
+                      lines[i] = lines[i] + words[wordIndex] + " ";
                       wordIndex++;
                   } else {
                       break;
