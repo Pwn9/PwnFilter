@@ -100,7 +100,7 @@ public class RuleSet {
         StringBuilder builder = new StringBuilder();
 
         for (String l :event.getLines()) {
-            builder.append(l);
+            builder.append(l).append(" ");
         }
         String signLines = builder.toString();
 
