@@ -4,6 +4,7 @@ import com.pwn9.PwnFilter.listener.PwnFilterCommandListener;
 import com.pwn9.PwnFilter.listener.PwnFilterEntityListener;
 import com.pwn9.PwnFilter.listener.PwnFilterPlayerListener;
 import com.pwn9.PwnFilter.listener.PwnFilterSignListener;
+import com.pwn9.PwnFilter.rules.RuleSet;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -145,7 +146,7 @@ public class PwnFilter extends JavaPlugin {
      * 1. Take lines of sign and aggregate them into one string for processing
      * 2. Feed them into the filter.
      * 3. Re-split the lines so they can be placed on the sign.
-     * @param event
+     * @param event The SignChangeEvent to be processed.
      */
     public void filterSign(SignChangeEvent event) {
         ruleset.apply(event);
@@ -154,11 +155,9 @@ public class PwnFilter extends JavaPlugin {
     
     public void filterCommand(PlayerCommandPreprocessEvent event) {
         String message = event.getMessage();
-        String rawmessage = event.getMessage();
         //Gets the actual command as a string
         String cmdmessage = message.substring(1).split(" ")[0];
         Player player = event.getPlayer();
-        String pname = player.getName();
 
         if ((cmdlist.isEmpty()) || (cmdlist.contains(cmdmessage))
                 && !(cmdblist.contains(cmdmessage))
@@ -172,7 +171,7 @@ public class PwnFilter extends JavaPlugin {
 
 	    	// Global decolor
 	    	if ((decolor) && (!(player.hasPermission("pwnfilter.color")))) {
-	    		message = ChatColor.stripColor(message);
+	    		event.setMessage(ChatColor.stripColor(message));
 	    	}
 
             // Now apply the rules
@@ -241,13 +240,16 @@ public class PwnFilter extends JavaPlugin {
     private File getRulesFile() {
 
         File dataFolder = getDataFolder();
-        File rulesFile = null;
+        File rulesFile;
         String fname = "rules.txt";
 
         // Ensure that directory exists
         if(!dataFolder.exists()) {
-            dataFolder.mkdirs();
-            logToFile("created directory '" + dataFolder.getName() + "'" );
+            if (dataFolder.mkdirs()) {
+                logToFile("created directory '" + dataFolder.getName() + "'" );
+            } else {
+                return null;
+            }
         }
 
         rulesFile = new File(dataFolder,fname);

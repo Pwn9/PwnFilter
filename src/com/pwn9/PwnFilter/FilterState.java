@@ -24,10 +24,11 @@ import java.util.regex.Pattern;
  */
 public class FilterState {
     private final ColoredString originalMessage; // Original message
-    public ColoredString message; // Modified message string
+    public final PwnFilter plugin; // Which plugin is this state attached to?
     public final Player player; // Player that this event is connected to.
+    public ColoredString message; // Modified message string
     final int messageLen; // New message can't be longer than original.
-    List<String> logMessages = new ArrayList<String>(); // Rules can add strings to this array.  They will be output to log if log=true
+    public List<String> logMessages = new ArrayList<String>(); // Rules can add strings to this array.  They will be output to log if log=true
     public boolean log = false;  // If true, actions will be logged
     public boolean stop = false; // If set true by a rule, will stop further processing.
     public boolean cancel = false; // If set true, will cancel this event.
@@ -42,11 +43,12 @@ public class FilterState {
      *
      * @param m The original text string to run rules against.
      */
-    public FilterState(String m, Player p) {
+    public FilterState(PwnFilter pl, String m, Player p) {
         originalMessage = new ColoredString(m);
         message = new ColoredString(m);
         messageLen = originalMessage.length();
         player = p;
+        plugin = pl;
     }
 
     /**

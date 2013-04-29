@@ -1,12 +1,12 @@
-package com.pwn9.PwnFilter.action;
+package com.pwn9.PwnFilter.rules.action;
 
 import com.pwn9.PwnFilter.FilterState;
-import com.pwn9.PwnFilter.PwnFilter;
 import com.pwn9.PwnFilter.util.ColoredString;
 
 /**
  * Convert the matched text to lowercase.
  */
+@SuppressWarnings("UnusedDeclaration")
 public class Actionlower implements Action {
 
     public void init(String s)
@@ -14,7 +14,7 @@ public class Actionlower implements Action {
         // Do nothing with a string, if one is provided.
     }
 
-    public boolean execute(final PwnFilter plugin, final FilterState state ) {
+    public boolean execute(final FilterState state ) {
         ColoredString cs = state.message;
         return cs.patternToLower(state.pattern);
 

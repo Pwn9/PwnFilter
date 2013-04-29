@@ -1,7 +1,6 @@
-package com.pwn9.PwnFilter.action;
+package com.pwn9.PwnFilter.rules.action;
 
 import com.pwn9.PwnFilter.FilterState;
-import com.pwn9.PwnFilter.PwnFilter;
 
 /**
  * Actions are triggered by Rules when they match.
@@ -10,5 +9,5 @@ import com.pwn9.PwnFilter.PwnFilter;
 public interface Action {
 
     void init(String s);
-    boolean execute(PwnFilter plugin, FilterState state );
+    boolean execute(FilterState state );
 }

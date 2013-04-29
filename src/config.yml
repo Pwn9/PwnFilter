@@ -10,6 +10,9 @@ killmsg: '&4[&6PwnFilter&4] &4Killed by PwnFilter!'
 # Logfile Enabling set to true or false
 logfile: true
 
+# Debug mode (VERY verbose)
+debug: false
+
 # Strip color from chat. Permission to bypass pwnfilter.color or pwnfilter.bypass
 decolor: true
 
@@ -37,3 +40,6 @@ cmdblist:
 - tpa
 - warp
 - help
+
+
+

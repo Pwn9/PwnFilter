@@ -1,10 +1,7 @@
-package com.pwn9.PwnFilter;
+package com.pwn9.PwnFilter.rules;
 
-import com.pwn9.PwnFilter.action.Action;
-import com.pwn9.PwnFilter.action.ActionFactory;
-import com.pwn9.PwnFilter.util.Patterns;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
+import com.pwn9.PwnFilter.FilterState;
+import com.pwn9.PwnFilter.PwnFilter;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -13,8 +10,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * The RuleSet contains a compiled version of all the rules in the text file.
@@ -37,14 +32,9 @@ import java.util.regex.Pattern;
 public class RuleSet {
     public final PwnFilter plugin;
     private ArrayList<Rule> ruleChain = new ArrayList<Rule>();
-
-    public enum CondFlag {
-        NONE, ignore, require
-    }
-
-    enum CondType {
-        permission, user, string
-    }
+    private ArrayList<Rule> chatRules = new ArrayList<Rule>();
+    private ArrayList<Rule> signRules = new ArrayList<Rule>();
+    private ArrayList<Rule> commandRules = new ArrayList<Rule>();
 
     public RuleSet(final PwnFilter p) {
         plugin = p;
@@ -68,7 +58,7 @@ public class RuleSet {
     public boolean apply(AsyncPlayerChatEvent event) {
         // Take the message from the ChatEvent and send it through the filter.
 
-        FilterState state = new FilterState(event.getMessage(),event.getPlayer());
+        FilterState state = new FilterState(plugin, event.getMessage(),event.getPlayer());
 
         runFilter(state);
 
@@ -83,7 +73,7 @@ public class RuleSet {
     public boolean apply(PlayerCommandPreprocessEvent event) {
         // Take the message from the Command Event and send it through the filter.
 
-        FilterState state = new FilterState(event.getMessage(),event.getPlayer());
+        FilterState state = new FilterState(plugin, event.getMessage(),event.getPlayer());
 
         runFilter(state);
 
@@ -104,15 +94,20 @@ public class RuleSet {
         }
         String signLines = builder.toString();
 
-        FilterState state = new FilterState(signLines, event.getPlayer());
+        FilterState state = new FilterState(plugin, signLines, event.getPlayer());
 
         runFilter(state);
 
         if (state.messageChanged()){
             // TODO: Can colors be placed on signs?  Wasn't working. Find out why.
+            // Break the changed string into words
             String[] words = state.message.getPlainString().split("\\b");
             String[] lines = new String[4];
 
+            // Iterate over the 4 sign lines, applying one word at a time, until the line is full.
+            // If all 4 lines are full, the rest of the words are just discarded.
+            // This may negatively affect plugins that use signs and require text to appear on a certain
+            // line, but we only do this when we've matched a rule.
             int wordIndex = 0;
             for (int i = 0 ; i < 4 ; i++) {
                 lines[i] = "";
@@ -183,177 +178,6 @@ public class RuleSet {
 
     }
 
-    /**
-     * Rule object
-     * <p/>
-     * <P>Each Rule has a single match Pattern, an ArrayList of {@link Condition}'s and an ArrayList of {@link com.pwn9.PwnFilter.action.Action}'s</P>
-     * TODO: Finish docs
-     */
-    public class Rule {
-        /**
-         * A Rule contains the match regex, conditions and actions for a action.
-         * Conditions are checked in order.  The first condition that matches
-         */
-        final Pattern pattern;
-        String name; // TODO: Give rules names for logs and troubleshooting
-        ArrayList<Condition> conditions = new ArrayList<Condition>();
-        ArrayList<Action> actions = new ArrayList<Action>();
-        boolean log = false;
-
-
-        /* Constructors */
-
-        // All rules must have a matchStr, hence no parameter-less constructor.
-        public Rule(String matchStr) {
-            this.pattern = Patterns.compilePattern(matchStr);
-        }
-
-    /* Methods */
-
-        /**
-         * apply this action to the current message / event.  May trigger other bukkit events.
-         * @param state A FilterState object for this event.
-         * @return true if action was taken, false if not.
-         */
-        public boolean apply(FilterState state) {
-
-            // Check if action matches the current state of the message
-            final Matcher matcher = pattern.matcher(state.message.getPlainString());
-
-            // If we don't match, return immediately with the original message
-            if (!matcher.find()) return false;
-            state.pattern = pattern;
-
-            // If Match, log it and then check any conditions.
-
-            state.addLogMessage("MATCH <"+ state.player.getName() + "> " + state.message.getPlainString());
-
-            for (Condition c : conditions) {
-                // This checks that EVERY condition is met (conditions are AND)
-                if (!c.check(state.player, state.message.getPlainString())) {
-                    if (plugin.debugEnable) state.addLogMessage("CONDITION not met <"+ c.flag.toString()+
-                            " " + c.type.toString()+" " + c.parameters + "> " + state.getOriginalMessage());
-                    return false;
-                }
-
-            }
-
-            // If we get this far, execute the actions
-            for (Action a : actions) {
-                a.execute(plugin, state);
-            }
-            return true;
-        }
-
-        public boolean addLine(String command, final String parameterString) {
-
-            command = command.toLowerCase();
-            CondFlag flag = CondFlag.NONE;
-            String subCmd;
-            String lineData = "";
-
-
-            if (command.matches("then")) {
-                // This is an action.  Try to add a new action with its parameters.
-                if (parameterString.matches("log")) {
-                    log = true;
-                    return true;
-                }
-                Action newAction = ActionFactory.getActionFromString(parameterString);
-                if (newAction != null) {
-                    actions.add(newAction);
-                    return true;
-                } else {
-                    plugin.logToFile("Unable to add action to rule:" + parameterString);
-                    return false;
-                }
-
-            }
-            else if (command.matches("ignore")) flag = CondFlag.ignore; // This is an ignore condition
-            else if (command.matches("require")) flag = CondFlag.require;  // This is a require condition
-
-            if (flag != CondFlag.NONE) { // If we have a condition, process it now.
-
-                // Now split the parameters to find the type of condition
-                {
-                    String[] parts = parameterString.split("\\s", 2);
-                    subCmd = parts[0].toLowerCase();
-                    if (parts.length > 1) {
-                        lineData = parts[1];
-                    }
-                }
-                try {
-                    CondType cType = CondType.valueOf(subCmd);
-                    Condition newCond = new Condition(flag, cType, lineData);
-                    conditions.add(newCond);
-                    return true;
-                } catch (IllegalArgumentException e) {
-                    plugin.logToFile("Unable to add condition to rule: " + command + " " + parameterString);
-                    return false;
-                }
-            }
-
-            plugin.logToFile("Unable to parse line: Command: " + command + " Data: " + parameterString);
-            return false;
-        }
-
-        public boolean isValid() {
-            // Check that we have a valid pattern and at least one action
-            return this.pattern != null && this.actions != null;
-        }
-
-        class Condition {
-            final CondType type;
-            final CondFlag flag;
-            final String parameters;
-
-            public Condition(CondFlag f, CondType t, String p) {
-                flag = f;
-                parameters = p;
-                type = t;
-            }
-
-            /**
-             * Checks a message against this condition.  This method returns true if
-             * the condition is met, false otherwise.  Processing of the current rule
-             * will be aborted if _any_ check returns false.
-             *
-             * @param player The player sending this message
-             * @param message The message to be checked
-             * @return true if this condition is met, false otherwise
-             */
-            public boolean check(Player player, String message) {
-                boolean matched = false;
-                switch (type) {
-                    case user:
-                        String playerName = player.getName();
-                        for (String check : parameters.split("\\s")) {
-                            if (playerName.equalsIgnoreCase(check)) matched = true;
-                        }
-                    case permission:
-                        for (String check: parameters.split("\\s")) {
-                            if (player.hasPermission(check)) matched = true;
-                        }
-                    case string:
-                        for (String check: parameters.split("\\|")) {
-                            if (ChatColor.stripColor(message.replaceAll("&([0-9a-fk-or])", "\u00A7$1")).
-                                    toUpperCase().contains(check.toUpperCase())) matched = true;
-                        }
-
-                }
-                switch (flag) {
-                    case ignore:
-                        return !matched;
-                    case require:
-                        return matched;
-                }
-                // Well, we shouldn't be able to get here, but in case we did, return false
-                return false;
-            }
-
-        }
-
-    }
 
     /**
      * Load rules from a file
@@ -401,7 +225,11 @@ public class RuleSet {
                     currentRule = new Rule(lineData);
                 } else {
                     // Not a match statement, so much be part of a rule.
-                    if (currentRule != null) currentRule.addLine(command, lineData);
+                    if (currentRule != null) {
+                        if (!currentRule.addLine(command, lineData)) {
+                            plugin.logToFile("Unable to add action to rule: " + command + " " + lineData);
+                        }
+                    }
                 }
             }
 

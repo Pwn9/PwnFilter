@@ -1,13 +1,13 @@
-package com.pwn9.PwnFilter.action;
+package com.pwn9.PwnFilter.rules.action;
 
 import com.pwn9.PwnFilter.FilterState;
-import com.pwn9.PwnFilter.PwnFilter;
 import com.pwn9.PwnFilter.util.Patterns;
 import org.bukkit.Bukkit;
 
 /**
  * Execute a console command
  */
+@SuppressWarnings("UnusedDeclaration")
 public class Actionconsole implements Action {
     String command;
 
@@ -16,7 +16,7 @@ public class Actionconsole implements Action {
         command = s;
     }
 
-    public boolean execute(final PwnFilter plugin, final FilterState state ) {
+    public boolean execute(final FilterState state ) {
         state.cancel = true;
         String cmd = Patterns.replaceCommands(command, state.player,
                 state.message.getColoredString(), state.getOriginalMessage().getColoredString());

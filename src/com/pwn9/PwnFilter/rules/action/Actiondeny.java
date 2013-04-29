@@ -1,12 +1,11 @@
-package com.pwn9.PwnFilter.action;
+package com.pwn9.PwnFilter.rules.action;
 
 import com.pwn9.PwnFilter.FilterState;
-import com.pwn9.PwnFilter.PwnFilter;
 
 /**
  * Deny this event by cancelling it.
  */
-
+@SuppressWarnings("UnusedDeclaration")
 public class Actiondeny implements Action {
 
     public void init(String s)
@@ -14,7 +13,7 @@ public class Actiondeny implements Action {
         // Do nothing with a string, if one is provided.
     }
 
-    public boolean execute(final PwnFilter plugin, final FilterState state ) {
+    public boolean execute(final FilterState state ) {
         state.cancel = true;
         return true;
     }

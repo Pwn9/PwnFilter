@@ -1,12 +1,12 @@
-package com.pwn9.PwnFilter.action;
+package com.pwn9.PwnFilter.rules.action;
 
 import com.pwn9.PwnFilter.FilterState;
-import com.pwn9.PwnFilter.PwnFilter;
 import com.pwn9.PwnFilter.util.Patterns;
 
 /**
  * Execute a command as a player.
  */
+@SuppressWarnings("UnusedDeclaration")
 public class Actioncommand implements Action {
     String command;
 
@@ -15,7 +15,7 @@ public class Actioncommand implements Action {
         command = s;
     }
 
-    public boolean execute(final PwnFilter plugin, final FilterState state ) {
+    public boolean execute(final FilterState state ) {
         state.cancel = true;
         String cmd = Patterns.replaceCommands(command, state.player,
                 state.message.getColoredString(), state.getOriginalMessage().getColoredString());

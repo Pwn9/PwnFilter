@@ -1,4 +1,4 @@
-package com.pwn9.PwnFilter.action;
+package com.pwn9.PwnFilter.rules.action;
 
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.PwnFilter;
@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 /**
  * Warn the user with the string provided.
  */
+@SuppressWarnings("UnusedDeclaration")
 public class Actionwarn implements Action {
     // Message to apply to this kick action
     String messageString;
@@ -16,8 +17,8 @@ public class Actionwarn implements Action {
         messageString = PwnFilter.prepareMessage(s,"warnmsg");
     }
 
-    public boolean execute(final PwnFilter plugin, final FilterState state ) {
-        Bukkit.getScheduler().runTask(plugin, new Runnable() {
+    public boolean execute(final FilterState state ) {
+        Bukkit.getScheduler().runTask(state.plugin, new Runnable() {
             public void run() {
                 state.player.sendMessage(messageString);
                 state.addLogMessage("Warned " + state.player.getName() + ": " + messageString);
