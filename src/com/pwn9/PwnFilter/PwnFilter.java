@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
 * A Regular Expression (REGEX) Chat Filter For Bukkit with many great features
@@ -42,6 +43,7 @@ public class PwnFilter extends JavaPlugin {
     List<String> cmdblist;
     public boolean decolor, logfileEnable, debugEnable;
     public HashMap<Player, String> killedPlayers = new HashMap<Player,String>();
+    public Logger logger;
 
     private RuleSet ruleset;
 
@@ -54,7 +56,7 @@ public class PwnFilter extends JavaPlugin {
         ruleset = new RuleSet(this);
         ruleset.init(getRulesFile());
 
-
+        logger = this.getLogger();
         logfileEnable = getConfig().getBoolean("logfile");
 
         decolor = getConfig().getBoolean("decolor");
@@ -183,7 +185,7 @@ public class PwnFilter extends JavaPlugin {
 
     public void logToFile(String message) {
     	// send to the console as info any logTofiles
-    	getLogger().info(message);
+    	if (logger != null ) logger.info(message);
 
     	if (logfileEnable) {
             if (pw == null) {

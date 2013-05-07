@@ -43,14 +43,14 @@
         </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
-            <artifactId>powermock-api-mockito</artifactId>
+            <artifactId>powermock-api-easymock</artifactId>
             <version>${powermock.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>${mockito.version}</version>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <version>${easymock.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -77,6 +77,14 @@
                 </includes>
             </resource>
         </resources>
+        <testResources>
+            <testResource>
+                <directory>${project.basedir}/test</directory>
+                <includes>
+                    <include>*.*</include>
+                </includes>
+            </testResource>
+        </testResources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -105,7 +113,7 @@
 
     <properties>
         <powermock.version>1.5</powermock.version>
-        <mockito.version>1.9.5</mockito.version>
+        <easymock.version>3.1</easymock.version>
         <bukkit.version>1.5.1-R0.1-SNAPSHOT</bukkit.version>
     </properties>
 </project>

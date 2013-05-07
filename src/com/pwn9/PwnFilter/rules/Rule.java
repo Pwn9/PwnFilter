@@ -6,6 +6,7 @@ import com.pwn9.PwnFilter.rules.action.ActionFactory;
 import com.pwn9.PwnFilter.util.Patterns;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,10 +21,18 @@ public class Rule {
      * A Rule contains the match regex, conditions and actions for a action.
      * Conditions are checked in order.  The first condition that matches
      */
+    public enum EventType {
+        chat,
+        sign,
+        command,
+    }
     final Pattern pattern;
 //    String name; // TODO: Give rules names for logs and troubleshooting
     ArrayList<Condition> conditions = new ArrayList<Condition>();
     ArrayList<Action> actions = new ArrayList<Action>();
+    ArrayList<EventType> events = new ArrayList<EventType>();
+
+
     boolean log = false;
 
         /* Constructors */
@@ -96,11 +105,31 @@ public class Rule {
             }
 
         }
+        else if (command.matches("events")) {
+            String[] parts = parameterString.split("\\b");
+            try {
+                if (parts[0].matches("not")) {
+                    events.addAll(Arrays.asList(EventType.values()));
+                    for (EventType e : EventType.values()) {
+                      events.remove(e);
+                    }
+                } else {
+                    for (String event : parts ) {
+                        events.add(EventType.valueOf(event));
+                    }
+                }
+            } catch (IllegalArgumentException e ) {
+                return false;
+            } catch (NullPointerException e) {
+                return false;
+            }
+        }
+
         else if ( Condition.isCondition(command) )  {
             // This is a condition.  Add a new condition to this rule.
             Condition newCondition = Condition.newCondition(command,parameterString);
             if (newCondition != null) {
-                conditions.add(newCondition);
+                return conditions.add(newCondition);
             } else {
                 return false;
             }

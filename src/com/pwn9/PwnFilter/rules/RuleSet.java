@@ -8,6 +8,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 
@@ -41,7 +42,11 @@ public class RuleSet {
     }
 
     public boolean init(final File f) {
-        return loadRules(f);
+        try {
+            return loadRules(new FileReader(f));
+        } catch (FileNotFoundException e) {
+            return false;
+        }
     }
 
     /**
@@ -182,11 +187,11 @@ public class RuleSet {
     /**
      * Load rules from a file
      */
-    public boolean loadRules(File rulesFile) {
+    public boolean loadRules(java.io.Reader rulesStream) {
 
         // Now read in the rules.txt file
         try {
-            BufferedReader input = new BufferedReader(new FileReader(rulesFile));
+            BufferedReader input = new BufferedReader(rulesStream);
             String line;
             Rule currentRule = null;
             Integer count = 0;
@@ -201,7 +206,6 @@ public class RuleSet {
                 if (line.isEmpty() || line.matches("^#.*")) continue;
 
                 // SPLIT the line into the token and remainder.
-                // TODO: There has to be a better way?  Worst case, we need a method, because this is a recurring pattern. :tokenizer:
                 {
                     String[] parts = line.split("\\s", 2);
                     command = parts[0];
@@ -217,7 +221,7 @@ public class RuleSet {
                     // If we currently have a valid action, add it to the set.
                     if (currentRule != null && currentRule.isValid()) {
                         ruleChain.add(currentRule);
-                    }  // TODO: Should we warn if an invalid action is discarded?
+                    }
 
                     // Now start on a new action.  If the match string is invalid, we'll still get the new action,
                     // and we'll still collect statements until the next match, but we'll throw it all away,
@@ -227,7 +231,7 @@ public class RuleSet {
                     // Not a match statement, so much be part of a rule.
                     if (currentRule != null) {
                         if (!currentRule.addLine(command, lineData)) {
-                            plugin.logToFile("Unable to add action to rule: " + command + " " + lineData);
+                            plugin.logToFile("Unable to add action/condition to rule: " + command + " " + lineData);
                         }
                     }
                 }

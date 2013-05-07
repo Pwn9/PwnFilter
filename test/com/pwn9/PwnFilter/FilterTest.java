@@ -1,16 +1,17 @@
 package com.pwn9.PwnFilter;
 
+import com.pwn9.PwnFilter.rules.RuleSet;
 import com.pwn9.PwnFilter.util.ColoredString;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
+import junit.framework.TestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.io.InputStreamReader;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,17 +21,26 @@ import static org.junit.Assert.assertEquals;
  */
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(AsyncPlayerChatEvent.class)
-public class FilterTest {
+public class FilterTest extends TestCase {
 
-    /**
-     * Test method for
-     * { @link com.pwn9.PwnFilter.listener.PwnFilterPlayerListener }
-     */
+    Logger logger;
+
+    public FilterTest() {
+        logger = Logger.getLogger("Test");
+    }
+
     @Test
     public void testLoadRules() {
 
-     }
+        PwnFilter p = new PwnFilter();
+        p.logger = logger;
+
+        RuleSet rs = new RuleSet(p);
+        InputStreamReader ruleStream = new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("testrules.txt"));
+
+        assertTrue(rs.loadRules(ruleStream));
+
+    }
 
     @Test
     public void testColoredString() {

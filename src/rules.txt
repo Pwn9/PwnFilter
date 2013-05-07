@@ -2,7 +2,13 @@
 # SAMPLE RULES http://dev.bukkit.org/server-mods/pwnfilter/
 # NOTE: ALL MATCHES AUTOMATICALLY IGNORE CASE
 # Each rule must have one 'match' statement and at least one 'then' statement
+#
 # match <regular expression>
+#
+# events <chat,command,sign,all> (no events except those listed. default = all events)
+# OR
+# events not <chat,command,sign> (all except those listed)
+#
 # ignore|require <user|permission|string> *(optional)
 # then <replace|rewrite|warn|log|deny|debug|kick|kill|burn|command|console> <string>
 # For more details visit http://dev.bukkit.org/server-mods/pwnfilter/
@@ -19,6 +25,7 @@ then log
 match cunt|whore|fag|slut|queer|bitch|bastard
 ignore permission permission.node
 then randrep meep|beep|bleep|herp|derp
+events
 
 # FIX the .command typo with /command
 match ^\.(?=[a-z]+)
@@ -29,12 +36,3 @@ then command
 match \btremor+\b|\btrem+\b
 require user tremor77
 then rewrite &bt&cREM&bor&f
-
-Original: &4F&2U&3CK &2T&9H&1I&9S SHIZZLE.
-
-MatchString:FUCK THIS SHIZZLE
-ColorString:42333291999999999
-
-fudge THIS SHIZZLE.
-
-fudge this shizzle

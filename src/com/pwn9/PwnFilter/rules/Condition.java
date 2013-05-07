@@ -12,7 +12,7 @@ class Condition {
     }
 
     public enum CondType {
-        permission, user, string
+        permission, user, string,
     }
 
     final CondType type;
@@ -27,7 +27,7 @@ class Condition {
     }
 
     public static Condition newCondition(String command, String parameterString) {
-        String subCmd, lineData;
+        String subCmd;
         CondType newType;
         CondFlag newFlag;
         String newParameters;
