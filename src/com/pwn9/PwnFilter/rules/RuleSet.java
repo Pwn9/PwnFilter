@@ -65,7 +65,7 @@ public class RuleSet {
 
         FilterState state = new FilterState(plugin, event.getMessage(),event.getPlayer());
 
-        runFilter(state);
+        runFilter(state, chatRules);
 
         // Only update the message if it has been changed.
         if (state.messageChanged()){
@@ -80,7 +80,7 @@ public class RuleSet {
 
         FilterState state = new FilterState(plugin, event.getMessage(),event.getPlayer());
 
-        runFilter(state);
+        runFilter(state, commandRules);
 
         // Only update the message if it has been changed.
         if (state.messageChanged()){
@@ -101,7 +101,7 @@ public class RuleSet {
 
         FilterState state = new FilterState(plugin, signLines, event.getPlayer());
 
-        runFilter(state);
+        runFilter(state, signRules);
 
         if (state.messageChanged()){
             // TODO: Can colors be placed on signs?  Wasn't working. Find out why.
@@ -147,9 +147,9 @@ public class RuleSet {
     }
 
 
-    public void runFilter(FilterState state) {
+    public void runFilter(FilterState state, ArrayList<Rule> chain) {
 
-        for (Rule rule : ruleChain) {
+        for (Rule rule : chain) {
             rule.apply(state);
             if (state.stop) {
                 break;
@@ -182,6 +182,7 @@ public class RuleSet {
         }
 
     }
+
 
 
     /**
@@ -241,7 +242,17 @@ public class RuleSet {
             if (currentRule != null && currentRule.isValid()) ruleChain.add(currentRule);
 
             input.close();
+
+            // Iterate over rules and add them to the proper event chains.
+            for (Rule r : ruleChain ) {
+                for (Rule.EventType e : r.events ) {
+                    if (e == Rule.EventType.sign) signRules.add(r);
+                    else if (e == Rule.EventType.chat) chatRules.add(r);
+                    else if (e == Rule.EventType.command) commandRules.add(r);
+                }
+            }
             plugin.logToFile("Read " + count.toString() + " rules from file.  Installed " + ruleChain.size() + " valid rules.");
+            plugin.logToFile("Command Rules: " + commandRules.size() + " Sign Rules: " + signRules.size() + " Chat Rules: " + chatRules.size());
 
         } catch (Exception e) {
             e.printStackTrace();

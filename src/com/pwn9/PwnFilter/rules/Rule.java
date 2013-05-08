@@ -40,6 +40,7 @@ public class Rule {
     // All rules must have a matchStr, hence no parameter-less constructor.
     public Rule(String matchStr) {
         this.pattern = Patterns.compilePattern(matchStr);
+        events.addAll(Arrays.asList(EventType.values())); // Add to all events by default.
     }
 
     /* Methods */
@@ -106,14 +107,14 @@ public class Rule {
 
         }
         else if (command.matches("events")) {
-            String[] parts = parameterString.split("\\b");
+            String[] parts = parameterString.split("[\\s|\\|]");
             try {
                 if (parts[0].matches("not")) {
-                    events.addAll(Arrays.asList(EventType.values()));
-                    for (EventType e : EventType.values()) {
-                      events.remove(e);
+                    for (int i = 1; i < parts.length ; i++ ) {
+                        events.remove(EventType.valueOf(parts[i]));
                     }
                 } else {
+                    events.clear();
                     for (String event : parts ) {
                         events.add(EventType.valueOf(event));
                     }
@@ -123,16 +124,14 @@ public class Rule {
             } catch (NullPointerException e) {
                 return false;
             }
+
+            return true;
         }
 
         else if ( Condition.isCondition(command) )  {
             // This is a condition.  Add a new condition to this rule.
             Condition newCondition = Condition.newCondition(command,parameterString);
-            if (newCondition != null) {
-                return conditions.add(newCondition);
-            } else {
-                return false;
-            }
+            return newCondition != null && conditions.add(newCondition);
         }
 
         // This line isn't a condition or an action...

@@ -79,7 +79,7 @@
         </resources>
         <testResources>
             <testResource>
-                <directory>${project.basedir}/test</directory>
+                <directory>${project.basedir}/test/resources</directory>
                 <includes>
                     <include>*.*</include>
                 </includes>
