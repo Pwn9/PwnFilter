@@ -107,7 +107,7 @@ public class Rule {
 
         }
         else if (command.matches("events")) {
-            String[] parts = parameterString.split("[\\s|\\|]");
+            String[] parts = parameterString.split("[\\s|,]");
             try {
                 if (parts[0].matches("not")) {
                     for (int i = 1; i < parts.length ; i++ ) {
