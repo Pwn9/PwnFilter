@@ -31,6 +31,7 @@ public class PwnFilterSignListener implements Listener {
     }
     // This is the handler
     public void onSignChange(SignChangeEvent event) {
+        if (event.isCancelled()) return;
         plugin.filterSign(event);
     }
 }

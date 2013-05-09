@@ -50,6 +50,7 @@ public class PwnFilterPlayerListener implements Listener {
     }
 
     public void onPlayerChat(AsyncPlayerChatEvent event) {
+        if (event.isCancelled()) return;
         final Player player = event.getPlayer();
         String pName = player.getName();
         String message = event.getMessage();

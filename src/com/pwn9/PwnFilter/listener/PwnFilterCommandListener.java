@@ -29,6 +29,7 @@ public class PwnFilterCommandListener implements Listener {
     }
 
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
+        if (event.isCancelled()) return;
     	plugin.filterCommand(event);
     }  
 }
