@@ -127,7 +127,7 @@ public class PwnFilter extends JavaPlugin {
         final Player player = event.getPlayer();
 
         // Global mute
-        if ((pwnMute) && (!(player.hasPermission("pwnfilter.bypassmute")))) {
+        if ((pwnMute) && (!(player.hasPermission("pwnfilter.bypass.mute")))) {
             event.setCancelled(true);
             return; // No point in continuing.
         }
@@ -167,7 +167,7 @@ public class PwnFilter extends JavaPlugin {
 
         // Hmm.. If we are under global mute, do we want to prevent players from executing commands?
 //	    	// Global mute
-//	    	if ((pwnMute) && (!(player.hasPermission("pwnfilter.bypassmute")))) {
+//	    	if ((pwnMute) && (!(player.hasPermission("pwnfilter.bypass.mute")))) {
 //	    			event.setCancelled(true);
 //	    	}
 

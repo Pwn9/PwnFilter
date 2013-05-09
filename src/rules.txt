@@ -5,7 +5,7 @@
 #
 # match <regular expression>
 #
-# events <chat,command,sign,all> (no events except those listed. default = all events)
+# events <chat,command,sign> (no events except those listed. default = all events)
 # OR
 # events not <chat,command,sign> (all except those listed)
 #

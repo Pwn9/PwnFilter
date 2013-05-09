@@ -13,7 +13,7 @@ public class Actionreplace implements Action {
 
     public void init(String s)
     {
-        messageString = s.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
+        messageString = s.replaceAll("&([0-9a-fk-or])", "\u00A7$1").replaceAll("\"","");
     }
 
     public boolean execute(final FilterState state ) {
