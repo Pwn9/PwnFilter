@@ -9,7 +9,7 @@
 # OR
 # events not <chat,command,sign> (all except those listed)
 #
-# ignore|require <user|permission|string> *(optional)
+# ignore|require <user|permission|string|command> *(optional)
 # then <replace|rewrite|warn|log|deny|debug|kick|kill|burn|command|console> <string>
 # For more details visit http://dev.bukkit.org/server-mods/pwnfilter/
 

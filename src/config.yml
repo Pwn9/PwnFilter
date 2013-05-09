@@ -1,6 +1,3 @@
-# Plugin Priority Configuration, options: lowest,low,normal,high,highest
-priority: lowest
-
 # Default message setups, can be overridden in rules.txt per match, do not remove quotes around messages!
 warnmsg: '&4[&6PwnFilter&4] &4Warned by PwnFilter!'
 kickmsg: '&4[&6PwnFilter&4] &4Kicked by PwnFilter!'
@@ -19,14 +16,8 @@ decolor: true
 # Experimental, filter commands as well as chat true/false
 commandfilter: true
 
-# Command Filter Priority, options: lowest,low,normal,high,highest
-cmdpriority: lowest
-
 # Filter text applied to signs
 signfilter: true
-
-# Set priority for the onSignChange listener
-signpriority: lowest
 
 # Basic spam filter enabled (chat and commands)
 spamfilter: true

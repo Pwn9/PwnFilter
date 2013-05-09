@@ -19,7 +19,10 @@ public class PwnFilterCommandListener implements Listener {
 	    plugin = p;
         PluginManager pm = Bukkit.getPluginManager();
 
-        EventPriority cmdFilterPriority = EventPriority.valueOf(plugin.getConfig().getString("cmdpriority").toUpperCase());
+        String priority = plugin.getConfig().getString("cmdpriority");
+        if (priority.isEmpty()) priority = "HIGHEST";
+
+        EventPriority cmdFilterPriority = EventPriority.valueOf(priority.toUpperCase());
 
         pm.registerEvent(PlayerCommandPreprocessEvent.class, this, cmdFilterPriority,
                 new EventExecutor() {

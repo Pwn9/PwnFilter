@@ -24,7 +24,11 @@ public class PwnFilterPlayerListener implements Listener {
 	public PwnFilterPlayerListener(PwnFilter p) {
         plugin = p;
         PluginManager pm = Bukkit.getServer().getPluginManager();
-        EventPriority chatFilterPriority = EventPriority.valueOf(p.getConfig().getString("priority").toUpperCase());
+
+        String priority = plugin.getConfig().getString("priority");
+        if (priority.isEmpty()) priority = "HIGHEST";
+
+        EventPriority chatFilterPriority = EventPriority.valueOf(priority.toUpperCase());
 
         /* Hook up the Listener for PlayerChat events */
         pm.registerEvent(AsyncPlayerChatEvent.class, this, chatFilterPriority,

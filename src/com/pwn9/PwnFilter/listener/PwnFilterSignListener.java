@@ -19,7 +19,10 @@ public class PwnFilterSignListener implements Listener {
         plugin = p;
         PluginManager pm = Bukkit.getPluginManager();
 
-        EventPriority signFilterPriority = EventPriority.valueOf(p.getConfig().getString("signpriority").toUpperCase());
+        String priority = plugin.getConfig().getString("signpriority");
+        if (priority.isEmpty()) priority = "HIGHEST";
+
+        EventPriority signFilterPriority = EventPriority.valueOf(priority.toUpperCase());
 
         // Now register the listener with the appropriate priority
         pm.registerEvent(SignChangeEvent.class, this, signFilterPriority,

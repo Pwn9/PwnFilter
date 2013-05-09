@@ -165,11 +165,10 @@ public class PwnFilter extends JavaPlugin {
                 && !(cmdblist.contains(cmdmessage))
                 && !(player.hasPermission(("pwnfilter.bypass")))) {
 
-        // Hmm.. If we are under global mute, do we want to prevent players from executing commands?
-//	    	// Global mute
-//	    	if ((pwnMute) && (!(player.hasPermission("pwnfilter.bypass.mute")))) {
-//	    			event.setCancelled(true);
-//	    	}
+	    	// Global mute
+	    	if ((pwnMute) && (!(player.hasPermission("pwnfilter.bypass.mute")))) {
+	    			event.setCancelled(true);
+	    	}
 
 	    	// Global decolor
 	    	if ((decolor) && (!(player.hasPermission("pwnfilter.color")))) {
