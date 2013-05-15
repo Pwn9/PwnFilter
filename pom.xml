@@ -7,7 +7,7 @@
 
     <groupId>PwnFilter</groupId>
     <artifactId>PwnFilter</artifactId>
-    <version>3.0.0-snapshot</version>
+    <version>${pwnfilter.version}</version>
     <name>PwnFilter</name>
     <description>Complete chat control with the power of regex.</description>
     <url>http://dev.bukkit.org/server-mods/pwnfilter/</url>
@@ -70,7 +70,7 @@
 
         <resources>
             <resource>
-                <directory>${project.basedir}/src</directory>
+                <directory>${project.basedir}/src/resources</directory>
                 <filtering>true</filtering>
                 <includes>
                     <include>*.*</include>
@@ -112,6 +112,7 @@
     </build>
 
     <properties>
+        <pwnfilter.version>3.0.0-rc1</pwnfilter.version>
         <powermock.version>1.5</powermock.version>
         <easymock.version>3.1</easymock.version>
         <bukkit.version>1.5.1-R0.1-SNAPSHOT</bukkit.version>

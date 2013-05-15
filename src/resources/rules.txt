@@ -5,11 +5,11 @@
 #
 # match <regular expression>
 #
-# events <chat,command,sign> (no events except those listed. default = all events)
+# events <chat,command,sign> (This format only applies to events listed. default = all events)
 # OR
-# events not <chat,command,sign> (all except those listed)
+# events not <chat,command,sign> (This format applies to all events -except- those listed)
 #
-# ignore|require <user|permission|string|command> *(optional)
+# ignore|require <user|permission|string|command> <string> *(optional)
 # then <replace|rewrite|warn|log|deny|debug|kick|kill|burn|command|console> <string>
 # For more details visit http://dev.bukkit.org/server-mods/pwnfilter/
 

@@ -32,5 +32,10 @@ cmdblist:
 - warp
 - help
 
+# Note: You can also change the priority of event handlers with:
+# priority, cmdpriority and signpriority
+# Changing priority can allow the event handlers to process messages before or after other
+# plugins.
+
 
 
