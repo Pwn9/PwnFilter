@@ -146,7 +146,6 @@ public class RuleSet {
         return true;
     }
 
-
     public void runFilter(FilterState state, ArrayList<Rule> chain) {
 
         for (Rule rule : chain) {
@@ -183,6 +182,17 @@ public class RuleSet {
 
     }
 
+    public boolean append(Rule r) {
+        if (r.isValid()) {
+            ruleChain.add(r);
+            for (Rule.EventType e : r.events ) {
+                if (e == Rule.EventType.sign) signRules.add(r);
+                else if (e == Rule.EventType.chat) chatRules.add(r);
+                else if (e == Rule.EventType.command) commandRules.add(r);
+            }
+            return true;
+        } else return false;
+    }
 
 
     /**
@@ -221,7 +231,7 @@ public class RuleSet {
                     // This is the start of a new action.
                     // If we currently have a valid action, add it to the set.
                     if (currentRule != null && currentRule.isValid()) {
-                        ruleChain.add(currentRule);
+                        append(currentRule);
                     }
 
                     // Now start on a new action.  If the match string is invalid, we'll still get the new action,
@@ -239,18 +249,10 @@ public class RuleSet {
             }
 
             // Make sure we add the last action
-            if (currentRule != null && currentRule.isValid()) ruleChain.add(currentRule);
+            if (currentRule != null && currentRule.isValid()) append(currentRule);
 
             input.close();
 
-            // Iterate over rules and add them to the proper event chains.
-            for (Rule r : ruleChain ) {
-                for (Rule.EventType e : r.events ) {
-                    if (e == Rule.EventType.sign) signRules.add(r);
-                    else if (e == Rule.EventType.chat) chatRules.add(r);
-                    else if (e == Rule.EventType.command) commandRules.add(r);
-                }
-            }
             plugin.logToFile("Read " + count.toString() + " rules from file.  Installed " + ruleChain.size() + " valid rules.");
             plugin.logToFile("Command Rules: " + commandRules.size() + " Sign Rules: " + signRules.size() + " Chat Rules: " + chatRules.size());
 

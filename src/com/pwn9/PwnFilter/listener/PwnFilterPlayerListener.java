@@ -4,7 +4,6 @@ import com.pwn9.PwnFilter.PwnFilter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -25,25 +24,20 @@ public class PwnFilterPlayerListener implements Listener {
         plugin = p;
         PluginManager pm = Bukkit.getServer().getPluginManager();
 
-        String priority = plugin.getConfig().getString("priority");
-        if (priority.isEmpty()) priority = "HIGHEST";
-
-        EventPriority chatFilterPriority = EventPriority.valueOf(priority.toUpperCase());
-
         /* Hook up the Listener for PlayerChat events */
-        pm.registerEvent(AsyncPlayerChatEvent.class, this, chatFilterPriority,
+        pm.registerEvent(AsyncPlayerChatEvent.class, this, p.chatPriority,
                 new EventExecutor() {
                     public void execute(Listener l, Event e) { onPlayerChat((AsyncPlayerChatEvent)e); }
                 },
                 plugin);
 
-        pm.registerEvent(PlayerQuitEvent.class, this, chatFilterPriority,
+        pm.registerEvent(PlayerQuitEvent.class, this, p.chatPriority,
                 new EventExecutor() {
                     public void execute(Listener l, Event e) { onPlayerQuit((PlayerQuitEvent)e); }
                 },
                 plugin);
 
-        plugin.logToFile("Activated PlayerListener with Priority Setting: "+chatFilterPriority);
+        plugin.logToFile("Activated PlayerListener with Priority Setting: "+ p.chatPriority);
     }
 
     public void onPlayerQuit(PlayerQuitEvent event) {

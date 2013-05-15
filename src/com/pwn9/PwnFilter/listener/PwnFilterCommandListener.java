@@ -3,7 +3,6 @@ package com.pwn9.PwnFilter.listener;
 import com.pwn9.PwnFilter.PwnFilter;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.plugin.EventExecutor;
@@ -19,12 +18,7 @@ public class PwnFilterCommandListener implements Listener {
 	    plugin = p;
         PluginManager pm = Bukkit.getPluginManager();
 
-        String priority = plugin.getConfig().getString("cmdpriority");
-        if (priority.isEmpty()) priority = "HIGHEST";
-
-        EventPriority cmdFilterPriority = EventPriority.valueOf(priority.toUpperCase());
-
-        pm.registerEvent(PlayerCommandPreprocessEvent.class, this, cmdFilterPriority,
+        pm.registerEvent(PlayerCommandPreprocessEvent.class, this, p.cmdPriority,
                 new EventExecutor() {
                     public void execute(Listener l, Event e) { onPlayerCommandPreprocess((PlayerCommandPreprocessEvent)e); }
                 },

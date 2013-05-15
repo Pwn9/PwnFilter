@@ -10,6 +10,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -44,6 +45,7 @@ public class PwnFilter extends JavaPlugin {
     public boolean decolor, logfileEnable, debugEnable;
     public HashMap<Player, String> killedPlayers = new HashMap<Player,String>();
     public Logger logger;
+    public EventPriority cmdPriority, chatPriority, signPriority;
 
     private RuleSet ruleset;
 
@@ -65,6 +67,14 @@ public class PwnFilter extends JavaPlugin {
         cmdlist = getConfig().getStringList("cmdlist");
         cmdblist = getConfig().getStringList("cmdblist");
 
+        getConfig().addDefault("cmdpriority","LOWEST");
+        getConfig().addDefault("chatpriority","LOWEST");
+        getConfig().addDefault("signpriority","LOWEST");
+
+        cmdPriority = EventPriority.valueOf(getConfig().getString("cmdpriority").toUpperCase());
+        chatPriority = EventPriority.valueOf(getConfig().getString("chatpriority").toUpperCase());
+        signPriority = EventPriority.valueOf(getConfig().getString("signpriority").toUpperCase());
+
         // Register Chat Handler
         new PwnFilterPlayerListener(this);
         new PwnFilterEntityListener(this);
@@ -76,7 +86,7 @@ public class PwnFilter extends JavaPlugin {
         if (getConfig().getBoolean("signfilter")) new PwnFilterSignListener(this);
 
     }
-    
+
     public void onDisable() {
     	ruleset = null;
         closeLog();

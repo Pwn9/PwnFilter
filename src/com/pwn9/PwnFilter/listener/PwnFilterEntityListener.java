@@ -4,7 +4,6 @@ import com.pwn9.PwnFilter.PwnFilter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -21,10 +20,9 @@ public class PwnFilterEntityListener implements Listener {
 	public PwnFilterEntityListener(PwnFilter p) {
         plugin = p;
         PluginManager pm = Bukkit.getServer().getPluginManager();
-        EventPriority chatFilterPriority = EventPriority.valueOf(p.getConfig().getString("priority").toUpperCase());
 
         /* Hook up the Listener for PlayerChat events */
-        pm.registerEvent(EntityDeathEvent.class, this, chatFilterPriority,
+        pm.registerEvent(EntityDeathEvent.class, this, p.chatPriority,
                 new EventExecutor() {
                     public void execute(Listener l, Event e) { onEntityDeath((EntityDeathEvent) e); }
                 },
