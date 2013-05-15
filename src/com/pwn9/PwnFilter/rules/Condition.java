@@ -12,7 +12,7 @@ class Condition {
     }
 
     public enum CondType {
-        permission, user, string,
+        permission, user, string, command,
     }
 
     final CondType type;
