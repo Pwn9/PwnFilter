@@ -10,15 +10,12 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.PluginManager;
 
-import java.util.HashMap;
-
 /**
 * Listen for Chat events and apply the filter.
 */
 
 public class PwnFilterPlayerListener implements Listener {
     private final PwnFilter plugin;
-    static HashMap<String, String> messages = new HashMap<String, String>();
 
 	public PwnFilterPlayerListener(PwnFilter p) {
         plugin = p;
@@ -37,13 +34,13 @@ public class PwnFilterPlayerListener implements Listener {
                 },
                 plugin);
 
-        plugin.logger.config("Activated PlayerListener with Priority Setting: "+ p.chatPriority);
+        plugin.logger.config("Activated PlayerListener with Priority Setting: " + p.chatPriority.toString());
     }
 
     public void onPlayerQuit(PlayerQuitEvent event) {
         // Cleanup player messages on quit
-        if (event.getPlayer() != null && messages.containsKey(event.getPlayer().getName())) {
-            messages.remove(event.getPlayer().getName());
+        if (event.getPlayer() != null && plugin.lastMessage.containsKey(event.getPlayer().getName())) {
+            plugin.lastMessage.remove(event.getPlayer().getName());
         }
     }
 
@@ -58,13 +55,13 @@ public class PwnFilterPlayerListener implements Listener {
             return;
         }
 
-        if (plugin.getConfig().getBoolean("chatspamfilter") && !player.hasPermission("pwnfilter.bypass.spam")) {
+        if (plugin.getConfig().getBoolean("spamfilter") && !player.hasPermission("pwnfilter.bypass.spam")) {
             // Keep a log of the last message sent by this player.  If it's the same as the current message, cancel.
-            if (messages.containsKey(pName) && messages.get(pName).equals(message)) {
+            if (plugin.lastMessage.containsKey(pName) && plugin.lastMessage.get(pName).equals(message)) {
                 event.setCancelled(true);
                 return;
             }
-            messages.put(pName, message);
+            plugin.lastMessage.put(pName, message);
 
         }
         plugin.filterChat(event);

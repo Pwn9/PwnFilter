@@ -40,14 +40,16 @@ import java.util.logging.*;
 public class PwnFilter extends JavaPlugin {
 
     public Boolean pwnMute = false;
-    List<String> cmdlist;
-    List<String> cmdblist;
+    public List<String> cmdlist;
+    public List<String> cmdblist;
     public boolean decolor, debugMode;
     public HashMap<Player, String> killedPlayers = new HashMap<Player,String>();
     public Logger logger;
     public Level logfileLevel;
     FileHandler fh;
     public EventPriority cmdPriority, chatPriority, signPriority;
+    public static HashMap<String, String> lastMessage = new HashMap<String, String>();
+
 
     private RuleSet ruleset;
 
@@ -192,28 +194,24 @@ public class PwnFilter extends JavaPlugin {
     
     public void filterCommand(PlayerCommandPreprocessEvent event) {
         String message = event.getMessage();
-        //Gets the actual command as a string
-        String cmdmessage = message.substring(1).split(" ")[0];
         Player player = event.getPlayer();
 
-        if ((cmdlist.isEmpty()) || (cmdlist.contains(cmdmessage))
-                && !(cmdblist.contains(cmdmessage))
-                && !(player.hasPermission(("pwnfilter.bypass")))) {
 
-	    	// Global mute
-	    	if ((pwnMute) && (!(player.hasPermission("pwnfilter.bypass.mute")))) {
-	    			event.setCancelled(true);
-	    	}
-
-	    	// Global decolor
-	    	if ((decolor) && (!(player.hasPermission("pwnfilter.color")))) {
-	    		event.setMessage(ChatColor.stripColor(message));
-	    	}
-
-            // Now apply the rules
-            ruleset.apply(event);
+        // Global mute
+        if ((pwnMute) && (!(player.hasPermission("pwnfilter.bypass.mute")))) {
+                event.setCancelled(true);
         }
-    }
+
+        // Global decolor
+        if ((decolor) && (!(player.hasPermission("pwnfilter.color")))) {
+            event.setMessage(ChatColor.stripColor(message));
+        }
+
+        // Check to see if this is commandspam
+
+        // Now apply the rules
+        ruleset.apply(event);
+        }
 
     /**
      * Selects string from the first not null of: message, default from config.yml or null.

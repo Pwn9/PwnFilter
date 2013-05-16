@@ -23,8 +23,11 @@ commandfilter: true
 # Filter text applied to signs
 signfilter: true
 
-# Basic spam filter enabled (chat and commands)
+# Basic spam filter enabled (chat ONLY)
 spamfilter: true
+
+# Basic spam filter enabled (commands ONLY)
+commandspamfilter: true
 
 # Command White List: Commands to filter, if empty, will filter ALL (except blacklist)
 cmdlist: []
