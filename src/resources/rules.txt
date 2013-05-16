@@ -1,7 +1,7 @@
 # PwnFilter rules.txt - Define Regular Expression Rules
 # SAMPLE RULES http://dev.bukkit.org/server-mods/pwnfilter/
 # NOTE: ALL MATCHES AUTOMATICALLY IGNORE CASE
-# Each rule must have one 'match' statement and at least one 'then' statement
+# Each rule must have one 'match' statement and at least one 'then' statement, everything else is optional.
 #
 # match <regular expression>
 #
@@ -10,7 +10,7 @@
 # events not <chat,command,sign> (This format applies to all events -except- those listed)
 #
 # ignore|require <user|permission|string|command> <string> *(optional)
-# then <replace|rewrite|warn|log|deny|debug|kick|kill|burn|command|console> <string>
+# then <replace|rewrite|warn|log|deny|debug|kick|kill|burn|command|console|abort> <string>
 # For more details visit http://dev.bukkit.org/server-mods/pwnfilter/
 # In "then command" statements, you can use &world, &player, &string, or &rawstring
 
