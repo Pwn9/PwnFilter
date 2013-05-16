@@ -141,7 +141,7 @@ public class RuleSet {
         }
 
         if (state.log) {
-            for (String s : state.logMessages) plugin.logToFile(s);
+            for (String s : state.logMessages) plugin.logger.info(s);
         }
         return true;
     }
@@ -155,29 +155,27 @@ public class RuleSet {
             }
         }
 
-        if (plugin.debugEnable) {
+        if (plugin.debugMode) {
             if (state.pattern != null) {
-                state.addLogMessage("[PwnFilter] Debug match: " + state.pattern.pattern());
-                state.addLogMessage("[PwnFilter] Debug original: " + state.getOriginalMessage().getColoredString());
-                state.addLogMessage("[PwnFilter] Debug current: " + state.message.getColoredString());
-                state.addLogMessage("[PwnFilter] Debug log: " + (state.log?"yes":"no"));
-                state.addLogMessage("[PwnFilter] Debug deny: " + (state.cancel?"yes":"no"));
+                plugin.logger.fine("Debug match: " + state.pattern.pattern());
+                plugin.logger.fine("Debug original: " + state.getOriginalMessage().getColoredString());
+                plugin.logger.fine("Debug current: " + state.message.getColoredString());
+                plugin.logger.fine("Debug log: " + (state.log?"yes":"no"));
+                plugin.logger.fine("Debug deny: " + (state.cancel?"yes":"no"));
             } else {
-                state.addLogMessage("[PwnFilter] Debug no match: " + state.getOriginalMessage().getColoredString());
+                plugin.logger.fine("[PwnFilter] Debug no match: " + state.getOriginalMessage().getColoredString());
             }
-
-            state.log = true;
         }
-        if (state.log) {
-            if (state.cancel){
-                state.addLogMessage("SENT <"+state.player.getName() + "> message cancelled by deny rule.");
-            }
-            state.addLogMessage("SENT <"+state.player.getName() + "> " + state.getOriginalMessage().getPlainString());
 
-            for (String s : state.logMessages) {
-                plugin.logToFile(s);
-            }
+        if (state.cancel){
+            state.addLogMessage("SENT <"+state.player.getName() + "> message cancelled by deny rule.");
+        }
+        state.addLogMessage("SENT <"+state.player.getName() + "> " + state.getOriginalMessage().getPlainString());
 
+        for (String s : state.logMessages) {
+            if (state.log) {
+                plugin.logger.fine(s);
+            } else plugin.logger.info(s);
         }
 
     }
@@ -242,7 +240,7 @@ public class RuleSet {
                     // Not a match statement, so much be part of a rule.
                     if (currentRule != null) {
                         if (!currentRule.addLine(command, lineData)) {
-                            plugin.logToFile("Unable to add action/condition to rule: " + command + " " + lineData);
+                            plugin.logger.warning("Unable to add action/condition to rule: " + command + " " + lineData);
                         }
                     }
                 }
@@ -253,8 +251,8 @@ public class RuleSet {
 
             input.close();
 
-            plugin.logToFile("Read " + count.toString() + " rules from file.  Installed " + ruleChain.size() + " valid rules.");
-            plugin.logToFile("Command Rules: " + commandRules.size() + " Sign Rules: " + signRules.size() + " Chat Rules: " + chatRules.size());
+            plugin.logger.config("Read " + count.toString() + " rules from file.  Installed " + ruleChain.size() + " valid rules.");
+            plugin.logger.config("Command Rules: " + commandRules.size() + " Sign Rules: " + signRules.size() + " Chat Rules: " + chatRules.size());
 
         } catch (Exception e) {
             e.printStackTrace();

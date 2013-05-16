@@ -12,6 +12,7 @@
 # ignore|require <user|permission|string|command> <string> *(optional)
 # then <replace|rewrite|warn|log|deny|debug|kick|kill|burn|command|console> <string>
 # For more details visit http://dev.bukkit.org/server-mods/pwnfilter/
+# In "then command" statements, you can use &world, &player, &string, or &rawstring
 
 # EXAMPLES
 

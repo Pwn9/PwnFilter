@@ -7,7 +7,7 @@
 
     <groupId>PwnFilter</groupId>
     <artifactId>PwnFilter</artifactId>
-    <version>${pwnfilter.version}</version>
+    <version>3.0.0-rc2</version>
     <name>PwnFilter</name>
     <description>Complete chat control with the power of regex.</description>
     <url>http://dev.bukkit.org/server-mods/pwnfilter/</url>
@@ -93,6 +93,15 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+
+        </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.4</version>
                 <configuration>
@@ -112,7 +121,7 @@
     </build>
 
     <properties>
-        <pwnfilter.version>3.0.0-rc1</pwnfilter.version>
+        <pwnfilter.version>${project.version}</pwnfilter.version>
         <powermock.version>1.5</powermock.version>
         <easymock.version>3.1</easymock.version>
         <bukkit.version>1.5.1-R0.1-SNAPSHOT</bukkit.version>

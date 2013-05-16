@@ -17,9 +17,14 @@ public class Actioncommand implements Action {
 
     public boolean execute(final FilterState state ) {
         state.cancel = true;
-        String cmd = Patterns.replaceCommands(command, state.player,
-                state.message.getColoredString(), state.getOriginalMessage().getColoredString());
-        state.addLogMessage("Helped " + state.player.getName() + " execute command: " + cmd);
+        String cmd;
+        if (!command.isEmpty()) {
+            cmd = Patterns.replaceCommands(command, state.player,
+                    state.message.getColoredString(), state.getOriginalMessage().getColoredString());
+            state.addLogMessage("Helped " + state.player.getName() + " execute command: " + cmd);
+        } else {
+            cmd = state.message.getColoredString();
+        }
         state.player.chat("/" + cmd);
         return true;
     }

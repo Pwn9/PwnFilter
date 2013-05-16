@@ -7,6 +7,10 @@ killmsg: '&4[&6PwnFilter&4] &4Killed by PwnFilter!'
 # Logfile Enabling set to true or false
 logfile: true
 
+# Logfile Level - If logfile is true, then this sets the level of messages that will be put in the logfile.
+# info = normal (includes matches and replacements), fine = verbose (debug: true will log at 'fine' level)
+logfilelevel: info
+
 # Debug mode (VERY verbose)
 debug: false
 

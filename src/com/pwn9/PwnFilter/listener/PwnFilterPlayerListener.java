@@ -37,7 +37,7 @@ public class PwnFilterPlayerListener implements Listener {
                 },
                 plugin);
 
-        plugin.logToFile("Activated PlayerListener with Priority Setting: "+ p.chatPriority);
+        plugin.logger.config("Activated PlayerListener with Priority Setting: "+ p.chatPriority);
     }
 
     public void onPlayerQuit(PlayerQuitEvent event) {

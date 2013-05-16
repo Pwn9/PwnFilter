@@ -5,6 +5,7 @@ import com.pwn9.PwnFilter.listener.PwnFilterEntityListener;
 import com.pwn9.PwnFilter.listener.PwnFilterPlayerListener;
 import com.pwn9.PwnFilter.listener.PwnFilterSignListener;
 import com.pwn9.PwnFilter.rules.RuleSet;
+import com.pwn9.PwnFilter.util.PwnFormatter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -16,14 +17,13 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.*;
-import java.text.Format;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.logging.*;
 
 /**
 * A Regular Expression (REGEX) Chat Filter For Bukkit with many great features
@@ -38,13 +38,15 @@ import java.util.logging.Logger;
  */
 
 public class PwnFilter extends JavaPlugin {
-    
+
     public Boolean pwnMute = false;
     List<String> cmdlist;
     List<String> cmdblist;
-    public boolean decolor, logfileEnable, debugEnable;
+    public boolean decolor, debugMode;
     public HashMap<Player, String> killedPlayers = new HashMap<Player,String>();
     public Logger logger;
+    public Level logfileLevel;
+    FileHandler fh;
     public EventPriority cmdPriority, chatPriority, signPriority;
 
     private RuleSet ruleset;
@@ -54,15 +56,36 @@ public class PwnFilter extends JavaPlugin {
         // Initialize and load configuration
         saveDefaultConfig();
 
+        // Set up logging
+        logger = this.getLogger();
+
+        if (getConfig().getBoolean("logfile")) {
+            if (fh == null) {
+                try {
+                    // For now, one logfile, like the old way.
+                    fh = new FileHandler(new File(getDataFolder(), "pwnfilter.log").toString(), true);
+                    SimpleFormatter f = new PwnFormatter();
+                    fh.setFormatter(f);
+                    getConfig().addDefault("logfileLevel", "fine");
+                    logfileLevel = Level.parse(getConfig().getString("logfileLevel").toUpperCase());
+                    fh.setLevel(logfileLevel);
+                    logger.addHandler(fh);
+
+                } catch (IOException e) {
+                    logger.warning("Unable to open logfile.");
+                } catch (SecurityException e) {
+                    logger.warning("Security Exception while trying to add file Handler");
+                }
+            }
+        }
+
         // Create a new RuleSet object, loading in the rulesFile
         ruleset = new RuleSet(this);
         ruleset.init(getRulesFile());
 
-        logger = this.getLogger();
-        logfileEnable = getConfig().getBoolean("logfile");
 
         decolor = getConfig().getBoolean("decolor");
-        debugEnable = getConfig().getBoolean("debug");
+        debugMode = getConfig().getBoolean("debug");
 
         cmdlist = getConfig().getStringList("cmdlist");
         cmdblist = getConfig().getStringList("cmdblist");
@@ -89,25 +112,27 @@ public class PwnFilter extends JavaPlugin {
 
     public void onDisable() {
     	ruleset = null;
-        closeLog();
+        fh.close();
+        logger.removeHandler(fh);
+        fh = null;
     }
 
     @Override   
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args ) {
 
         if (cmd.getName().equalsIgnoreCase("pfreload")) { 		   		
-            sender.sendMessage(ChatColor.RED + "[PwnFilter] Reloading rules.txt");
+            sender.sendMessage(ChatColor.RED + "Reloading rules.txt");
             ruleset = new RuleSet(this);
             if (ruleset.init(getRulesFile())) {
-                logToFile("rules.txt reloaded by " + sender.getName());
+                logger.config("rules.txt reloaded by " + sender.getName());
             } else {
-                logToFile("failed to reload rules.txt as requested by " + sender.getName());
+                logger.warning("failed to reload rules.txt as requested by " + sender.getName());
             }
             return true;
         }
 		else if (cmd.getName().equalsIgnoreCase("pfcls")) {  
-            sender.sendMessage(ChatColor.RED + "[PwnFilter] Clearing chat screen");
-            logToFile("chat screen cleared by " + sender.getName());
+            sender.sendMessage(ChatColor.RED + "Clearing chat screen");
+            logger.info("chat screen cleared by " + sender.getName());
             int i = 0;
             while (i <= 120) {
               getServer().broadcastMessage(" ");
@@ -118,12 +143,12 @@ public class PwnFilter extends JavaPlugin {
 		else if (cmd.getName().equalsIgnoreCase("pfmute")) {
 			if (pwnMute) {
 				getServer().broadcastMessage(ChatColor.RED + "Global mute cancelled by " + sender.getName());
-	            logToFile("global mute cancelled by " + sender.getName());	
+	            logger.info("global mute cancelled by " + sender.getName());
 	            pwnMute = false;
 			}
 			else {
 				getServer().broadcastMessage(ChatColor.RED + "Global mute initiated by " + sender.getName());
-	            logToFile("global mute initiated by " + sender.getName());
+	            logger.info("global mute initiated by " + sender.getName());
 	            pwnMute = true;
 			}
     		return true;
@@ -190,46 +215,6 @@ public class PwnFilter extends JavaPlugin {
         }
     }
 
-    private static PrintWriter pw = null; // Keep the printwriter persistent, so we don't have to open it each time.
-
-    public void logToFile(String message) {
-    	// send to the console as info any logTofiles
-    	if (logger != null ) logger.info(message);
-
-    	if (logfileEnable) {
-            if (pw == null) {
-                try {
-                    pw = new PrintWriter(new File(getDataFolder(), "pwnfilter.log"));
-                }
-                catch (IOException ex)
-                {
-                    getLogger().log(Level.SEVERE, null, ex);
-                }
-            }
-            pw.println(getDate() +" "+ message);
-            pw.flush();
-        }
-    }
-
-    public static void closeLog()
-    {
-        if (pw != null)
-        {
-            pw.close();
-            pw = null;
-        }
-    }
-
-
-    public String getDate() {
-    	  String s;
-    	  Format formatter;
-    	  Date date = new Date(); 
-    	  formatter = new SimpleDateFormat("[yyyy/MM/dd HH:mm:ss]");
-    	  s = formatter.format(date);
-    	  return s;
-    }
-
     /**
      * Selects string from the first not null of: message, default from config.yml or null.
      * Converts & to u00A7
@@ -257,7 +242,7 @@ public class PwnFilter extends JavaPlugin {
         // Ensure that directory exists
         if(!dataFolder.exists()) {
             if (dataFolder.mkdirs()) {
-                logToFile("created directory '" + dataFolder.getName() + "'" );
+                logger.info("created directory '" + dataFolder.getName() + "'");
             } else {
                 return null;
             }
@@ -276,7 +261,7 @@ public class PwnFilter extends JavaPlugin {
                     fout.write(data, 0, c);
                 fin.close();
                 fout.close();
-                logToFile("created config file '" + fname + "'" );
+                logger.warning("created config file '" + fname + "'");
             }catch(Exception ex){
                 ex.printStackTrace();
             }
