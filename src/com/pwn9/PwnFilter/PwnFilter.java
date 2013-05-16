@@ -114,9 +114,11 @@ public class PwnFilter extends JavaPlugin {
 
     public void onDisable() {
     	ruleset = null;
-        fh.close();
-        logger.removeHandler(fh);
-        fh = null;
+        if (fh != null) {
+            fh.close();
+            logger.removeHandler(fh);
+            fh = null;
+        }
     }
 
     @Override   
