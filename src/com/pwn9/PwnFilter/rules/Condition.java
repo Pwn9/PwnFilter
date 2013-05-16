@@ -1,7 +1,6 @@
 package com.pwn9.PwnFilter.rules;
 
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
+import com.pwn9.PwnFilter.FilterState;
 
 
 class Condition {
@@ -71,26 +70,29 @@ class Condition {
      * the condition is met, false otherwise.  Processing of the current rule
      * will be aborted if _any_ check returns false.
      *
-     * @param player The player sending this message
-     * @param message The message to be checked
+     * @param state The MessageState
      * @return true if this condition is met, false otherwise
      */
-    public boolean check(Player player, String message) {
+    public boolean check(FilterState state) {
         boolean matched = false;
         switch (type) {
             case user:
-                String playerName = player.getName();
+                String playerName = state.player.getName();
                 for (String check : parameters.split("\\s")) {
                     if (playerName.equalsIgnoreCase(check)) matched = true;
                 }
             case permission:
                 for (String check: parameters.split("\\s")) {
-                    if (player.hasPermission(check)) matched = true;
+                    if (state.player.hasPermission(check)) matched = true;
                 }
             case string:
                 for (String check: parameters.split("\\|")) {
-                    if (ChatColor.stripColor(message.replaceAll("&([0-9a-fk-or])", "\u00A7$1")).
-                            toUpperCase().contains(check.toUpperCase())) matched = true;
+                    if (state.getOriginalMessage().getPlainString().toUpperCase().contains(check.toUpperCase())) matched=true;
+                }
+            case command:
+                for (String check: parameters.split("\\|")) {
+                    String command = state.getOriginalMessage().getPlainString().split("\\s")[0];
+                    if (command.toUpperCase().contains(check.toUpperCase())) matched = true;
                 }
 
         }

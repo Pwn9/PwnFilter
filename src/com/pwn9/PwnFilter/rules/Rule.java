@@ -65,7 +65,7 @@ public class Rule {
 
         for (Condition c : conditions) {
             // This checks that EVERY condition is met (conditions are AND)
-            if (!c.check(state.player, state.message.getPlainString())) {
+            if (!c.check(state)) {
                 state.addLogMessage("CONDITION not met <"+ c.flag.toString()+
                         " " + c.type.toString()+" " + c.parameters + "> " + state.getOriginalMessage());
                 return false;
