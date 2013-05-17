@@ -140,9 +140,6 @@ public class RuleSet {
                     + state.getOriginalMessage().getColoredString());
         }
 
-        if (state.log) {
-            for (String s : state.logMessages) plugin.logger.info(s);
-        }
         return true;
     }
 
@@ -157,13 +154,13 @@ public class RuleSet {
 
         if (plugin.debugMode) {
             if (state.pattern != null) {
-                plugin.logger.fine("Debug match: " + state.pattern.pattern());
-                plugin.logger.fine("Debug original: " + state.getOriginalMessage().getColoredString());
-                plugin.logger.fine("Debug current: " + state.message.getColoredString());
-                plugin.logger.fine("Debug log: " + (state.log?"yes":"no"));
-                plugin.logger.fine("Debug deny: " + (state.cancel?"yes":"no"));
+                plugin.logger.finer("Debug match: " + state.pattern.pattern());
+                plugin.logger.finer("Debug original: " + state.getOriginalMessage().getColoredString());
+                plugin.logger.finer("Debug current: " + state.message.getColoredString());
+                plugin.logger.finer("Debug log: " + (state.log?"yes":"no"));
+                plugin.logger.finer("Debug deny: " + (state.cancel?"yes":"no"));
             } else {
-                plugin.logger.fine("[PwnFilter] Debug no match: " + state.getOriginalMessage().getColoredString());
+                plugin.logger.finer("[PwnFilter] Debug no match: " + state.getOriginalMessage().getColoredString());
             }
         }
 
@@ -175,8 +172,8 @@ public class RuleSet {
 
         for (String s : state.logMessages) {
             if (state.log) {
-                plugin.logger.fine(s);
-            } else plugin.logger.info(s);
+                plugin.logger.info(s);
+            } else plugin.logger.log(plugin.ruleLogLevel,s);
         }
 
     }

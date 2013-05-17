@@ -4,14 +4,17 @@ kickmsg: '&4[&6PwnFilter&4] &4Kicked by PwnFilter!'
 burnmsg: '&4[&6PwnFilter&4] &4Burned by PwnFilter!'
 killmsg: '&4[&6PwnFilter&4] &4Killed by PwnFilter!'
 
-# Logfile Enabling set to true or false
+# Set the level for MATCH/SEND messages
+# Set to 'fine' if you don't want MATCH/SEND events in your main server log
+# NOTE: If you have the "then log" action set for a rule, it will log
+# at level INFO, regardless of the setting here.
+loglevel: info
+
+# Create a PwnFilter.log file in the plugins/PwnFilter directory
+# This file will contain all PwnFilter log messages, regardless of level.
 logfile: true
 
-# Logfile Level - If logfile is true, then this sets the level of messages that will be put in the logfile.
-# info = normal (includes matches and replacements), fine = verbose (debug: true will log at 'fine' level)
-logfilelevel: info
-
-# Debug mode (VERY verbose)
+# Debug mode (VERY verbose) (Enable logfile above)
 debug: false
 
 # Strip color from chat. Permission to bypass pwnfilter.color or pwnfilter.bypass

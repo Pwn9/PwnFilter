@@ -46,7 +46,7 @@ public class PwnFilter extends JavaPlugin {
     public boolean decolor, debugMode;
     public HashMap<Player, String> killedPlayers = new HashMap<Player,String>();
     public Logger logger;
-    public Level logfileLevel;
+    public Level ruleLogLevel;
     FileHandler fh;
     public EventPriority cmdPriority, chatPriority, signPriority;
     public static HashMap<String, String> lastMessage = new HashMap<String, String>();
@@ -70,8 +70,7 @@ public class PwnFilter extends JavaPlugin {
                     SimpleFormatter f = new PwnFormatter();
                     fh.setFormatter(f);
                     getConfig().addDefault("logfileLevel", "fine");
-                    logfileLevel = Level.parse(getConfig().getString("logfileLevel").toUpperCase());
-                    fh.setLevel(logfileLevel);
+                    fh.setLevel(Level.FINEST); // Catch all log messages
                     logger.addHandler(fh);
 
                 } catch (IOException e) {
@@ -86,6 +85,12 @@ public class PwnFilter extends JavaPlugin {
         ruleset = new RuleSet(this);
         ruleset.init(getRulesFile());
 
+        getConfig().addDefault("logLevel","info");
+        try {
+            ruleLogLevel = Level.parse(getConfig().getString("loglevel").toUpperCase());
+        } catch (IllegalArgumentException e ) {
+            ruleLogLevel = Level.INFO;
+        }
 
         decolor = getConfig().getBoolean("decolor");
         debugMode = getConfig().getBoolean("debug");
