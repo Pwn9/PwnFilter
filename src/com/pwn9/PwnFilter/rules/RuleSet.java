@@ -168,7 +168,7 @@ public class RuleSet {
         }
 
         if (state.cancel){
-            state.addLogMessage("SENT <"+state.player.getName() + "> message cancelled by deny rule.");
+            state.addLogMessage("<"+state.player.getName() + "> Original message cancelled.");
         } else if (state.pattern != null || plugin.debugMode ) {
             state.addLogMessage("SENT <"+state.player.getName() + "> " + state.message.getPlainString());
         }

@@ -31,6 +31,7 @@ import java.util.logging.*;
 **/
 
 // TODO: Add support for Anvils and Books
+// TODO: Enable configuration management /pfset /pfsave and /pfreload config
 /*
 <--
 12:32:53          @Amaranth | Sage905: For anvils just use InventoryClickEvent. If the slot is for an anvil and is of

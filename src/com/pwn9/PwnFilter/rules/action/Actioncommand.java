@@ -25,6 +25,7 @@ public class Actioncommand implements Action {
         } else {
             cmd = state.message.getColoredString();
         }
+        state.addLogMessage("Helped " + state.player.getName() + " execute command: " + cmd);
         state.player.chat("/" + cmd);
         return true;
     }
