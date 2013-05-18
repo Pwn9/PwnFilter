@@ -2,6 +2,7 @@ package com.pwn9.PwnFilter.listener;
 
 import com.pwn9.PwnFilter.PwnFilter;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
@@ -22,25 +23,25 @@ public class PwnFilterPlayerListener implements Listener {
         PluginManager pm = Bukkit.getServer().getPluginManager();
 
         /* Hook up the Listener for PlayerChat events */
-        pm.registerEvent(AsyncPlayerChatEvent.class, this, p.chatPriority,
+        pm.registerEvent(AsyncPlayerChatEvent.class, this, PwnFilter.chatPriority,
                 new EventExecutor() {
                     public void execute(Listener l, Event e) { onPlayerChat((AsyncPlayerChatEvent)e); }
                 },
                 plugin);
 
-        pm.registerEvent(PlayerQuitEvent.class, this, p.chatPriority,
+        pm.registerEvent(PlayerQuitEvent.class, this, PwnFilter.chatPriority,
                 new EventExecutor() {
                     public void execute(Listener l, Event e) { onPlayerQuit((PlayerQuitEvent)e); }
                 },
                 plugin);
 
-        plugin.logger.config("Activated PlayerListener with Priority Setting: " + p.chatPriority.toString());
+        plugin.logger.config("Activated PlayerListener with Priority Setting: " + PwnFilter.chatPriority.toString());
     }
 
     public void onPlayerQuit(PlayerQuitEvent event) {
         // Cleanup player messages on quit
-        if (event.getPlayer() != null && plugin.lastMessage.containsKey(event.getPlayer().getName())) {
-            plugin.lastMessage.remove(event.getPlayer().getName());
+        if (event.getPlayer() != null && PwnFilter.lastMessage.containsKey(event.getPlayer().getName())) {
+            PwnFilter.lastMessage.remove(event.getPlayer().getName());
         }
     }
 
@@ -57,13 +58,26 @@ public class PwnFilterPlayerListener implements Listener {
 
         if (plugin.getConfig().getBoolean("spamfilter") && !player.hasPermission("pwnfilter.bypass.spam")) {
             // Keep a log of the last message sent by this player.  If it's the same as the current message, cancel.
-            if (plugin.lastMessage.containsKey(pName) && plugin.lastMessage.get(pName).equals(message)) {
+            if (PwnFilter.lastMessage.containsKey(pName) && PwnFilter.lastMessage.get(pName).equals(message)) {
                 event.setCancelled(true);
                 return;
             }
-            plugin.lastMessage.put(pName, message);
+            PwnFilter.lastMessage.put(pName, message);
 
         }
+
+        // Global mute
+        if ((PwnFilter.pwnMute) && (!(player.hasPermission("pwnfilter.bypass.mute")))) {
+            event.setCancelled(true);
+            return; // No point in continuing.
+        }
+
+        // Global decolor
+        if ((PwnFilter.decolor) && (!(player.hasPermission("pwnfilter.color")))) {
+            // We are changing the state of the message.  Let's do that before any rules processing.
+            event.setMessage(ChatColor.stripColor(event.getMessage()));
+        }
+
         plugin.filterChat(event);
 
     }

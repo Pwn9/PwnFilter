@@ -2,6 +2,7 @@ package com.pwn9.PwnFilter.listener;
 
 import com.pwn9.PwnFilter.PwnFilter;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
@@ -20,7 +21,7 @@ public class PwnFilterCommandListener implements Listener {
 	    plugin = p;
         PluginManager pm = Bukkit.getPluginManager();
 
-        pm.registerEvent(PlayerCommandPreprocessEvent.class, this, p.cmdPriority,
+        pm.registerEvent(PlayerCommandPreprocessEvent.class, this, PwnFilter.cmdPriority,
                 new EventExecutor() {
                     public void execute(Listener l, Event e) { onPlayerCommandPreprocess((PlayerCommandPreprocessEvent)e); }
                 },
@@ -43,12 +44,23 @@ public class PwnFilterCommandListener implements Listener {
 
             if (plugin.getConfig().getBoolean("commandspamfilter") && !player.hasPermission("pwnfilter.bypass.spam")) {
                 // Keep a log of the last message sent by this player.  If it's the same as the current message, cancel.
-                if (plugin.lastMessage.containsKey(pName) && plugin.lastMessage.get(pName).equals(message)) {
+                if (PwnFilter.lastMessage.containsKey(pName) && PwnFilter.lastMessage.get(pName).equals(message)) {
                     event.setCancelled(true);
                     return;
                 }
-                plugin.lastMessage.put(pName, message);
+                PwnFilter.lastMessage.put(pName, message);
 
+            }
+
+            // Global mute
+            if ((PwnFilter.pwnMute) && (!(player.hasPermission("pwnfilter.bypass.mute")))) {
+                event.setCancelled(true);
+                return;
+            }
+
+            // Global decolor
+            if ((PwnFilter.decolor) && (!(player.hasPermission("pwnfilter.color")))) {
+                event.setMessage(ChatColor.stripColor(message));
             }
 
             plugin.filterCommand(event);

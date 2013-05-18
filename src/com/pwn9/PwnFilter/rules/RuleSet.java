@@ -35,6 +35,8 @@ public class RuleSet {
     private ArrayList<Rule> ruleChain = new ArrayList<Rule>();
     private ArrayList<Rule> chatRules = new ArrayList<Rule>();
     private ArrayList<Rule> signRules = new ArrayList<Rule>();
+    private ArrayList<Rule> itemRules = new ArrayList<Rule>();
+
     private ArrayList<Rule> commandRules = new ArrayList<Rule>();
 
     public RuleSet(final PwnFilter p) {
@@ -90,6 +92,13 @@ public class RuleSet {
         return true;
     }
 
+    /**
+     * The sign filter has extra work to do that the chat doesn't:
+     * 1. Take lines of sign and aggregate them into one string for processing
+     * 2. Feed them into the filter.
+     * 3. Re-split the lines so they can be placed on the sign.
+     * @param event The SignChangeEvent to be processed.
+     */
     public boolean apply(SignChangeEvent event) {
         // Take the message from the CommandPreprocessEvent and send it through the filter.
         StringBuilder builder = new StringBuilder();
@@ -143,6 +152,14 @@ public class RuleSet {
         return true;
     }
 
+    public void runFilter(FilterState state, String chainName) {
+        // This is temporary.  Clean up
+
+        if (chainName.matches("item")) {
+            runFilter(state, itemRules);
+        }
+    }
+
     public void runFilter(FilterState state, ArrayList<Rule> chain) {
 
         for (Rule rule : chain) {
@@ -152,7 +169,7 @@ public class RuleSet {
             }
         }
 
-        if (plugin.debugMode) {
+        if (PwnFilter.debugMode) {
             if (state.pattern != null) {
                 plugin.logger.finer("Debug match: " + state.pattern.pattern());
                 plugin.logger.finer("Debug original: " + state.getOriginalMessage().getColoredString());
@@ -166,7 +183,7 @@ public class RuleSet {
 
         if (state.cancel){
             state.addLogMessage("<"+state.player.getName() + "> Original message cancelled.");
-        } else if (state.pattern != null || plugin.debugMode ) {
+        } else if (state.pattern != null || PwnFilter.debugMode ) {
             state.addLogMessage("SENT <"+state.player.getName() + "> " + state.message.getPlainString());
         }
 
@@ -182,9 +199,11 @@ public class RuleSet {
         if (r.isValid()) {
             ruleChain.add(r);
             for (Rule.EventType e : r.events ) {
+                // TODO: Clean this up
                 if (e == Rule.EventType.sign) signRules.add(r);
                 else if (e == Rule.EventType.chat) chatRules.add(r);
                 else if (e == Rule.EventType.command) commandRules.add(r);
+                else if (e == Rule.EventType.item) itemRules.add(r);
             }
             return true;
         } else return false;

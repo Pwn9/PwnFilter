@@ -25,6 +25,7 @@ public class Rule {
         chat,
         sign,
         command,
+        item,
     }
     final Pattern pattern;
 //    String name; // TODO: Give rules names for logs and troubleshooting
