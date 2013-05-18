@@ -1,0 +1,52 @@
+package com.pwn9.PwnFilter.rules.action;
+
+import com.pwn9.PwnFilter.FilterState;
+import com.pwn9.PwnFilter.PwnFilter;
+import net.milkbowl.vault.economy.EconomyResponse;
+import org.bukkit.Bukkit;
+
+/**
+ * Fine the user by extracting money from his economy account.
+ */
+@SuppressWarnings("UnusedDeclaration")
+public class Actionfine implements Action {
+
+    String messageString; // Message to apply to this action
+    double fineAmount; // How much to fine the player.
+
+    public void init(String s)
+    {
+        String[] parts = s.split("\\s",2);
+
+        try {
+            fineAmount = Double.parseDouble(parts[0]);
+        } catch (NumberFormatException e ) {
+            fineAmount = 0.00;
+        }
+
+        String message = (parts.length > 1)?parts[1]:"";
+        messageString = PwnFilter.prepareMessage(parts[1],"finemsg");
+
+    }
+
+    public boolean execute(final FilterState state ) {
+        if (PwnFilter.economy != null ) {
+            EconomyResponse resp = PwnFilter.economy.withdrawPlayer(state.player.getName(),fineAmount);
+            if (resp.transactionSuccess()) {
+                state.addLogMessage(String.format("Fined %s : %f",state.player.getName(),resp.amount));
+            } else {
+                state.addLogMessage(String.format("Failed to fine %s : %f. Error: %s",
+                        state.player.getName(),resp.amount,resp.errorMessage));
+                return false;
+            }
+
+            Bukkit.getScheduler().runTask(state.plugin, new Runnable() {
+                public void run() {
+                    state.player.sendMessage(messageString);
+                }
+            });
+
+        return true;
+        } else return false;
+    }
+}

@@ -6,6 +6,7 @@ import com.pwn9.PwnFilter.listener.PwnFilterPlayerListener;
 import com.pwn9.PwnFilter.listener.PwnFilterSignListener;
 import com.pwn9.PwnFilter.rules.RuleSet;
 import com.pwn9.PwnFilter.util.PwnFormatter;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -15,6 +16,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.BufferedInputStream;
@@ -23,7 +25,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.*;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 /**
 * A Regular Expression (REGEX) Chat Filter For Bukkit with many great features
@@ -50,6 +55,7 @@ public class PwnFilter extends JavaPlugin {
     FileHandler fh;
     public EventPriority cmdPriority, chatPriority, signPriority;
     public static HashMap<String, String> lastMessage = new HashMap<String, String>();
+    public static Economy economy = null;
 
 
     private RuleSet ruleset;
@@ -63,23 +69,16 @@ public class PwnFilter extends JavaPlugin {
         logger = this.getLogger();
 
         if (getConfig().getBoolean("logfile")) {
-            if (fh == null) {
-                try {
-                    // For now, one logfile, like the old way.
-                    fh = new FileHandler(new File(getDataFolder(), "pwnfilter.log").toString(), true);
-                    SimpleFormatter f = new PwnFormatter();
-                    fh.setFormatter(f);
-                    getConfig().addDefault("logfileLevel", "fine");
-                    fh.setLevel(Level.FINEST); // Catch all log messages
-                    logger.addHandler(fh);
-
-                } catch (IOException e) {
-                    logger.warning("Unable to open logfile.");
-                } catch (SecurityException e) {
-                    logger.warning("Security Exception while trying to add file Handler");
-                }
-            }
+            setupLogfile();
         }
+
+        // See if we have Vault
+        if (!setupEconomy() ) {
+            logger.info("Vault dependency not found.  Disabling actions requiring Vault");
+        } else {
+            logger.info("Vault found. Enabling actions requiring Vault");
+        }
+
 
         // Create a new RuleSet object, loading in the rulesFile
         ruleset = new RuleSet(this);
@@ -93,6 +92,7 @@ public class PwnFilter extends JavaPlugin {
         }
 
         decolor = getConfig().getBoolean("decolor");
+
         debugMode = getConfig().getBoolean("debug");
 
         cmdlist = getConfig().getStringList("cmdlist");
@@ -125,6 +125,40 @@ public class PwnFilter extends JavaPlugin {
             logger.removeHandler(fh);
             fh = null;
         }
+    }
+
+    private void setupLogfile() {
+        if (fh == null) {
+            try {
+                // For now, one logfile, like the old way.
+                String fileName =  new File(getDataFolder(), "pwnfilter.log").toString();
+                fh = new FileHandler(fileName, true);
+                SimpleFormatter f = new PwnFormatter();
+                fh.setFormatter(f);
+                getConfig().addDefault("logfileLevel", "fine");
+                fh.setLevel(Level.FINEST); // Catch all log messages
+                logger.addHandler(fh);
+                logger.info("Now logging to " + fileName );
+
+            } catch (IOException e) {
+                logger.warning("Unable to open logfile.");
+            } catch (SecurityException e) {
+                logger.warning("Security Exception while trying to add file Handler");
+            }
+        }
+
+    }
+
+    private boolean setupEconomy() {
+        if (getServer().getPluginManager().getPlugin("Vault") == null) {
+            return false;
+        }
+        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+        if (rsp == null) {
+            return false;
+        }
+        economy = rsp.getProvider();
+        return economy != null;
     }
 
     @Override   
@@ -258,6 +292,7 @@ public class PwnFilter extends JavaPlugin {
         // Check to see if rules file exists.  If not, create a basic file from template
         if (!rulesFile.exists()) {
             try{
+                //noinspection ResultOfMethodCallIgnored
                 rulesFile.createNewFile();
                 BufferedInputStream fin = new BufferedInputStream(this.getResource(fname));
                 FileOutputStream fout = new FileOutputStream(rulesFile);

@@ -4,6 +4,7 @@ version: ${pwnfilter.version}
 author: tremor77
 description: Complete chat control with the power of RegEx
 website: http://pwn9.com
+softdepend: [Vault]
 
 commands:
   pfcls:
