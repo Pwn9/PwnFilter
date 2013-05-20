@@ -7,7 +7,7 @@
 
     <groupId>PwnFilter</groupId>
     <artifactId>PwnFilter</artifactId>
-    <version>3.0.0-rc4</version>
+    <version>3.0.0</version>
     <name>PwnFilter</name>
     <description>Complete chat control with the power of regex.</description>
     <url>http://dev.bukkit.org/server-mods/pwnfilter/</url>

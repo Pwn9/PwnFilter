@@ -33,8 +33,6 @@ permissions:
         description: Gives permission to mute all chat and commands globally.
       pwnfilter.cls:
         description: Gives permission to clear chat
-      pwnfilter.bypassmute:
-        description: Gives permission to bypass global mute
       pwnfilter.color:
         description: Gives permission to use color if color is blocked
       pwnfilter.bypass:
@@ -48,4 +46,6 @@ permissions:
                 description: Gives permission to bypass Command rules
             pwnfilter.bypass.signs:
                 description: Gives permission to bypass Sign rules
+            pwnfilter.bypass.mute:
+                description: Gives permission to bypass global mute
 

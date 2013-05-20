@@ -28,12 +28,17 @@ ignore permission permission.node
 then randrep meep|beep|bleep|herp|derp
 events
 
+
 # FIX the .command typo with /command
+# But don't apply this to signs
 match ^\.(?=[a-z]+)
+events not sign
 then replace
 then command
 
 # Fun: rewrite tremor with pretty colors. Only let player tremor77 use it
+# Only do this for chat events
 match \btremor+\b|\btrem+\b
+events chat
 require user tremor77
 then rewrite &bt&cREM&bor&f

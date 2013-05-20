@@ -37,9 +37,10 @@ public class PwnFilterCommandListener implements Listener {
         //Gets the actual command as a string
         String cmdmessage = event.getMessage().substring(1).split(" ")[0];
 
+        if (event.getPlayer().hasPermission(("pwnfilter.bypass.commands"))) return;
+
         if ((plugin.cmdlist.isEmpty()) || (plugin.cmdlist.contains(cmdmessage))
-                && !(plugin.cmdblist.contains(cmdmessage))
-                && !(event.getPlayer().hasPermission(("pwnfilter.bypass.commands")))) {
+                && !(plugin.cmdblist.contains(cmdmessage))) {
 
             if (plugin.getConfig().getBoolean("commandspamfilter") && !player.hasPermission("pwnfilter.bypass.spam")) {
                 // Keep a log of the last message sent by this player.  If it's the same as the current message, cancel.
