@@ -166,7 +166,7 @@ public class PwnFilter extends JavaPlugin {
         return false;
     } 
     
-
+    // TODO: These need to be refactored away...
     public void filterChat(AsyncPlayerChatEvent event) {
 
         final Player player = event.getPlayer();
@@ -258,6 +258,7 @@ public class PwnFilter extends JavaPlugin {
         // Check to see if rules file exists.  If not, create a basic file from template
         if (!rulesFile.exists()) {
             try{
+                //noinspection ResultOfMethodCallIgnored
                 rulesFile.createNewFile();
                 BufferedInputStream fin = new BufferedInputStream(this.getResource(fname));
                 FileOutputStream fout = new FileOutputStream(rulesFile);

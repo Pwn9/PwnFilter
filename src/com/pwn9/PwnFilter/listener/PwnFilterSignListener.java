@@ -29,6 +29,12 @@ public class PwnFilterSignListener implements Listener {
     // This is the handler
     public void onSignChange(SignChangeEvent event) {
         if (event.isCancelled()) return;
+
+        // Permissions Check, if player has bypass permissions, then skip everything.
+        if (event.getPlayer().hasPermission("pwnfilter.bypass.signs")) {
+            return;
+        }
+
         plugin.filterSign(event);
     }
 }
