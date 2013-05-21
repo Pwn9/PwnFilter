@@ -10,6 +10,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -50,28 +51,60 @@ public class PwnFilter extends JavaPlugin {
     public static RuleSet ruleset;
 
 	public void onEnable() {
-
-        // Initialize and load configuration
-        saveDefaultConfig();
-
         // Set up logging
-        logger = this.getLogger();
-
-        if (getConfig().getBoolean("logfile")) {
-            setupLogfile();
+        if (logger == null) {
+            logger = this.getLogger();
         }
 
-        // See if we have Vault
+        // Initialize default configuration
+        saveDefaultConfig();
+
+        // Now get our configuration
+        configurePlugin();
+
+        // See if we have Vault and set up economy
         if (!setupEconomy() ) {
             logger.info("Vault dependency not found.  Disabling actions requiring Vault");
         } else {
             logger.info("Vault found. Enabling actions requiring Vault");
         }
 
-
         // Create a new RuleSet object, loading in the rulesFile
         ruleset = new RuleSet(this);
         ruleset.init(getRulesFile());
+
+        // Now activate our listeners
+        registerListeners();
+    }
+
+    public void registerListeners() {
+
+        // Register Chat Handler
+        new PwnFilterPlayerListener(this);
+        new PwnFilterEntityListener(this);
+
+        // Register Command Handler, if configured
+        if (getConfig().getBoolean("commandfilter")) new PwnFilterCommandListener(this);
+
+        // Register Sign Handler, if configured
+        if (getConfig().getBoolean("signfilter")) new PwnFilterSignListener(this);
+
+        // Put flag in to enable/disable this.
+        new PwnFilterInvListener(this);
+
+    }
+
+    public void configurePlugin() {
+
+        if (getConfig().getBoolean("logfile")) {
+            setupLogfile();
+        } else { // Needed during configuration reload to turn off logging if the option changes
+            if (fh != null) {
+                fh.close();
+                logger.removeHandler(fh);
+                fh = null;
+            }
+        }
 
         getConfig().addDefault("logLevel","info");
         try {
@@ -96,19 +129,6 @@ public class PwnFilter extends JavaPlugin {
         chatPriority = EventPriority.valueOf(getConfig().getString("chatpriority").toUpperCase());
         signPriority = EventPriority.valueOf(getConfig().getString("signpriority").toUpperCase());
         invPriority = EventPriority.valueOf(getConfig().getString("invpriority").toUpperCase());
-
-        // Register Chat Handler
-        new PwnFilterPlayerListener(this);
-        new PwnFilterEntityListener(this);
-
-        // Register Command Handler, if configured
-        if (getConfig().getBoolean("commandfilter")) new PwnFilterCommandListener(this);
-
-        // Register Sign Handler, if configured
-        if (getConfig().getBoolean("signfilter")) new PwnFilterSignListener(this);
-
-        // Put flag in to enable/disable this.
-        new PwnFilterInvListener(this);
 
     }
 
@@ -159,13 +179,22 @@ public class PwnFilter extends JavaPlugin {
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args ) {
 
         if (cmd.getName().equalsIgnoreCase("pfreload")) { 		   		
-            sender.sendMessage(ChatColor.RED + "Reloading rules.txt");
+            sender.sendMessage(ChatColor.RED + "Reloading config.yml and rules.txt");
+
+            // Remove all our listeners, first.
+            HandlerList.unregisterAll(this);
+
+            reloadConfig();
+            configurePlugin();
+
             ruleset = new RuleSet(this);
             if (ruleset.init(getRulesFile())) {
-                logger.config("rules.txt reloaded by " + sender.getName());
+                logger.config("rules.txt and config.yml reloaded by " + sender.getName());
             } else {
                 logger.warning("failed to reload rules.txt as requested by " + sender.getName());
             }
+
+            registerListeners();
             return true;
         }
 		else if (cmd.getName().equalsIgnoreCase("pfcls")) {  

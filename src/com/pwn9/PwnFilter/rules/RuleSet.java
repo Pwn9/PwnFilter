@@ -178,7 +178,7 @@ public class RuleSet {
             PwnFilter.logger.config("Read " + count.toString() + " rules from file.  Installed " + ruleChain.size() + " valid rules.");
             StringBuilder sb = new StringBuilder();
             for (Rule.EventType e : Rule.EventType.values()) {
-                sb.append(e.toString()).append(" Rules:").append(eventChain.get(e).size());
+                sb.append(e.toString()).append(" Rules:").append(eventChain.get(e).size()).append(" ");
             }
             PwnFilter.logger.config(sb.toString());
 
