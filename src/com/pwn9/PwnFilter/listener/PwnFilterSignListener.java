@@ -1,4 +1,5 @@
 package com.pwn9.PwnFilter.listener;
+import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.PwnFilter;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
@@ -26,7 +27,13 @@ public class PwnFilterSignListener implements Listener {
                 plugin);
 
     }
-    // This is the handler
+    /**
+     * The sign filter has extra work to do that the chat doesn't:
+     * 1. Take lines of sign and aggregate them into one string for processing
+     * 2. Feed them into the filter.
+     * 3. Re-split the lines so they can be placed on the sign.
+     * @param event The SignChangeEvent to be processed.
+     */
     public void onSignChange(SignChangeEvent event) {
         if (event.isCancelled()) return;
 
@@ -34,7 +41,54 @@ public class PwnFilterSignListener implements Listener {
         if (event.getPlayer().hasPermission("pwnfilter.bypass.signs")) {
             return;
         }
+        // Take the message from the CommandPreprocessEvent and send it through the filter.
+        StringBuilder builder = new StringBuilder();
 
-        plugin.filterSign(event);
+        for (String l :event.getLines()) {
+            builder.append(l).append(" ");
+        }
+        String signLines = builder.toString();
+
+        FilterState state = new FilterState(plugin, signLines, event.getPlayer());
+
+        PwnFilter.ruleset.runFilter(state, "sign");
+
+        if (state.messageChanged()){
+            // TODO: Can colors be placed on signs?  Wasn't working. Find out why.
+            // Break the changed string into words
+            String[] words = state.message.getPlainString().split("\\b");
+            String[] lines = new String[4];
+
+            // Iterate over the 4 sign lines, applying one word at a time, until the line is full.
+            // If all 4 lines are full, the rest of the words are just discarded.
+            // This may negatively affect plugins that use signs and require text to appear on a certain
+            // line, but we only do this when we've matched a rule.
+            int wordIndex = 0;
+            for (int i = 0 ; i < 4 ; i++) {
+                lines[i] = "";
+                while (wordIndex < words.length) {
+                    if (lines[i].length() + words[wordIndex].length() < 15) {
+                        lines[i] = lines[i] + words[wordIndex] + " ";
+                        wordIndex++;
+                    } else {
+                        break;
+                    }
+                }
+            }
+
+            for (int i = 0 ; i < 4 ; i++ ) {
+                if (lines[i] != null) {
+                    event.setLine(i,lines[i]);
+                }
+            }
+        }
+
+        if (state.cancel) {
+            event.setCancelled(true);
+            state.player.sendMessage("Your sign broke, there must be something wrong with it.");
+            state.addLogMessage("SIGN " + state.player.getName() + " sign text: "
+                    + state.getOriginalMessage().getColoredString());
+        }
+
     }
 }
