@@ -42,7 +42,7 @@ public class PwnFilter extends JavaPlugin {
     public List<String> cmdblist;
     public static boolean decolor, debugMode;
     public HashMap<Player, String> killedPlayers = new HashMap<Player,String>();
-    public Logger logger;
+    public static Logger logger;
     public Level ruleLogLevel;
     FileHandler fh;
     public static EventPriority cmdPriority, chatPriority, signPriority, invPriority;

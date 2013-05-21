@@ -26,6 +26,10 @@ public class Actionfine implements Action {
 
         String message = (parts.length > 1)?parts[1]:"";
         messageString = PwnFilter.prepareMessage(parts[1],"finemsg");
+        if (PwnFilter.economy == null) {
+            PwnFilter.logger.warning("Parsed rule requiring an Economy, but one was not detected. " +
+                    "Check Vault configuration, or remove 'then fine' rules.");
+        }
 
     }
 
