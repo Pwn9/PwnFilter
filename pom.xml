@@ -115,7 +115,7 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.4</version>
                 <configuration>
-                    <outputDirectory>../jars</outputDirectory>
+                    <outputDirectory>jars</outputDirectory>
                 </configuration>
             </plugin>
             <plugin>
