@@ -21,20 +21,32 @@ commands:
     description: Reloads the config of PwnFilter
     usage: /<command> 
     permission: pwnfilter.reload
-    permission-message: You dont have permission for this command
+    permission-message: You don't have permission for this command
 
 permissions:
   pwnfilter.*:
     description: gives all permissions of the PwnFilter
     default: op
     children:
-      pwnfilter.bypass:
-        description: Gives permission to bypass all rules
       pwnfilter.reload:
         description: Gives permission to reload the rules
+      pwnfilter.mute:
+        description: Gives permission to mute all chat and commands globally.
       pwnfilter.cls:
         description: Gives permission to clear chat
-      pwnfilter.bypassmute:
-        description: Gives permission to bypass global mute
       pwnfilter.color:
-        description: Gives permission to use color if color is blocked                
+        description: Gives permission to use color if color is blocked
+      pwnfilter.bypass:
+        description: Gives permission to bypass all rules
+        children:
+            pwnfilter.bypass.spam:
+                description: Gives permission to bypass spam filter
+            pwnfilter.bypass.chat:
+                description: Gives permission to bypass Chat rules
+            pwnfilter.bypass.commands:
+                description: Gives permission to bypass Command rules
+            pwnfilter.bypass.signs:
+                description: Gives permission to bypass Sign rules
+            pwnfilter.bypass.mute:
+                description: Gives permission to bypass global mute
+

@@ -1,4 +1,5 @@
-# Default message setups, can be overridden in rules.txt per match, do not remove quotes around messages!
+# Default message setups, can be overridden in rules.txt per match.
+# DO NOT remove quotes around messages!
 warnmsg: '&4[&6PwnFilter&4] &4Warned by PwnFilter!'
 kickmsg: '&4[&6PwnFilter&4] &4Kicked by PwnFilter!'
 burnmsg: '&4[&6PwnFilter&4] &4Burned by PwnFilter!'
@@ -20,7 +21,7 @@ debug: false
 # Strip color from chat. Permission to bypass pwnfilter.color or pwnfilter.bypass
 decolor: true
 
-# Experimental, filter commands as well as chat true/false
+# Filter commands as well as chat true/false
 commandfilter: true
 
 # Filter text applied to signs
@@ -42,10 +43,22 @@ cmdblist:
 - warp
 - help
 
+#### ADVANCED #####
 # Note: You can also change the priority of event handlers with:
 # priority, cmdpriority and signpriority
 # Changing priority can allow the event handlers to process messages before or after other
-# plugins.
+# plugins.  This can sometimes help with plugin conflicts.  You really should know what you
+# are doing before you change these. :)
+
+# Change priority of PlayerListener (chat)
+# priority: lowest #(default)
+
+# Change priority of CommandListener
+# cmdpriority: lowest #(default)
+
+# Change priority of SignListener
+# signpriority: lowest #(default)
+
 
 
 

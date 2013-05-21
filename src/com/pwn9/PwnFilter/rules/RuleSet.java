@@ -187,7 +187,7 @@ public class RuleSet {
             state.addLogMessage("SENT <"+state.player.getName() + "> " + state.message.getPlainString());
         }
 
-        for (String s : state.logMessages) {
+        for (String s : state.getLogMessages()) {
             if (state.log) {
                 plugin.logger.info(s);
             } else plugin.logger.log(plugin.ruleLogLevel,s);

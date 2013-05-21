@@ -28,7 +28,7 @@ public class FilterState {
     public final Player player; // Player that this event is connected to.
     public ColoredString message; // Modified message string
     final int messageLen; // New message can't be longer than original.
-    public List<String> logMessages = new ArrayList<String>(); // Rules can add strings to this array.  They will be output to log if log=true
+    private List<String> logMessages = new ArrayList<String>(); // Rules can add strings to this array.  They will be output to log if log=true
     public boolean log = false;  // If true, actions will be logged
     public boolean stop = false; // If set true by a rule, will stop further processing.
     public boolean cancel = false; // If set true, will cancel this event.
@@ -61,6 +61,9 @@ public class FilterState {
         logMessages.add(message);
     }
 
+    public List<String> getLogMessages() {
+        return logMessages;
+    }
     /**
      * @return true if the modified message is different than the original.
      */

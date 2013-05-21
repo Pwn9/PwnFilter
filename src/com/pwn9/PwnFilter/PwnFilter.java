@@ -197,7 +197,7 @@ public class PwnFilter extends JavaPlugin {
         return false;
     } 
     
-
+    // TODO: These need to be refactored away...
     public void filterChat(AsyncPlayerChatEvent event) {
         ruleset.apply(event);
     }
