@@ -1,5 +1,6 @@
 package com.pwn9.PwnFilter.listener;
 
+import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.PwnFilter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -64,7 +65,17 @@ public class PwnFilterCommandListener implements Listener {
                 event.setMessage(ChatColor.stripColor(message));
             }
 
-            plugin.filterCommand(event);
+            // Take the message from the Command Event and send it through the filter.
+
+            FilterState state = new FilterState(plugin, event.getMessage(),event.getPlayer());
+
+            PwnFilter.ruleset.runFilter(state, "command");
+
+            // Only update the message if it has been changed.
+            if (state.messageChanged()){
+                event.setMessage(state.message.getColoredString());
+            }
+            if (state.cancel) event.setCancelled(true);
 
         }
     }

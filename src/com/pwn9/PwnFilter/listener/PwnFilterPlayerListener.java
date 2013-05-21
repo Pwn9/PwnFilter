@@ -1,5 +1,6 @@
 package com.pwn9.PwnFilter.listener;
 
+import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.PwnFilter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -35,7 +36,7 @@ public class PwnFilterPlayerListener implements Listener {
                 },
                 plugin);
 
-        plugin.logger.config("Activated PlayerListener with Priority Setting: " + PwnFilter.chatPriority.toString());
+        PwnFilter.logger.config("Activated PlayerListener with Priority Setting: " + PwnFilter.chatPriority.toString());
     }
 
     public void onPlayerQuit(PlayerQuitEvent event) {
@@ -78,8 +79,16 @@ public class PwnFilterPlayerListener implements Listener {
             event.setMessage(ChatColor.stripColor(event.getMessage()));
         }
 
-        plugin.filterChat(event);
+        // Take the message from the ChatEvent and send it through the filter.
+        FilterState state = new FilterState(plugin, event.getMessage(),event.getPlayer());
 
+        PwnFilter.ruleset.runFilter(state, "chat");
+
+        // Only update the message if it has been changed.
+        if (state.messageChanged()){
+            event.setMessage(state.message.getColoredString());
+        }
+        if (state.cancel) event.setCancelled(true);
     }
 
 }

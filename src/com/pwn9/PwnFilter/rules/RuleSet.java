@@ -2,14 +2,13 @@ package com.pwn9.PwnFilter.rules;
 
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.PwnFilter;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The RuleSet contains a compiled version of all the rules in the text file.
@@ -35,7 +34,6 @@ public class RuleSet {
     private ArrayList<Rule> chatRules = new ArrayList<Rule>();
     private ArrayList<Rule> signRules = new ArrayList<Rule>();
     private ArrayList<Rule> itemRules = new ArrayList<Rule>();
-
     private ArrayList<Rule> commandRules = new ArrayList<Rule>();
 
     public RuleSet(final PwnFilter p) {
@@ -57,49 +55,21 @@ public class RuleSet {
      * actions in sequential order.  If the Rule sets the stop=true of the FilterState,
      * stop processing rules.  If not, continue along the rule chain, checking the
      * (possibly modified) message against subsequent rules.
-     *
-     * @param event The event being handled.
-     * @return true if successful
      */
-    public boolean apply(AsyncPlayerChatEvent event) {
-        // Take the message from the ChatEvent and send it through the filter.
-
-        FilterState state = new FilterState(plugin, event.getMessage(),event.getPlayer());
-
-        runFilter(state, chatRules);
-
-        // Only update the message if it has been changed.
-        if (state.messageChanged()){
-            event.setMessage(state.message.getColoredString());
-        }
-        if (state.cancel) event.setCancelled(true);
-        return true;
-    }
-
-    public boolean apply(PlayerCommandPreprocessEvent event) {
-        // Take the message from the Command Event and send it through the filter.
-
-        FilterState state = new FilterState(plugin, event.getMessage(),event.getPlayer());
-
-        runFilter(state, commandRules);
-
-        // Only update the message if it has been changed.
-        if (state.messageChanged()){
-            event.setMessage(state.message.getColoredString());
-        }
-        if (state.cancel) event.setCancelled(true);
-        return true;
-    }
 
     public void runFilter(FilterState state, String chainName) {
         // This is temporary.  Clean up
 
-        if (chainName.matches("item")) runFilter(state, itemRules);
-        else if (chainName.matches("sign")) runFilter(state,signRules);
+        List<Rule> chain;
 
-    }
-
-    public void runFilter(FilterState state, ArrayList<Rule> chain) {
+        if (chainName.matches("item")) chain = itemRules;
+        else if (chainName.matches("sign")) chain = signRules;
+        else if (chainName.matches("command")) chain = commandRules;
+        else if (chainName.matches("chat")) chain = chatRules;
+        else {
+            PwnFilter.logger.severe("ruleChain not found.  Please report this as a bug.");
+            return;
+        }
 
         for (Rule rule : chain) {
             rule.apply(state);

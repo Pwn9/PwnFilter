@@ -10,9 +10,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.block.SignChangeEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -196,19 +193,7 @@ public class PwnFilter extends JavaPlugin {
     	} 
         return false;
     } 
-    
-    // TODO: These need to be refactored away...
-    public void filterChat(AsyncPlayerChatEvent event) {
-        ruleset.apply(event);
-    }
 
-    public void filterSign(SignChangeEvent event) {
-        ruleset.apply(event);
-    }
-
-    public void filterCommand(PlayerCommandPreprocessEvent event) {
-        ruleset.apply(event);
-    }
 
 /*
 <--
