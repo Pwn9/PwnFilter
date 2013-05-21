@@ -8,7 +8,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.EnumMap;
+
 
 /**
  * The RuleSet contains a compiled version of all the rules in the text file.
@@ -31,16 +32,22 @@ import java.util.List;
 public class RuleSet {
     public final PwnFilter plugin;
     private ArrayList<Rule> ruleChain = new ArrayList<Rule>();
-    private ArrayList<Rule> chatRules = new ArrayList<Rule>();
-    private ArrayList<Rule> signRules = new ArrayList<Rule>();
-    private ArrayList<Rule> itemRules = new ArrayList<Rule>();
-    private ArrayList<Rule> commandRules = new ArrayList<Rule>();
+
+    // EnumMap that contains a ruleChain (also ArrayList) for each type of event.
+    private EnumMap<Rule.EventType,ArrayList<Rule>> eventChain;
 
     public RuleSet(final PwnFilter p) {
         plugin = p;
+
+        eventChain = new EnumMap<Rule.EventType,ArrayList<Rule>>(Rule.EventType.class);
+
+        for (Rule.EventType e : Rule.EventType.values()) {
+            eventChain.put(e, new ArrayList<Rule>());
+        }
     }
 
     public boolean init(final File f) {
+
         try {
             return loadRules(new FileReader(f));
         } catch (FileNotFoundException e) {
@@ -57,16 +64,11 @@ public class RuleSet {
      * (possibly modified) message against subsequent rules.
      */
 
-    public void runFilter(FilterState state, String chainName) {
-        // This is temporary.  Clean up
+    public void runFilter(FilterState state, Rule.EventType eventType) {
 
-        List<Rule> chain;
+        ArrayList<Rule> chain = eventChain.get(eventType);
 
-        if (chainName.matches("item")) chain = itemRules;
-        else if (chainName.matches("sign")) chain = signRules;
-        else if (chainName.matches("command")) chain = commandRules;
-        else if (chainName.matches("chat")) chain = chatRules;
-        else {
+        if (chain == null) {
             PwnFilter.logger.severe("ruleChain not found.  Please report this as a bug.");
             return;
         }
@@ -106,13 +108,9 @@ public class RuleSet {
 
     public boolean append(Rule r) {
         if (r.isValid()) {
-            ruleChain.add(r);
+            ruleChain.add(r); // Add the Rule to the master chain
             for (Rule.EventType e : r.events ) {
-                // TODO: Clean this up
-                if (e == Rule.EventType.sign) signRules.add(r);
-                else if (e == Rule.EventType.chat) chatRules.add(r);
-                else if (e == Rule.EventType.command) commandRules.add(r);
-                else if (e == Rule.EventType.item) itemRules.add(r);
+                eventChain.get(e).add(r);
             }
             return true;
         } else return false;
@@ -178,7 +176,11 @@ public class RuleSet {
             input.close();
 
             PwnFilter.logger.config("Read " + count.toString() + " rules from file.  Installed " + ruleChain.size() + " valid rules.");
-            PwnFilter.logger.config("Command Rules: " + commandRules.size() + " Sign Rules: " + signRules.size() + " Chat Rules: " + chatRules.size());
+            StringBuilder sb = new StringBuilder();
+            for (Rule.EventType e : Rule.EventType.values()) {
+                sb.append(e.toString()).append(" Rules:").append(eventChain.get(e).size());
+            }
+            PwnFilter.logger.config(sb.toString());
 
         } catch (Exception e) {
             e.printStackTrace();

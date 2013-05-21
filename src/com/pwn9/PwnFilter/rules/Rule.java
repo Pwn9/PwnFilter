@@ -22,10 +22,10 @@ public class Rule {
      * Conditions are checked in order.  The first condition that matches
      */
     public enum EventType {
-        chat,
-        sign,
-        command,
-        item,
+        CHAT,
+        SIGN,
+        COMMAND,
+        ITEM,
     }
     final Pattern pattern;
 //    String name; // TODO: Give rules names for logs and troubleshooting
@@ -112,12 +112,12 @@ public class Rule {
             try {
                 if (parts[0].matches("not")) {
                     for (int i = 1; i < parts.length ; i++ ) {
-                        events.remove(EventType.valueOf(parts[i]));
+                        events.remove(EventType.valueOf(parts[i].toUpperCase()));
                     }
                 } else {
                     events.clear();
                     for (String event : parts ) {
-                        events.add(EventType.valueOf(event));
+                        events.add(EventType.valueOf(event.toUpperCase()));
                     }
                 }
             } catch (IllegalArgumentException e ) {

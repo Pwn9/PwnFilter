@@ -1,6 +1,8 @@
 package com.pwn9.PwnFilter.listener;
+
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.PwnFilter;
+import com.pwn9.PwnFilter.rules.Rule;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
@@ -51,7 +53,7 @@ public class PwnFilterSignListener implements Listener {
 
         FilterState state = new FilterState(plugin, signLines, event.getPlayer());
 
-        PwnFilter.ruleset.runFilter(state, "sign");
+        PwnFilter.ruleset.runFilter(state, Rule.EventType.SIGN);
 
         if (state.messageChanged()){
             // TODO: Can colors be placed on signs?  Wasn't working. Find out why.

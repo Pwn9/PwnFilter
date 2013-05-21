@@ -3,7 +3,6 @@ package com.pwn9.PwnFilter;
 import com.pwn9.PwnFilter.rules.RuleSet;
 import com.pwn9.PwnFilter.util.ColoredString;
 import junit.framework.TestCase;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -27,13 +26,12 @@ public class FilterTest extends TestCase {
 
     public FilterTest() {
         logger = Logger.getLogger("Test");
+        PwnFilter.logger = logger;
     }
 
-    @Test
     public void testLoadRules() {
 
         PwnFilter p = new PwnFilter();
-        p.logger = logger;
 
         RuleSet rs = new RuleSet(p);
         InputStreamReader ruleStream = new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("testrules.txt"));
@@ -42,7 +40,6 @@ public class FilterTest extends TestCase {
 
     }
 
-    @Test
     public void testColoredString() {
         String testString = "§7This §9is§l the §1string§3 under test.";
         String plainString = "This is the string under test.";
