@@ -30,8 +30,8 @@ import java.util.logging.SimpleFormatter;
 * @author tremor77
 **/
 
-// TODO: Add support for Anvils and Books
-// TODO: Enable configuration management /pfset /pfsave and /pfreload config
+// TODO: Add support for Books
+// TODO: Enable configuration management /pfset /pfsave
 
 public class PwnFilter extends JavaPlugin {
 
@@ -90,7 +90,7 @@ public class PwnFilter extends JavaPlugin {
         if (getConfig().getBoolean("signfilter")) new PwnFilterSignListener(this);
 
         // Put flag in to enable/disable this.
-        new PwnFilterInvListener(this);
+        if (getConfig().getBoolean("itemfilter")) new PwnFilterInvListener(this);
 
     }
 
@@ -224,12 +224,6 @@ public class PwnFilter extends JavaPlugin {
     } 
 
 
-/*
-<--
-12:32:53          @Amaranth | Sage905: For anvils just use InventoryClickEvent. If the slot is for an anvil and is of
- type result the player has crafted the item and you should be able to modify the itemmeta
- */
-
     /**
      * Selects string from the first not null of: message, default from config.yml or null.
      * Converts & to u00A7
@@ -277,7 +271,7 @@ public class PwnFilter extends JavaPlugin {
                     fout.write(data, 0, c);
                 fin.close();
                 fout.close();
-                logger.warning("created config file '" + fname + "'");
+                logger.warning("created sample rules file '" + fname + "'");
             }catch(Exception ex){
                 ex.printStackTrace();
             }
