@@ -5,7 +5,7 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>PwnFilter</groupId>
+    <groupId>com.pwn9.PwnFilter</groupId>
     <artifactId>PwnFilter</artifactId>
     <version>3.1.0-SNAPSHOT</version>
     <name>PwnFilter</name>
@@ -20,11 +20,11 @@
         <repository>
             <id>vault-repo</id>
             <url>http://ci.herocraftonline.com/plugin/repository/everything</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
         </repository>
         <repository>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
             <id>central</id>
             <name>Central Repository</name>
             <url>http://repo.maven.apache.org/maven2</url>
@@ -77,6 +77,13 @@
         <finalName>${project.name}</finalName>
         <sourceDirectory>${project.basedir}/src</sourceDirectory>
         <testSourceDirectory>${project.basedir}/test</testSourceDirectory>
+        <extensions>
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ssh</artifactId>
+                <version>2.4</version>
+            </extension>
+        </extensions>
 
         <resources>
             <resource>
@@ -147,18 +154,21 @@
         <url>scm:git:git://github.com/ptoal/PwnFilter.git</url>
         <developerConnection>scm:git:git://github.com/ptoal/PwnFilter.git</developerConnection>
     </scm>
+
     <distributionManagement>
+        <downloadUrl>http://ci.toal.ca/repo/PwnFilter</downloadUrl>
         <repository>
-            <id>pwnfilter-release-repo</id>
+            <id>pwnfilter-repo</id>
             <name>PwnFilter Release</name>
-            <url>scp://server.address/home/user.name/path/to/dir/maven/releases</url>
+            <url>scp://ci.toal.ca/home/tkflight/domains/toal.ca/public_html/repo/</url>
         </repository>
         <snapshotRepository>
-            <id>pwnfilter-snapshot-repository</id>
+            <id>pwnfilter-repo</id>
             <name>PwnFilter Snapshot</name>
-            <url>scp://server.address/home/user.name/path/to/dir/maven/snapshots</url>
+            <url>scp://ci.toal.ca/home/tkflight/domains/toal.ca/public_html/repo/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
+
 
     <properties>
         <pwnfilter.version>${project.version}</pwnfilter.version>
