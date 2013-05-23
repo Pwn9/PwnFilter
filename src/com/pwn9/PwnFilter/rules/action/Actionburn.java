@@ -23,9 +23,9 @@ public class Actionburn implements Action {
             public void run() {
                 state.player.setFireTicks(5000);
                 state.player.sendMessage(messageString);
-                state.addLogMessage("Burned " + state.player.getName() + ": " + messageString);
             }
         });
+        state.addLogMessage("Burned " + state.player.getName() + ": " + messageString);
         return true;
     }
 }
