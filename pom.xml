@@ -5,9 +5,9 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>PwnFilter</groupId>
+    <groupId>com.pwn9.PwnFilter</groupId>
     <artifactId>PwnFilter</artifactId>
-    <version>3.0.0</version>
+    <version>3.1.0-SNAPSHOT</version>
     <name>PwnFilter</name>
     <description>Complete chat control with the power of regex.</description>
     <url>http://dev.bukkit.org/server-mods/pwnfilter/</url>
@@ -18,13 +18,18 @@
             <url>http://repo.bukkit.org/content/groups/public/</url>
         </repository>
         <repository>
+            <id>vault-repo</id>
+            <url>http://ci.herocraftonline.com/plugin/repository/everything</url>
             <snapshots>
-                <enabled>false</enabled>
+                <enabled>true</enabled>
             </snapshots>
+        </repository>
+        <repository>
             <id>central</id>
             <name>Central Repository</name>
             <url>http://repo.maven.apache.org/maven2</url>
         </repository>
+
 
     </repositories>
 
@@ -34,6 +39,11 @@
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
             <version>${bukkit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.milkbowl.vault</groupId>
+            <artifactId>Vault</artifactId>
+            <version>${vault.version}</version>
         </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
@@ -67,6 +77,13 @@
         <finalName>${project.name}</finalName>
         <sourceDirectory>${project.basedir}/src</sourceDirectory>
         <testSourceDirectory>${project.basedir}/test</testSourceDirectory>
+        <extensions>
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ssh</artifactId>
+                <version>2.4</version>
+            </extension>
+        </extensions>
 
         <resources>
             <resource>
@@ -98,15 +115,27 @@
                 <configuration>
                     <encoding>UTF-8</encoding>
                 </configuration>
-
-        </plugin>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.4</version>
                 <configuration>
-                    <outputDirectory>../jars</outputDirectory>
+                    <outputDirectory>jars</outputDirectory>
                 </configuration>
+            </plugin>
+            <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-release-plugin</artifactId>
+                <version>2.4.1</version>
+                <configuration>
+                    <tagNameFormat>v@{project.version}</tagNameFormat>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-scm-plugin</artifactId>
+                <version>1.8.1</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -115,15 +144,37 @@
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
+                    <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
         </plugins>
     </build>
+    <scm>
+        <connection>scm:git:git://github.com/ptoal/PwnFilter.git</connection>
+        <url>scm:git:git://github.com/ptoal/PwnFilter.git</url>
+        <developerConnection>scm:git:git://github.com/ptoal/PwnFilter.git</developerConnection>
+    </scm>
+
+    <distributionManagement>
+        <downloadUrl>http://ci.toal.ca/repo/PwnFilter</downloadUrl>
+        <repository>
+            <id>pwnfilter-repo</id>
+            <name>PwnFilter Release</name>
+            <url>scp://ci.toal.ca/home/tkflight/domains/toal.ca/public_html/repo/</url>
+        </repository>
+        <snapshotRepository>
+            <id>pwnfilter-repo</id>
+            <name>PwnFilter Snapshot</name>
+            <url>scp://ci.toal.ca/home/tkflight/domains/toal.ca/public_html/repo/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+
 
     <properties>
         <pwnfilter.version>${project.version}</pwnfilter.version>
         <powermock.version>1.5</powermock.version>
         <easymock.version>3.1</easymock.version>
         <bukkit.version>1.5.1-R0.1-SNAPSHOT</bukkit.version>
+        <vault.version>1.2.25-SNAPSHOT</vault.version>
     </properties>
 </project>
