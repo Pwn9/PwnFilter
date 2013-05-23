@@ -21,9 +21,9 @@ public class Actionkick implements Action {
         Bukkit.getScheduler().runTask(state.plugin, new Runnable() {
             public void run() {
                 state.player.kickPlayer(messageString);
-                state.addLogMessage("Kicked " + state.player.getName() + ": " + messageString);
             }
         });
+        state.addLogMessage("Kicked " + state.player.getName() + ": " + messageString);
         return true;
     }
 }

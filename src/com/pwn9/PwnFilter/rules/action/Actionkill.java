@@ -22,9 +22,10 @@ public class Actionkill implements Action {
             public void run() {
                 state.plugin.killedPlayers.put(state.player, state.player.getDisplayName() + " " + messageString);
                 state.player.setHealth(0);
-                state.addLogMessage("Killed by Filter: " + state.player.getName() + " " + messageString);
             }
         });
+        state.addLogMessage("Killed by Filter: " + state.player.getName() + " " + messageString);
+
         return true;
     }
 }
