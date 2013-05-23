@@ -175,6 +175,6 @@
         <powermock.version>1.5</powermock.version>
         <easymock.version>3.1</easymock.version>
         <bukkit.version>1.5.1-R0.1-SNAPSHOT</bukkit.version>
-        <vault.version>1.2.25-SNAPSHOT</vault.version>
+        <vault.version>1.2.26-SNAPSHOT</vault.version>
     </properties>
 </project>

@@ -3,7 +3,6 @@ package com.pwn9.PwnFilter.rules.action;
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.PwnFilter;
 import net.milkbowl.vault.economy.EconomyResponse;
-import org.bukkit.Bukkit;
 
 /**
  * Fine the user by extracting money from his economy account.
@@ -43,14 +42,10 @@ public class Actionfine implements Action {
                         state.player.getName(),resp.amount,resp.errorMessage));
                 return false;
             }
+            state.player.sendMessage(messageString);
 
-            Bukkit.getScheduler().runTask(state.plugin, new Runnable() {
-                public void run() {
-                    state.player.sendMessage(messageString);
-                }
-            });
+            return true;
 
-        return true;
         } else return false;
     }
 }

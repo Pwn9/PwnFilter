@@ -2,7 +2,6 @@ package com.pwn9.PwnFilter.rules.action;
 
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.PwnFilter;
-import org.bukkit.Bukkit;
 
 /**
  * Burns a player to death.
@@ -19,12 +18,8 @@ public class Actionburn implements Action {
     }
 
     public boolean execute(final FilterState state ) {
-        Bukkit.getScheduler().runTask(state.plugin, new Runnable() {
-            public void run() {
-                state.player.setFireTicks(5000);
-                state.player.sendMessage(messageString);
-            }
-        });
+        state.player.setFireTicks(5000);
+        state.player.sendMessage(messageString);
         state.addLogMessage("Burned " + state.player.getName() + ": " + messageString);
         return true;
     }
