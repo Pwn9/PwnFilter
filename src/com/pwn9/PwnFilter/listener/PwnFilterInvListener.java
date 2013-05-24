@@ -32,6 +32,8 @@ public class PwnFilterInvListener implements Listener {
                 },
                 plugin);
 
+        PwnFilter.logger.info("Activated ItemListener with Priority Setting: " + PwnFilter.invPriority.toString());
+
     }
     // This is the handler
     public void onInventoryEvent(InventoryClickEvent event) {

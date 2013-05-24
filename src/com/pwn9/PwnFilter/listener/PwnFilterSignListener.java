@@ -28,6 +28,8 @@ public class PwnFilterSignListener implements Listener {
                 },
                 plugin);
 
+        PwnFilter.logger.info("Activated SignListener with Priority Setting: " + PwnFilter.signPriority.toString());
+
     }
     /**
      * The sign filter has extra work to do that the chat doesn't:

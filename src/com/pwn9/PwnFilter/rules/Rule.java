@@ -1,6 +1,7 @@
 package com.pwn9.PwnFilter.rules;
 
 import com.pwn9.PwnFilter.FilterState;
+import com.pwn9.PwnFilter.PwnFilter;
 import com.pwn9.PwnFilter.rules.action.Action;
 import com.pwn9.PwnFilter.rules.action.ActionFactory;
 import com.pwn9.PwnFilter.util.Patterns;
@@ -54,14 +55,17 @@ public class Rule {
     public boolean apply(FilterState state) {
 
         // Check if action matches the current state of the message
-        final Matcher matcher = pattern.matcher(state.message.getPlainString());
+
+        if (PwnFilter.debugMode) {
+            PwnFilter.logger.info("Testing Pattern: " + pattern.toString() + " on string: " + state.message.getPlainString());
+        }
+            final Matcher matcher = pattern.matcher(state.message.getPlainString());
 
         // If we don't match, return immediately with the original message
         if (!matcher.find()) return false;
         state.pattern = pattern;
 
         // If Match, log it and then check any conditions.
-
         state.addLogMessage("MATCH <"+ state.player.getName() + "> " + state.message.getPlainString());
 
         for (Condition c : conditions) {

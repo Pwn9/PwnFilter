@@ -28,6 +28,8 @@ public class PwnFilterCommandListener implements Listener {
                     public void execute(Listener l, Event e) { onPlayerCommandPreprocess((PlayerCommandPreprocessEvent)e); }
                 },
                 plugin);
+        PwnFilter.logger.info("Activated CommandListener with Priority Setting: " + PwnFilter.cmdPriority.toString());
+
     }
 
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
