@@ -70,9 +70,11 @@ public class PwnFilterCommandListener implements Listener {
 
             // Take the message from the Command Event and send it through the filter.
 
-            FilterState state = new FilterState(plugin, event.getMessage(),event.getPlayer());
+            FilterState state = new FilterState(plugin, event.getMessage(),event.getPlayer(),
+                    Rule.EventType.COMMAND);
 
-            PwnFilter.ruleset.runFilter(state, Rule.EventType.SIGN);
+
+            PwnFilter.ruleset.runFilter(state);
 
             // Only update the message if it has been changed.
             if (state.messageChanged()){

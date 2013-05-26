@@ -59,9 +59,9 @@ public class PwnFilterInvListener implements Listener {
         if (itemMeta.hasDisplayName()) {
             message = itemMeta.getDisplayName();
 
-            FilterState state = new FilterState(plugin, message, player);
+            FilterState state = new FilterState(plugin, message, player, Rule.EventType.ITEM);
 
-            PwnFilter.ruleset.runFilter(state, Rule.EventType.ITEM);
+            PwnFilter.ruleset.runFilter(state);
 
             // Only update the message if it has been changed.
             if (state.messageChanged()){

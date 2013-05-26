@@ -56,7 +56,7 @@ public class Rule {
 
         // Check if action matches the current state of the message
 
-        if (PwnFilter.debugMode) {
+        if (PwnFilter.debugMode.compareTo(PwnFilter.DebugModes.high) >= 0) {
             PwnFilter.logger.info("Testing Pattern: " + pattern.toString() + " on string: " + state.message.getPlainString());
         }
             final Matcher matcher = pattern.matcher(state.message.getPlainString());

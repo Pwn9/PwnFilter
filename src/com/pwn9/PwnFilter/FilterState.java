@@ -1,5 +1,6 @@
 package com.pwn9.PwnFilter;
 
+import com.pwn9.PwnFilter.rules.Rule;
 import com.pwn9.PwnFilter.util.ColoredString;
 import org.bukkit.entity.Player;
 
@@ -26,6 +27,7 @@ public class FilterState {
     private final ColoredString originalMessage; // Original message
     public final PwnFilter plugin; // Which plugin is this state attached to?
     public final Player player; // Player that this event is connected to.
+    public final Rule.EventType eventType;
     public ColoredString message; // Modified message string
     final int messageLen; // New message can't be longer than original.
     private List<String> logMessages = new ArrayList<String>(); // Rules can add strings to this array.  They will be output to log if log=true
@@ -33,6 +35,7 @@ public class FilterState {
     public boolean stop = false; // If set true by a rule, will stop further processing.
     public boolean cancel = false; // If set true, will cancel this event.
     public Pattern pattern; // Pattern that we currently matched.
+
     // NOTE: pattern should always match originalMessage, but may not match
     // the new message, if another rule has modified it.
 
@@ -43,12 +46,13 @@ public class FilterState {
      *
      * @param m The original text string to run rules against.
      */
-    public FilterState(PwnFilter pl, String m, Player p) {
+    public FilterState(PwnFilter pl, String m, Player p, Rule.EventType et) {
         originalMessage = new ColoredString(m);
         message = new ColoredString(m);
         messageLen = originalMessage.length();
         player = p;
         plugin = pl;
+        eventType = et;
     }
 
     /**

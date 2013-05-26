@@ -64,7 +64,9 @@ public class RuleSet {
      * (possibly modified) message against subsequent rules.
      */
 
-    public void runFilter(FilterState state, Rule.EventType eventType) {
+    public void runFilter(FilterState state) {
+
+        Rule.EventType eventType = state.eventType;
 
         ArrayList<Rule> chain = eventChain.get(eventType);
 
@@ -80,8 +82,7 @@ public class RuleSet {
             }
         }
 
-        if (plugin.debugMode == PwnFilter.DebugModes.high) {
-        if (PwnFilter.debugMode) {
+        if (PwnFilter.debugMode == PwnFilter.DebugModes.high) {
             if (state.pattern != null) {
                 PwnFilter.logger.finer("Debug match: " + state.pattern.pattern());
                 PwnFilter.logger.finer("Debug original: " + state.getOriginalMessage().getColoredString());
@@ -96,8 +97,7 @@ public class RuleSet {
         if (state.cancel){
             state.addLogMessage("<"+state.player.getName() + "> Original message cancelled.");
         } else if (state.pattern != null ||
-                plugin.debugMode.compareTo(PwnFilter.DebugModes.low) >= 0) {
-        } else if (state.pattern != null || PwnFilter.debugMode ) {
+                PwnFilter.debugMode.compareTo(PwnFilter.DebugModes.low) >= 0) {
             state.addLogMessage("SENT <"+state.player.getName() + "> " + state.message.getPlainString());
         }
 

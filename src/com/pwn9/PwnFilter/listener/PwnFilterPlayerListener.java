@@ -81,9 +81,9 @@ public class PwnFilterPlayerListener implements Listener {
         }
 
         // Take the message from the ChatEvent and send it through the filter.
-        FilterState state = new FilterState(plugin, event.getMessage(),event.getPlayer());
+        FilterState state = new FilterState(plugin, event.getMessage(),event.getPlayer(), Rule.EventType.CHAT);
 
-        PwnFilter.ruleset.runFilter(state, Rule.EventType.CHAT);
+        PwnFilter.ruleset.runFilter(state);
 
         // Only update the message if it has been changed.
         if (state.messageChanged()){
