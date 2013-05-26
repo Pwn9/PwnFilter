@@ -43,7 +43,10 @@ public class FilterTest extends TestCase {
     public void testColoredString() {
         String testString = "§7This §9is§l the §1string§3 under test.";
         String plainString = "This is the string under test.";
-        char [] codeArray = new char[]{'7',0,0,0,0,'9',0,'l',0,0,0,0,'1',0,0,0,0,0,'3',0,0,0,0,0,0,0,0,0,0,0};
+
+        String[] codeArray = {"§7",null,null,null,null,"§9",null,"§l",
+                null,null,null,null,"§1",null,null,null,null,null,"§3",null,null,
+                null,null,null,null,null,null,null,null,null};
 
         ColoredString cs = new ColoredString(testString);
         // Check length() method
@@ -54,10 +57,10 @@ public class FilterTest extends TestCase {
         assertEquals("is th",cs.subSequence(5,10));
 
         // Basic setup tests
-        assertEquals(testString, cs.getColoredString());
         assertEquals(plainString, cs.getPlainString());
-        assertEquals(testString, cs.toString());
         assertArrayEquals(codeArray, cs.getCodeArray());
+        assertEquals(testString, cs.getColoredString());
+        assertEquals(testString, cs.toString());
 
 
         // Replace with plain text
@@ -72,5 +75,21 @@ public class FilterTest extends TestCase {
         assertEquals("This is the rainbow under derp.", cs.getPlainString());
         assertEquals("§7This §9is§l the §3r§4a§5i§6n§7b§8o§9w§3 under derp.", cs.getColoredString());
 
+    }
+
+    public void testColoredStringWithFormatting() {
+        String test = "§9§l![MEMBERS]!:§r §aPlease §c§l/VOTE§r§a to get §9§l4 DIAMONDS§r§a /VOTE!";
+        String plain = "![MEMBERS]!: Please /VOTE to get 4 DIAMONDS /VOTE!";
+        Pattern p = Pattern.compile("-+m+e+m+b+e+r");
+
+        ColoredString cs1 = new ColoredString(test);
+
+        assertEquals(test,cs1.getColoredString());
+        assertEquals(plain,cs1.getPlainString());
+
+        ColoredString cs2 = new ColoredString("-member");
+
+        cs2.replaceText(p,"§9§l![MEMBERS]!:§r §aPlease §c§l/VOTE§r§a to get §9§l4 DIAMONDS§r§a /VOTE!");
+        assertEquals("§9§l![MEMBERS]!:§r §aPlease §c§l/VOTE§r§a to get §9§l4 DIAMONDS§r§a /VOTE!",cs2.getColoredString());
     }
 }

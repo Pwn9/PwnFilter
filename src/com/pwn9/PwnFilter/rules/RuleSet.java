@@ -80,6 +80,7 @@ public class RuleSet {
             }
         }
 
+        if (plugin.debugMode == PwnFilter.DebugModes.high) {
         if (PwnFilter.debugMode) {
             if (state.pattern != null) {
                 PwnFilter.logger.finer("Debug match: " + state.pattern.pattern());
@@ -94,6 +95,8 @@ public class RuleSet {
 
         if (state.cancel){
             state.addLogMessage("<"+state.player.getName() + "> Original message cancelled.");
+        } else if (state.pattern != null ||
+                plugin.debugMode.compareTo(PwnFilter.DebugModes.low) >= 0) {
         } else if (state.pattern != null || PwnFilter.debugMode ) {
             state.addLogMessage("SENT <"+state.player.getName() + "> " + state.message.getPlainString());
         }

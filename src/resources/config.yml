@@ -16,7 +16,10 @@ loglevel: info
 logfile: true
 
 # Debug mode (VERY verbose) (Enable logfile above)
+# NOTE: Changed in 3.0.1.  Now options are:
+# off, low, medium, high
 debug: false
+
 
 # Strip color from chat. Permission to bypass pwnfilter.color or pwnfilter.bypass
 decolor: true

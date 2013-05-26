@@ -17,7 +17,6 @@ public class Actionconchain implements Action {
     }
 
     public boolean execute(final FilterState state ) {
-        state.cancel = true;
         String cmds = Patterns.replaceCommands(commands, state.player,
                 state.message.getColoredString(), state.getOriginalMessage().getColoredString());
         String cmdchain[] = cmds.split("\\|");

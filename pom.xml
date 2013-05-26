@@ -38,12 +38,12 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>${bukkit.version}</version>
+            <version>1.5.2-R0.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>net.milkbowl.vault</groupId>
             <artifactId>Vault</artifactId>
-            <version>${vault.version}</version>
+            <version>1.2.26-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
@@ -150,10 +150,10 @@
         </plugins>
     </build>
     <scm>
-        <connection>scm:git:git://github.com/ptoal/PwnFilter.git</connection>
-        <url>scm:git:git://github.com/ptoal/PwnFilter.git</url>
-        <developerConnection>scm:git:git://github.com/ptoal/PwnFilter.git</developerConnection>
-    </scm>
+        <connection>scm:git:https://github.com/ptoal/PwnFilter.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/ptoal/PwnFilter.git</developerConnection>
+      <tag>HEAD</tag>
+  </scm>
 
     <distributionManagement>
         <downloadUrl>http://ci.toal.ca/repo/PwnFilter</downloadUrl>

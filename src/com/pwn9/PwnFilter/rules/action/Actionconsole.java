@@ -17,7 +17,6 @@ public class Actionconsole implements Action {
     }
 
     public boolean execute(final FilterState state ) {
-        state.cancel = true;
         String cmd = Patterns.replaceCommands(command, state.player,
                 state.message.getColoredString(), state.getOriginalMessage().getColoredString());
         state.addLogMessage("Sending console command: " + cmd);
