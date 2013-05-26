@@ -75,6 +75,10 @@ public class RuleSet {
             return;
         }
 
+        if (PwnFilter.debugMode.compareTo(PwnFilter.DebugModes.medium) >= 0) {
+              PwnFilter.logger.finer("Checking: " + state.getOriginalMessage());
+        }
+
         for (Rule rule : chain) {
             rule.apply(state);
             if (state.stop) {
