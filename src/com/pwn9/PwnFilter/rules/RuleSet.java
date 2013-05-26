@@ -145,6 +145,9 @@ public class RuleSet {
 
     public void runFilter(FilterState state, ArrayList<Rule> chain) {
 
+        if (plugin.debugMode.compareTo(PwnFilter.DebugModes.medium) >= 0) {
+            plugin.logger.finer("Checking: " + state.getOriginalMessage());
+        }
         for (Rule rule : chain) {
             rule.apply(state);
             if (state.stop) {
@@ -152,7 +155,7 @@ public class RuleSet {
             }
         }
 
-        if (plugin.debugMode) {
+        if (plugin.debugMode == PwnFilter.DebugModes.high) {
             if (state.pattern != null) {
                 plugin.logger.finer("Debug match: " + state.pattern.pattern());
                 plugin.logger.finer("Debug original: " + state.getOriginalMessage().getColoredString());
@@ -166,7 +169,8 @@ public class RuleSet {
 
         if (state.cancel){
             state.addLogMessage("<"+state.player.getName() + "> Original message cancelled.");
-        } else if (state.pattern != null || plugin.debugMode ) {
+        } else if (state.pattern != null ||
+                plugin.debugMode.compareTo(PwnFilter.DebugModes.low) >= 0) {
             state.addLogMessage("SENT <"+state.player.getName() + "> " + state.message.getPlainString());
         }
 

@@ -43,7 +43,14 @@ public class PwnFilter extends JavaPlugin {
     public Boolean pwnMute = false;
     public List<String> cmdlist;
     public List<String> cmdblist;
-    public boolean decolor, debugMode;
+    public enum DebugModes {
+        off, // Off
+        low, // Some debugging
+        medium, // More debugging
+        high, // You're crazy. :)
+    }
+    public boolean decolor;
+    public DebugModes debugMode;
     public HashMap<Player, String> killedPlayers = new HashMap<Player,String>();
     public Logger logger;
     public Level ruleLogLevel;
@@ -93,7 +100,11 @@ public class PwnFilter extends JavaPlugin {
         }
 
         decolor = getConfig().getBoolean("decolor");
-        debugMode = getConfig().getBoolean("debug");
+        try {
+            debugMode = DebugModes.valueOf(getConfig().getString("debug"));
+        } catch (IllegalArgumentException e) {
+            debugMode = DebugModes.off;
+        }
 
         cmdlist = getConfig().getStringList("cmdlist");
         cmdblist = getConfig().getStringList("cmdblist");
