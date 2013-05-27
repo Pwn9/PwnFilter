@@ -20,7 +20,7 @@ public class Actioncommand implements Action {
         String cmd;
         if (!command.isEmpty()) {
             cmd = Patterns.replaceCommands(command, state.player,
-                    state.message.getColoredString(), state.getOriginalMessage().getColoredString());
+                    state.message.getColoredString(), state.getOriginalMessage().getColoredString(), state);
             state.addLogMessage("Helped " + state.player.getName() + " execute command: " + cmd);
         } else {
             cmd = state.message.getColoredString();
