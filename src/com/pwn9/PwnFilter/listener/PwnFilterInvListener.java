@@ -10,6 +10,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.PluginManager;
@@ -54,7 +55,8 @@ public class PwnFilterInvListener implements Listener {
             return;
         }
 
-        ItemMeta itemMeta = event.getCurrentItem().getItemMeta();
+        ItemStack item = event.getCurrentItem();
+        ItemMeta itemMeta = item.getItemMeta();
 
         if (itemMeta.hasDisplayName()) {
             message = itemMeta.getDisplayName();
@@ -65,8 +67,13 @@ public class PwnFilterInvListener implements Listener {
 
             // Only update the message if it has been changed.
             if (state.messageChanged()){
-                itemMeta.setDisplayName(state.message.getColoredString());
+                ItemStack newItem = new ItemStack(item);
+                ItemMeta newItemMeta = newItem.getItemMeta();
+                newItemMeta.setDisplayName(state.message.getColoredString());
+                newItem.setItemMeta(newItemMeta);
+                event.setCurrentItem(newItem);
             }
+
 
             if (state.cancel) event.setCancelled(true);
         }

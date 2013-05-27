@@ -66,7 +66,8 @@ public class Rule {
         state.pattern = pattern;
 
         // If Match, log it and then check any conditions.
-        state.addLogMessage("MATCH <"+ state.player.getName() + "> " + state.message.getPlainString());
+        state.addLogMessage("|" + state.eventType.toString() +  "| MATCH <" +
+                state.player.getName() + "> " + state.message.getPlainString());
 
         for (Condition c : conditions) {
             // This checks that EVERY condition is met (conditions are AND)

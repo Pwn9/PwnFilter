@@ -76,7 +76,7 @@ public class RuleSet {
         }
 
         if (PwnFilter.debugMode.compareTo(PwnFilter.DebugModes.medium) >= 0) {
-              PwnFilter.logger.finer("Checking: " + state.getOriginalMessage());
+              PwnFilter.logger.finer("Event: " + state.eventType.toString() + " message: " + state.getOriginalMessage());
         }
 
         for (Rule rule : chain) {
@@ -102,7 +102,8 @@ public class RuleSet {
             state.addLogMessage("<"+state.player.getName() + "> Original message cancelled.");
         } else if (state.pattern != null ||
                 PwnFilter.debugMode.compareTo(PwnFilter.DebugModes.low) >= 0) {
-            state.addLogMessage("SENT <"+state.player.getName() + "> " + state.message.getPlainString());
+            state.addLogMessage("|" + state.eventType.toString() + "| SENT <" +
+                    state.player.getName() + "> " + state.message.getPlainString());
         }
 
         for (String s : state.getLogMessages()) {
