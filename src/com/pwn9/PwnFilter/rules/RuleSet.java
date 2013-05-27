@@ -55,6 +55,15 @@ public class RuleSet {
         }
     }
 
+    public int ruleCount() {
+        return ruleChain.size();
+    }
+
+    public int ruleCount(Rule.EventType r) {
+        return eventChain.get(r).size();
+    }
+
+
     /**
      * Iterate over the ruleChain in order, checking the Rule pattern against the
      * current message.  If the text pattern matches, test the rule conditions, to

@@ -1,8 +1,10 @@
 package com.pwn9.PwnFilter;
 
 import com.pwn9.PwnFilter.listener.*;
+import com.pwn9.PwnFilter.rules.Rule;
 import com.pwn9.PwnFilter.rules.RuleSet;
 import com.pwn9.PwnFilter.util.PwnFormatter;
+import com.pwn9.PwnFilter.util.Tracker;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -54,6 +56,7 @@ public class PwnFilter extends JavaPlugin {
     public static EventPriority cmdPriority, chatPriority, signPriority, invPriority;
     public static HashMap<String, String> lastMessage = new HashMap<String, String>();
     public static Economy economy = null;
+    public static Tracker matchTracker;
 
 
     public static RuleSet ruleset;
@@ -84,11 +87,37 @@ public class PwnFilter extends JavaPlugin {
         // Now activate our listeners
         registerListeners();
 
+        // Activate Plugin Metrics
         try {
             Metrics metrics = new Metrics(this);
+
+            metrics.addCustomData(new Metrics.Plotter("Total Number of Server Rules") {
+                @Override
+                public int getValue() {
+                    return ruleset.ruleCount();
+                }
+            });
+
+            Metrics.Graph graph = metrics.createGraph("Rules by Event");
+
+            for (final Rule.EventType r : Rule.EventType.values()) {
+                graph.addPlotter(new Metrics.Plotter(r.toString()) {
+                    @Override
+                    public int getValue() {
+                        return ruleset.ruleCount(r); // Number of rules for this event type
+                    }
+                });
+            }
+
+            Metrics.Graph matchGraph = metrics.createGraph("Matches");
+            matchTracker = new Tracker("Matches");
+
+            matchGraph.addPlotter(matchTracker);
+
             metrics.start();
+
         } catch (IOException e) {
-            // Failed to submit the stats :-(
+            logger.fine(e.getMessage());
         }
 
 
