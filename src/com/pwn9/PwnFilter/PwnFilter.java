@@ -13,6 +13,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.mcstats.Metrics;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -82,6 +83,15 @@ public class PwnFilter extends JavaPlugin {
 
         // Now activate our listeners
         registerListeners();
+
+        try {
+            Metrics metrics = new Metrics(this);
+            metrics.start();
+        } catch (IOException e) {
+            // Failed to submit the stats :-(
+        }
+
+
     }
 
     public void registerListeners() {
@@ -91,13 +101,13 @@ public class PwnFilter extends JavaPlugin {
         new PwnFilterEntityListener(this);
 
         // Register Command Handler, if configured
-        if (getConfig().getBoolean("commandfilter")) new PwnFilterCommandListener(this);
+        if (getConfig().getBoolean("commandfilter",false)) new PwnFilterCommandListener(this);
 
         // Register Sign Handler, if configured
-        if (getConfig().getBoolean("signfilter")) new PwnFilterSignListener(this);
+        if (getConfig().getBoolean("signfilter",false)) new PwnFilterSignListener(this);
 
         // Put flag in to enable/disable this.
-        if (getConfig().getBoolean("itemfilter")) new PwnFilterInvListener(this);
+        if (getConfig().getBoolean("itemfilter",false)) new PwnFilterInvListener(this);
 
     }
 
