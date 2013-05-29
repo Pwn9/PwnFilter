@@ -18,21 +18,11 @@ import java.util.regex.Pattern;
  * TODO: Finish docs
  */
 public class Rule {
-    /**
-     * A Rule contains the match regex, conditions and actions for a action.
-     * Conditions are checked in order.  The first condition that matches
-     */
-    public enum EventType {
-        CHAT,
-        SIGN,
-        COMMAND,
-        ITEM,
-    }
     final Pattern pattern;
 //    String name; // TODO: Give rules names for logs and troubleshooting
     ArrayList<Condition> conditions = new ArrayList<Condition>();
     ArrayList<Action> actions = new ArrayList<Action>();
-    ArrayList<EventType> events = new ArrayList<EventType>();
+    ArrayList<PwnFilter.EventType> events = new ArrayList<PwnFilter.EventType>();
 
 
     boolean log = false;
@@ -42,7 +32,7 @@ public class Rule {
     // All rules must have a matchStr, hence no parameter-less constructor.
     public Rule(String matchStr) {
         this.pattern = Patterns.compilePattern(matchStr);
-        events.addAll(Arrays.asList(EventType.values())); // Add to all events by default.
+        events.addAll(Arrays.asList(PwnFilter.EventType.values())); // Add to all events by default.
     }
 
     /* Methods */
@@ -119,12 +109,12 @@ public class Rule {
             try {
                 if (parts[0].matches("not")) {
                     for (int i = 1; i < parts.length ; i++ ) {
-                        events.remove(EventType.valueOf(parts[i].toUpperCase()));
+                        events.remove(PwnFilter.EventType.valueOf(parts[i].toUpperCase()));
                     }
                 } else {
                     events.clear();
                     for (String event : parts ) {
-                        events.add(EventType.valueOf(event.toUpperCase()));
+                        events.add(PwnFilter.EventType.valueOf(event.toUpperCase()));
                     }
                 }
             } catch (IllegalArgumentException e ) {
@@ -152,4 +142,7 @@ public class Rule {
         return this.pattern != null && this.actions != null;
     }
 
+    public String toString() {
+        return pattern.toString();
+    }
 }

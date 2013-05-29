@@ -33,6 +33,7 @@ public class FilterTest extends TestCase {
 
         PwnFilter p = new PwnFilter();
 
+
         RuleSet rs = new RuleSet(p);
         InputStreamReader ruleStream = new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("testrules.txt"));
 

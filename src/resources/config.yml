@@ -65,6 +65,9 @@ cmdblist:
 # Change priority of SignListener
 # signpriority: lowest #(default)
 
+# Change priority of ItemListener
+# itempriority: lowest
+
 
 
 

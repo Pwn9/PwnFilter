@@ -23,6 +23,7 @@ import java.util.EnumMap;
  *
  *
  * TODO: More documentation
+ * TODO: Implement ObuShutTheHellUp style functionality.
  *
  * User: ptoal
  * Date: 13-04-05
@@ -34,14 +35,14 @@ public class RuleSet {
     private ArrayList<Rule> ruleChain = new ArrayList<Rule>();
 
     // EnumMap that contains a ruleChain (also ArrayList) for each type of event.
-    private EnumMap<Rule.EventType,ArrayList<Rule>> eventChain;
+    private EnumMap<PwnFilter.EventType,ArrayList<Rule>> eventChain;
 
     public RuleSet(final PwnFilter p) {
         plugin = p;
 
-        eventChain = new EnumMap<Rule.EventType,ArrayList<Rule>>(Rule.EventType.class);
+        eventChain = new EnumMap<PwnFilter.EventType,ArrayList<Rule>>(PwnFilter.EventType.class);
 
-        for (Rule.EventType e : Rule.EventType.values()) {
+        for (PwnFilter.EventType e : PwnFilter.EventType.values()) {
             eventChain.put(e, new ArrayList<Rule>());
         }
     }
@@ -59,7 +60,7 @@ public class RuleSet {
         return ruleChain.size();
     }
 
-    public int ruleCount(Rule.EventType r) {
+    public int ruleCount(PwnFilter.EventType r) {
         return eventChain.get(r).size();
     }
 
@@ -75,7 +76,7 @@ public class RuleSet {
 
     public void runFilter(FilterState state) {
 
-        Rule.EventType eventType = state.eventType;
+        PwnFilter.EventType eventType = state.eventType;
 
         ArrayList<Rule> chain = eventChain.get(eventType);
 
@@ -126,8 +127,13 @@ public class RuleSet {
     public boolean append(Rule r) {
         if (r.isValid()) {
             ruleChain.add(r); // Add the Rule to the master chain
-            for (Rule.EventType e : r.events ) {
-                eventChain.get(e).add(r);
+            for (PwnFilter.EventType e : r.events ) {
+                if (PwnFilter.enabledEvents.contains(e)) {
+                    eventChain.get(e).add(r);
+                } else if (PwnFilter.debugMode.compareTo(PwnFilter.DebugModes.low) >= 0) {
+                    PwnFilter.logger.fine("Unable to add rule: " + r.toString() + " to the: " + e.toString()
+                            + " chain, as that filter is not enabled in the config.yml");
+                }
             }
             return true;
         } else return false;
@@ -194,7 +200,7 @@ public class RuleSet {
 
             PwnFilter.logger.config("Read " + count.toString() + " rules from file.  Installed " + ruleChain.size() + " valid rules.");
             StringBuilder sb = new StringBuilder();
-            for (Rule.EventType e : Rule.EventType.values()) {
+            for (PwnFilter.EventType e : PwnFilter.enabledEvents) {
                 sb.append(e.toString()).append(" Rules:").append(eventChain.get(e).size()).append(" ");
             }
             PwnFilter.logger.config(sb.toString());

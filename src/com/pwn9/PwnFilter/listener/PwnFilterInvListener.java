@@ -2,7 +2,6 @@ package com.pwn9.PwnFilter.listener;
 
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.PwnFilter;
-import com.pwn9.PwnFilter.rules.Rule;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -61,9 +60,10 @@ public class PwnFilterInvListener implements Listener {
         if (itemMeta.hasDisplayName()) {
             message = itemMeta.getDisplayName();
 
-            FilterState state = new FilterState(plugin, message, player, Rule.EventType.ITEM);
+            FilterState state = new FilterState(plugin, message, player, PwnFilter.EventType.ITEM);
 
             PwnFilter.ruleset.runFilter(state);
+            if (state.cancel) event.setCancelled(true);
 
             // Only update the message if it has been changed.
             if (state.messageChanged()){
@@ -75,7 +75,7 @@ public class PwnFilterInvListener implements Listener {
             }
 
 
-            if (state.cancel) event.setCancelled(true);
+
         }
 
     }

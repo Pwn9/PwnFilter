@@ -2,7 +2,6 @@ package com.pwn9.PwnFilter.listener;
 
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.PwnFilter;
-import com.pwn9.PwnFilter.rules.Rule;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
@@ -53,7 +52,7 @@ public class PwnFilterSignListener implements Listener {
         }
         String signLines = builder.toString();
 
-        FilterState state = new FilterState(plugin, signLines, event.getPlayer(), Rule.EventType.SIGN);
+        FilterState state = new FilterState(plugin, signLines, event.getPlayer(), PwnFilter.EventType.SIGN);
 
         PwnFilter.ruleset.runFilter(state);
 

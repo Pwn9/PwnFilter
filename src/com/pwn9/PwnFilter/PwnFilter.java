@@ -1,7 +1,6 @@
 package com.pwn9.PwnFilter;
 
 import com.pwn9.PwnFilter.listener.*;
-import com.pwn9.PwnFilter.rules.Rule;
 import com.pwn9.PwnFilter.rules.RuleSet;
 import com.pwn9.PwnFilter.util.PwnFormatter;
 import com.pwn9.PwnFilter.util.Tracker;
@@ -21,6 +20,7 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.FileHandler;
@@ -41,6 +41,13 @@ public class PwnFilter extends JavaPlugin {
     public static Boolean pwnMute = false;
     public List<String> cmdlist;
     public List<String> cmdblist;
+
+    public enum EventType {
+        CHAT,
+        SIGN,
+        COMMAND,
+        ITEM,
+    }
     public enum DebugModes {
         off, // Off
         low, // Some debugging
@@ -52,14 +59,16 @@ public class PwnFilter extends JavaPlugin {
     public HashMap<Player, String> killedPlayers = new HashMap<Player,String>();
     public static Logger logger;
     public Level ruleLogLevel;
-    FileHandler fh;
+    FileHandler logfileHandler;
     public static EventPriority cmdPriority, chatPriority, signPriority, invPriority;
     public static HashMap<String, String> lastMessage = new HashMap<String, String>();
+    public static EnumSet<EventType> enabledEvents = EnumSet.allOf(EventType.class); // The list of active Events
     public static Economy economy = null;
     public static Tracker matchTracker;
 
 
     public static RuleSet ruleset;
+
 
 	public void onEnable() {
         // Set up logging
@@ -73,12 +82,8 @@ public class PwnFilter extends JavaPlugin {
         // Now get our configuration
         configurePlugin();
 
-        // See if we have Vault and set up economy
-        if (!setupEconomy() ) {
-            logger.info("Vault dependency not found.  Disabling actions requiring Vault");
-        } else {
-            logger.info("Vault found. Enabling actions requiring Vault");
-        }
+        // Set up a Vault economy for actions like "fine" (optional)
+        setupEconomy();
 
         // Create a new RuleSet object, loading in the rulesFile
         ruleset = new RuleSet(this);
@@ -87,6 +92,12 @@ public class PwnFilter extends JavaPlugin {
         // Now activate our listeners
         registerListeners();
 
+        // Activate Plugin Metrics
+        activateMetrics();
+
+    }
+
+    public void activateMetrics() {
         // Activate Plugin Metrics
         try {
             Metrics metrics = new Metrics(this);
@@ -100,7 +111,7 @@ public class PwnFilter extends JavaPlugin {
 
             Metrics.Graph graph = metrics.createGraph("Rules by Event");
 
-            for (final Rule.EventType r : Rule.EventType.values()) {
+            for (final EventType r : EventType.values()) {
                 graph.addPlotter(new Metrics.Plotter(r.toString()) {
                     @Override
                     public int getValue() {
@@ -120,23 +131,17 @@ public class PwnFilter extends JavaPlugin {
             logger.fine(e.getMessage());
         }
 
-
     }
-
     public void registerListeners() {
 
-        // Register Chat Handler
+        // Register Chat Handler (Always enabled)
         new PwnFilterPlayerListener(this);
         new PwnFilterEntityListener(this);
 
-        // Register Command Handler, if configured
-        if (getConfig().getBoolean("commandfilter",false)) new PwnFilterCommandListener(this);
-
-        // Register Sign Handler, if configured
-        if (getConfig().getBoolean("signfilter",false)) new PwnFilterSignListener(this);
-
-        // Put flag in to enable/disable this.
-        if (getConfig().getBoolean("itemfilter",false)) new PwnFilterInvListener(this);
+        // Register Configured Handlers
+        if (enabledEvents.contains(EventType.COMMAND)) new PwnFilterCommandListener(this);
+        if (enabledEvents.contains(EventType.SIGN)) new PwnFilterSignListener(this);
+        if (enabledEvents.contains(EventType.ITEM)) new PwnFilterInvListener(this);
 
     }
 
@@ -145,21 +150,21 @@ public class PwnFilter extends JavaPlugin {
         if (getConfig().getBoolean("logfile")) {
             setupLogfile();
         } else { // Needed during configuration reload to turn off logging if the option changes
-            if (fh != null) {
-                fh.close();
-                logger.removeHandler(fh);
-                fh = null;
+            if (logfileHandler != null) {
+                logfileHandler.close();
+                logger.removeHandler(logfileHandler);
+                logfileHandler = null;
             }
         }
 
-        getConfig().addDefault("logLevel","info");
         try {
-            ruleLogLevel = Level.parse(getConfig().getString("loglevel").toUpperCase());
+            ruleLogLevel = Level.parse(getConfig().getString("loglevel","info").toUpperCase());
         } catch (IllegalArgumentException e ) {
             ruleLogLevel = Level.INFO;
         }
 
         decolor = getConfig().getBoolean("decolor");
+
         try {
             debugMode = DebugModes.valueOf(getConfig().getString("debug"));
         } catch (IllegalArgumentException e) {
@@ -169,38 +174,64 @@ public class PwnFilter extends JavaPlugin {
         cmdlist = getConfig().getStringList("cmdlist");
         cmdblist = getConfig().getStringList("cmdblist");
 
-        getConfig().addDefault("cmdpriority","LOWEST");
-        getConfig().addDefault("chatpriority","LOWEST");
-        getConfig().addDefault("signpriority","LOWEST");
-        getConfig().addDefault("invpriority","LOWEST");
+        enabledEvents.clear(); // Reset the enabled event types.
+        for ( EventType e : EventType.values()) {
+            switch (e) {
+                case CHAT:
+                    chatPriority = EventPriority.valueOf(getConfig()
+                            .getString("chatpriority","LOWEST").toUpperCase());
+                    enabledEvents.add(EventType.CHAT);
+                    break;
 
-        cmdPriority = EventPriority.valueOf(getConfig().getString("cmdpriority").toUpperCase());
-        chatPriority = EventPriority.valueOf(getConfig().getString("chatpriority").toUpperCase());
-        signPriority = EventPriority.valueOf(getConfig().getString("signpriority").toUpperCase());
-        invPriority = EventPriority.valueOf(getConfig().getString("invpriority").toUpperCase());
+                case COMMAND:
+                    if (getConfig().getBoolean("commandfilter",false)) {
+                        cmdPriority = EventPriority.valueOf(getConfig()
+                                .getString("cmdpriority","LOWEST").toUpperCase());
+                        enabledEvents.add(EventType.COMMAND);
+                    }
+                    break;
+
+                case SIGN:
+                    if(getConfig().getBoolean("signfilter",false)) {
+                        signPriority = EventPriority.valueOf(getConfig()
+                                .getString("signpriority","LOWEST").toUpperCase());
+                        enabledEvents.add(EventType.SIGN);
+                    }
+                    break;
+
+                case ITEM:
+                    if(getConfig().getBoolean("itemfilter",false)) {
+                        invPriority = EventPriority.valueOf(getConfig()
+                                .getString("invpriority","LOWEST").toUpperCase());
+                        enabledEvents.add(EventType.ITEM);
+                    }
+                    break;
+            }
+
+        }
 
     }
 
     public void onDisable() {
     	ruleset = null;
-        if (fh != null) {
-            fh.close();
-            logger.removeHandler(fh);
-            fh = null;
+        if (logfileHandler != null) {
+            logfileHandler.close();
+            logger.removeHandler(logfileHandler);
+            logfileHandler = null;
         }
     }
 
     private void setupLogfile() {
-        if (fh == null) {
+        if (logfileHandler == null) {
             try {
                 // For now, one logfile, like the old way.
                 String fileName =  new File(getDataFolder(), "pwnfilter.log").toString();
-                fh = new FileHandler(fileName, true);
+                logfileHandler = new FileHandler(fileName, true);
                 SimpleFormatter f = new PwnFormatter();
-                fh.setFormatter(f);
+                logfileHandler.setFormatter(f);
                 getConfig().addDefault("logfileLevel", "fine");
-                fh.setLevel(Level.FINEST); // Catch all log messages
-                logger.addHandler(fh);
+                logfileHandler.setLevel(Level.FINEST); // Catch all log messages
+                logger.addHandler(logfileHandler);
                 logger.info("Now logging to " + fileName );
 
             } catch (IOException e) {
@@ -212,16 +243,18 @@ public class PwnFilter extends JavaPlugin {
 
     }
 
-    private boolean setupEconomy() {
-        if (getServer().getPluginManager().getPlugin("Vault") == null) {
-            return false;
+    private void setupEconomy() {
+
+        if (getServer().getPluginManager().getPlugin("Vault") != null) {
+            RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+            if (rsp != null) {
+                economy = rsp.getProvider();
+                logger.info("Vault found. Enabling actions requiring Vault");
+                return;
+            }
         }
-        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
-        if (rsp == null) {
-            return false;
-        }
-        economy = rsp.getProvider();
-        return economy != null;
+        logger.info("Vault dependency not found.  Disabling actions requiring Vault");
+
     }
 
     @Override   
@@ -327,5 +360,6 @@ public class PwnFilter extends JavaPlugin {
         }
         return rulesFile;
     }
+
 }
 

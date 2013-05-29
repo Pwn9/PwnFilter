@@ -32,7 +32,6 @@ then log
 match cunt|whore|fag|slut|queer|bitch|bastard
 ignore permission permission.node
 then randrep meep|beep|bleep|herp|derp
-events
 
 
 # FIX the .command typo with /command
