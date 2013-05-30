@@ -82,6 +82,32 @@
 
     </dependencies>
 
+    <profiles>
+        <profile>
+            <id>jenkins</id>
+            <activation>
+                <property>
+                    <name>env.BUILD_NUMBER</name>
+                </property>
+            </activation>
+            <properties>
+                <pwnfilter.version>${project.version}-b${env.BUILD_NUMBER}</pwnfilter.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>profile-1</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <pwnfilter.version>${project.version}</pwnfilter.version>
+            </properties>
+        </profile>
+
+    </profiles>
+
+
+
     <build>
         <finalName>${project.name}</finalName>
         <sourceDirectory>${project.basedir}/src</sourceDirectory>
@@ -186,6 +212,11 @@
       <tag>HEAD</tag>
   </scm>
 
+  <ciManagement>
+      <system>jenkins</system>
+      <url>http://ci.toal.ca</url>
+  </ciManagement>
+
     <distributionManagement>
         <downloadUrl>http://ci.toal.ca/repo/PwnFilter</downloadUrl>
         <repository>
@@ -202,7 +233,6 @@
 
 
     <properties>
-        <pwnfilter.version>${project.version}</pwnfilter.version>
         <powermock.version>1.5</powermock.version>
         <easymock.version>3.1</easymock.version>
         <bukkit.version>1.5.1-R0.1-SNAPSHOT</bukkit.version>
