@@ -26,12 +26,13 @@ public class FilterTest extends TestCase {
 
     public FilterTest() {
         logger = Logger.getLogger("Test");
+        PwnFilter.logger = logger;
     }
 
     public void testLoadRules() {
 
         PwnFilter p = new PwnFilter();
-        p.logger = logger;
+
 
         RuleSet rs = new RuleSet(p);
         InputStreamReader ruleStream = new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("testrules.txt"));

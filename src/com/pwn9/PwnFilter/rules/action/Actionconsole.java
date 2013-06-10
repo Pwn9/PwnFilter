@@ -17,8 +17,8 @@ public class Actionconsole implements Action {
     }
 
     public boolean execute(final FilterState state ) {
-        String cmd = Patterns.replaceCommands(command, state.player,
-                state.message.getColoredString(), state.getOriginalMessage().getColoredString());
+        String cmd = Patterns.replaceCommands(command,
+                state.message.getColoredString(), state.getOriginalMessage().getColoredString(),state);
         state.addLogMessage("Sending console command: " + cmd);
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
         return true;

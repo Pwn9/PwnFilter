@@ -1,6 +1,7 @@
 package com.pwn9.PwnFilter.rules;
 
 import com.pwn9.PwnFilter.FilterState;
+import com.pwn9.PwnFilter.PwnFilter;
 import com.pwn9.PwnFilter.rules.action.Action;
 import com.pwn9.PwnFilter.rules.action.ActionFactory;
 import com.pwn9.PwnFilter.util.Patterns;
@@ -17,20 +18,11 @@ import java.util.regex.Pattern;
  * TODO: Finish docs
  */
 public class Rule {
-    /**
-     * A Rule contains the match regex, conditions and actions for a action.
-     * Conditions are checked in order.  The first condition that matches
-     */
-    public enum EventType {
-        chat,
-        sign,
-        command,
-    }
     final Pattern pattern;
 //    String name; // TODO: Give rules names for logs and troubleshooting
     ArrayList<Condition> conditions = new ArrayList<Condition>();
     ArrayList<Action> actions = new ArrayList<Action>();
-    ArrayList<EventType> events = new ArrayList<EventType>();
+    ArrayList<PwnFilter.EventType> events = new ArrayList<PwnFilter.EventType>();
 
 
     boolean log = false;
@@ -40,7 +32,7 @@ public class Rule {
     // All rules must have a matchStr, hence no parameter-less constructor.
     public Rule(String matchStr) {
         this.pattern = Patterns.compilePattern(matchStr);
-        events.addAll(Arrays.asList(EventType.values())); // Add to all events by default.
+        events.addAll(Arrays.asList(PwnFilter.EventType.values())); // Add to all events by default.
     }
 
     /* Methods */
@@ -53,15 +45,21 @@ public class Rule {
     public boolean apply(FilterState state) {
 
         // Check if action matches the current state of the message
-        final Matcher matcher = pattern.matcher(state.message.getPlainString());
+
+        if (PwnFilter.debugMode.compareTo(PwnFilter.DebugModes.high) >= 0) {
+            PwnFilter.logger.info("Testing Pattern: " + pattern.toString() + " on string: " + state.message.getPlainString());
+        }
+            final Matcher matcher = pattern.matcher(state.message.getPlainString());
 
         // If we don't match, return immediately with the original message
         if (!matcher.find()) return false;
         state.pattern = pattern;
 
         // If Match, log it and then check any conditions.
+        state.addLogMessage("|" + state.eventType.toString() +  "| MATCH <" +
+                state.playerName + "> " + state.message.getPlainString());
 
-        state.addLogMessage("MATCH <"+ state.player.getName() + "> " + state.message.getPlainString());
+        PwnFilter.matchTracker.increment(); // Update Match Statistics
 
         for (Condition c : conditions) {
             // This checks that EVERY condition is met (conditions are AND)
@@ -111,12 +109,12 @@ public class Rule {
             try {
                 if (parts[0].matches("not")) {
                     for (int i = 1; i < parts.length ; i++ ) {
-                        events.remove(EventType.valueOf(parts[i]));
+                        events.remove(PwnFilter.EventType.valueOf(parts[i].toUpperCase()));
                     }
                 } else {
                     events.clear();
                     for (String event : parts ) {
-                        events.add(EventType.valueOf(event));
+                        events.add(PwnFilter.EventType.valueOf(event.toUpperCase()));
                     }
                 }
             } catch (IllegalArgumentException e ) {
@@ -144,4 +142,7 @@ public class Rule {
         return this.pattern != null && this.actions != null;
     }
 
+    public String toString() {
+        return pattern.toString();
+    }
 }

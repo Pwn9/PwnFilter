@@ -2,6 +2,8 @@ package com.pwn9.PwnFilter.rules.action;
 
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.PwnFilter;
+import org.bukkit.Bukkit;
+import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * Warn the user with the string provided.
@@ -17,8 +19,15 @@ public class Actionwarn implements Action {
     }
 
     public boolean execute(final FilterState state ) {
-        state.player.sendMessage(messageString);
-        state.addLogMessage("Warned " + state.player.getName() + ": " + messageString);
+
+        state.addLogMessage("Warned " + state.playerName + ": " + messageString);
+        Bukkit.getScheduler().runTask(state.plugin, new BukkitRunnable() {
+            @Override
+            public void run() {
+                state.player.sendMessage(messageString);
+            }
+        });
+
         return true;
     }
 }

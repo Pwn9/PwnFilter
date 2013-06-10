@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.pwn9.PwnFilter</groupId>
     <artifactId>PwnFilter</artifactId>
-    <version>3.0.2-SNAPSHOT</version>
+    <version>3.1.0-SNAPSHOT</version>
     <name>PwnFilter</name>
     <description>Complete chat control with the power of regex.</description>
     <url>http://dev.bukkit.org/server-mods/pwnfilter/</url>
@@ -27,7 +29,10 @@
             <name>Central Repository</name>
             <url>http://repo.maven.apache.org/maven2</url>
         </repository>
-
+        <repository>
+            <id>Plugin Metrics</id>
+            <url>http://repo.mcstats.org/content/repositories/public</url>
+        </repository>
 
     </repositories>
 
@@ -68,8 +73,40 @@
             <version>4.8.1</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.mcstats.bukkit</groupId>
+            <artifactId>metrics</artifactId>
+            <version>R6</version>
+            <scope>compile</scope>
+        </dependency>
 
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>jenkins</id>
+            <activation>
+                <property>
+                    <name>env.BUILD_NUMBER</name>
+                </property>
+            </activation>
+            <properties>
+                <pwnfilter.version>${project.version}-b${env.BUILD_NUMBER}</pwnfilter.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>profile-1</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <pwnfilter.version>${project.version}</pwnfilter.version>
+            </properties>
+        </profile>
+
+    </profiles>
+
+
 
     <build>
         <finalName>${project.name}</finalName>
@@ -145,6 +182,28 @@
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.0</version>
+                <configuration>
+                    <minimizeJar>true</minimizeJar>
+                    <artifactSet>
+                        <includes>
+                            <include>org.mcstats.bukkit:metrics</include>
+                        </includes>
+                    </artifactSet>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
     <scm>
@@ -152,6 +211,11 @@
         <developerConnection>scm:git:ssh://git@github.com/ptoal/PwnFilter.git</developerConnection>
       <tag>HEAD</tag>
   </scm>
+
+  <ciManagement>
+      <system>jenkins</system>
+      <url>http://ci.toal.ca</url>
+  </ciManagement>
 
     <distributionManagement>
         <downloadUrl>http://ci.toal.ca/repo/PwnFilter</downloadUrl>
@@ -169,10 +233,9 @@
 
 
     <properties>
-        <pwnfilter.version>${project.version}</pwnfilter.version>
         <powermock.version>1.5</powermock.version>
         <easymock.version>3.1</easymock.version>
         <bukkit.version>1.5.1-R0.1-SNAPSHOT</bukkit.version>
-        <vault.version>1.2.25-SNAPSHOT</vault.version>
+        <vault.version>1.2.26-SNAPSHOT</vault.version>
     </properties>
 </project>

@@ -1,7 +1,9 @@
 package com.pwn9.PwnFilter.listener;
 
+import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.PwnFilter;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
@@ -22,50 +24,70 @@ public class PwnFilterPlayerListener implements Listener {
         PluginManager pm = Bukkit.getServer().getPluginManager();
 
         /* Hook up the Listener for PlayerChat events */
-        pm.registerEvent(AsyncPlayerChatEvent.class, this, p.chatPriority,
+        pm.registerEvent(AsyncPlayerChatEvent.class, this, PwnFilter.chatPriority,
                 new EventExecutor() {
                     public void execute(Listener l, Event e) { onPlayerChat((AsyncPlayerChatEvent)e); }
                 },
                 plugin);
 
-        pm.registerEvent(PlayerQuitEvent.class, this, p.chatPriority,
+        pm.registerEvent(PlayerQuitEvent.class, this, PwnFilter.chatPriority,
                 new EventExecutor() {
                     public void execute(Listener l, Event e) { onPlayerQuit((PlayerQuitEvent)e); }
                 },
                 plugin);
 
-        plugin.logger.config("Activated PlayerListener with Priority Setting: " + p.chatPriority.toString());
+        PwnFilter.logger.info("Activated PlayerListener with Priority Setting: " + PwnFilter.chatPriority.toString());
     }
 
     public void onPlayerQuit(PlayerQuitEvent event) {
         // Cleanup player messages on quit
-        if (event.getPlayer() != null && plugin.lastMessage.containsKey(event.getPlayer().getName())) {
-            plugin.lastMessage.remove(event.getPlayer().getName());
+        if (event.getPlayer() != null && PwnFilter.lastMessage.containsKey(event.getPlayer())) {
+            PwnFilter.lastMessage.remove(event.getPlayer());
         }
     }
 
     public void onPlayerChat(AsyncPlayerChatEvent event) {
         if (event.isCancelled()) return;
         final Player player = event.getPlayer();
-        String pName = player.getName();
         String message = event.getMessage();
+        FilterState state = new FilterState(plugin, event.getMessage(),event.getPlayer(), PwnFilter.EventType.CHAT);
+
 
         // Permissions Check, if player has bypass permissions, then skip everything.
-        if (player.hasPermission("pwnfilter.bypass.chat")) {
+        if (state.playerHasPermission("pwnfilter.bypass.chat")) {
             return;
         }
 
-        if (plugin.getConfig().getBoolean("spamfilter") && !player.hasPermission("pwnfilter.bypass.spam")) {
+        if (plugin.getConfig().getBoolean("spamfilter") && !state.playerHasPermission("pwnfilter.bypass.spam")) {
             // Keep a log of the last message sent by this player.  If it's the same as the current message, cancel.
-            if (plugin.lastMessage.containsKey(pName) && plugin.lastMessage.get(pName).equals(message)) {
+            if (PwnFilter.lastMessage.containsKey(player) && PwnFilter.lastMessage.get(player).equals(message)) {
                 event.setCancelled(true);
                 return;
             }
-            plugin.lastMessage.put(pName, message);
+            PwnFilter.lastMessage.put(player, message);
 
         }
-        plugin.filterChat(event);
 
+        // Global mute
+        if ((PwnFilter.pwnMute) && (!(state.playerHasPermission("pwnfilter.bypass.mute")))) {
+            event.setCancelled(true);
+            return; // No point in continuing.
+        }
+
+        // Global decolor
+        if ((PwnFilter.decolor) && (!(state.playerHasPermission("pwnfilter.color")))) {
+            // We are changing the state of the message.  Let's do that before any rules processing.
+            event.setMessage(ChatColor.stripColor(event.getMessage()));
+        }
+
+        // Take the message from the ChatEvent and send it through the filter.
+        PwnFilter.ruleset.runFilter(state);
+
+        // Only update the message if it has been changed.
+        if (state.messageChanged()){
+            event.setMessage(state.message.getColoredString());
+        }
+        if (state.cancel) event.setCancelled(true);
     }
 
 }

@@ -1,6 +1,12 @@
 # PwnFilter rules.txt - Define Regular Expression Rules
 # SAMPLE RULES http://dev.bukkit.org/server-mods/pwnfilter/
 # NOTE: ALL MATCHES AUTOMATICALLY IGNORE CASE
+#
+# Rules are applied in the order they are listed in this file.  Using the "then abort" action
+# will stop further rule processing.  So, if you want a rule to take priority over the others,
+# list it first in this file.  If you want a rule to stop further processing, use "then abort"
+# as an action to that rule.
+#
 # Each rule must have one 'match' statement and at least one 'then' statement, everything else is optional.
 #
 # match <regular expression>
@@ -26,7 +32,6 @@ then log
 match cunt|whore|fag|slut|queer|bitch|bastard
 ignore permission permission.node
 then randrep meep|beep|bleep|herp|derp
-events
 
 
 # FIX the .command typo with /command

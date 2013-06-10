@@ -22,7 +22,7 @@ public class PwnFilterEntityListener implements Listener {
         PluginManager pm = Bukkit.getServer().getPluginManager();
 
         /* Hook up the Listener for PlayerChat events */
-        pm.registerEvent(EntityDeathEvent.class, this, p.chatPriority,
+        pm.registerEvent(EntityDeathEvent.class, this, PwnFilter.chatPriority,
                 new EventExecutor() {
                     public void execute(Listener l, Event e) { onEntityDeath((EntityDeathEvent) e); }
                 },

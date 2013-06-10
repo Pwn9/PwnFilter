@@ -2,15 +2,15 @@ package com.pwn9.PwnFilter.rules;
 
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.PwnFilter;
-import org.bukkit.event.block.SignChangeEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumMap;
+
 
 /**
  * The RuleSet contains a compiled version of all the rules in the text file.
@@ -24,6 +24,7 @@ import java.util.ArrayList;
  *
  *
  * TODO: More documentation
+ * TODO: Implement ObuShutTheHellUp style functionality.
  *
  * User: ptoal
  * Date: 13-04-05
@@ -33,21 +34,38 @@ import java.util.ArrayList;
 public class RuleSet {
     public final PwnFilter plugin;
     private ArrayList<Rule> ruleChain = new ArrayList<Rule>();
-    private ArrayList<Rule> chatRules = new ArrayList<Rule>();
-    private ArrayList<Rule> signRules = new ArrayList<Rule>();
-    private ArrayList<Rule> commandRules = new ArrayList<Rule>();
+    public ArrayList<String> permList = new ArrayList<String>();
+
+    // EnumMap that contains a ruleChain (also ArrayList) for each type of event.
+    private EnumMap<PwnFilter.EventType,ArrayList<Rule>> eventChain;
 
     public RuleSet(final PwnFilter p) {
         plugin = p;
+
+        eventChain = new EnumMap<PwnFilter.EventType,ArrayList<Rule>>(PwnFilter.EventType.class);
+
+        for (PwnFilter.EventType e : PwnFilter.EventType.values()) {
+            eventChain.put(e, new ArrayList<Rule>());
+        }
     }
 
     public boolean init(final File f) {
+
         try {
             return loadRules(new FileReader(f));
         } catch (FileNotFoundException e) {
             return false;
         }
     }
+
+    public int ruleCount() {
+        return ruleChain.size();
+    }
+
+    public int ruleCount(PwnFilter.EventType r) {
+        return eventChain.get(r).size();
+    }
+
 
     /**
      * Iterate over the ruleChain in order, checking the Rule pattern against the
@@ -56,98 +74,23 @@ public class RuleSet {
      * actions in sequential order.  If the Rule sets the stop=true of the FilterState,
      * stop processing rules.  If not, continue along the rule chain, checking the
      * (possibly modified) message against subsequent rules.
-     *
-     * @param event The event being handled.
-     * @return true if successful
      */
-    public boolean apply(AsyncPlayerChatEvent event) {
-        // Take the message from the ChatEvent and send it through the filter.
 
-        FilterState state = new FilterState(plugin, event.getMessage(),event.getPlayer());
+    public void runFilter(FilterState state) {
 
-        runFilter(state, chatRules);
+        PwnFilter.EventType eventType = state.eventType;
 
-        // Only update the message if it has been changed.
-        if (state.messageChanged()){
-            event.setMessage(state.message.getColoredString());
-        }
-        if (state.cancel) event.setCancelled(true);
-        return true;
-    }
+        ArrayList<Rule> chain = eventChain.get(eventType);
 
-    public boolean apply(PlayerCommandPreprocessEvent event) {
-        // Take the message from the Command Event and send it through the filter.
-
-        FilterState state = new FilterState(plugin, event.getMessage(),event.getPlayer());
-
-        runFilter(state, commandRules);
-
-        // Only update the message if it has been changed.
-        if (state.messageChanged()){
-            event.setMessage(state.message.getColoredString());
-        }
-        if (state.cancel) event.setCancelled(true);
-        return true;
-    }
-
-    public boolean apply(SignChangeEvent event) {
-        // Take the message from the CommandPreprocessEvent and send it through the filter.
-        StringBuilder builder = new StringBuilder();
-
-        for (String l :event.getLines()) {
-            builder.append(l).append(" ");
-        }
-        String signLines = builder.toString();
-
-        FilterState state = new FilterState(plugin, signLines, event.getPlayer());
-
-        runFilter(state, signRules);
-
-        if (state.messageChanged()){
-            // TODO: Can colors be placed on signs?  Wasn't working. Find out why.
-            // Break the changed string into words
-            String[] words = state.message.getPlainString().split("\\b");
-            String[] lines = new String[4];
-
-            // Iterate over the 4 sign lines, applying one word at a time, until the line is full.
-            // If all 4 lines are full, the rest of the words are just discarded.
-            // This may negatively affect plugins that use signs and require text to appear on a certain
-            // line, but we only do this when we've matched a rule.
-            int wordIndex = 0;
-            for (int i = 0 ; i < 4 ; i++) {
-                lines[i] = "";
-              while (wordIndex < words.length) {
-                  if (lines[i].length() + words[wordIndex].length() < 15) {
-                      lines[i] = lines[i] + words[wordIndex] + " ";
-                      wordIndex++;
-                  } else {
-                      break;
-                  }
-              }
-            }
-
-            for (int i = 0 ; i < 4 ; i++ ) {
-                if (lines[i] != null) {
-                    event.setLine(i,lines[i]);
-                }
-            }
+        if (chain == null) {
+            PwnFilter.logger.severe("ruleChain not found.  Please report this as a bug.");
+            return;
         }
 
-        if (state.cancel) {
-            event.setCancelled(true);
-            state.player.sendMessage("Your sign broke, there must be something wrong with it.");
-            state.addLogMessage("SIGN " + state.player.getName() + " sign text: "
-                    + state.getOriginalMessage().getColoredString());
+        if (PwnFilter.debugMode.compareTo(PwnFilter.DebugModes.medium) >= 0) {
+              PwnFilter.logger.finer("Event: " + state.eventType.toString() + " message: " + state.getOriginalMessage());
         }
 
-        return true;
-    }
-
-    public void runFilter(FilterState state, ArrayList<Rule> chain) {
-
-        if (plugin.debugMode.compareTo(PwnFilter.DebugModes.medium) >= 0) {
-            plugin.logger.finer("Checking: " + state.getOriginalMessage());
-        }
         for (Rule rule : chain) {
             rule.apply(state);
             if (state.stop) {
@@ -155,40 +98,44 @@ public class RuleSet {
             }
         }
 
-        if (plugin.debugMode == PwnFilter.DebugModes.high) {
+        if (PwnFilter.debugMode == PwnFilter.DebugModes.high) {
             if (state.pattern != null) {
-                plugin.logger.finer("Debug match: " + state.pattern.pattern());
-                plugin.logger.finer("Debug original: " + state.getOriginalMessage().getColoredString());
-                plugin.logger.finer("Debug current: " + state.message.getColoredString());
-                plugin.logger.finer("Debug log: " + (state.log?"yes":"no"));
-                plugin.logger.finer("Debug deny: " + (state.cancel?"yes":"no"));
+                PwnFilter.logger.finer("Debug match: " + state.pattern.pattern());
+                PwnFilter.logger.finer("Debug original: " + state.getOriginalMessage().getColoredString());
+                PwnFilter.logger.finer("Debug current: " + state.message.getColoredString());
+                PwnFilter.logger.finer("Debug log: " + (state.log?"yes":"no"));
+                PwnFilter.logger.finer("Debug deny: " + (state.cancel?"yes":"no"));
             } else {
-                plugin.logger.finer("[PwnFilter] Debug no match: " + state.getOriginalMessage().getColoredString());
+                PwnFilter.logger.finer("[PwnFilter] Debug no match: " + state.getOriginalMessage().getColoredString());
             }
         }
 
         if (state.cancel){
-            state.addLogMessage("<"+state.player.getName() + "> Original message cancelled.");
+            state.addLogMessage("<"+state.playerName + "> Original message cancelled.");
         } else if (state.pattern != null ||
-                plugin.debugMode.compareTo(PwnFilter.DebugModes.low) >= 0) {
-            state.addLogMessage("SENT <"+state.player.getName() + "> " + state.message.getPlainString());
+                PwnFilter.debugMode.compareTo(PwnFilter.DebugModes.low) >= 0) {
+            state.addLogMessage("|" + state.eventType.toString() + "| SENT <" +
+                    state.playerName + "> " + state.message.getPlainString());
         }
 
         for (String s : state.getLogMessages()) {
             if (state.log) {
-                plugin.logger.info(s);
-            } else plugin.logger.log(plugin.ruleLogLevel,s);
+                PwnFilter.logger.info(s);
+            } else PwnFilter.logger.log(plugin.ruleLogLevel,s);
         }
 
     }
 
     public boolean append(Rule r) {
         if (r.isValid()) {
-            ruleChain.add(r);
-            for (Rule.EventType e : r.events ) {
-                if (e == Rule.EventType.sign) signRules.add(r);
-                else if (e == Rule.EventType.chat) chatRules.add(r);
-                else if (e == Rule.EventType.command) commandRules.add(r);
+            ruleChain.add(r); // Add the Rule to the master chain
+            for (PwnFilter.EventType e : r.events ) {
+                if (PwnFilter.enabledEvents.contains(e)) {
+                    eventChain.get(e).add(r);
+                } else if (PwnFilter.debugMode.compareTo(PwnFilter.DebugModes.low) >= 0) {
+                    PwnFilter.logger.fine("Unable to add rule: " + r.toString() + " to the: " + e.toString()
+                            + " chain, as that filter is not enabled in the config.yml");
+                }
             }
             return true;
         } else return false;
@@ -242,7 +189,7 @@ public class RuleSet {
                     // Not a match statement, so much be part of a rule.
                     if (currentRule != null) {
                         if (!currentRule.addLine(command, lineData)) {
-                            plugin.logger.warning("Unable to add action/condition to rule: " + command + " " + lineData);
+                            PwnFilter.logger.warning("Unable to add action/condition to rule: " + command + " " + lineData);
                         }
                     }
                 }
@@ -253,11 +200,24 @@ public class RuleSet {
 
             input.close();
 
-            plugin.logger.config("Read " + count.toString() + " rules from file.  Installed " + ruleChain.size() + " valid rules.");
-            plugin.logger.config("Command Rules: " + commandRules.size() + " Sign Rules: " + signRules.size() + " Chat Rules: " + chatRules.size());
+            PwnFilter.logger.config("Read " + count.toString() + " rules from file.  Installed " + ruleChain.size() + " valid rules.");
+            StringBuilder sb = new StringBuilder();
+            for (PwnFilter.EventType e : PwnFilter.enabledEvents) {
+                sb.append(e.toString()).append(" Rules:").append(eventChain.get(e).size()).append(" ");
+            }
+            PwnFilter.logger.config(sb.toString());
 
         } catch (Exception e) {
             e.printStackTrace();
+        }
+
+        // Add all permissions to the list of those we are interested in for the DataCache
+        for (Rule r : ruleChain ) {
+            for (Condition c : r.conditions) {
+                if (c.type == Condition.CondType.permission) {
+                    Collections.addAll(permList, c.parameters.split("\\|"));
+                }
+            }
         }
 
         return !ruleChain.isEmpty();

@@ -30,6 +30,9 @@ commandfilter: true
 # Filter text applied to signs
 signfilter: true
 
+# Activate item filter (Naming items with Anvil)
+itemfilter: true
+
 # Basic spam filter enabled (chat ONLY)
 spamfilter: true
 
@@ -61,6 +64,9 @@ cmdblist:
 
 # Change priority of SignListener
 # signpriority: lowest #(default)
+
+# Change priority of ItemListener
+# itempriority: lowest
 
 
 
