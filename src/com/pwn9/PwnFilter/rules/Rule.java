@@ -57,7 +57,7 @@ public class Rule {
 
         // If Match, log it and then check any conditions.
         state.addLogMessage("|" + state.eventType.toString() +  "| MATCH <" +
-                state.player.getName() + "> " + state.message.getPlainString());
+                state.playerName + "> " + state.message.getPlainString());
 
         PwnFilter.matchTracker.increment(); // Update Match Statistics
 

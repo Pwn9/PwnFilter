@@ -3,6 +3,8 @@ package com.pwn9.PwnFilter.rules.action;
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.PwnFilter;
 import net.milkbowl.vault.economy.EconomyResponse;
+import org.bukkit.Bukkit;
+import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * Fine the user by extracting money from his economy account.
@@ -34,15 +36,20 @@ public class Actionfine implements Action {
 
     public boolean execute(final FilterState state ) {
         if (PwnFilter.economy != null ) {
-            EconomyResponse resp = PwnFilter.economy.withdrawPlayer(state.player.getName(),fineAmount);
+            EconomyResponse resp = PwnFilter.economy.withdrawPlayer(state.playerName,fineAmount);
             if (resp.transactionSuccess()) {
-                state.addLogMessage(String.format("Fined %s : %f",state.player.getName(),resp.amount));
+                state.addLogMessage(String.format("Fined %s : %f",state.playerName,resp.amount));
             } else {
                 state.addLogMessage(String.format("Failed to fine %s : %f. Error: %s",
-                        state.player.getName(),resp.amount,resp.errorMessage));
+                        state.playerName,resp.amount,resp.errorMessage));
                 return false;
             }
-            state.player.sendMessage(messageString);
+            Bukkit.getScheduler().runTask(state.plugin, new BukkitRunnable() {
+                @Override
+                public void run() {
+                    state.player.sendMessage(messageString);
+                }
+            });
 
             return true;
 

@@ -55,11 +55,7 @@ class Condition {
 
     public static boolean isCondition(String command) {
         try {
-            if (CondFlag.valueOf(command) != CondFlag.NONE ) {
-                return true;
-            } else {
-                return false;
-            }
+            return CondFlag.valueOf(command) != CondFlag.NONE;
         } catch (IllegalArgumentException e) {
             return false;
         }
@@ -77,13 +73,12 @@ class Condition {
         boolean matched = false;
         switch (type) {
             case user:
-                String playerName = state.player.getName();
                 for (String check : parameters.split("\\s")) {
-                    if (playerName.equalsIgnoreCase(check)) matched = true;
+                    if (state.playerName.equalsIgnoreCase(check)) matched = true;
                 }
             case permission:
                 for (String check: parameters.split("\\s")) {
-                    if (state.player.hasPermission(check)) matched = true;
+                    if (state.playerHasPermission(check)) matched = true;
                 }
             case string:
                 for (String check: parameters.split("\\|")) {

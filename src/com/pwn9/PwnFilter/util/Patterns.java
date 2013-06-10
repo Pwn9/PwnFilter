@@ -1,7 +1,6 @@
 package com.pwn9.PwnFilter.util;
 
 import com.pwn9.PwnFilter.FilterState;
-import org.bukkit.entity.Player;
 
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -34,9 +33,9 @@ public class Patterns {
         return pattern;
     }
 
-    public static String replaceCommands(String cmd, Player player, String message, String rawMessage, FilterState state) {
-        cmd = cmd.replaceAll("&world", player.getLocation().getWorld().getName()).
-                replaceAll("&player", player.getName()).
+    public static String replaceCommands(String cmd, String message, String rawMessage, FilterState state) {
+        cmd = cmd.replaceAll("&world", state.playerWorldName).
+                replaceAll("&player", state.playerName).
                 replaceAll("&string", message).
                 replaceAll("&rawstring", rawMessage).
                 replaceAll("&event", state.eventType.toString());

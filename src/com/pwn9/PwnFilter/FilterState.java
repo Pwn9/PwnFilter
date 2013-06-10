@@ -26,6 +26,7 @@ public class FilterState {
     private final ColoredString originalMessage; // Original message
     public final PwnFilter plugin; // Which plugin is this state attached to?
     public final Player player; // Player that this event is connected to.
+    public final String playerName,playerWorldName;
     public final PwnFilter.EventType eventType;
     public ColoredString message; // Modified message string
     final int messageLen; // New message can't be longer than original.
@@ -50,6 +51,8 @@ public class FilterState {
         message = new ColoredString(m);
         messageLen = originalMessage.length();
         player = p;
+        playerName = PwnFilter.dataCache.getPlayerName(p);
+        playerWorldName = PwnFilter.dataCache.getPlayerWorld(p);
         plugin = pl;
         eventType = et;
     }
@@ -74,6 +77,9 @@ public class FilterState {
         return !originalMessage.toString().equals(message.toString());
     }
 
+    public boolean playerHasPermission(String perm) {
+        return PwnFilter.dataCache.hasPermission(player,perm);
+    }
     /**
      *
      * @return a new Instance of ColouredString with a copy of the originalMessage.

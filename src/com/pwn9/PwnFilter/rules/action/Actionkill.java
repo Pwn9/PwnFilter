@@ -2,6 +2,8 @@ package com.pwn9.PwnFilter.rules.action;
 
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.PwnFilter;
+import org.bukkit.Bukkit;
+import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * Kill a player with a customized Death Message
@@ -17,9 +19,15 @@ public class Actionkill implements Action {
     }
 
     public boolean execute(final FilterState state ) {
-        state.plugin.killedPlayers.put(state.player, state.player.getDisplayName() + " " + messageString);
-        state.player.setHealth(0);
-        state.addLogMessage("Killed by Filter: " + state.player.getName() + " " + messageString);
+        state.plugin.killedPlayers.put(state.player, state.playerName + " " + messageString);
+        state.addLogMessage("Killed by Filter: " + state.playerName + " " + messageString);
+
+        Bukkit.getScheduler().runTask(state.plugin, new BukkitRunnable() {
+            @Override
+            public void run() {
+                state.player.setHealth(0);
+            }
+        });
         return true;
     }
 }

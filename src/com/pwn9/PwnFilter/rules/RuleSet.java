@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumMap;
 
 
@@ -33,6 +34,7 @@ import java.util.EnumMap;
 public class RuleSet {
     public final PwnFilter plugin;
     private ArrayList<Rule> ruleChain = new ArrayList<Rule>();
+    public ArrayList<String> permList = new ArrayList<String>();
 
     // EnumMap that contains a ruleChain (also ArrayList) for each type of event.
     private EnumMap<PwnFilter.EventType,ArrayList<Rule>> eventChain;
@@ -109,11 +111,11 @@ public class RuleSet {
         }
 
         if (state.cancel){
-            state.addLogMessage("<"+state.player.getName() + "> Original message cancelled.");
+            state.addLogMessage("<"+state.playerName + "> Original message cancelled.");
         } else if (state.pattern != null ||
                 PwnFilter.debugMode.compareTo(PwnFilter.DebugModes.low) >= 0) {
             state.addLogMessage("|" + state.eventType.toString() + "| SENT <" +
-                    state.player.getName() + "> " + state.message.getPlainString());
+                    state.playerName + "> " + state.message.getPlainString());
         }
 
         for (String s : state.getLogMessages()) {
@@ -207,6 +209,15 @@ public class RuleSet {
 
         } catch (Exception e) {
             e.printStackTrace();
+        }
+
+        // Add all permissions to the list of those we are interested in for the DataCache
+        for (Rule r : ruleChain ) {
+            for (Condition c : r.conditions) {
+                if (c.type == Condition.CondType.permission) {
+                    Collections.addAll(permList, c.parameters.split("\\|"));
+                }
+            }
         }
 
         return !ruleChain.isEmpty();

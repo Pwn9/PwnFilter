@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -54,19 +55,20 @@ public class PwnFilter extends JavaPlugin {
         medium, // More debugging
         high, // You're crazy. :)
     }
+
     public static boolean decolor;
     public static DebugModes debugMode;
-    public HashMap<Player, String> killedPlayers = new HashMap<Player,String>();
+    public ConcurrentHashMap<Player, String> killedPlayers = new ConcurrentHashMap<Player,String>();
     public static Logger logger;
     public Level ruleLogLevel;
     FileHandler logfileHandler;
     public static EventPriority cmdPriority, chatPriority, signPriority, invPriority;
-    public static HashMap<String, String> lastMessage = new HashMap<String, String>();
+    public static HashMap<Player, String> lastMessage = new HashMap<Player, String>();
     public static EnumSet<EventType> enabledEvents = EnumSet.allOf(EventType.class); // The list of active Events
     public static Economy economy = null;
     public static Tracker matchTracker;
 
-
+    public static DataCache dataCache;
     public static RuleSet ruleset;
 
 
@@ -88,6 +90,9 @@ public class PwnFilter extends JavaPlugin {
         // Create a new RuleSet object, loading in the rulesFile
         ruleset = new RuleSet(this);
         ruleset.init(getRulesFile());
+
+        // Start the dataCache
+        dataCache = new DataCache(this, ruleset.permList);
 
         // Now activate our listeners
         registerListeners();
@@ -213,12 +218,20 @@ public class PwnFilter extends JavaPlugin {
     }
 
     public void onDisable() {
+
     	ruleset = null;
         if (logfileHandler != null) {
             logfileHandler.close();
             logger.removeHandler(logfileHandler);
             logfileHandler = null;
         }
+        // Remove all our listeners, first.
+        HandlerList.unregisterAll(this);
+
+        // Shutdown the DataCache
+        dataCache.stop();
+        dataCache = null;
+
     }
 
     private void setupLogfile() {
@@ -266,6 +279,9 @@ public class PwnFilter extends JavaPlugin {
             // Remove all our listeners, first.
             HandlerList.unregisterAll(this);
 
+            // Shut down the DataCache
+            dataCache.stop();
+
             reloadConfig();
             configurePlugin();
 
@@ -276,9 +292,15 @@ public class PwnFilter extends JavaPlugin {
                 logger.warning("failed to reload rules.txt as requested by " + sender.getName());
             }
 
+            // Start the DataCache again
+            dataCache = new DataCache(this, ruleset.permList);
+
+            // Re-register our listeners
             registerListeners();
+
             return true;
         }
+
 		else if (cmd.getName().equalsIgnoreCase("pfcls")) {  
             sender.sendMessage(ChatColor.RED + "Clearing chat screen");
             logger.info("chat screen cleared by " + sender.getName());
@@ -301,7 +323,9 @@ public class PwnFilter extends JavaPlugin {
 	            pwnMute = true;
 			}
     		return true;
-    	} 
+    	}  else if (cmd.getName().equalsIgnoreCase("pfdumpcache")) {
+            dataCache.dumpCache(logger);
+        }
         return false;
     } 
 

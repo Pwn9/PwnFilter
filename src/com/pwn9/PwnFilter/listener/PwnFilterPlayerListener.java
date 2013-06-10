@@ -41,47 +41,46 @@ public class PwnFilterPlayerListener implements Listener {
 
     public void onPlayerQuit(PlayerQuitEvent event) {
         // Cleanup player messages on quit
-        if (event.getPlayer() != null && PwnFilter.lastMessage.containsKey(event.getPlayer().getName())) {
-            PwnFilter.lastMessage.remove(event.getPlayer().getName());
+        if (event.getPlayer() != null && PwnFilter.lastMessage.containsKey(event.getPlayer())) {
+            PwnFilter.lastMessage.remove(event.getPlayer());
         }
     }
 
     public void onPlayerChat(AsyncPlayerChatEvent event) {
         if (event.isCancelled()) return;
         final Player player = event.getPlayer();
-        String pName = player.getName();
         String message = event.getMessage();
+        FilterState state = new FilterState(plugin, event.getMessage(),event.getPlayer(), PwnFilter.EventType.CHAT);
+
 
         // Permissions Check, if player has bypass permissions, then skip everything.
-        if (player.hasPermission("pwnfilter.bypass.chat")) {
+        if (state.playerHasPermission("pwnfilter.bypass.chat")) {
             return;
         }
 
-        if (plugin.getConfig().getBoolean("spamfilter") && !player.hasPermission("pwnfilter.bypass.spam")) {
+        if (plugin.getConfig().getBoolean("spamfilter") && !state.playerHasPermission("pwnfilter.bypass.spam")) {
             // Keep a log of the last message sent by this player.  If it's the same as the current message, cancel.
-            if (PwnFilter.lastMessage.containsKey(pName) && PwnFilter.lastMessage.get(pName).equals(message)) {
+            if (PwnFilter.lastMessage.containsKey(player) && PwnFilter.lastMessage.get(player).equals(message)) {
                 event.setCancelled(true);
                 return;
             }
-            PwnFilter.lastMessage.put(pName, message);
+            PwnFilter.lastMessage.put(player, message);
 
         }
 
         // Global mute
-        if ((PwnFilter.pwnMute) && (!(player.hasPermission("pwnfilter.bypass.mute")))) {
+        if ((PwnFilter.pwnMute) && (!(state.playerHasPermission("pwnfilter.bypass.mute")))) {
             event.setCancelled(true);
             return; // No point in continuing.
         }
 
         // Global decolor
-        if ((PwnFilter.decolor) && (!(player.hasPermission("pwnfilter.color")))) {
+        if ((PwnFilter.decolor) && (!(state.playerHasPermission("pwnfilter.color")))) {
             // We are changing the state of the message.  Let's do that before any rules processing.
             event.setMessage(ChatColor.stripColor(event.getMessage()));
         }
 
         // Take the message from the ChatEvent and send it through the filter.
-        FilterState state = new FilterState(plugin, event.getMessage(),event.getPlayer(), PwnFilter.EventType.CHAT);
-
         PwnFilter.ruleset.runFilter(state);
 
         // Only update the message if it has been changed.

@@ -35,7 +35,10 @@ public class PwnFilterCommandListener implements Listener {
 
         if (event.isCancelled()) return;
         final Player player = event.getPlayer();
-        String pName = player.getName();
+
+        FilterState state = new FilterState(plugin, event.getMessage(),player,
+                PwnFilter.EventType.COMMAND);
+
         String message = event.getMessage();
 
         //Gets the actual command as a string
@@ -48,30 +51,26 @@ public class PwnFilterCommandListener implements Listener {
 
             if (plugin.getConfig().getBoolean("commandspamfilter") && !player.hasPermission("pwnfilter.bypass.spam")) {
                 // Keep a log of the last message sent by this player.  If it's the same as the current message, cancel.
-                if (PwnFilter.lastMessage.containsKey(pName) && PwnFilter.lastMessage.get(pName).equals(message)) {
+                if (PwnFilter.lastMessage.containsKey(player) && PwnFilter.lastMessage.get(player).equals(message)) {
                     event.setCancelled(true);
                     return;
                 }
-                PwnFilter.lastMessage.put(pName, message);
+                PwnFilter.lastMessage.put(player, message);
 
             }
 
             // Global mute
-            if ((PwnFilter.pwnMute) && (!(player.hasPermission("pwnfilter.bypass.mute")))) {
+            if ((PwnFilter.pwnMute) && (!(state.playerHasPermission("pwnfilter.bypass.mute")))) {
                 event.setCancelled(true);
                 return;
             }
 
             // Global decolor
-            if ((PwnFilter.decolor) && (!(player.hasPermission("pwnfilter.color")))) {
+            if ((PwnFilter.decolor) && (!(state.playerHasPermission("pwnfilter.color")))) {
                 event.setMessage(ChatColor.stripColor(message));
             }
 
             // Take the message from the Command Event and send it through the filter.
-
-            FilterState state = new FilterState(plugin, event.getMessage(),event.getPlayer(),
-                    PwnFilter.EventType.COMMAND);
-
 
             PwnFilter.ruleset.runFilter(state);
 
