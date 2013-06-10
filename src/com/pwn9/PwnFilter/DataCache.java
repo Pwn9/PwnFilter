@@ -18,10 +18,10 @@ import java.util.logging.Logger;
 
 public class DataCache {
 
-    public final static int runEveryTicks = 100;
+    public final static int runEveryTicks = 20;
 
     // Permissions we are interested in caching
-    protected static ArrayList<String> permSet = new ArrayList<String>();
+    protected ArrayList<String> permSet = new ArrayList<String>();
 
     //private
     private int taskId;
@@ -63,35 +63,19 @@ public class DataCache {
 
 
     public boolean hasPermission(Player p, String s) {
-        try {
-            return playerPermissions.get(p).contains(s);
-        } catch (NullPointerException e) {
-            return false;
-        }
+        return playerPermissions.get(p).contains(s);
     }
 
     public boolean hasPermission(Player p, Permission perm) {
-        try {
-            return playerPermissions.get(p).contains(perm.getName());
-        } catch (NullPointerException e) {
-            return false;
-        }
+        return playerPermissions.get(p).contains(perm.getName());
     }
 
     public String getPlayerWorld(Player p) {
-        try {
-            return playerWorld.get(p);
-        } catch (NullPointerException e) {
-            return "";
-        }
+        return playerWorld.get(p);
     }
 
     public String getPlayerName(Player p) {
-        try {
-            return playerName.get(p);
-        } catch (NullPointerException e) {
-            return "";
-        }
+        return playerName.get(p);
     }
 
     public void addCachedPermission(String perm) {
