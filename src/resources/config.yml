@@ -30,8 +30,8 @@ commandfilter: true
 # Filter text applied to signs
 signfilter: true
 
-# Activate item filter (Naming items with Anvil)
-itemfilter: true
+# Activate item filter (Naming items with Anvil)  **EXPERIMENTAL FEATURE**
+itemfilter: false
 
 # Basic spam filter enabled (chat ONLY)
 spamfilter: true

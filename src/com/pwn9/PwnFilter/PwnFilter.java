@@ -1,105 +1,175 @@
 package com.pwn9.PwnFilter;
 
-import com.pwn9.PwnFilter.listener.PwnFilterCommandListener;
-import com.pwn9.PwnFilter.listener.PwnFilterEntityListener;
-import com.pwn9.PwnFilter.listener.PwnFilterPlayerListener;
-import com.pwn9.PwnFilter.listener.PwnFilterSignListener;
+import com.pwn9.PwnFilter.listener.*;
 import com.pwn9.PwnFilter.rules.RuleSet;
 import com.pwn9.PwnFilter.util.PwnFormatter;
+import com.pwn9.PwnFilter.util.Tracker;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.block.SignChangeEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.HandlerList;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.mcstats.Metrics;
 
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 /**
-* A Regular Expression (REGEX) Chat Filter For Bukkit with many great features
-* @author tremor77
-**/
+ * A Regular Expression (REGEX) Chat Filter For Bukkit with many great features
+ * @author tremor77
+ **/
 
-// TODO: Add support for Anvils and Books
-// TODO: Enable configuration management /pfset /pfsave and /pfreload config
-/*
-<--
-12:32:53          @Amaranth | Sage905: For anvils just use InventoryClickEvent. If the slot is for an anvil and is of
- type result the player has crafted the item and you should be able to modify the itemmeta
- */
+// TODO: Add support for Books
+// TODO: Enable configuration management /pfset /pfsave
 
 public class PwnFilter extends JavaPlugin {
 
-    public Boolean pwnMute = false;
+    public static Boolean pwnMute = false;
     public List<String> cmdlist;
     public List<String> cmdblist;
+
+    public enum EventType {
+        CHAT,
+        SIGN,
+        COMMAND,
+        ITEM,
+    }
     public enum DebugModes {
         off, // Off
         low, // Some debugging
         medium, // More debugging
         high, // You're crazy. :)
     }
-    public boolean decolor;
-    public DebugModes debugMode;
-    public HashMap<Player, String> killedPlayers = new HashMap<Player,String>();
-    public Logger logger;
+
+    public static boolean decolor;
+    public static DebugModes debugMode;
+    public ConcurrentHashMap<Player, String> killedPlayers = new ConcurrentHashMap<Player,String>();
+    public static Logger logger;
     public Level ruleLogLevel;
-    FileHandler fh;
-    public EventPriority cmdPriority, chatPriority, signPriority;
-    public static HashMap<String, String> lastMessage = new HashMap<String, String>();
+    FileHandler logfileHandler;
+    public static EventPriority cmdPriority, chatPriority, signPriority, invPriority;
+    public static HashMap<Player, String> lastMessage = new HashMap<Player, String>();
+    public static EnumSet<EventType> enabledEvents = EnumSet.allOf(EventType.class); // The list of active Events
+    public static Economy economy = null;
+    public static Tracker matchTracker;
+
+    public static DataCache dataCache;
+    public static RuleSet ruleset;
 
 
-    private RuleSet ruleset;
+    public void onEnable() {
+        // Set up logging
+        if (logger == null) {
+            logger = this.getLogger();
+        }
 
-	public void onEnable() {
-
-        // Initialize and load configuration
+        // Initialize default configuration
         saveDefaultConfig();
 
-        // Set up logging
-        logger = this.getLogger();
+        // Now get our configuration
+        configurePlugin();
 
-        if (getConfig().getBoolean("logfile")) {
-            if (fh == null) {
-                try {
-                    // For now, one logfile, like the old way.
-                    fh = new FileHandler(new File(getDataFolder(), "pwnfilter.log").toString(), true);
-                    SimpleFormatter f = new PwnFormatter();
-                    fh.setFormatter(f);
-                    getConfig().addDefault("logfileLevel", "fine");
-                    fh.setLevel(Level.FINEST); // Catch all log messages
-                    logger.addHandler(fh);
-
-                } catch (IOException e) {
-                    logger.warning("Unable to open logfile.");
-                } catch (SecurityException e) {
-                    logger.warning("Security Exception while trying to add file Handler");
-                }
-            }
-        }
+        // Set up a Vault economy for actions like "fine" (optional)
+        setupEconomy();
 
         // Create a new RuleSet object, loading in the rulesFile
         ruleset = new RuleSet(this);
         ruleset.init(getRulesFile());
 
-        getConfig().addDefault("logLevel","info");
+        // Start the dataCache
+        dataCache = new DataCache(this, ruleset.permList);
+
+        // Now activate our listeners
+        registerListeners();
+
+        // Activate Plugin Metrics
+        activateMetrics();
+
+    }
+
+    public void activateMetrics() {
+        // Activate Plugin Metrics
         try {
-            ruleLogLevel = Level.parse(getConfig().getString("loglevel").toUpperCase());
+            Metrics metrics = new Metrics(this);
+
+            metrics.addCustomData(new Metrics.Plotter("Total Number of Server Rules") {
+                @Override
+                public int getValue() {
+                    return ruleset.ruleCount();
+                }
+            });
+
+            Metrics.Graph graph = metrics.createGraph("Rules by Event");
+
+            for (final EventType r : EventType.values()) {
+                graph.addPlotter(new Metrics.Plotter(r.toString()) {
+                    @Override
+                    public int getValue() {
+                        return ruleset.ruleCount(r); // Number of rules for this event type
+                    }
+                });
+            }
+
+            Metrics.Graph matchGraph = metrics.createGraph("Matches");
+            matchTracker = new Tracker("Matches");
+
+            matchGraph.addPlotter(matchTracker);
+
+            metrics.start();
+
+        } catch (IOException e) {
+            logger.fine(e.getMessage());
+        }
+
+    }
+    public void registerListeners() {
+
+        // Register Chat Handler (Always enabled)
+        new PwnFilterPlayerListener(this);
+        new PwnFilterEntityListener(this);
+
+        // Register Configured Handlers
+        if (enabledEvents.contains(EventType.COMMAND)) new PwnFilterCommandListener(this);
+        if (enabledEvents.contains(EventType.SIGN)) new PwnFilterSignListener(this);
+        if (enabledEvents.contains(EventType.ITEM)) new PwnFilterInvListener(this);
+
+    }
+
+    public void configurePlugin() {
+
+        if (getConfig().getBoolean("logfile")) {
+            setupLogfile();
+        } else { // Needed during configuration reload to turn off logging if the option changes
+            if (logfileHandler != null) {
+                logfileHandler.close();
+                logger.removeHandler(logfileHandler);
+                logfileHandler = null;
+            }
+        }
+
+        try {
+            ruleLogLevel = Level.parse(getConfig().getString("loglevel","info").toUpperCase());
         } catch (IllegalArgumentException e ) {
             ruleLogLevel = Level.INFO;
         }
 
         decolor = getConfig().getBoolean("decolor");
+
         try {
             debugMode = DebugModes.valueOf(getConfig().getString("debug"));
         } catch (IllegalArgumentException e) {
@@ -109,128 +179,158 @@ public class PwnFilter extends JavaPlugin {
         cmdlist = getConfig().getStringList("cmdlist");
         cmdblist = getConfig().getStringList("cmdblist");
 
-        getConfig().addDefault("cmdpriority","LOWEST");
-        getConfig().addDefault("chatpriority","LOWEST");
-        getConfig().addDefault("signpriority","LOWEST");
+        enabledEvents.clear(); // Reset the enabled event types.
+        for ( EventType e : EventType.values()) {
+            switch (e) {
+                case CHAT:
+                    chatPriority = EventPriority.valueOf(getConfig()
+                            .getString("chatpriority","LOWEST").toUpperCase());
+                    enabledEvents.add(EventType.CHAT);
+                    break;
 
-        cmdPriority = EventPriority.valueOf(getConfig().getString("cmdpriority").toUpperCase());
-        chatPriority = EventPriority.valueOf(getConfig().getString("chatpriority").toUpperCase());
-        signPriority = EventPriority.valueOf(getConfig().getString("signpriority").toUpperCase());
+                case COMMAND:
+                    if (getConfig().getBoolean("commandfilter",false)) {
+                        cmdPriority = EventPriority.valueOf(getConfig()
+                                .getString("cmdpriority","LOWEST").toUpperCase());
+                        enabledEvents.add(EventType.COMMAND);
+                    }
+                    break;
 
-        // Register Chat Handler
-        new PwnFilterPlayerListener(this);
-        new PwnFilterEntityListener(this);
+                case SIGN:
+                    if(getConfig().getBoolean("signfilter",false)) {
+                        signPriority = EventPriority.valueOf(getConfig()
+                                .getString("signpriority","LOWEST").toUpperCase());
+                        enabledEvents.add(EventType.SIGN);
+                    }
+                    break;
 
-        // Register Command Handler, if configured
-        if (getConfig().getBoolean("commandfilter")) new PwnFilterCommandListener(this);
+                case ITEM:
+                    if(getConfig().getBoolean("itemfilter",false)) {
+                        invPriority = EventPriority.valueOf(getConfig()
+                                .getString("invpriority","LOWEST").toUpperCase());
+                        enabledEvents.add(EventType.ITEM);
+                    }
+                    break;
+            }
 
-        // Register Sign Handler, if configured
-        if (getConfig().getBoolean("signfilter")) new PwnFilterSignListener(this);
+        }
 
     }
 
     public void onDisable() {
-    	ruleset = null;
-        if (fh != null) {
-            fh.close();
-            logger.removeHandler(fh);
-            fh = null;
+
+        ruleset = null;
+        if (logfileHandler != null) {
+            logfileHandler.close();
+            logger.removeHandler(logfileHandler);
+            logfileHandler = null;
         }
+        // Remove all our listeners, first.
+        HandlerList.unregisterAll(this);
+
+        // Shutdown the DataCache
+        dataCache.stop();
+        dataCache = null;
+
     }
 
-    @Override   
+    private void setupLogfile() {
+        if (logfileHandler == null) {
+            try {
+                // For now, one logfile, like the old way.
+                String fileName =  new File(getDataFolder(), "pwnfilter.log").toString();
+                logfileHandler = new FileHandler(fileName, true);
+                SimpleFormatter f = new PwnFormatter();
+                logfileHandler.setFormatter(f);
+                getConfig().addDefault("logfileLevel", "fine");
+                logfileHandler.setLevel(Level.FINEST); // Catch all log messages
+                logger.addHandler(logfileHandler);
+                logger.info("Now logging to " + fileName );
+
+            } catch (IOException e) {
+                logger.warning("Unable to open logfile.");
+            } catch (SecurityException e) {
+                logger.warning("Security Exception while trying to add file Handler");
+            }
+        }
+
+    }
+
+    private void setupEconomy() {
+
+        if (getServer().getPluginManager().getPlugin("Vault") != null) {
+            RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+            if (rsp != null) {
+                economy = rsp.getProvider();
+                logger.info("Vault found. Enabling actions requiring Vault");
+                return;
+            }
+        }
+        logger.info("Vault dependency not found.  Disabling actions requiring Vault");
+
+    }
+
+    @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args ) {
 
-        if (cmd.getName().equalsIgnoreCase("pfreload")) { 		   		
-            sender.sendMessage(ChatColor.RED + "Reloading rules.txt");
+        if (cmd.getName().equalsIgnoreCase("pfreload")) {
+            sender.sendMessage(ChatColor.RED + "Reloading config.yml and rules.txt");
+
+            // Remove all our listeners, first.
+            HandlerList.unregisterAll(this);
+
+            // Shut down the DataCache
+            dataCache.stop();
+
+            reloadConfig();
+            configurePlugin();
+
             ruleset = new RuleSet(this);
             if (ruleset.init(getRulesFile())) {
-                logger.config("rules.txt reloaded by " + sender.getName());
+                logger.config("rules.txt and config.yml reloaded by " + sender.getName());
             } else {
                 logger.warning("failed to reload rules.txt as requested by " + sender.getName());
             }
+
+            // Start the DataCache again
+            dataCache = new DataCache(this, ruleset.permList);
+
+            // Re-register our listeners
+            registerListeners();
+
             return true;
         }
-		else if (cmd.getName().equalsIgnoreCase("pfcls")) {  
+
+        else if (cmd.getName().equalsIgnoreCase("pfcls")) {
             sender.sendMessage(ChatColor.RED + "Clearing chat screen");
             logger.info("chat screen cleared by " + sender.getName());
             int i = 0;
             while (i <= 120) {
-              getServer().broadcastMessage(" ");
-              i++;
-            }    
-    		return true;
-    	}
-		else if (cmd.getName().equalsIgnoreCase("pfmute")) {
-			if (pwnMute) {
-				getServer().broadcastMessage(ChatColor.RED + "Global mute cancelled by " + sender.getName());
-	            logger.info("global mute cancelled by " + sender.getName());
-	            pwnMute = false;
-			}
-			else {
-				getServer().broadcastMessage(ChatColor.RED + "Global mute initiated by " + sender.getName());
-	            logger.info("global mute initiated by " + sender.getName());
-	            pwnMute = true;
-			}
-    		return true;
-    	} 
+                getServer().broadcastMessage(" ");
+                i++;
+            }
+            return true;
+        }
+        else if (cmd.getName().equalsIgnoreCase("pfmute")) {
+            if (pwnMute) {
+                getServer().broadcastMessage(ChatColor.RED + "Global mute cancelled by " + sender.getName());
+                logger.info("global mute cancelled by " + sender.getName());
+                pwnMute = false;
+            }
+            else {
+                getServer().broadcastMessage(ChatColor.RED + "Global mute initiated by " + sender.getName());
+                logger.info("global mute initiated by " + sender.getName());
+                pwnMute = true;
+            }
+            return true;
+        }  else if (cmd.getName().equalsIgnoreCase("pfdumpcache")) {
+            dataCache.dumpCache(logger);
+            sender.sendMessage(ChatColor.RED + "Dumped PwnFilter cache to log.");
+            logger.info("Dumped PwnFilter cache to log by " + sender.getName());
+        }
         return false;
-    } 
-    
-    // TODO: These need to be refactored away...
-    public void filterChat(AsyncPlayerChatEvent event) {
-
-        final Player player = event.getPlayer();
-
-        // Global mute
-        if ((pwnMute) && (!(player.hasPermission("pwnfilter.bypass.mute")))) {
-            event.setCancelled(true);
-            return; // No point in continuing.
-        }
-
-        // Global decolor
-        if ((decolor) && (!(player.hasPermission("pwnfilter.color")))) {
-            // We are changing the state of the message.  Let's do that before any rules processing.
-            event.setMessage(ChatColor.stripColor(event.getMessage()));
-        }
-
-        // Now apply the rules
-        ruleset.apply(event);
-
     }
 
-    /**
-     * The sign handler has extra work to do that the chat doesn't:
-     * 1. Take lines of sign and aggregate them into one string for processing
-     * 2. Feed them into the filter.
-     * 3. Re-split the lines so they can be placed on the sign.
-     * @param event The SignChangeEvent to be processed.
-     */
-    public void filterSign(SignChangeEvent event) {
-        ruleset.apply(event);
-    }
-
-    
-    public void filterCommand(PlayerCommandPreprocessEvent event) {
-        String message = event.getMessage();
-        Player player = event.getPlayer();
-
-
-        // Global mute
-        if ((pwnMute) && (!(player.hasPermission("pwnfilter.bypass.mute")))) {
-                event.setCancelled(true);
-        }
-
-        // Global decolor
-        if ((decolor) && (!(player.hasPermission("pwnfilter.color")))) {
-            event.setMessage(ChatColor.stripColor(message));
-        }
-
-        // Check to see if this is commandspam
-
-        // Now apply the rules
-        ruleset.apply(event);
-        }
 
     /**
      * Selects string from the first not null of: message, default from config.yml or null.
@@ -279,12 +379,13 @@ public class PwnFilter extends JavaPlugin {
                     fout.write(data, 0, c);
                 fin.close();
                 fout.close();
-                logger.warning("created config file '" + fname + "'");
+                logger.warning("created sample rules file '" + fname + "'");
             }catch(Exception ex){
                 ex.printStackTrace();
             }
         }
         return rulesFile;
     }
+
 }
 

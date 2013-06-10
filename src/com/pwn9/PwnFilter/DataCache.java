@@ -63,11 +63,13 @@ public class DataCache {
 
 
     public boolean hasPermission(Player p, String s) {
-        return playerPermissions.get(p).contains(s);
+        HashSet<String> perms = playerPermissions.get(p);
+        return perms != null && perms.contains(s);
     }
 
     public boolean hasPermission(Player p, Permission perm) {
-        return playerPermissions.get(p).contains(perm.getName());
+        HashSet<String> perms = playerPermissions.get(p);
+        return perms != null && perms.contains(perm.getName());
     }
 
     public String getPlayerWorld(Player p) {
