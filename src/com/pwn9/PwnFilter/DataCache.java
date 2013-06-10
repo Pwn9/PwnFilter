@@ -129,7 +129,8 @@ public class DataCache {
     public void dumpCache(Logger l) {
         l.finest("PwnFilter Data Cache Contents:");
         l.finest("Task Id: " + taskId);
-        l.finest("Online Players: " + queuedPlayerList.size());
+        l.finest("Online Players: " + Bukkit.getOnlinePlayers().length);
+        l.finest("Total Names: " + playerName.size() + " Worlds: " + playerWorld.size() + " Perms: " + playerPermissions.size());
         StringBuilder sb = new StringBuilder();
         for (Player p : queuedPlayerList ){
             sb.append(p.toString());
@@ -139,8 +140,8 @@ public class DataCache {
         l.finest("-----PlayerCache ------");
         for (Player p : playerName.keySet()) {
             l.finest("Player ID: " + p + " Name: " + playerName.get(p) + " World: " + playerWorld.get(p));
-            l.finest("PermissionsSet :");
             StringBuilder s = new StringBuilder();
+            sb.append("PermissionsSet : ");
             HashSet<String> perms = playerPermissions.get(p);
             for (String perm : perms) {
                 s.append(perm);
