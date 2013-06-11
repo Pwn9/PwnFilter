@@ -36,6 +36,9 @@ import java.util.logging.SimpleFormatter;
 
 // TODO: Add support for Books
 // TODO: Enable configuration management /pfset /pfsave
+// TODO: It's powerful.  Now, make it easier.
+// TODO: Allow multiple config files so rules can be grouped.
+// TODO: Make 'base' files that users can pull in to get started quickly (eg: swearing.txt, hate.txt, etc.)
 
 public class PwnFilter extends JavaPlugin {
 

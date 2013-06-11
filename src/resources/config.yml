@@ -28,16 +28,16 @@ decolor: true
 commandfilter: true
 
 # Filter text applied to signs
-signfilter: true
+signfilter: false
 
 # Activate item filter (Naming items with Anvil)  **EXPERIMENTAL FEATURE**
 itemfilter: false
 
 # Basic spam filter enabled (chat ONLY)
-spamfilter: true
+spamfilter: false
 
 # Basic spam filter enabled (commands ONLY)
-commandspamfilter: true
+commandspamfilter: false
 
 # Command White List: Commands to filter, if empty, will filter ALL (except blacklist)
 cmdlist: []
