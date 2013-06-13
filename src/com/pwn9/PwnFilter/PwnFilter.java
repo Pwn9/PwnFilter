@@ -39,6 +39,7 @@ import java.util.logging.SimpleFormatter;
 // TODO: It's powerful.  Now, make it easier.
 // TODO: Allow multiple config files so rules can be grouped.
 // TODO: Make 'base' files that users can pull in to get started quickly (eg: swearing.txt, hate.txt, etc.)
+// TODO: Multiverse-support? (Different configs for different worlds)
 
 public class PwnFilter extends JavaPlugin {
 
