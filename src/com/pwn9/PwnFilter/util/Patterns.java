@@ -33,12 +33,12 @@ public class Patterns {
         return pattern;
     }
 
-    public static String replaceCommands(String cmd, String message, String rawMessage, FilterState state) {
-        cmd = cmd.replaceAll("&world", state.playerWorldName).
-                replaceAll("&player", state.playerName).
-                replaceAll("&string", message).
-                replaceAll("&rawstring", rawMessage).
-                replaceAll("&event", state.eventType.toString());
+    public static String replaceCommands(String cmd, FilterState state) {
+        cmd = cmd.replaceAll("&world", (state.playerWorldName != null)?state.playerWorldName:"NoWorld").
+                replaceAll("&player", (state.playerName != null)?state.playerName:"NoPlayer!").
+                replaceAll("&string", state.message.getColoredString()).
+                replaceAll("&rawstring", state.getOriginalMessage().getColoredString()).
+                replaceAll("&event", (state.eventType != null)?state.eventType.toString():"No Event!");
         return cmd;
     }
 }
