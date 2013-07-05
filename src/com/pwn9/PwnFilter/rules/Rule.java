@@ -7,7 +7,6 @@ import com.pwn9.PwnFilter.rules.action.ActionFactory;
 import com.pwn9.PwnFilter.util.Patterns;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,7 +31,7 @@ public class Rule {
     // All rules must have a matchStr, hence no parameter-less constructor.
     public Rule(String matchStr) {
         this.pattern = Patterns.compilePattern(matchStr);
-        events.addAll(Arrays.asList(PwnFilter.EventType.values())); // Add to all events by default.
+        events.addAll(PwnFilter.enabledEvents); // Add to all enabled events by default.
     }
 
     /* Methods */
