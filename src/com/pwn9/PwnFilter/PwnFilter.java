@@ -9,6 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
@@ -82,8 +83,10 @@ public class PwnFilter extends JavaPlugin {
             logger = this.getLogger();
         }
 
-        // Initialize default configuration
-        saveDefaultConfig();
+        // Initialize Configuration
+        FileConfiguration config = getConfig();
+        config.options().copyDefaults(true);
+        saveConfig();
 
         // Now get our configuration
         configurePlugin();
@@ -155,6 +158,8 @@ public class PwnFilter extends JavaPlugin {
     }
 
     public void configurePlugin() {
+
+
 
         if (getConfig().getBoolean("logfile")) {
             setupLogfile();

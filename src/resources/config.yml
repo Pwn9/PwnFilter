@@ -18,7 +18,7 @@ logfile: true
 # Debug mode (high is VERY verbose) (Enable logfile above)
 # NOTE: Changed in 3.0.1.  Now options are:
 # off, low, medium, high
-debug: false
+debug: off
 
 
 # Strip color from chat. Permission to bypass pwnfilter.color or pwnfilter.bypass
@@ -48,6 +48,9 @@ cmdblist:
 - tpa
 - warp
 - help
+
+# "then notify" actions will send a message to all users with this permission
+notifyperm: pwnfilter.admin
 
 #### ADVANCED #####
 # Note: You can also change the priority of event handlers with:

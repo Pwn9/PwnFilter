@@ -21,7 +21,7 @@ public class Actioncommand implements Action {
         state.cancel = true;
         final String cmd;
         if (!command.isEmpty()) {
-            cmd = Patterns.replaceCommands(command, state);
+            cmd = Patterns.replaceVars(command, state);
             state.addLogMessage("Helped " + state.playerName + " execute command: " + cmd);
         } else {
             cmd = state.message.getColoredString();

@@ -34,6 +34,7 @@ public class FilterState {
     public boolean log = false;  // If true, actions will be logged
     public boolean stop = false; // If set true by a rule, will stop further processing.
     public boolean cancel = false; // If set true, will cancel this event.
+    public String ruleID; // ID of the rule we currently match
     public Pattern pattern; // Pattern that we currently matched.
 
     // NOTE: pattern should always match originalMessage, but may not match

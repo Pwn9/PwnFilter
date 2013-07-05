@@ -1236,6 +1236,7 @@ then log
 match \b(r+(\W|\d|_)*e+(\W|\d|_)*d+(\W|\d|_)*n+(\W|\d|_)*e+(\W|\d|_)*c+(\W|\d|_)*k+\w*)
 then rewrite Northern
 then console say Blocked &player's Language: (M17)
+
 # O&bptional&bCommand1
 # O&bptional&bCommand2
 # O&bptional&bCommand3

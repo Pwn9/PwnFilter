@@ -17,7 +17,7 @@ public class Actionconchain implements Action {
     }
 
     public boolean execute(final FilterState state ) {
-        String cmds = Patterns.replaceCommands(commands, state);
+        String cmds = Patterns.replaceVars(commands, state);
         String cmdchain[] = cmds.split("\\|");
         for (String cmd : cmdchain) {
             state.addLogMessage("Sending console command: " + cmd);

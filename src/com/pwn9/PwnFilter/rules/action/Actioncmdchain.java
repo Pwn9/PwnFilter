@@ -21,7 +21,7 @@ public class Actioncmdchain implements Action {
 
     public boolean execute(final FilterState state ) {
         state.cancel = true;
-        String cmds = Patterns.replaceCommands(commands,state);
+        String cmds = Patterns.replaceVars(commands, state);
         String cmdchain[] = cmds.split("\\|");
         for (final String cmd : cmdchain) {
             state.addLogMessage("Helped " + state.playerName + " execute command: " + cmd);
