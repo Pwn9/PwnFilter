@@ -59,7 +59,7 @@ public class FilterState {
 
     /**
      * Add a string to the list of log messages that will be written to the logfile /console.
-     * These messages will only be output if the rule has the "then log" action, or if debug: true
+     * These messages will only be output if the rule has the "then log" action, or if debug >= low
      * in the comfig.yml
      * @param message A string containing the log message to be output.
      */

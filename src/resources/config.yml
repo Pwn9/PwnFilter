@@ -15,7 +15,7 @@ loglevel: info
 # This file will contain all PwnFilter log messages, regardless of level.
 logfile: true
 
-# Debug mode (VERY verbose) (Enable logfile above)
+# Debug mode (high is VERY verbose) (Enable logfile above)
 # NOTE: Changed in 3.0.1.  Now options are:
 # off, low, medium, high
 debug: false

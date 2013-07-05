@@ -100,7 +100,7 @@ public class RuleSet {
 
         if (PwnFilter.debugMode == PwnFilter.DebugModes.high) {
             if (state.pattern != null) {
-                PwnFilter.logger.finer("Debug match: " + state.pattern.pattern());
+                PwnFilter.logger.finer("Debug last match: " + state.pattern.pattern());
                 PwnFilter.logger.finer("Debug original: " + state.getOriginalMessage().getColoredString());
                 PwnFilter.logger.finer("Debug current: " + state.message.getColoredString());
                 PwnFilter.logger.finer("Debug log: " + (state.log?"yes":"no"));
@@ -112,8 +112,7 @@ public class RuleSet {
 
         if (state.cancel){
             state.addLogMessage("<"+state.playerName + "> Original message cancelled.");
-        } else if (state.pattern != null ||
-                PwnFilter.debugMode.compareTo(PwnFilter.DebugModes.low) >= 0) {
+        } else if (state.pattern != null) {
             state.addLogMessage("|" + state.eventType.toString() + "| SENT <" +
                     state.playerName + "> " + state.message.getPlainString());
         }
@@ -121,7 +120,9 @@ public class RuleSet {
         for (String s : state.getLogMessages()) {
             if (state.log) {
                 PwnFilter.logger.info(s);
-            } else PwnFilter.logger.log(plugin.ruleLogLevel,s);
+            } else if (PwnFilter.debugMode.compareTo(PwnFilter.DebugModes.low) >= 0) {
+                PwnFilter.logger.log(plugin.ruleLogLevel,s);
+            }
         }
 
     }

@@ -246,7 +246,6 @@ public class PwnFilter extends JavaPlugin {
                 logfileHandler = new FileHandler(fileName, true);
                 SimpleFormatter f = new PwnFormatter();
                 logfileHandler.setFormatter(f);
-                getConfig().addDefault("logfileLevel", "fine");
                 logfileHandler.setLevel(Level.FINEST); // Catch all log messages
                 logger.addHandler(logfileHandler);
                 logger.info("Now logging to " + fileName );
