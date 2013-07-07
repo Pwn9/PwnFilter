@@ -16,6 +16,7 @@ public class Actionlower implements Action {
 
     public boolean execute(final FilterState state ) {
         ColoredString cs = state.message;
+        state.addLogMessage("Converting to lowercase.");
         return cs.patternToLower(state.pattern);
 
     }

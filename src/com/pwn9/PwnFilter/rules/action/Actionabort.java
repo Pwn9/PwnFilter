@@ -15,6 +15,7 @@ public class Actionabort implements Action {
 
     public boolean execute(final FilterState state ) {
         state.stop = true;
+        state.addLogMessage("<Abort> Not processing more rules.");
         return true;
     }
 }

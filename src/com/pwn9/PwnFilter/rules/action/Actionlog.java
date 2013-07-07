@@ -3,7 +3,7 @@ package com.pwn9.PwnFilter.rules.action;
 import com.pwn9.PwnFilter.FilterState;
 
 /**
- * Deny this event by cancelling it.
+ * Log this event.
  */
 @SuppressWarnings("UnusedDeclaration")
 public class Actionlog implements Action {
