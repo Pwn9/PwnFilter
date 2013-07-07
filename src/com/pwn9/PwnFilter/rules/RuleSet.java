@@ -98,7 +98,7 @@ public class RuleSet {
             }
         }
 
-        if (PwnFilter.debugMode == PwnFilter.DebugModes.high) {
+        if (PwnFilter.debugMode.compareTo(PwnFilter.DebugModes.high) >=0) {
             if (state.pattern != null) {
                 PwnFilter.logger.finer("Debug last match: " + state.pattern.pattern());
                 PwnFilter.logger.finer("Debug original: " + state.getOriginalMessage().getColoredString());

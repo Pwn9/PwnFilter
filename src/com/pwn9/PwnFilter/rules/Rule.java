@@ -23,9 +23,6 @@ public class Rule {
     ArrayList<Action> actions = new ArrayList<Action>();
     ArrayList<PwnFilter.EventType> events = new ArrayList<PwnFilter.EventType>();
 
-
-    boolean log = false;
-
         /* Constructors */
 
     // All rules must have a matchStr, hence no parameter-less constructor.
@@ -90,10 +87,7 @@ public class Rule {
 
         if (command.matches("then")) {
             // This is an action.  Try to add a new action with its parameters.
-            if (parameterString.matches("log")) {
-                log = true;
-                return true;
-            }
+
             Action newAction = ActionFactory.getActionFromString(parameterString);
             if (newAction != null) {
                 actions.add(newAction);
