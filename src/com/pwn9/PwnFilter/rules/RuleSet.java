@@ -118,9 +118,7 @@ public class RuleSet {
         }
 
         for (String s : state.getLogMessages()) {
-            if (state.log) {
-                PwnFilter.logger.info(s);
-            } else if (PwnFilter.debugMode.compareTo(PwnFilter.DebugModes.low) >= 0) {
+            if (state.log || PwnFilter.debugMode.compareTo(PwnFilter.DebugModes.low) >= 0) {
                 PwnFilter.logger.log(plugin.ruleLogLevel,s);
             }
         }
