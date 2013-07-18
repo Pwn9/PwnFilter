@@ -1,0 +1,3622 @@
+# EpicATrain's Language Filter
+#
+# Thank you for supporting my work.  Please consider donating to help
+#	further support family safe gaming!
+#		http://fnd.us/c/0QtL4
+# All donations will go towards the support and continuation of this
+#	language filter and the advancement of server & client side
+#	family safe game development.
+#
+# > > > > > Please Do NOT Remove or Edit Any Donation Lines < < < < <
+# > > > > > If you wish to remove these, please donate. Thanks! < < < < <
+#
+# ---------- Important Information ----------
+# This scripting code has no warranty or remedies, whether expressed or
+#	 implied, and is provided "as is".
+# The following scripting code is designed for the following servers:
+#	Minecraft -> Bukkit -> Pwnfilter Plugin
+# There is a goal to make this code universal for cross-platforms
+# 	on many other game servers. Support for other games is currently
+#	in development.  If you wish to participate and help develop this
+#	code, please contact EpicATrain at the email below.
+# All code that is not original to Addam Waitkus has been remove from
+# 	this script for copyright registration purposes. As of the release
+# 	of this script, all current and future work is copyright of
+# 	Addam Waitkus, with all rights reserved.
+# This work may be distributed in current format free of charge as
+# 	long as this work remains free of charge and used only on the
+#	game servers listed above.
+# Server administrators may modify this work to their preference for
+#	their server only, if so desired, as long as such work remains property
+# 	of Addam Waitkus and remains distributed freely of charge.
+# Addam Waitkus: atrain(nothinghere)online [at] gmail (dot) com
+# ---------- End Important Information ----------
+#
+# ---------- Read Me ----------
+# This entire script is written so that any admin can edit out most
+# 	parts of this filter to his or her liking.  To stop a word from
+# 	being filtered, simply put a pound sign (#) next to the lines of
+# 	code you want to turn off.
+# It's highly NOT recommended to delete lines of code in case you
+# 	want to turn it back on at a later date.
+#
+# This filter no longer uses chat colors.
+#
+# You can disable players from using colors by enabling this command:
+# Turn off colors
+# match (\&\d|\&\w)
+# ignore permission permission.node
+# then replace
+#
+# The ignore permission code is optional.
+#
+# The following is very important in order for your server to run
+# 	properly.  Below you will find the following lines of code:
+# 		ignore string youtube|google|biblegateway ...
+# 		ignore string 192.168.1.1|1.2.3.4 ...
+# Please follow the instructions listed below to provide your server
+# 	information into the code to allow the script to run without errors.
+# ---------- End Read Me ----------
+#
+#
+#
+# Domain Advertising Filter
+match ((http)*(\w|\W|\d|_)*(www)*(\w|\W|\d|_)*[a-zA-Z0-9\.\-\*_\^\+\~\`\=\,\&*]{3,}(\W|\d|_|dot|\(dot\))+(com\b|org\b|net\b|edu\b|co\b|uk\b|de\b|cc\b|biz\b|mobi\b|xxx\b|tv\b))
+# Please put the name of your server below.
+# Website Allow List. Afer yahoo.com, put a | followed by your website name (please
+# 	include any punctuation or com, edu, etc after it or it WILL cause problems)
+#---------------------------------------------------------------------------------
+ignore string youtube.com|google.com|biblegateway.com|winfamilyserver.co.uk|wraithaven.com|minecraft.net|minecraftwiki.com|yahoo.com
+#---------------------------------------------------------------------------------
+then replace ~^~^~Blocked For Domain Advertising~^~^~
+then console say Blocked &player's From Advertising: (Domain)
+#then kill Do NOT Advertise!
+then log
+#
+#
+#
+# IP Address Advertising Filter
+match \b(([0-9]{1,3})(\W|_|and|dot|\(dot\))+([0-9]{1,3})(\W|_|and|dot|\(dot\))+([0-9]{1,3})(\W|_|and|dot|\(dot\))+([0-9]{1,3}))\b
+#---------------------------------------------------------------------------------
+# Please put your IP address of the server in the space below
+# After the 1.2.3.4, put a | followed by your server's IP address
+#---------------------------------------------------------------------------------
+ignore string 192.168.1.1|1.2.3.4
+#---------------------------------------------------------------------------------
+then replace ~^~^~Blocked For IP Advertising~^~^~
+then console say Blocked &player's From Advertising: (IP)
+#then kill Do NOT Advertise!
+then log
+#
+#
+#
+#---------------------------------------------------------------------------------
+# Word Changers and Correctors
+# These are optional. These were orginally required by the filter but no longer.
+# Server Admins: You may keep these if you wish.
+#---------------------------------------------------------------------------------
+
+# rewrite da with the
+match \bda\b
+then rewrite the
+
+# rewrite asap with as soon as possible
+match \basap\b
+then rewrite as soon as possible
+
+# rewrite bbl with be back later
+match \bbbl\b
+then rewrite be back later
+
+# rewrite bbs with be back soon
+match \bbbs\b
+then rewrite be back soon
+
+# rewrite btw with by the way
+match \bbtw\b
+then rewrite by the way
+
+# rewrite FAQ with Frequently asked questions
+match \bFAQ\b
+then rewrite Frequently Asked Questions
+
+# rewrite FYI with for your information
+match \bfyi\b
+then rewrite for your information
+
+# rewrite g2g or gtg with got to go
+match \bg2g\b|\bgtg\b
+then rewrite got to go
+
+# rewrite gfy with good for you
+match \bgfy\b
+then rewrite good for you
+
+# rewrite gg with good game
+match \bgg\b
+then rewrite good game
+
+# rewrite gj with good job
+match \bgj\b
+then rewrite good job
+
+# rewrite HTH with hope this helps
+match \bhth\b
+then rewrite hope this helps
+
+# rewrite IC with I see
+match \bic\b
+then rewrite I see
+
+# rewrite imo or imho with in my honest opinion
+match \b(imo)\b|\b(imho)\b
+then rewrite in my honest opinion
+
+# rewrite IRL with in real life
+match \birl\b
+then rewrite in real life
+
+# rewrite jk with just kidding
+match \bjk\b
+then rewrite just kidding
+
+# rewrite yew and joo with you
+match \byew\b|\bjoo\b
+then rewrite you
+
+# rewrite myob with mind your own business
+match \bmyob\b
+then rewrite mind your own business
+
+# rewrite np with no problem
+match \bnp\b
+then rewrite no problem
+
+# rewrite noyb with none of your business
+match \bnoyb\b
+then rewrite none of your business
+
+# rewrite otoh with on the other hand
+match \botoh\b
+then rewrite on the other hand
+
+# rewrite pvp with player versus player
+match \bpvp\b
+then rewrite player versus player
+
+# rewrite ru with are you
+match \bru\b
+then rewrite are you
+
+# rewrite TBH with to be honest
+match \btbh\b
+then rewrite to be honest
+
+# rewrite thx with thanks
+match \bthx\b|\bthnx\b
+then rewrite thanks
+
+# rewrite ttyl with talk to you later
+match \bttyl\b
+then rewrite talk to you later
+
+# rewrite w8 with wait
+match \bw8\b
+then rewrite wait
+
+# rewrite k with ok
+match \bk\b
+then rewrite ok
+
+# rewrite o with oh
+match \bo\b
+then rewrite oh
+
+# rewrite wt with what
+match \bwt\b
+then rewrite what
+
+# Match: u and change to you
+match \bu\b
+then rewrite you
+
+# Match: r and change to are
+match \br\b
+then rewrite are
+
+# Match: ur and change to you're
+match \bur\b
+then rewrite you're
+
+# Match: urs and change to yours
+match \burs\b
+then rewrite yours
+
+# Match: brb and change to be right back
+match \bbrb\b
+then rewrite be right back
+
+# Match: afk and change it to away from keyboard
+match \bafk\b
+then rewrite away from keyboard
+
+# Match: 2morrow and change it to tomorrow
+match \b2morrow\b
+then rewrite tomorrow
+
+# Match: i and change it to I
+match \bi\b
+then rewrite I
+
+# Match: plz and change it to please
+match plz
+then rewrite please
+
+# rewrite bc with because
+match \bbc\b
+then rewrite because
+
+# rewrite c with see
+match \bc\b
+then rewrite see
+
+# rewrite g with gee
+match \bg\b
+then rewrite gee
+
+# rewrite y with why
+match \by\b
+then rewrite why
+
+# rewrite x with ex
+match \bx\b
+then rewrite ex
+
+#---------------------------------------------------------------------------------
+# Custom List & Annoying Terms
+# Op/Admin generated list
+# This list is NOT fool proof. It is weak so that admins can easily add words.
+# After each letter, add +(\W)* to make the filter a little stronger.
+# The + looks for repeating words.
+# The (\W)* looks for spaces and symbols to filter out but does NOT filter
+# 	underscores.  To filter those, use +(\W|\d|_)* which looks for everything.
+#---------------------------------------------------------------------------------
+
+# (C1) Match: he'll
+match \b(he'll)\b
+then rewrite he will
+then console say Custom Filter: (C1)
+then log
+
+# (C2) Match: yolo
+match \b(y+(\W)*(0|o)+(\W)*(1|l)+(\W)*(0|o)+(\W)*)
+then rewrite My mom thinks I'm cool...
+then console say Custom Filter: (C2)
+then log
+
+# (C3) Match: swag
+match \b((5|s|z)+(\W)*w+(\W)*a+(\W)*g+(\W)*)
+then rewrite My mom says I'm cool...
+then console say Custom Filter: (C3)
+then log
+
+# (C4) Match: TV
+match \b(TV)\b
+then rewrite Television
+then console say Custom Filter: (C4)
+then log
+
+# (C5) Match: !lag
+match ^(\!lag)$
+then rewrite
+then warn &9> > > Here are a few ways to fix lag: 1) 2) 3) ... etc
+then log
+
+# (C6) Match: lag
+match .*(l+(\W|\d|_)*a+(\W|\d|_)*g+(\W|\d|_)*).*
+then warn &e> > > To explore ideas on how to fix lag, type !lag < < <
+then log
+
+# (C6) Match:
+#match \b()\b
+#then rewrite
+#then console say Custom Filter: (C5)
+#then log
+
+#---------------------------------------------------------------------------------
+# Server Utilities List
+# Please do NOT modify or remove this list.
+# The language filter requires these to work properly.
+#---------------------------------------------------------------------------------
+
+# Caps Lock Detection of 10 letters or more.
+match (\p{Lu}|\s){10,200}
+then lower
+then warn &c> > > Caps Lock/Spam Detection Engaged < < <
+
+# Advanced Detection of Single Letter Spamming
+# Allow emoticons
+match \b(^[a-z]$)\b
+ignore string a|b|g|k|i|o|r|s|u|w8|y|:-X|:X|:S|>:P|:-P|:P|X-P|x-p|xp|XP|:-p|:p|=p|:-b|:b|D:<|D:|D8|D;|D=|DX|D-':|:-c|:c|:-D|:D|8-D|8D|x-D|xD|X-D|XD|=-D|=D|B^D
+then replace I Love This Filter!
+then console say Blocked &player: (Spam)
+
+# Match: fn and change it to fun
+match \b(f+(\W|\d|_)*n+)\b
+then rewrite fun
+
+# Match: @ and change it to a
+match ((@|\@))
+then rewrite a
+
+# Match: Å å and change it to a
+match (Å|å)
+then rewrite a
+
+# Match: Ø ø and change it to o
+match (Ø|ø|\(\))
+then rewrite o
+
+# Match: /\/\ and change it to m
+match (/\\/\\)|(/\\\./\\)
+then rewrite m
+
+# Match: \/\/ and change it to w
+match (\\/\\/)
+then rewrite w
+
+# Match: \/ and change it to v
+match (\\/)
+then rewrite v
+
+# Match: F and change it to I love this filter
+match \b(f)\b
+then rewrite I love this filter!
+
+# Match: Look for $ in the middle of a word.
+match ([a-zA-Z]+(\$)+[a-zA-Z]+)
+then replace I Love This Filter!
+then console say Filter Circumvention Detected! { $ }
+then log
+
+# Match: Look for $ at the beginning or end of a word.
+match ((\$)+[a-zA-Z]+)|([a-zA-Z]+(\$)+)
+then replace I Love This Filter!
+then console say Filter Circumvention Detected! { $ BE }
+then log
+
+# Match: Look for ! in the middle of a word.
+match (\w+\!\w+)
+then replace I Love This Filter!
+then console say Filter Circumvention Detected! { ! }
+then log
+
+# Match: Look for * in the middle of a word.
+match (\w+\*\w+)
+ignore string =*(|:*(|=*-(|:*-(|*\0/*|=*)|:*)|=*-)|:*-)
+then replace I Love This Filter!
+then console say Filter Circumvention Detected! { * }
+then log
+
+# Match: Look for mutiple *
+match (\*{2,})
+ignore string =*(|:*(|=*-(|:*-(|*\0/*|=*)|:*)|=*-)|:*-)
+then replace I Love This Filter!
+then console say Filter Circumvention Detected! { ** }
+then log
+
+# Match: Look for | in the middle of a word.
+match (\w+\|\w+)
+then replace I Love This Filter!
+then console say Filter Circumvention Detected! { Pipe }
+then log
+
+# Match: Look for | at the beginning or end of a word.
+match (\|\w+)|(\w+\|)
+then replace I Love This Filter!
+then console say Filter Circumvention Detected! { Pipe BE }
+then log
+
+# Match: Look for numbers at the beginning of a word.
+#match \b([0-9]+[a-zA-Z]+)\b
+#then replace I Love This Filter!
+#then console say Filter Circumvention Detected! { Numbers Begin }
+#then log
+
+# Match: Look for a number in the middle of a word.
+match ([a-z]+[0-9]+[a-z]+)
+then replace I Love This Filter!
+then console say Filter Circumvention Detected! { Number }
+then log
+
+# Match: Look for numbers at the end of a word.
+# match ([a-z]+[0-9]+)\b
+# then replace I Love This Filter!
+# then console say Filter Circumvention Detected! { End Number }
+# then log
+
+# Match: Look for + in the middle of a word.
+match (\w+\+\w+)
+then replace I Love This Filter!
+then console say Filter Circumvention Detected! { + }
+then log
+
+# Match: Look for + at the beginning or end of a word
+match (\w+\+$)|(\+$\w+)
+ignore string =*(|:*(|=*-(|:*-(|*\0/*|=*)|:*)|=*-)|:*-)
+then replace I Love This Filter!
+then console say Filter Circumvention Detected! { + BE }
+then log
+
+# Match: Look for !+ at the end of a word
+match (\w+\!\+$)
+ignore string =*(|:*(|=*-(|:*-(|*\0/*|=*)|:*)|=*-)|:*-)
+then replace I Love This Filter!
+then console say Filter Circumvention Detected! { !+ End }
+then log
+
+# Match: Look for +! at the beginning of a word
+match (^\+\!\w+)
+ignore string =*(|:*(|=*-(|:*-(|*\0/*|=*)|:*)|=*-)|:*-)
+then replace I Love This Filter!
+then console say Filter Circumvention Detected! { !+ End }
+then log
+
+# Match: $$ and change it to ss
+match (\$){2,}
+then rewrite ss
+then log
+
+# Match: | and deny it
+#match (\|)
+#then rewrite l
+#then warn For the safety of others, the pipe symbol/character has been blocked.
+#then log
+
+# Match: Stop those annoying scams with Planet Minecraft Reviewers
+match .*((Planet(\w|\W|\d|_)*Minecraft|PMC)(\w|\W|\d|_)*(interview|review|reveiw|reviewer|reveiwer)).*|.*((interview|review|reveiw|reviewer|reveiwer)(\w|\W|\d|_)*(Planet(\w|\W|\d|_)*Minecraft|PMC)).*|.*((I|I'm|I am)(\w|\W|\d|_)*(from|with|belong|affiliat|relationship|admin|mod|member)(\w|\W|\d|_)*(Planet(\w|\W|\d|_)*Minecraft|PMC)).*
+then warn &aPlanet Minecraft Reviewers Are Always Welcome! Type !opme For 2 Minutes of Op Time. Contact An Admin If You Need More Time.
+then replace ~^~^~Official PMC Reviewer~^~^~
+then log
+
+# Match: !opme
+match ^(\!opme).*
+then replace ~^~^~Official PMC Reviewer Is Now Kicked~^~^~
+then conchain kick &player You are now op!|ban &player You are now op!
+then log
+
+# Website: Type !website To Display Server's Website
+match ^(\!website).*
+then replace Website: Please Add Your Website Here (!website)
+then console say Website: Please Add Your Website Here
+
+# Match: !op
+match ^(\!op).*
+then replace Only PMC Reviewers Have Access To !Op
+then console say Command !op Initiated.
+
+# Match: Stop annoying players from asking for admin, mod, etc
+match .*((can I have|I want|can you|can I has|give me|can has|can I be)(\w|\W|\d|_)*(\bop\b|\boperator\b|\badmin\b|\badministrator\b|\bmod\b|\bmoderator\b|\bwatchman\b|\bwatchmen\b|\bstaff\b)).*
+then replace ~^~^~Killed For Spam~^~^~
+then kill Don't ask for powers
+then log
+
+# Match: Kill Players Who Don't Like The Server.
+match .*(stupid|gay|lame|hate)(\w|\W|\d|_)*(server).*|.*((server)(\w|\W|\d|_)*(suck|gay|blow|lame|stupid)).*
+then replace ~^~^~Killed For Spam~^~^~
+then kill Don't talk bad about the server.
+then log
+
+# New Letter & Word Spam Filter (ALWAYS ACTIVE)
+#match ([a-zA-Z_\W]*)(?=\1\1)
+#then rewrite
+
+# Experimental Letter & Word Spam Filter
+match (.+)(?=\1\1\1+)
+then rewrite
+then warn &c> > > Caps Lock/Spam Detection Engaged < < <
+
+# Remove Automatic Advertising
+match .*(herobrine(\w|\W|\d|_)*mod).*|.*(Platinum Client).*
+then replace ~^~^~Blocked For Spam~^~^~
+then warn &4> > > Message Denied < < <
+then log
+
+# Donations Link (Please do NOT remove unless you've donated)
+match (donations|donating|donate)
+then warn Please Consider Supporting My Work: http://fnd.us/c/0QtL4
+
+# Match: I hate this filter
+match ((hate|dislike|not a fan|stupid|gay|lame)(\w|\W|\d|_)*(filter|censor|sensor))|((filter|censor|sensor)(\w|\W|\d|_)*(suck|gay|blow|lame|stupid))
+then replace I'm in love with this filter
+then log
+
+# Match: I love this filter
+match ((like|Love|best)(\w|\W|\d|_)*(filter|censor|sensor))|((filter|censor|sensor)(\w|\W|\d|_)*(awesome|amazing|cool|neat|best))
+then warn <EpicATrain> &aThanks for the compliment! I try to work hard to keep the language clean!
+
+#---------------------------------------------------------------------------------
+# Light Block List
+# This list is not really swearing but put-downs.
+#---------------------------------------------------------------------------------
+
+# (L1-1) Advance Match: butt (Beginning)
+match \b(b+(\W|\d|_)*u+(\W|\d|_)*(7|t)+[a-zA-z]*)
+ignore string buts|butch|buteo|butle|butte|butty|butut|butyl|butane|butene|buteos|butled|butler|butles|butted|butter|buttes|button|bututs|butyls|butanes|butanol|butcher|butches|butenes|butlers|butlery|butling|buttals|butters|buttery|butting|buttons|buttony|butyral|butyric|butyrin|butyryl|butanols|butanone|butchers|butchery|buttered|buttoned|buttoner|buttress|butylate|butylene|butyrals|butyrate|butyrins|butyrous|butyryls|butadiene|butanones|butchered|butcherly|butleries|buttercup|butterfat|butterfly|butterier|butteries|buttering|butternut|buttinski|buttinsky|buttoners|buttoning|buttstock|butylated|butylates|butylenes|butyrates|butadienes|butcheries|butchering|butterball|buttercups|butterfats|butterfish|butteriest|butterless|buttermilk|butternuts|butterweed|butterwort|buttonball|buttonbush|buttonhole|buttonhook|buttonless|buttonwood|buttressed|buttresses|buttstocks|butylating|butylation|butterballs|butterflied|butterflies|butterflyer|buttermilks|butterweeds|butterworts|buttinskies|buttonballs|buttonholed|buttonholer|buttonholes|buttonhooks|buttonwoods|buttressing|butylations|butterfishes|butterflyers|butterflying|butterscotch|buttonbushes|buttonholers|buttonholing|buttonhooked|butterfingers|buttonhooking|butyraldehyde|butyrophenone|butterfingered|butterscotches|butyraldehydes|butyrophenones
+then rewrite but
+# then console say Blocked &player's Language: (L1-1)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+# then log
+
+# (L1-2) Advance Match: butt (Ending), bung
+match (b+(\W|\d|_)*u+(\W|\d|_)*(7|t)+(\W|\d|_)*(7|t)+)\b|(b+(\W|\d|_)*u+(\W|\d|_)*n+(\W|\d|_)*g+(\W|\d|_)*h+(\W|\d|_)*o+(\W|\d|_)*l+(\W|\d|_)*e+(\W|\d|_)*)
+then rewrite but
+# then console say Blocked &player's Language: (L1-2)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+# then log
+
+# (L2) Match: hump
+# But allow thumping
+match \b(h+(\W|\d|_)*u+(\W|\d|_)*m+(\W|\d|_)*p+(\W|\d|_)*i*(\W|\d|_)*n*(\W|\d|_)*g*(\W|\d|_)*e*(\W|\d|_)*d*(\W|\d|_)*s*(\W|\d|_)*)\b
+then rewrite dance
+then console say Blocked &player's Language: (L2)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L3) Match: jerk
+match \b(j+(\W|\d|_)*(e|u)+(\W|\d|_)*r+(\W|\d|_)*(c|k)+(\W|\d|_)*s*)\b
+then rewrite  meanie
+then console say Blocked &player's Language: (L3)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L4) Search for crap, crappy
+match \b((c|k)+(\W|\d|_)*r+(\W|\d|_)*a+(\W|\d|_)*p+(\W|\d|_)*y*(\W|\d|_)*)\b
+then rewrite  yuck
+then console say Blocked &player's Language: (L4)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L5) Search for screw
+match \b((5|s|z)+(\W|\d|_)*(c|k)+(\W|\d|_)*r+(\W|\d|_)*(3|e)+(\W|\d|_)*w+(\W|\d|_)*i*(\W|\d|_)*n*(\W|\d|_)*g*(\W|\d|_)*e*(\W|\d|_)*d*(\W|\d|_)*)\b
+then rewrite  twist
+then console say Blocked &player's Language: (L5)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L6) Search for turd, terd, tard
+match \b((7|t)+(\W|\d|_)*(3|a|e|u)+(\W|\d|_)*r+(\W|\d|_)*d+(\W|\d|_)*s*)\b
+then rewrite  Jesus Loves You
+then console say Blocked &player's Language: (L6)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L7) Search for dumb
+match \b(d+(\W|\d|_)*u+(\W|\d|_)*m+(\W|\d|_)*(a|b|f|s)+)\b
+then rewrite  silly
+then console say Blocked &player's Language: (L7)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L8) Search for flamer
+match \b(f+(\W|\d|_)*(1|l)+(\W|\d|_)*a+(\W|\d|_)*m+(\W|\d|_)*(3|e)+(\W|\d|_)*r+(\W|\d|_)*s*)\b
+then rewrite  meanie
+then console say Blocked &player's Language: (L8)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L9) Match: pecker
+match \b(p+(\W|\d|_)*(3|e)+(\W|\d|_)*(c|k)+(\W|\d|_)*(c|k)*(\W|\d|_)*(3|e)+(\W|\d|_)*r+(\W|\d|_)*s*)\b
+then rewrite  flashlight
+then console say Blocked &player's Language: (L9)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L10) Match: shut up
+match \b(s+(\W|\d|_)*h+(\W|\d|_)*u+(\W|\d|_)*t+(\W|\d|_)*u+(\W|\d|_)*p+)\b
+then rewrite love me
+then console say Blocked &player's Language: (L10)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L11) Match: suck it
+match \b(s+(\W|\d|_)*u+(\W|\d|_)*c+(\W|\d|_)*k+(\W|\d|_)*i+(\W|\d|_)*t+)\b
+then rewrite love me
+then console say Blocked &player's Language: (L11)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L12) Match: suck up
+match \b(s+(\W|\d|_)*u+(\W|\d|_)*c+(\W|\d|_)*k+(\W|\d|_)*u+(\W|\d|_)*p+)\b
+then rewrite love it
+then console say Blocked &player's Language: (L12)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L13) Match: Muffin top
+match \b(m+(\W|\d|_)*u+(\W|\d|_)*f+(\W|\d|_)*i+(\W|\d|_)*n+(\W|\d|_)*t+(\W|\d|_)*o+(\W|\d|_)*p+)\b
+then rewrite waist
+then console say Blocked &player's Language: (L13)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L14) Match: I swear
+match \b(I+(\W|\d|_)*s+(\W|\d|_)*w+(\W|\d|_)*e+(\W|\d|_)*a+(\W|\d|_)*r+)\b
+then rewrite I honor
+then console say Blocked &player's Language: (L14)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L15) Match: fart face
+match \b(f+(\W|\d|_)*a+(\W|\d|_)*r+(\W|\d|_)*t+(\W|\d|_)*f+(\W|\d|_)*a+(\W|\d|_)*c+(\W|\d|_)*e+)\b
+then rewrite nice face
+then console say Blocked &player's Language: (L15)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L16) Match: get a life
+match \b(g+(\W|\d|_)*e+(\W|\d|_)*t+(\W|\d|_)*a+(\W|\d|_)*l+(\W|\d|_)*i+(\W|\d|_)*f+(\W|\d|_)*e+)\b
+then rewrite have a blessed life
+then console say Blocked &player's Language: (L16)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L17) Match: get bent
+match \b(g+(\W|\d|_)*e+(\W|\d|_)*t+(\W|\d|_)*b+(\W|\d|_)*e+(\W|\d|_)*n+(\W|\d|_)*t+)\b
+then rewrite be blessed
+then console say Blocked &player's Language: (L17)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L18) Match: newb, newbie, noob, noobie, nooby
+match \b(n+(\W|\d|_)*e+(\W|\d|_)*w+(\W|\d|_)*b+(\W|\d|_)*i*(\W|\d|_)*e*(\W|\d|_)*y*(\W|\d|_)*)\b|\b(n+(\W|\d|_)*o+(\W|\d|_)*b+(\W|\d|_)*i*(\W|\d|_)*e*(\W|\d|_)*y*(\W|\d|_)*)\b
+then rewrite novice player
+then console say Blocked &player's Language: (L18)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L19) Match: tea bag
+match \b(t+(\W|\d|_)*e+(\W|\d|_)*a+(\W|\d|_)*b+(\W|\d|_)*a+(\W|\d|_)*g+)
+then rewrite squat
+then console say Blocked &player's Language: (L19)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L20) Match: your mom, yo momma, yo mamma, your mama
+match \b(y+(\W|\d|_)*o+(\W|\d|_)*u*(\W|\d|_)*r*(\W|\d|_)*m+(\W|\d|_)*(a|o)+(\W|\d|_)*m+(\W|\d|_)*a+)\b
+then rewrite your mom is awesome
+then console say Blocked &player's Language: (L20)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L21) Match: bite me, bite my, kiss my
+match \b(b+(\W|\d|_)*i+(\W|\d|_)*t+(\W|\d|_)*e+(\W|\d|_)*m+(\W|\d|_)*(e|y)+)\b|\b(k+(\W|\d|_)*i+(\W|\d|_)*s+(\W|\d|_)*s+(\W|\d|_)*m+(\W|\d|_)*y+)\b
+then rewrite love me
+then console say Blocked &player's Language: (L21)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L22) Match: I hate you
+match \b(I+(\W|\d|_)*h+(\W|\d|_)*a+(\W|\d|_)*t+(\W|\d|_)*e+(\W|\d|_)*y+(\W|\d|_)*o+(\W|\d|_)*u+)\b
+then rewrite I wish you no harm
+then console say Blocked &player's Language: (L22)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L23) Match: loser
+match \b(l+(\W|\d|_)*o+(\W|\d|_)*(s|z)+(\W|\d|_)*e+(\W|\d|_)*r+)\b
+then rewrite runner up
+then console say Blocked &player's Language: (L23)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L24) Match: idiot
+match \b(i+(\W|\d|_)*d+(\W|\d|_)*i+(\W|\d|_)*o+(\W|\d|_)*t+)\b
+then rewrite I’m not a complete idiot, some parts are missing.
+then console say Blocked &player's Language: (L24)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L25) Match: wimp
+match \b(w+(\W|\d|_)*i+(\W|\d|_)*m+(\W|\d|_)*p+)\b
+then rewrite outstanding person
+then console say Blocked &player's Language: (L25)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L26) Match: scum
+match \b(s+(\W|\d|_)*c+(\W|\d|_)*u+(\W|\d|_)*m+)\b
+then rewrite beauty
+then console say Blocked &player's Language: (L26)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L27) Match: dork
+match \b(d+(\W|\d|_)*o+(\W|\d|_)*r+(\W|\d|_)*k+)\b
+then rewrite genius
+then console say Blocked &player's Language: (L27)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L28) Match: ugly
+match \b(u+(\W|\d|_)*g+(\W|\d|_)*l+(\W|\d|_)*y+)\b
+then rewrite unappealing
+then console say Blocked &player's Language: (L28)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L29) Match: incompetent
+match \b(i+(\W|\d|_)*n+(\W|\d|_)*c+(\W|\d|_)*o+(\W|\d|_)*m+(\W|\d|_)*p+(\W|\d|_)*e+(\W|\d|_)*t+(\W|\d|_)*e+(\W|\d|_)*n+(\W|\d|_)*t+)\b
+then rewrite lacking
+then console say Blocked &player's Language: (L29)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L30) Match: Ignorant
+match \b(i+(\W|\d|_)*g+(\W|\d|_)*n+(\W|\d|_)*o+(\W|\d|_)*r+(\W|\d|_)*a+(\W|\d|_)*n+(\W|\d|_)*t+)\b
+then rewrite uneducated
+then console say Blocked &player's Language: (L30)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L31) Match: Imbecile
+match \b(i+(\W|\d|_)*m+(\W|\d|_)*b+(\W|\d|_)*e+(\W|\d|_)*c+(\W|\d|_)*i+(\W|\d|_)*l+(\W|\d|_)*e+)\b
+then rewrite smart
+then console say Blocked &player's Language: (L31)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L32) Match: Moron
+match \b(m+(\W|\d|_)*o+(\W|\d|_)*r+(\W|\d|_)*o+(\W|\d|_)*n+)\b
+then rewrite smart person
+then console say Blocked &player's Language: (L32)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L33) Match: lardo
+match \b(l+(\W|\d|_)*a+(\W|\d|_)*r+(\W|\d|_)*d+(\W|\d|_)*o+)\b
+then rewrite perfect size
+then console say Blocked &player's Language: (L33)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L34) Match: knockers
+match \b(k+(\W|\d|_)*n+(\W|\d|_)*o+(\W|\d|_)*c+(\W|\d|_)*k+(\W|\d|_)*e+(\W|\d|_)*r+(\W|\d|_)*s+)\b
+then rewrite knocking
+then console say Blocked &player's Language: (L34)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L35) Match: pansy
+match \b(p+(\W|\d|_)*a+(\W|\d|_)*n+(\W|\d|_)*s+(\W|\d|_)*y+)\b
+then rewrite hero
+then console say Blocked &player's Language: (L35)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L36) Match: bimbo
+match \b(b+(\W|\d|_)*i+(\W|\d|_)*m+(\W|\d|_)*b+(\W|\d|_)*o+)
+then rewrite beautiful and smart
+then console say Blocked &player's Language: (L36)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L37) Match: bafoon
+match \b(b+(\W|\d|_)*a+(\W|\d|_)*f+(\W|\d|_)*o+(\W|\d|_)*o+(\W|\d|_)*n+)\b
+then rewrite scientist
+then console say Blocked &player's Language: (L37)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L38) Match: schlub
+match \b(s+(\W|\d|_)*c+(\W|\d|_)*h+(\W|\d|_)*l+(\W|\d|_)*u+(\W|\d|_)*b+)\b
+then rewrite professor
+then console say Blocked &player's Language: (L38)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L39) Match: Nipple
+match \b(n+(\W|\d|_)*i+(\W|\d|_)*p+(\W|\d|_)*l+(\W|\d|_)*e+)\b
+then rewrite chest cavity
+then console say Blocked &player's Language: (L39)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L40) Match: minx
+match \b(m+(\W|\d|_)*i+(\W|\d|_)*n+(\W|\d|_)*x+)\b
+then rewrite unknown
+then console say Blocked &player's Language: (L40)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L41) Match: tigress
+match \b(t+(\W|\d|_)*i+(\W|\d|_)*g+(\W|\d|_)*r+(\W|\d|_)*e+(\W|\d|_)*s+)\b
+then rewrite ROAR
+then console say Blocked &player's Language: (L41)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L42) Match: chippy
+match \b(c+(\W|\d|_)*h+(\W|\d|_)*i+(\W|\d|_)*p+(\W|\d|_)*y+)\b
+then rewrite unknown
+then console say Blocked &player's Language: (L42)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L43) Match: vixen
+match \b(v+(\W|\d|_)*i+(\W|\d|_)*x+(\W|\d|_)*e+(\W|\d|_)*n+)\b
+then rewrite unknown
+then console say Blocked &player's Language: (L43)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L44) Match: Nut
+match \b(n+(\W|\d|_)*u+(\W|\d|_)*t+)\b
+then rewrite goofball
+then console say Blocked &player's Language: (L44)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L45) Match: wang
+match \b(w+(\W|\d|_)*a+(\W|\d|_)*n+(\W|\d|_)*g+)\b
+then rewrite transformer
+then console say Blocked &player's Language: (L45)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L46) Advanced Match: weenie, weeny, weener
+match \b(w+(\W|\d|_)*e+(\W|\d|_)*e+(\W|\d|_)*n+\w*)
+ignore string weens|weened|weensy|weening|weeniest|weensier|weensiest
+then rewrite hotdog
+then console say Blocked &player's Language: (L46)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L47) Match: snatch
+match \b(s+(\W|\d|_)*n+(\W|\d|_)*a+(\W|\d|_)*t+(\W|\d|_)*c+(\W|\d|_)*h+)\b
+then randrep grab|catch|swoop up
+then console say Blocked &player's Language: (L47)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L48) Match: making out, make out, french kiss
+match \b(m+(\W|\d|_)*a+(\W|\d|_)*k+(\W|\d|_)*i+(\W|\d|_)*n+(\W|\d|_)*g+(\W|\d|_)*o+(\W|\d|_)*u+(\W|\d|_)*t+)\b|\b(m+(\W|\d|_)*a+(\W|\d|_)*k+(\W|\d|_)*e+(\W|\d|_)*o+(\W|\d|_)*u+(\W|\d|_)*t+)\b|\b(f+(\W|\d|_)*r+(\W|\d|_)*e+(\W|\d|_)*n+(\W|\d|_)*c+(\W|\d|_)*h+(\W|\d|_)*k+(\W|\d|_)*i+(\W|\d|_)*s+(\W|\d|_)*s+)\b
+then rewrite kiss
+then console say Blocked &player's Language: (L48)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L49) Match: hung
+match \b(h+(\W|\d|_)*u+(\W|\d|_)*n+(\W|\d|_)*g+)\b
+then rewrite hanged up
+then console say Blocked &player's Language: (L49)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L50) Match: knocked up, knock up
+match \b(k+(\W|\d|_)*n+(\W|\d|_)*o+(\W|\d|_)*c+(\W|\d|_)*k+(\W|\d|_)*e+(\W|\d|_)*d+(\W|\d|_)*u+(\W|\d|_)*p+(\W|\d|_)*)\b|\b(k+(\W|\d|_)*n+(\W|\d|_)*o+(\W|\d|_)*c+(\W|\d|_)*k+(\W|\d|_)*\s?(\w+)\s?u+(\W|\d|_)*p+(\W|\d|_)*)
+then rewrite knocked on the door
+then console say Blocked &player's Language: (L50)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L51) Match: hackor, hacker, haxor, haxzor
+match \b(h+(\W|\d|_)*a+(\W|\d|_)*c+(\W|\d|_)*k+(\W|\d|_)*(e|o)+(\W|\d|_)*r+\w*)|(h+(\W|\d|_)*a+(\W|\d|_)*x+(\W|\d|_)*z*(\W|\d|_)*o+(\W|\d|_)*r+\w*)
+then rewrite Unknown
+then console say Blocked &player's Language: (L51)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L52) Match: Bacterial Vaginosis, Chlamydia, Gonorrhea, Herpes, Human Papillomavirus, Trichomoniasis, Chancroid, Hepatitis, Hepetitis, HIV, AIDS, Lymphogranuloma Venereum, Molluscum Contagiosum, Mucopurulent Cervicitis, Pelvic Inflammatory Disease, Pubic “Crab” Lice, Scabies, Syphilis
+match \b(Bacterial Vaginosis|Chlamydia|Gonorrhea|Herpes|Human Papillomavirus|Trichomoniasis|Chancroid|Hepatitis|Hepetitis|HIV|AIDS|Lymphogranuloma Venereum|Molluscum Contagiosum|Mucopurulent Cervicitis|Pelvic Inflammatory Disease|Pubic “Crab” Lice|Scabies|Syphilis)\b
+then rewrite disease
+then console say Blocked &player's Language: (L52)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L53) Match: STD
+match \b(s+(\W|\d|_)*t+(\W|\d|_)*d+\w*)
+then rewrite disease
+then console say Blocked &player's Language: (L53)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (L) Match: Open
+#match \b(
+#then rewrite
+#then console say Blocked &player's Language: (L)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+#then log
+
+# (L) Match: Open
+#match \b(
+#then rewrite
+#then console say Blocked &player's Language: (L)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+#then log
+
+#---------------------------------------------------------------------------------
+# Moderate Block List
+#---------------------------------------------------------------------------------
+
+# (M1) Match: hell
+# Will filter out the word hello and help
+match \b(h+(3|e)+(1|l)+(1|l)+i+(5|s|z)+h+)\b|\b(h+(3|e)+(1|l)+(1|l)+(5|s|z)+)\b|\b(h+(\W|\d|_)*(e|3)*(\W|\d|_)*(1|l)+(\W|\d|_)*(1|l)*(\W|\d|_)*)\b
+ignore string he'll
+then console say Blocked &player's Language: (M1)
+then rewrite lake of fire
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M2) Match: boob
+#Filters out bobby.
+match \b(b+(\W|\d|_)*(0|o)+(\W|\d|_)*(0|o)+(\W|\d|_)*b+(\W|\d|_)*(ies|es|s|y)*)\b
+then console say Blocked &player's Language: (M2)
+then rewrite  chest
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M3-1) Match: dam
+match \b(d+(\W|\d|_)*a+(\W|\d|_)*m+)\b
+then rewrite water barrier
+
+# (M3-2) Advanced Match: damn
+match \b(d+(\W|\d|_)*a+(\W|\d|_)*m+(\W|\d|_)*\w+)\b
+ignore string dame|damp|dams|daman|damar|dames|damns|damps|damage|damans|damars|damask|dammar|dammer|damned|damner|damped|dampen|damper|damply|damsel|damson|damaged|damager|damages|damasks|dammars|dammers|damners|damnify|damning|damosel|damozel|dampens|dampers|dampest|damping|dampish|damsels|damsons|damagers|damaging|damasked|damewort|damnably|damneder|damosels|damozels|dampened|dampener|dampings|dampness|damascene|damasking|dameworts|damnation|damnatory|damndests|damnified|damnifies|damningly|dampeners|dampening|damselfly|damagingly|damascened|damascenes|damnations|damnedests|damnifying|dampnesses|damselfish|damascening|damselflies|damnableness|damselfishes|damageability|damnablenesses|damageabilities|
+then console say Blocked &player's Language: (M3-2)
+then rewrite dang
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M3-3) Advanced Match: danm
+match .*(d+(\W|\d|_)*a+(\W|\d|_)*n+(\W|\d|_)*m+).*
+then console say Blocked &player's Language: (M3-3)
+then rewrite dang
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M4) Match: omg, omfg (Oh my god)
+match \b((0|o)+(\W|\d|_)*m+(\W|\d|_)*f*(\W|\d|_)*g+)
+then rewrite  oh my gosh
+then console say Blocked &player's Language: (M4)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M5) Match: retard
+match \b(r+(\W|\d|_)*(3|e|i)+(\W|\d|_)*(7|t)+(\W|\d|_)*(3|a|u|e)+(\W|\d|_)*r+(\W|\d|_)*d+(\W|\d|_)*(ed|s)*(\W|\d|_)*)\b
+then rewrite  blessed
+then console say Blocked &player's Language: (M5)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M6) Match: shit, shyte, shiz, chiz
+match \b(s.h.i.t)|\b(s h i t)\b|\b(s-h-i-t)|\b(sh it)\b|\b((5|s|z)+(\W|\d|_)*h+(y|i|1)+(\W|\d|_)*(7|t)+(\W|\d|_)*y*(\W|\d|_)*s*(\W|\d|_)*)\b|\b(s+(\W|\d|_)*h+(\W|\d|_)*y+(\W|\d|_)*t+(\W|\d|_)*e+(\W|\d|_)*)\b|\b((c|s)+(\W|\d|_)*h+(\W|\d|_)*i+(\W|\d|_)*z+(\W|\d|_)*)
+then rewrite  poo
+then console say Blocked &player's Language: (M6)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M6-1) Advanced Match: shit (beginning)
+match \b(shit)
+ignore string mishit|mishits|shittah|shittim|shittahs|shittims|mishitting|shittimwood|shittimwoods
+then console say Blocked &player's Language: (M6-1)
+then rewrite dang
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M6-2) Advanced Match: shit (end)
+match (shit)\b
+ignore string mishit|mishits|shittah|shittim|shittahs|shittims|mishitting|shittimwood|shittimwoods
+then console say Blocked &player's Language: (M6-2)
+then rewrite dang
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M7) Match: tit
+match \b((7|t)+(1|i)+(7|t)+)\b|\b((7|t)+(1|i)+(7|t)+(5|s|z)+)\b|\b((7|t)+(1|i)+(7|t)+y+)\b
+then rewrite  tilt
+then console say Blocked &player's Language: (M7)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M8) Match: wtf, wth (What the fuck), (What the hell)
+match \b((v|w)+(\W|\d|_)*(7|t)+(\W|\d|_)*f+)\b|\b((v|w)+(\W|\d|_)*(7|t)+(\W|\d|_)*h+)\b
+then rewrite  what the heck
+then console say Blocked &player's Language: (M8)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M9) Match: oh my god
+match \b((0|o)+(\W|\d|_)*h+(\W|\d|_)*m+(\W|\d|_)*y+(\W|\d|_)*g+(\W|\d|_)*(0|a|aw|o)+(\W|\d|_)*d+)\b
+then rewrite  oh my gosh
+then console say Blocked &player's Language: (M9)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M10) Match: shart
+match \b((5|s|z)+(\W|\d|_)*h+(\W|\d|_)*a+(\W|\d|_)*r+(\W|\d|_)*(7|t)+(\W|\d|_)*i*(\W|\d|_)*n*(\W|\d|_)*g*(\W|\d|_)*e*(\W|\d|_)*d*(\W|\d|_)*s*(\W|\d|_)*)\b
+then rewrite  farted
+then console say Blocked &player's Language: (M10)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M11) Search for XXX
+match \b(xxx)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (M11)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M12) Search for lmao, lmfao, lmfgdao (Laughing My Ass Off)
+match \b((1|l)+(\W|\d|_)*m+(\W|\d|_)*([a-z])*(\W|\d|_)*a+(\W|\d|_)*(0|o)+)\b
+then rewrite LOL!
+then console say Blocked &player's Language: (M12)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M13) Match: god damn
+match \b(g+(\W|\d|_)*(0|o)(\W|\d|_)*d+(\W|\d|_)*d+(\W|\d|_)*a+(\W|\d|_)*(m|n)+)
+then rewrite  He is jealous for me
+then console say Blocked &player's Language: (M13)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M14) Match: white trash
+match \b(w+(\W|\d|_)*h+(\W|\d|_)*i+(\W|\d|_)*t+(\W|\d|_)*e+(\W|\d|_)*t+(\W|\d|_)*r+(\W|\d|_)*a+(\W|\d|_)*s+(\W|\d|_)*h+)\b
+then rewrite human
+then console say Blocked &player's Language: (M14)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M15) Match: tramp
+match \b(t+(\W|\d|_)*r+(\W|\d|_)*a+(\W|\d|_)*m+(\W|\d|_)*p+)\b
+then rewrite elite
+then console say Blocked &player's Language: (M15)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M16) Match: twit
+match \b(t+(\W|\d|_)*w+(\W|\d|_)*i+(\W|\d|_)*t+)\b
+then rewrite elite
+then console say Blocked &player's Language: (M16)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M17) Match: redneck
+match \b(r+(\W|\d|_)*e+(\W|\d|_)*d+(\W|\d|_)*n+(\W|\d|_)*e+(\W|\d|_)*c+(\W|\d|_)*k+\w*)
+then rewrite Northern
+then console say Blocked &player's Language: (M17)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M18) Match: hick
+match \b(h+(\W|\d|_)*i+(\W|\d|_)*c+(\W|\d|_)*k+\w*)
+then rewrite mom
+then console say Blocked &player's Language: (M18)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M19) Match: honky
+match \b(h+(\W|\d|_)*o+(\W|\d|_)*n+(\W|\d|_)*k+(\W|\d|_)*y+)\b
+then rewrite blare your horn
+then console say Blocked &player's Language: (M19)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M20) Match: shemale
+match \b(s+(\W|\d|_)*h+(\W|\d|_)*e+(\W|\d|_)*m+(\W|\d|_)*a+(\W|\d|_)*l+(\W|\d|_)*e+)\b
+then rewrite gender approperiate
+then console say Blocked &player's Language: (M20)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M21) Match: hetro
+match \b(h+(\W|\d|_)*e+(\W|\d|_)*t+(\W|\d|_)*r+(\W|\d|_)*o+)
+then rewrite gender approperiate
+then console say Blocked &player's Language: (M21)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M22) Match: twink
+match \b(t+(\W|\d|_)*w+(\W|\d|_)*i+(\W|\d|_)*n+(\W|\d|_)*k+)\b
+then rewrite youngin
+then console say Blocked &player's Language: (M22)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M23) Match: condom
+match \b(c+(\W|\d|_)*o+(\W|\d|_)*n+(\W|\d|_)*d+(\W|\d|_)*o+(\W|\d|_)*m+\w*)
+then rewrite style
+then console say Blocked &player's Language: (M23)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M24) Match: bugly
+match \b(b+(\W|\d|_)*u+(\W|\d|_)*g+(\W|\d|_)*l+(\W|\d|_)*y+)\b
+then rewrite beautiful
+then console say Blocked &player's Language: (M24)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M25) Match: floozy
+match \b(f+(\W|\d|_)*l+(\W|\d|_)*o+(\W|\d|_)*z+(\W|\d|_)*y+)\b
+then rewrite unknown
+then console say Blocked &player's Language: (M25)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M26) Match: hussy
+match \b(h+(\W|\d|_)*u+(\W|\d|_)*s+(\W|\d|_)*y+)\b
+then rewrite cowgirl
+then console say Blocked &player's Language: (M26)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M27) Match: wench
+match \b(w+(\W|\d|_)*e+(\W|\d|_)*n+(\W|\d|_)*c+(\W|\d|_)*h+)\b
+then rewrite boil maker
+then console say Blocked &player's Language: (M27)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M28) Match: strumpet
+match \b(s+(\W|\d|_)*t+(\W|\d|_)*r+(\W|\d|_)*u+(\W|\d|_)*m+(\W|\d|_)*p+(\W|\d|_)*e+(\W|\d|_)*t+)\b
+then rewrite food
+then console say Blocked &player's Language: (M28)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M29) Match: trollop
+match \b(t+(\W|\d|_)*r+(\W|\d|_)*o+(\W|\d|_)*l+(\W|\d|_)*o+(\W|\d|_)*p+\w*)
+then rewrite horse
+then console say Blocked &player's Language: (M29)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M30) Match: biddy
+match \b(b+(\W|\d|_)*i+(\W|\d|_)*d+(\W|\d|_)*y+)\b
+then rewrite boo
+then console say Blocked &player's Language: (M30)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M31) Match: Easy Lay, Easist Lay
+match \b(e+(\W|\d|_)*a+(\W|\d|_)*s+(\W|\d|_)*y*(\W|\d|_)*i*(\W|\d|_)*e*(\W|\d|_)*s*(\W|\d|_)*t*(\W|\d|_)*l+(\W|\d|_)*a+(\W|\d|_)*y+)\b
+then rewrite easiest way to get caught
+then console say Blocked &player's Language: (M31)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M32) Match: menstruation
+match \b(m+(\W|\d|_)*e+(\W|\d|_)*n+(\W|\d|_)*s+(\W|\d|_)*t+(\W|\d|_)*r+(\W|\d|_)*u+(\W|\d|_)*a+(\W|\d|_)*t+(\W|\d|_)*i+(\W|\d|_)*o+(\W|\d|_)*n+)\b
+then rewrite yuck
+then console say Blocked &player's Language: (M32)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M33) Match: wear the rag, wearing the rag
+match \b(w+(\W|\d|_)*e+(\W|\d|_)*a+(\W|\d|_)*r+(\W|\d|_)*i*(\W|\d|_)*n*(\W|\d|_)*g*(\W|\d|_)*s*(\W|\d|_)*t+(\W|\d|_)*h+(\W|\d|_)*e+(\W|\d|_)*r+(\W|\d|_)*a+(\W|\d|_)*g+)\b
+then rewrite yuck
+then console say Blocked &player's Language: (M33)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M34) Match: voyeur
+match \b(v+(\W|\d|_)*o+(\W|\d|_)*y+(\W|\d|_)*e+(\W|\d|_)*u+(\W|\d|_)*r+)\b
+then rewrite peeping tom
+then console say Blocked &player's Language: (M34)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M35) Match: short eyes
+match \b(s+(\W|\d|_)*h+(\W|\d|_)*o+(\W|\d|_)*r+(\W|\d|_)*t+(\W|\d|_)*e+(\W|\d|_)*y+(\W|\d|_)*e+\w*)
+then rewrite human
+then console say Blocked &player's Language: (M35)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M36) Match: grope, groping, cop a feel
+match \b(g+(\W|\d|_)*r+(\W|\d|_)*o+(\W|\d|_)*p+)|\b(c+(\W|\d|_)*o+(\W|\d|_)*p+(\W|\d|_)*a+(\W|\d|_)*f+(\W|\d|_)*e+(\W|\d|_)*l+(\W|\d|_)*)
+then rewrite highly inapproperiate talk
+then console say Blocked &player's Language: (M36)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M37) Match: drag queen
+match \b(d+(\W|\d|_)*r+(\W|\d|_)*a+(\W|\d|_)*g+(\W|\d|_)*q+(\W|\d|_)*u+(\W|\d|_)*e+(\W|\d|_)*e+(\W|\d|_)*n+)
+then rewrite opposite day
+then console say Blocked &player's Language: (M37)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M38) Match: fairy
+match \b(f+(\W|\d|_)*a+(\W|\d|_)*i+(\W|\d|_)*r+(\W|\d|_)*y+)\b
+then rewrite fairly
+then console say Blocked &player's Language: (M38)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M39) Match: French letter
+match (f+(\W|\d|_)*r+(\W|\d|_)*e+(\W|\d|_)*n+(\W|\d|_)*c+(\W|\d|_)*h+(\W|\d|_)*l+(\W|\d|_)*e+(\W|\d|_)*t+(\W|\d|_)*e+(\W|\d|_)*r+)
+then rewrite United States Postal Service
+then console say Blocked &player's Language: (M39)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M40) Match: Love + Glove
+match \b((love|glove)+(\W|\d|_|\w)*(love|glove))\b
+then rewrite I am a chicken
+then console say Blocked &player's Language: (M40)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M41) Match: rubber
+match \b(r+(\W|\d|_)*u+(\W|\d|_)*b+(\W|\d|_)*e+(\W|\d|_)*r+)\b
+then rewrite solution
+then console say Blocked &player's Language: (M41)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M42) Match: pocket pool
+match \b(p+(\W|\d|_)*o+(\W|\d|_)*c+(\W|\d|_)*k+(\W|\d|_)*e+(\W|\d|_)*t+(\W|\d|_)*p+(\W|\d|_)*o+(\W|\d|_)*l+)\b
+then rewrite darts
+then console say Blocked &player's Language: (M42)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M43) Match: love juice
+match \b(l+(\W|\d|_)*o+(\W|\d|_)*v+(\W|\d|_)*e+(\W|\d|_)*j+(\W|\d|_)*u+(\W|\d|_)*i+(\W|\d|_)*c+(\W|\d|_)*e+)\b
+then rewrite Orange Juice
+then console say Blocked &player's Language: (M43)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M44) Match: gonads, gones
+match \b(g+(\W|\d|_)*o+(\W|\d|_)*n+(\W|\d|_)*a+(\W|\d|_)*d+)|\b(g+(\W|\d|_)*o+(\W|\d|_)*n+(\W|\d|_)*e+(\W|\d|_)*s+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (M44)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M45) Match: flipping the bird
+match \b(f+(\W|\d|_)*l+(\W|\d|_)*i+(\W|\d|_)*p+(\W|\d|_)*i+(\W|\d|_)*n+(\W|\d|_)*g+(\W|\d|_)*t+(\W|\d|_)*h+(\W|\d|_)*e+(\W|\d|_)*b+(\W|\d|_)*i+(\W|\d|_)*r+(\W|\d|_)*d+)\b
+then rewrite feeding the bird
+then console say Blocked &player's Language: (M45)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M46) Match: fudge packer
+match \b(f+(\W|\d|_)*u+(\W|\d|_)*d*(\W|\d|_)*g+(\W|\d|_)*e*(\W|\d|_)*p+(\W|\d|_)*a+(\W|\d|_)*c+(\W|\d|_)*k+(\W|\d|_)*e*(\W|\d|_)*r*(\W|\d|_)*i*(\W|\d|_)*n*(\W|\d|_)*g*(\W|\d|_)*)\b
+then rewrite I eat special fudge
+then console say Blocked &player's Language: (M46)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M47) Match: Orafis, Orifis, Orifice, Orafice, Oriface, oraface
+match \b(o+(\W|\d|_)*r+(\W|\d|_)*(a|i)+(\W|\d|_)*f+(\W|\d|_)*(a|i)+(\W|\d|_)*(c|s)+(\W|\d|_)*e*(\W|\d|_)*)
+then rewrite opening
+then console say Blocked &player's Language: (M47)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M48) Match: Skankey, Skankee, Skanky
+match \b(s+(\W|\d|_)*k+(\W|\d|_)*a+(\W|\d|_)*n+(\W|\d|_)*k+(\W|\d|_)*e*(\W|\d|_)*y*(\W|\d|_)*)\b
+then rewrite dirty
+then console say Blocked &player's Language: (M48)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M49) Match: son of a
+match \b(s+(\W|\d|_)*o+(\W|\d|_)*n+(\W|\d|_)*o+(\W|\d|_)*f+(\W|\d|_)*a+(\W|\d|_)*)
+then rewrite ding!
+then console say Blocked &player's Language: (M49)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M50) Match: pimp
+match \b(p+(\W|\d|_)*i+(\W|\d|_)*m+(\W|\d|_)*p+)
+then rewrite cheese
+then console say Blocked &player's Language: (M50)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M51) Match: teet, teat
+match \b(t+(\W|\d|_)*e+(\W|\d|_)*a*(\W|\d|_)*t+(\W|\d|_)*s*(\W|\d|_)*)\b
+then rewrite hairy
+then console say Blocked &player's Language: (M51)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M52) Match: xrated
+match \b(e*(\W|\d|_)*x+(\W|\d|_)*r+(\W|\d|_)*a+(\W|\d|_)*t+(\W|\d|_)*e+(\W|\d|_)*d*(\W|\d|_)*)\b
+then rewrite Wednesday
+then console say Blocked &player's Language: (M52)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M53) Match: weed
+match \b(w+(\W|\d|_)*e+(\W|\d|_)*e+(\W|\d|_)*d+(\W|\d|_)*)
+then rewrite unwanted plant
+then console say Blocked &player's Language: (M53)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M54) Match: Open
+match \b(d+(\W|\d|_)*o+(\W|\d|_)*g+(\W|\d|_)*i*(\W|\d|_)*e*(\W|\d|_)*y*(\W|\d|_)*s+(\W|\d|_)*t+(\W|\d|_)*y+(\W|\d|_)*l+(\W|\d|_)*e+(\W|\d|_)*)\b
+then rewrite I Love This Filter
+then console say Blocked &player's Language: (M54)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (M  ) Match: Open
+#match \b(
+#then rewrite
+#then console say Blocked &player's Language: (M  )
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+#then log
+
+
+#---------------------------------------------------------------------------------
+# Severe Block List
+#---------------------------------------------------------------------------------
+
+# (S1) Match: nymph
+match \b(n+(\W|\d|_)*y+(\W|\d|_)*m+(\W|\d|_)*p+(\W|\d|_)*h+)
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S1)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S2) Match: ass, ashole
+match \b(a+(\W|\d|_)*s+(\W|\d|_)*s+)\b|\b(a+(\W|\d|_)*s+(\W|\d|_)*h+(\W|\d|_)*o+(\W|\d|_)*l+(\W|\d|_)*e+(\W|\d|_)*s*)\b
+then console say Blocked &player's Language: (S2)
+then replace rump
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S2-1) Advanced Match: ass (ending)
+match (a+(\W|\d|_)*s+(\W|\d|_)*s+)\b
+ignore string bass|lass|mass|pass|sass|tass|amass|brass|class|crass|glass|grass|kvass|quass|trass|admass|bagass|bypass|camass|harass|kavass|megass|morass|repass|strass|biomass|canvass|carcass|compass|cuirass|cutlass|declass|jackass|jiveass|matrass|outpass|subbass|surpass|wiseass|zebrass|cutgrass|eelgrass|eyeglass|galleass|galliass|landmass|mattrass|misclass|nonclass|nutgrass|outclass|overpass|pingrass|raygrass|ribgrass|ryegrass|smartass|spyglass|subclass|sunglass|trespass|windlass|bluegrass|cordgrass|crabgrass|embarrass|encompass|hourglass|isinglass|knotgrass|sandglass|underpass|wineglass|bromegrass|bunchgrass|contrabass|fiberglass|fibreglass|goosegrass|groundmass|interclass|lemongrass|plateglass|superclass|underclass|witchgrass|gallowglass|gyrocompass|peppergrass|switchgrass|disembarrass|hardinggrass|johnsongrass|thoroughbass|weatherglass
+then console say Blocked &player's Language: (S2-1)
+then replace rump
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S2-2) Advanced Match: ass (beginning)
+match \b(a+(\W|\d|_)*s+(\W|\d|_)*s+\w*)
+ignore string assai|assay|asses|asset|assail|assais|assays|assent|assert|assess|assets|assign|assist|assize|assoil|assort|assume|assure|assagai|assails|assault|assayed|assayer|assegai|assents|asserts|assigns|assists|assizes|assoils|assorts|assuage|assumed|assumer|assumes|assured|assurer|assures|assuror|assagais|assailed|assailer|assassin|assaults|assayers|assaying|assegais|assemble|assembly|assented|assenter|assentor|asserted|asserter|assertor|assessed|assesses|assessor|assignat|assigned|assignee|assigner|assignor|assisted|assister|assistor|assoiled|assonant|assorted|assorter|assuaged|assuages|assumers|assuming|assureds|assurers|assuring|assurors|assagaied|assailant|assailers|assailing|assassins|assaulted|assaulter|assegaied|assembled|assembler|assembles|assenters|assenting|assentors|asserters|asserting|assertion|assertive|assertors|assessing|assessors|assiduity|assiduous|assignats|assignees|assigners|assigning|assignors|assistant|assisters|assisting|assistors|associate|assoiling|assonance|assonants|assorters|assorting|assuaging|assuasive|assumable|assumably|assumpsit|assurance|assuredly|assurgent|assagaiing|assailable|assailants|assaulters|assaulting|assaultive|assegaiing|assemblage|assemblers|assemblies|assembling|assertedly|assertions|assessable|assessment|asseverate|assignable|assignment|assimilate|assistance|assistants|associated|associates|assoilment|assonances|assonantal|assortment|assumpsits|assumption|assumptive|assurancesassassinate|assemblages|assemblyman|assemblymen|assentation|assertively|assessments|asseverated|asseverates|assiduities|assiduously|assignation|assignments|assimilable|assimilated|assimilates|assimilator|assistances|associating|association|associative|assoilments|assortative|assortments|assuagement|assumptions|assuredness|assassinated|assassinates|assassinator|assaultively|assemblagist|assentations|asseverating|asseveration|asseverative|assignations|assimilating|assimilation|assimilative|assimilators|assimilatory|associations|assuagements|assumability|assassinating|assassination|assassinators|assemblagists|assemblywoman|assemblywomen|assertiveness|asseverations|assiduousness|assignability|assimilations|assistantship|associateship|associational|associatively|associativity|assortatively|assurednesses|assassinations|assaultiveness|assimilability|assistantships|associateships|associationism|associationist|assumabilities|assertivenesses|assiduousnesses|assignabilities|assimilationism|assimilationist|associationisms|associationists|associativities|assaultivenesses|assimilabilities|assimilationisms|assimilationists|associationistic|as soon as
+then console say Blocked &player's Language: (S2-2)
+then replace rump
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S3) Advanced Match: arse, anus
+match (a+(\W|\d|_)*r+(\W|\d|_)*s+(\W|\d|_)*e+\w*)|\b(a+(\W|\d|_)*n+(\W|\d|_)*u+(\W|\d|_)*(5|s|z)+(\W|\d|_)*(3|e)*(\W|\d|_)*(s|z)*(\W|\d|_)*)\b
+ignore string carse|marse|parse|arseno|carses|coarse|hearse|hoarse|marses|parsec|parsed|parser|parses|sarsen|sparse|arsenal|arsenic|coarsen|coarser|hearsed|hearses|hoarsen|hoarser|parsecs|parsers|sarsens|sparser|arsenals|arsenate|arsenics|arsenide|arsenite|arsenous|coarsely|coarsens|coarsest|hoarsely|hoarsens|hoarsest|misparse|rehearse|sarsenet|sparsely|sparsest|arsenates|arsenical|arsenides|arsenious|arsenites|catharses|coarsened|farseeing|hoarsened|katharses|misparsed|misparses|rehearsed|rehearser|rehearses|sarsenets|arsenicals|coarseness|coarsening|hoarseness|hoarsening|kiloparsec|megaparsec|rehearsers|sparseness|kiloparsecs|megaparsecs|unrehearsed|arsenopyrite|coarsenesses|hoarsenesses|sparsenesses|arsenopyrites
+then console say Blocked &player's Language: (S3)
+then replace I Love This Filter!
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S4) Match: bastard, basterd
+match \b(b+(\W|\d|_)*a+(\W|\d|_)*(5|s|z)+(\W|\d|_)*(7|t)+(\W|\d|_)*(3|a|e|u)+(\W|\d|_)*r+(\W|\d|_)*d+(\W|\d|_)*\w*)\b
+then console say Blocked &player's Language: (S4)
+then replace I Love This Filter!
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S5) Match: bitch, beeotch, biotch, beeoch, bioch
+match \b(b+(\W|\d|_)*i+(\W|\d|_)*a*(\W|\d|_)*(7|t)+(\W|\d|_)*(c|k)+(\W|\d|_)*h+(\W|\d|_)*(3|e)*(\W|\d|_)*(s|z)*(\W|\d|_)*)\b|\b(b+(\W|\d|_)*e+(\W|\d|_)*o+(\W|\d|_)*t*(\W|\d|_)*c+(\W|\d|_)*h+)\b|\b(b+(\W|\d|_)*i+(\W|\d|_)*o+(\W|\d|_)*t*(\W|\d|_)*c+(\W|\d|_)*h+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S5)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S6) Match: blowjob, fellatio, handjob
+match \b(b+(\W|\d|_)*(1|l)+(\W|\d|_)*(0|o)+(\W|\d|_)*w+(\W|\d|_)*j+(\W|\d|_)*(0|o)+(\W|\d|_)*b+(\W|\d|_)*(s|z)*(\W|\d|_)*)\b|\b(b+(\W|\d|_)*j+)\b|\b(b+(\W|\d|_)*j+(\W|\d|_)*(0|o)+(\W|\d|_)*b+(\W|\d|_)*(s|z)*(\W|\d|_)*)\b|(f+(\W|\d|_)*(3|e)+(\W|\d|_)*(1|l)*(\W|\d|_)*(1|l)+(\W|\d|_)*a+(\W|\d|_)*(7|t)+(\W|\d|_)*(1|i)+(\W|\d|_)*(0|o)+)|\b(h+(\W|\d|_)*a+(\W|\d|_)*n+(\W|\d|_)*d+(\W|\d|_)*j+(\W|\d|_)*(0|o)+(\W|\d|_)*b+(\W|\d|_)*(s|z)*(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S6)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S7) Match: bollocks
+match \b(b+(\W|\d|_)*(0|o)+(\W|\d|_)*(1|l)+(\W|\d|_)*(1|l)+(\W|\d|_)*(0|o)+(\W|\d|_)*(c|k)+(\W|\d|_)*s*(\W|\d|_)*)\b
+then console say Blocked &player's Language: (S7)
+then replace I Love This Filter!
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S8) Match: boner
+match \b(b+(\W|\d|_)*(0|o)+(\W|\d|_)*n+(\W|\d|_)*(3|e)+(\W|\d|_)*r+(\W|\d|_)*s*(\W|\d|_)*)\b
+then console say Blocked &player's Language: (S8)
+then replace I Love This Filter!
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S9) Match: knuckle dragger
+match \b(k+(\W|\d|_)*n+(\W|\d|_)*u+(\W|\d|_)*c+(\W|\d|_)*k+(\W|\d|_)*l+(\W|\d|_)*e+(\W|\d|_)*d+(\W|\d|_)*r+(\W|\d|_)*a+(\W|\d|_)*g+(\W|\d|_)*e+(\W|\d|_)*r+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S9)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S10) Match: cock, cawk, kock, cocksucking
+match \b((c|k)+(\W|\d|_)*(0|o)+(\W|\d|_)*(c|k)+(\W|\d|_)*(c|k)+\w*)|((c|k)+(\W|\d|_)*a+(\W|\d|_)*w+(\W|\d|_)*(c|k)+)\b|(c+(\W|\d|_)*o+(\W|\d|_)*c+(\W|\d|_)*k+(\W|\d|_)*s+(\W|\d|_)*u+(\W|\d|_)*c+(\W|\d|_)*k+(\W|\d|_)*i+(\W|\d|_)*n+(\W|\d|_)*g+(\W|\d|_)*)
+ignore string cocked|cocker|cockle|cockeye|cockily|cocking|cockled|cockles|cockney|cockpit|cockaded|cockades|cockapoo|cockatoo|cockbill|cockboat|cockcrow|cockered|cockerel|cockeyed|cockeyes|cockling|cockloft|cockneys|cockpits|cockshut|cockspur|cocksure|cocktail|cockamamy|cockapoos|cockatiel|cockatoos|cockbills|cockboats|cockcrows|cockerels|cockering|cocklebur|cocklofts|cockneyfy|cockroach|cockscomb|cocksfoot|cockshies|cockshuts|cockspurs|cocktails|cockalorum|cockamamie|cockatiels|cockatrice|cockbilled|cockchafer|cockeyedly|cockleburs|cockneyish|cockneyism|cockscombs|cocksfoots|cocksurely|cocktailed|cockalorums|cockatrices|cockbilling|cockchafers|cockleshell|cockneyfied|cockneyfies|cockneyisms|cockroaches|cocktailing|cockeyedness|cockleshells|cockneyfying|cocksureness|cockeyednesses|cocksurenesses
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S10)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S11) Match: clit, cunt, cnts
+match \b((c|k)+(\W|\d|_)*(1|l)+(\W|\d|_)*(1|i)+(\W|\d|_)*(7|t)+(\W|\d|_)*\w*)|\b((c|k)+(\W|\d|_)*u+(\W|\d|_)*n+(\W|\d|_)*(7|t)+\w*)|\b(c+(\W|\d|_)*n+(\W|\d|_)*t+(\W|\d|_)*s+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S11)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S12) Match: religitard
+match \b(r+(\W|\d|_)*e+(\W|\d|_)*l+(\W|\d|_)*i+(\W|\d|_)*g+(\W|\d|_)*i+(\W|\d|_)*t+(\W|\d|_)*a+(\W|\d|_)*r+(\W|\d|_)*d+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S12)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S13) Match: cum, dick, dike, hardon, and dildo
+match \b((c|k)+(\W|\d|_)*u+(\W|\d|_)*m+(\W|\d|_)*m*(\W|\d|_)*i*(\W|\d|_)*n*(\W|\d|_)*g*(\W|\d|_)*)\b|\b(d+(\W|\d|_)*(1|i)+(\W|\d|_)*(c|k)+(\W|\d|_)*(c|k)+(\W|\d|_)*s*(\W|\d|_)*)\b|\b(d+(\W|\d|_)*(1|i)+(\W|\d|_)*k+(\W|\d|_)*(3|e)+(\W|\d|_)*s*(\W|\d|_)*)\b|\b(d+(\W|\d|_)*(1|i)+(\W|\d|_)*(1|l)+(\W|\d|_)*(1|l)*(\W|\d|_)*d+(\W|\d|_)*(0|o)+(\W|\d|_)*s*(\W|\d|_)*)\b|\b(d+(\W|\d|_)*y+(\W|\d|_)*(c|k)+(\W|\d|_)*(3|e)+)\b|\b(h+(\W|\d|_)*a+(\W|\d|_)*r+(\W|\d|_)*d+(\W|\d|_)*(0|o)+(\W|\d|_)*n+(\W|\d|_)*s*(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S13)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S13-1) Advance Match: dick
+match (d+(\W|\d|_)*i+(\W|\d|_)*c+(\W|\d|_)*k+(\W|\d|_)*)
+ignore string dicky|dicker|dickey|dickie|medick|dickens|dickers|dickeys|dickier|dickies|medicks|zaddick|benedick|dickered|benedicks|dickenses|dickering|dickcissel|dickcissels
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S13-1)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S14) Match: ejaculate
+match \b((3|e)+(\W|\d|_)*j+(\W|\d|_)*a+(\W|\d|_)*(c|k)+(\W|\d|_)*u+(\W|\d|_)*(1|l)+(\W|\d|_)*a+(\W|\d|_)*(7|t)+(\W|\d|_)*(3|e)*(\W|\d|_)*i*(\W|\d|_)*o*(\W|\d|_)*n*(\W|\d|_)*g*(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S14)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S15) Match: enema
+match \b((3|e)+(\W|\d|_)*n+(\W|\d|_)*(3|e)+(\W|\d|_)*m+(\W|\d|_)*a+(\W|\d|_)*s*(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S15)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S16) Match: fag
+match \b(f+(\W|\d|_)*a+(\W|\d|_)*g+)|\b(f+(\W|\d|_)*a+(\W|\d|_)*(1|i)+(\W|\d|_)*g+)|\b(f+(\W|\d|_)*(3|e)+(\W|\d|_)*g+)
+ignore string leafage|of a
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S16)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S17) Match: fuck, fcuk, fuq, fck
+match \b(f+(\W|\d|_)*u+)\b|(f+(\W|\d|_)*u+(\W|\d|_)*(c|k)+)|\b(f+(\W|\d|_)*(3|e)+(\W|\d|_)*(c|k)+(\W|\d|_)*(c|k)+(\W|\d|_)*i*(\W|\d|_)*n*(\W|\d|_)*g*(\W|\d|_)*)\b|\b(f+(\W|\d|_)*u+(\W|\d|_)*g+(\W|\d|_)*(1|l)+(\W|\d|_)*y+)\b|\b(f+(\W|\d|_)*v+(\W|\d|_)*(c|k)+(\W|\d|_)*(c|k)+)|(f+(\W|\d|_)*u+(\W|\d|_)*x+(\W|\d|_)*r+)|(f+(\W|\d|_)*c+(\W|\d|_)*u+(\W|\d|_)*k+(\W|\d|_)*)|(f+(\W|\d|_)*u+(\W|\d|_)*q+(\W|\d|_)*\w*)|(f+(\W|\d|_)*c+(\W|\d|_)*k+(\W|\d|_)*\w*)
+ignore string afk
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S17)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S18) Match: gay, lez, lesbian, lezzian, lesbo
+match \b(g+(\W|\d|_)*a+(\W|\d|_)*y+)|\b(g+(\W|\d|_)*(3|e)+(\W|\d|_)*y+)|\b(g+(\W|\d|_)*h+(\W|\d|_)*(3|e|a)+(\W|\d|_)*y+)\b|\b((1|l)+(\W|\d|_)*(3|e)+(\W|\d|_)*(5|s|z)+(\W|\d|_)*b+(\W|\d|_)*i+(\W|\d|_)*a+(\W|\d|_)*n+(\W|\d|_)*s*(\W|\d|_)*)\b|\b(g+(\W|\d|_)*(3|e)+(\W|\d|_)*h+(\W|\d|_)*y+)|\b(l+(\W|\d|_)*e+(\W|\d|_)*z+(\W|\d|_)*i*(\W|\d|_)*a*(\W|\d|_)*n*(\W|\d|_)*)\b|\b(l+(\W|\d|_)*e+(\W|\d|_)*s+(\W|\d|_)*b+(\W|\d|_)*o+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S18)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S19) Match: wanksta
+match (w+(\W|\d|_)*a+(\W|\d|_)*n+(\W|\d|_)*k+(\W|\d|_)*s+(\W|\d|_)*t+(\W|\d|_)*a+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S19)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S20) Match: homo
+#Filter out Sophomore
+match \b.*(h+(\W|\d|_)*(0|o)+(\W|\d|_)*m+(\W|\d|_)*(0|o)+).*
+then rewrite  Person of interest
+then console say Blocked &player's Language: (S20)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S21) Match: jackoff, jerkoff, jizz, jiss
+match \b(j+(\W|\d|_)*a+(\W|\d|_)*(c|k)+(\W|\d|_)*(0|o)+(\W|\d|_)*f+(\W|\d|_)*f+)\b|\b(j+(\W|\d|_)*(3|a|e)+(\W|\d|_)*r+(\W|\d|_)*(c|k)+(\W|\d|_)*(0|o)+(\W|\d|_)*f+(\W|\d|_)*f+)|\b(j+(\W|\d|_)*(1|i)+(\W|\d|_)*(5|s|z)+(\W|\d|_)*(5|s|z)+(\W|\d|_)*i*(\W|\d|_)*n*(\W|\d|_)*g*(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S21)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S22) Match:waspy
+match \b(w+(\W|\d|_)*a+(\W|\d|_)*s+(\W|\d|_)*p+(\W|\d|_)*y+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S22)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S23) Match: masturbate, masterbait, mastrbate, wank
+#Allow Master
+match \b(m+(\W|\d|_)*a+(\W|\d|_)*(5|s|z)+(\W|\d|_)*(7|t)+(\W|\d|_)*(e|u)*(\W|\d|_)*r+(\W|\d|_)*b+(\W|\d|_)*a+(\W|\d|_)*i*(\W|\d|_)*(7|t)+(\W|\d|_)*(3|e|o)*(\W|\d|_)*i*(\W|\d|_)*n*(\W|\d|_)*g*(\W|\d|_)*r*(\W|\d|_)*s*(\W|\d|_)*)|\b(w+(\W|\d|_)*a+(\W|\d|_)*n+(\W|\d|_)*(c|k)+(\W|\d|_)*i*(\W|\d|_)*n*(\W|\d|_)*g*(\W|\d|_)*e*(\W|\d|_)*r*(\W|\d|_)*s*(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S23)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S24) Match: mofo
+match \b(m+(\W|\d|_)*(0|o)+(\W|\d|_)*f+(\W|\d|_)*(0|o)+(\W|\d|_)*s*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S24)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S25) Match: nazi
+match \b(n+(\W|\d|_)*a+(\W|\d|_)*z+(\W|\d|_)*(1|i)+(\W|\d|_)*s*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S25)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S26) Match: nigger
+match \b(n+(\W|\d|_)*(1|i)+(\W|\d|_)*g+(\W|\d|_)*g+)|\b(n+(\W|\d|_)*(3|e)+(\W|\d|_)*g+(\W|\d|_)*g+)|\b(n+(\W|\d|_)*g+(\W|\d|_)*r+)\b|\b(n+(\W|\d|_)*(1|i)+(\W|\d|_)*g+(\W|\d|_)*r+)|\b(n+(\W|\d|_)*(3|e)+(\W|\d|_)*g+(\W|\d|_)*r+)|\b(n+(\W|\d|_)*(1|i)+(\W|\d|_)*g+(\W|\d|_)*(3|e)+(\W|\d|_)*r+)\b|\b(n+(\W|\d|_)*(1|i)+(\W|\d|_)*g+(\W|\d|_)*a+)|\b(n+(\W|\d|_)*(1|i)+(\W|\d|_)*g+(\W|\d|_)*(1|l)+)|\b(n+(\W|\d|_)*(1|i)+(\W|\d|_)*g+(\W|\d|_)*u+(\W|\d|_)*r+)
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S26)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S27) Match: Queef, Qweef, Kaweef, Kweef, Caweef, Cweef
+match \b((caw|cw|kaw|kw|qu|quw|qw)+(\W|\d|_)*e+(\W|\d|_)*f+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S27)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S28) Match: Ball Sack, Ballsacking
+match \b(b+(\W|\d|_)*a+(\W|\d|_)*l+(\W|\d|_)*s+(\W|\d|_)*a+(\W|\d|_)*c*(\W|\d|_)*k*(\W|\d|_)*i*(\W|\d|_)*n*(\W|\d|_)*g*(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S28)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S29) Match: Carpet Eater, Carpet Muncher
+match \b(c+(\W|\d|_)*a+(\W|\d|_)*r+(\W|\d|_)*p+(\W|\d|_)*e+(\W|\d|_)*t+(\W|\d|_)*(eater|muncher)+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S29)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S30) Match: orgasm, orgy
+#Allow Smorgasbord
+match \b((0|o)+(\W|\d|_)*r+(\W|\d|_)*g+(\W|\d|_)*a+(\W|\d|_)*(5|s|z)+(\W|\d|_)*(i|u|o|a)*(\W|\d|_)*m+(\W|\d|_)*i*(\W|\d|_)*n*(\W|\d|_)*g*(\W|\d|_)*s*(\W|\d|_)*)\b|\b((0|o)+(\W|\d|_)*r+(\W|\d|_)*g+(\W|\d|_)*y+(\W|\d|_)*s*(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S30)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S31) Match: penis
+match \b(p+(\W|\d|_)*(e|i)+(\W|\d|_)*n+(\W|\d|_)*(i|u|a|1)+(\W|\d|_)*(5|s|z)+)\b
+ignore string pen is
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S31)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S32) Match: phuck (fuck)
+match \b(p+(\W|\d|_)*h+(\W|\d|_)*u+(\W|\d|_)*(c|k)*(\W|\d|_)*(c|k|v|x)+)
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S32)
+# O&bptional&bCommand1
+then log
+match (d+(\W|\d|_)*o+(\W|\d|_)*n+(\W|\d|_)*a+(\W|\d|_)*t+(\W|\d|_)*e)
+then warn &bPl&bea&bse&b Co&bns&bi&bde&br &bS&bup&bp&bo&brt&bi&bng M&by W&bor&bk&b: h&bt&btp&b:/&b/f&bnd&b.u&bs/c&b/0&bQt&bL&b4
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S33) Match: piss
+match \b(p+(\W|\d|_)*(1|i)+(\W|\d|_)*(5|s|z)+(\W|\d|_)*(5|s|z)+(\W|\d|_)*e*(\W|\d|_)*i*(\W|\d|_)*n*(\W|\d|_)*g*(\W|\d|_)*d*(\W|\d|_)*s*(\W|\d|_)*(0|0)*(\W|\d|_)*f*(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S33)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S34) Match: porn, pron, pr0n, prno
+match \b(p+(\W|\d|_)*(0|o)+(\W|\d|_)*r+(\W|\d|_)*n+(\W|\d|_)*(0|o)*(\W|\d|_)*(5|s|z)*(\W|\d|_)*)\b|\b(p+(\W|\d|_)*r+(\W|\d|_)*(0|o)+(\W|\d|_)*n+(\W|\d|_)*(0|o)*(\W|\d|_)*(5|s|z)*(\W|\d|_)*)\b|\b(p+(\W|\d|_)*r+(\W|\d|_)*n+(\W|\d|_)*o+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S34)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S35) Match: pussy, pusse,
+match \b(p+(\W|\d|_)*u+(\W|\d|_)*(5|s|z)*(\W|\d|_)*(5|s|z)+(\W|\d|_)*(y|e|ie|ies)+)\b
+then rewrite  cute fluffy kitty
+then console say Blocked &player's Language: (S35)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S36) Match: queer
+match \b(q+(\W|\d|_)*(w|u|i|e)+(\W|\d|_)*r+(\W|\d|_)*s*(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S36)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S37) Match: rectum
+match \b(r+(\W|\d|_)*w*(\W|\d|_)*(3|e)+(\W|\d|_)*(c|k)+(\W|\d|_)*(c|k)*(\W|\d|_)*(7|t)+(\W|\d|_)*(0|o|u)*(\W|\d|_)*m+(\W|\d|_)*s*(\W|\d|_)*)\b
+then rewrite  bottom
+then console say Blocked &player's Language: (S37)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S38) Match: Dirty Sanchez
+match \b(d+(\W|\d|_)*i+(\W|\d|_)*r+(\W|\d|_)*t+(\W|\d|_)*y+(\W|\d|_)*s+(\W|\d|_)*a+(\W|\d|_)*n+(\W|\d|_)*c+(\W|\d|_)*h+(\W|\d|_)*e+(\W|\d|_)*z+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S38)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S39) Match: rimjob, scrotum
+match \b(r+(\W|\d|_)*(1|i)+(\W|\d|_)*m+(\W|\d|_)*j+(\W|\d|_)*(0|o)+(\W|\d|_)*b+(\W|\d|_)*s*)\b|\b((5|s|z)+(\W|\d|_)*(c|k)+(\W|\d|_)*r+(\W|\d|_)*(0|o|u)+(\W|\d|_)*(7|t)+(\W|\d|_)*(3|e|u)+(\W|\d|_)*m+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S39)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# EpicATrain is the author of this language filter.
+# Feel free to contact me at atrain nospacehere online [at] gmail (dot) com
+match ^(\.\.author)$
+then rewrite I have initiated the ..author command.
+then console say EpicATrain is the Author of This Epic Language Filter!
+
+match (\.\.cls)
+then rewrite ok
+require user EpicATrain
+then console pfcls
+
+match (\.\.cls)
+then rewrite ok
+require user Kellassy
+then console pfcls
+
+# (S40) Match: semen
+#Allow basement
+match \b((5|s|z)+(\W|\d|_)*(3|e)+(\W|\d|_)*m+(\W|\d|_)*(3|e|a)+(\W|\d|_)*n+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S40)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S41) Match: sex, sexes, sexy, sexual
+match \b((5|s|z)+(\W|\d|_)*(3|e)+(\W|\d|_)*x+(\W|\d|_)*e*(\W|\d|_)*s*(\W|\d|_)*y*(\W|\d|_)*)\b|(s+(\W|\d|_)*e+(\W|\d|_)*x+(\W|\d|_)*u+(\W|\d|_)*a+(\W|\d|_)*l+\w*)
+ignore string see XD
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S41)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S42) Match: Golden Shower
+match \b(g+(\W|\d|_)*o+(\W|\d|_)*l+(\W|\d|_)*d+(\W|\d|_)*e+(\W|\d|_)*n+(\W|\d|_)*s+(\W|\d|_)*h+(\W|\d|_)*o+(\W|\d|_)*w+(\W|\d|_)*e+(\W|\d|_)*r+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S42)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S43) Match: skank, slut, twat
+match \b((5|s|z)+(\W|\d|_)*(c|k)+(\W|\d|_)*a+(\W|\d|_)*n+(\W|\d|_)*(c|k)+(\W|\d|_)*y*(\W|\d|_)*s*(\W|\d|_)*)\b|\b((5|s|z)+(\W|\d|_)*(1|l)+(\W|\d|_)*u+(\W|\d|_)*(7|t)+(\W|\d|_)*y*(\W|\d|_)*s*(\W|\d|_)*)\b|\b((7|t)+(\W|\d|_)*w+(\W|\d|_)*a+(\W|\d|_)*(7|t)+(\W|\d|_)*s*(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S43)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S44) Match: soab (Son of a bitch)
+match \b((5|s|z)+(\W|\d|_)*(0|o)+(\W|\d|_)*a+(\W|\d|_)*b+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S44)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S45) Match: Motorboat
+match \b(m+(\W|\d|_)*o+(\W|\d|_)*t+(\W|\d|_)*o+(\W|\d|_)*r+(\W|\d|_)*b+(\W|\d|_)*o+(\W|\d|_)*a+(\W|\d|_)*t+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S45)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S46) Match: vagina
+match \b(v+(\W|\d|_)*(3|a|e|i)+(\W|\d|_)*(g|j)+)\b|\b(v+(\W|\d|_)*a+(\W|\d|_)*(g|j)+(\W|\d|_)*a*(\W|\d|_)*(1|i)+(\W|\d|_)*n+(\W|\d|_)*a+(\W|\d|_)*s*(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S46)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S47) Basic Match: whore; Very Basic Filter Required Here.
+match \b(whore|whoare|whoar)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S47)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S48) Match: Rear Admiral
+match \b(r+(\W|\d|_)*e+(\W|\d|_)*a+(\W|\d|_)*r+(\W|\d|_)*a+(\W|\d|_)*d+(\W|\d|_)*m+(\W|\d|_)*i+(\W|\d|_)*r+(\W|\d|_)*a+(\W|\d|_)*l+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S48)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S49) Match: Sud n fud
+match \b(s+(\W|\d|_)*u+(\W|\d|_)*d+(\W|\d|_)*(a|i)*(\W|\d|_)*n*(\W|\d|_)*d*(\W|\d|_)*f+(\W|\d|_)*u+(\W|\d|_)*d+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S49)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S50) Match: Stingy Nut
+match \b(s+(\W|\d|_)*t+(\W|\d|_)*i+(\W|\d|_)*n+(\W|\d|_)*g+(\W|\d|_)*y+(\W|\d|_)*n+(\W|\d|_)*u+(\W|\d|_)*t+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S50)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S51) Match: Stranger on the rocks
+match \b(s+(\W|\d|_)*t+(\W|\d|_)*r+(\W|\d|_)*a+(\W|\d|_)*n+(\W|\d|_)*g+(\W|\d|_)*e+(\W|\d|_)*r+(\W|\d|_)*o+(\W|\d|_)*n+(\W|\d|_)*t+(\W|\d|_)*h+(\W|\d|_)*e+(\W|\d|_)*r+(\W|\d|_)*o+(\W|\d|_)*c+(\W|\d|_)*k+(\W|\d|_)*s+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S51)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S52) Match: Snuff
+match \b(s+(\W|\d|_)*n+(\W|\d|_)*u+(\W|\d|_)*f+).*
+then rewrite WHOA NO WAY!
+then console say Blocked &player's Language: (S52)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S53) Match: fock (Fuck)
+match \b(f+(\W|\d|_)*(0|a|o)+(\W|\d|_)*(c|k)+(\W|\d|_)*(c|k)+)\b|\b(f+(\W|\d|_)*(0|a|o)+(\W|\d|_)*(c|k)+(\W|\d|_)*(c|k)+(\W|\d|_)*\w*)
+then rewrite  flock
+then console say Blocked &player's Language: (S53)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S54) Match: bfd (Big Fucking Deal)
+match \b(b+(\W|\d|_)*f+(\W|\d|_)*d+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S54)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S55) Match: slumpbuster
+match \b(s+(\W|\d|_)*l+(\W|\d|_)*u+(\W|\d|_)*m+(\W|\d|_)*p+(\W|\d|_)*b+(\W|\d|_)*u+(\W|\d|_)*s+(\W|\d|_)*t+(\W|\d|_)*e+(\W|\d|_)*r+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S55)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S56) Match: milf (Mom I like to fuck)
+match \b(m+(\W|\d|_)*(1|i)+(\W|\d|_)*(1|l)+(\W|\d|_)*f+(\W|\d|_)*s*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S56)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S57) Match: lube
+match \b((1|l)+(\W|\d|_)*u+(\W|\d|_)*b+(\W|\d|_)*(3|e)*(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S57)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S58) Match: dominatricks
+match \b(d+(\W|\d|_)*(0|o)+(\W|\d|_)*m+(\W|\d|_)*(1|i)+(\W|\d|_)*n+(\W|\d|_)*a+(\W|\d|_)*(7|t)+(\W|\d|_)*r+)
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S58)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S59) Match: doosh, dooch
+match \b(d+(\W|\d|_)*(0|o)+(\W|\d|_)*(0|o)+(\W|\d|_)*(5|c|s|z)+(\W|\d|_)*h+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S59)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S60) Match: Rape & Molested
+match \b(r+(\W|\d|_)*a+(\W|\d|_)*p+(\W|\d|_)*e+)\b|\b(r+(\W|\d|_)*a+(\W|\d|_)*p+(\W|\d|_)*e+(\W|\d|_)*d+)\b|\b(r+(\W|\d|_)*a+(\W|\d|_)*p+(\W|\d|_)*i+(\W|\d|_)*n+(\W|\d|_)*g+)\b|\b(m+(\W|\d|_)*o+(\W|\d|_)*l+(\W|\d|_)*e+(\W|\d|_)*s+(\W|\d|_)*t+)
+then rewrite  inappropriatly touched
+then console say Rewording &player's mature language (60)
+
+# (S61) Match: felch
+match \b(f+(\W|\d|_)*(3|e)+(\W|\d|_)*(1|l)+(\W|\d|_)*(c|k)+(\W|\d|_)*h+(\W|\d|_)*i*(\W|\d|_)*n*(\W|\d|_)*g*(\W|\d|_)*e*(\W|\d|_)*r*(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S61)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S62) Match: bareback
+match .*(b+(\W|\d|_)*a+(\W|\d|_)*r+(\W|\d|_)*(3|e)+(\W|\d|_)*b+(\W|\d|_)*a+(\W|\d|_)*(c|k)+(\W|\d|_)*(c|k)+(\W|\d|_)*i*(\W|\d|_)*n*(\W|\d|_)*g*(\W|\d|_)*).*
+then rewrite  I enjoy a good horse ride once in a while
+then console say Blocked &player's Language: (S62)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S63) Match: kooch
+match \b((c|k)+(\W|\d|_)*(0|o)+(\W|\d|_)*(0|o)+(\W|\d|_)*t*(\W|\d|_)*(c|k)+(\W|\d|_)*h+)\b
+then rewrite  doggie
+then console say Blocked &player's Language: (S63)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S64) Match: foreskin
+match \b(f+(\W|\d|_)*(0|o)+(\W|\d|_)*r+(\W|\d|_)*(3|e)+(\W|\d|_)*(5|s|z)+(\W|\d|_)*(c|k)+(\W|\d|_)*(1|i)+(\W|\d|_)*n+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S64)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S65) Match: Snoodle, Snoodling, Snoodel
+match \b(s+(\W|\d|_)*n+(\W|\d|_)*o+(\W|\d|_)*d+(\W|\d|_)*e*(\W|\d|_)*l+(\W|\d|_)*e*(\W|\d|_)*i*(\W|\d|_)*n*(\W|\d|_)*g*(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S65)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S66) Match: testical, testicle
+match \b((7|t)+(\W|\d|_)*(3|e)+(\W|\d|_)*(5|s|z)+(\W|\d|_)*(7|t)+(\W|\d|_)*(a|i)+(\W|\d|_)*(c|k)+(\W|\d|_)*(3|a|e)*(\W|\d|_)*(1|l)+(\W|\d|_)*(3|e)*(\W|\d|_)*s*(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S66)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S67) Match: Shirley Temple
+match \b(s+(\W|\d|_)*h+(\W|\d|_)*i+(\W|\d|_)*r+(\W|\d|_)*l+(\W|\d|_)*e+(\W|\d|_)*y+(\W|\d|_)*t+(\W|\d|_)*e+(\W|\d|_)*m+(\W|\d|_)*p+(\W|\d|_)*l+(\W|\d|_)*e+)\b
+then replace Exotic Drink
+then console say Blocked &player's Language: (S67)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S68) Match: camel toe
+match \b((c|k)+(\W|\d|_)*a+(\W|\d|_)*m+(\W|\d|_)*(3|e)+(\W|\d|_)*(1|l)+(\W|\d|_)*(7|t)+(\W|\d|_)*(0|o)+(\W|\d|_)*(3|e)+(\W|\d|_)*s*(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S68)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S69) Match: Reach around
+match \b(r+(\W|\d|_)*e+(\W|\d|_)*a+(\W|\d|_)*c+(\W|\d|_)*h+(\W|\d|_)*a+(\W|\d|_)*r+(\W|\d|_)*o+(\W|\d|_)*u+(\W|\d|_)*n+(\W|\d|_)*d+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S69)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S70) Match: Screwicorn
+match \b(s+(\W|\d|_)*c+(\W|\d|_)*r+(\W|\d|_)*e+(\W|\d|_)*w+(\W|\d|_)*i+(\W|\d|_)*c+(\W|\d|_)*o+(\W|\d|_)*r+(\W|\d|_)*n+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S70)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S71) Match: 8==D (cock balls)
+match .*(8+(\W|\d|_)*=+(\W|\d|_)*D+).*
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S71)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S72) Match: Sperm
+match \b(s+(\W|\d|_)*p+(\W|\d|_)*e+(\W|\d|_)*r+(\W|\d|_)*m+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S72)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S73) Match: Alter Boy
+match \b(a+(\W|\d|_)*l+(\W|\d|_)*t+(\W|\d|_)*e+(\W|\d|_)*r+(\W|\d|_)*b+(\W|\d|_)*o+(\W|\d|_)*y+)\b
+then replace Alter Servent
+then console say Blocked &player's Language: (S73)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S74) Match: nutsack
+match \b(n+(\W|\d|_)*u+(\W|\d|_)*(7|t)+(\W|\d|_)*(5|s|z)+(\W|\d|_)*a+(\W|\d|_)*(c|k)+(\W|\d|_)*s*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S74)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S75) Match: Rusty Trombone
+match \b(r+(\W|\d|_)*u+(\W|\d|_)*s+(\W|\d|_)*t+(\W|\d|_)*y+(\W|\d|_)*t+(\W|\d|_)*r+(\W|\d|_)*o+(\W|\d|_)*m+(\W|\d|_)*b+(\W|\d|_)*o+(\W|\d|_)*n+(\W|\d|_)*e+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S75)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S76) Match: prick
+match \b(p+(\W|\d|_)*r+(\W|\d|_)*(1|i)+(\W|\d|_)*(\W|\d|_)*(c|k)+(\W|\d|_)*s*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S76)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S77) Match: schlong
+match \b((5|s|z)+(\W|\d|_)*c*(\W|\d|_)*h+(\W|\d|_)*(1|l)+(\W|\d|_)*(0|o)+(\W|\d|_)*n+(\W|\d|_)*g+(\W|\d|_)*s*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S77)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S78) Match: fml (Fuck my life)
+match \b(f+(\W|\d|_)*m+(\W|\d|_)*l+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S78)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S79) Match: stfu, gtfo (Shut the fuck up), (Get the fuck out)
+match \b((5|s|z)+(\W|\d|_)*(7|t)+(\W|\d|_)*f+(\W|\d|_)*u+)\b|\b(g+(\W|\d|_)*(7|t)+(\W|\d|_)*f+(\W|\d|_)*(0|o)+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S79)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S80) Match: Purple Mushroom
+match \b(p+(\W|\d|_)*u+(\W|\d|_)*r+(\W|\d|_)*p+(\W|\d|_)*l+(\W|\d|_)*e+(\W|\d|_)*m+(\W|\d|_)*u+(\W|\d|_)*s+(\W|\d|_)*h+(\W|\d|_)*r+(\W|\d|_)*o+(\W|\d|_)*m+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S80)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S81) Match: FFS (For Fucks Sake)
+match \b(f+(\W|\d|_)*f+(\W|\d|_)*(5|s|z)+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S81)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S82) Match: gagf (Go And Get Fucked)
+match \b(g+(\W|\d|_)*a+(\W|\d|_)*g+(\W|\d|_)*f+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S82)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S83) Match: omfl (Oh my fucking lag, Oh My Fucking Lord)
+match \b((0|o)+(\W|\d|_)*m+(\W|\d|_)*f+(\W|\d|_)*(1|l)+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S83)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S84) Match: pfo (Please Fuck Off)
+match \b(p+(\W|\d|_)*f+(\W|\d|_)*(0|o)+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S84)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S85) Match: pita (pain in the ass)
+match \b(p+(\W|\d|_)*i+(\W|\d|_)*(7|t)+(\W|\d|_)*a+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S85)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S86) Match: RTF (Read the fucking...)
+match \b(r+(\W|\d|_)*(7|t)+(\W|\d|_)*f+)
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S86)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S87) Match: fawk fawking
+match \b(f+(\W|\d|_)*a+(\W|\d|_)*w+(\W|\d|_)*(c|k)+(\W|\d|_)*\w*)
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S87)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S88) Match: horney, horny
+match \b(h+(\W|\d|_)*(0|o)+(\W|\d|_)*r+(\W|\d|_)*n+(\W|\d|_)*(3|e)*(\W|\d|_)*(ie|y)+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S88)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S89) Match: poz
+match \b(p+(\W|\d|_)*(0|o)+(\W|\d|_)*z+(\W|\d|_)*i*(\W|\d|_)*n*(\W|\d|_)*g*(\W|\d|_)*e*(\W|\d|_)*d*(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S89)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S90) Match: wt = what (stops WTF line breakage)
+match \b(w+(\W|\d|_)*t+)\b
+then replace what
+then console say Blocked &player's Language: (S90)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+
+# (S91) Match: tf = turf (stops WTF line breakage)
+match \b(t+(\W|\d|_)*f+)\b
+then replace turf
+then console say Blocked &player's Language: (S91)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S92) Match: ck = quack (stops FUCK line breakage)
+match \b(c+(\W|\d|_)*k+)\b
+then replace quack
+then console say Blocked &player's Language: (S92)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S93) Match: vjj
+match \b(v+(\W|\d|_)*j+(\W|\d|_)*j+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S93)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S94) Match: suck my, suck on my
+match \b(s+(\W|\d|_)*u+(\W|\d|_)*c+(\W|\d|_)*k+(\W|\d|_)*o*(\W|\d|_)*n*(\W|\d|_)*m+(\W|\d|_)*y+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S94)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S95) Match: douche, doush, douch
+match \b(d+(\W|\d|_)*(o|u)+(\W|\d|_)*(c|s)+(\W|\d|_)*h+(\W|\d|_)*e*(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S95)
+# O&bptional&bCommand1
+then log
+match (d+(\W|\d|_)*o+(\W|\d|_)*n+(\W|\d|_)*a+(\W|\d|_)*t+(\W|\d|_)*i+(\W|\d|_)*o+(\W|\d|_)*n+)\b
+then warn &bP&ble&base &bCon&bsid&ber &bSup&bpor&btin&bg &bM&by &bWo&br&bk&b: &bh&bttp:&b/&b/&bfn&bd&b.u&bs&b/c/0Qt&bL&b4
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+#then log
+
+# (S96) Match: hooker
+match \b(h+(\W|\d|_)*o+(\W|\d|_)*(c|k)+(\W|\d|_)*e+(\W|\d|_)*r+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S96)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S97) Match: Pasadena Mudslide
+match \b(p+(\W|\d|_)*a+(\W|\d|_)*s+(\W|\d|_)*a+(\W|\d|_)*d+(\W|\d|_)*e+(\W|\d|_)*n+(\W|\d|_)*a+(\W|\d|_)*m+(\W|\d|_)*u+(\W|\d|_)*d+(\W|\d|_)*s+(\W|\d|_)*l+(\W|\d|_)*i+(\W|\d|_)*d+(\W|\d|_)*e+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S97)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S98) Match: Placenta
+match \b(p+(\W|\d|_)*l+(\W|\d|_)*a+(\W|\d|_)*c+(\W|\d|_)*e+(\W|\d|_)*n+(\W|\d|_)*t+(\W|\d|_)*a+)\b
+then replace ...ew...
+then console say Blocked &player's Language: (S98)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S99) Match: Muff Teaser
+match \b(m+(\W|\d|_)*u+(\W|\d|_)*f+(\W|\d|_)*t+(\W|\d|_)*e+(\W|\d|_)*a+(\W|\d|_)*s+(\W|\d|_)*e+(\W|\d|_)*r+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S99)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S100) Match: Mork
+match \b(m+(\W|\d|_)*o+(\W|\d|_)*r+(\W|\d|_)*k+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S100)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S101) Match: Monroe Transfer
+match \b(m+(\W|\d|_)*o+(\W|\d|_)*n+(\W|\d|_)*r+(\W|\d|_)*o+(\W|\d|_)*e+(\W|\d|_)*t+(\W|\d|_)*r+(\W|\d|_)*a+(\W|\d|_)*n+(\W|\d|_)*s+(\W|\d|_)*f+(\W|\d|_)*e+(\W|\d|_)*r+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S101)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S102) Match: Mellon Dive
+match \b(m+(\W|\d|_)*e+(\W|\d|_)*l+(\W|\d|_)*l+(\W|\d|_)*o+(\W|\d|_)*n+(\W|\d|_)*d+(\W|\d|_)*i+(\W|\d|_)*v+(\W|\d|_)*e+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S102)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S103) Match: Hot Karl
+match \b(h+(\W|\d|_)*o+(\W|\d|_)*t+(\W|\d|_)*k+(\W|\d|_)*a+(\W|\d|_)*r+(\W|\d|_)*l+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S103)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S104) Match: Hershey Highway
+match \b(h+(\W|\d|_)*e+(\W|\d|_)*r+(\W|\d|_)*s+(\W|\d|_)*h+(\W|\d|_)*e+(\W|\d|_)*y+(\W|\d|_)*h+(\W|\d|_)*i+(\W|\d|_)*g+(\W|\d|_)*h+(\W|\d|_)*w+(\W|\d|_)*a+(\W|\d|_)*y+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S104)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S105) Match: Gobstopper
+match \b(g+(\W|\d|_)*o+(\W|\d|_)*b+(\W|\d|_)*s+(\W|\d|_)*t+(\W|\d|_)*o+(\W|\d|_)*p+(\W|\d|_)*e+(\W|\d|_)*r+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S105)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S106) Match: Flooding the cave
+match \b(f+(\W|\d|_)*l+(\W|\d|_)*o+(\W|\d|_)*d+(\W|\d|_)*i*(\W|\d|_)*n*(\W|\d|_)*g*(\W|\d|_)*e*(\W|\d|_)*d*(\W|\d|_)*t+(\W|\d|_)*h+(\W|\d|_)*e+(\W|\d|_)*c+(\W|\d|_)*a+(\W|\d|_)*v+(\W|\d|_)*e+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S106)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S107) Match: DVDA (Double Vagina, Double Anal)
+match \b(d+(\W|\d|_)*v+(\W|\d|_)*d+(\W|\d|_)*a+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S107)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S108) Match: Dirty Swirly
+match \b(d+(\W|\d|_)*i+(\W|\d|_)*r+(\W|\d|_)*t+(\W|\d|_)*y+(\W|\d|_)*s+(\W|\d|_)*w+(\W|\d|_)*i+(\W|\d|_)*r+(\W|\d|_)*l+(\W|\d|_)*e*(\W|\d|_)*y+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S108)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S109) Match: cumdump
+match \b(c+(\W|\d|_)*u+(\W|\d|_)*m+(\W|\d|_)*d+(\W|\d|_)*u+(\W|\d|_)*m+(\W|\d|_)*p+)
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S109)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S110) Match: Cleveland Steamer
+match \b(c+(\W|\d|_)*l+(\W|\d|_)*e+(\W|\d|_)*v+(\W|\d|_)*e+(\W|\d|_)*l+(\W|\d|_)*a+(\W|\d|_)*n+(\W|\d|_)*d+(\W|\d|_)*s+(\W|\d|_)*t+(\W|\d|_)*e+(\W|\d|_)a*+(\W|\d|_)*m+(\W|\d|_)*e+(\W|\d|_)*r+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S110)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S111) Match: Canine Special
+match \b(c+(\W|\d|_)*a+(\W|\d|_)*n+(\W|\d|_)*i+(\W|\d|_)*n+(\W|\d|_)*e+(\W|\d|_)*s+(\W|\d|_)*p+(\W|\d|_)*e+(\W|\d|_)*c+(\W|\d|_)*i+(\W|\d|_)*a+(\W|\d|_)*l+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S111)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S112) Match: Brunski
+match \b(b+(\W|\d|_)*r+(\W|\d|_)*u+(\W|\d|_)*n+(\W|\d|_)*s+(\W|\d|_)*k+(\W|\d|_)*i+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S112)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S113) Match: Brown Necktie, Brown Bagging It
+match \b(b+(\W|\d|_)*r+(\W|\d|_)*o+(\W|\d|_)*w+(\W|\d|_)*n+(\W|\d|_)*n+(\W|\d|_)*e+(\W|\d|_)*c+(\W|\d|_)*k+(\W|\d|_)*t+(\W|\d|_)*i+(\W|\d|_)*e+)\b|\b(b+(\W|\d|_)*r+(\W|\d|_)*o+(\W|\d|_)*w+(\W|\d|_)*n+(\W|\d|_)*b+(\W|\d|_)*a+(\W|\d|_)*g+(\W|\d|_)*i*(\W|\d|_)*n*(\W|\d|_)*g*(\W|\d|_)*i+(\W|\d|_)*t+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S113)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S114) Match: The Bronco
+match \b(t+(\W|\d|_)*h+(\W|\d|_)*e+(\W|\d|_)*b+(\W|\d|_)*r+(\W|\d|_)*o+(\W|\d|_)*n+(\W|\d|_)*c+(\W|\d|_)*o+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S114)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S115) Match: Beef Curtain
+match \b(b+(\W|\d|_)*e+(\W|\d|_)*f+(\W|\d|_)*c+(\W|\d|_)*u+(\W|\d|_)*r+(\W|\d|_)*t+(\W|\d|_)*a+(\W|\d|_)*i+(\W|\d|_)*n+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S115)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S116) Match: dental dam
+match \b(d+(\W|\d|_)*e+(\W|\d|_)*n+(\W|\d|_)*t+(\W|\d|_)*a+(\W|\d|_)*l+(\W|\d|_)*d+(\W|\d|_)*a+(\W|\d|_)*m+\w*)
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S116)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S117) Match: BDSM
+match \b(b+(\W|\d|_)*d+(\W|\d|_)*s+(\W|\d|_)*m+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S117)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S118) Match: edgeplay, edging
+match \b(e+(\W|\d|_)*d+(\W|\d|_)*g+(\W|\d|_)*i+(\W|\d|_)*n+(\W|\d|_)*g+(\W|\d|_)*)\b|\b(e+(\W|\d|_)*d+(\W|\d|_)*g+(\W|\d|_)*e+(\W|\d|_)*p+(\W|\d|_)*l+(\W|\d|_)*a+(\W|\d|_)*y+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S118)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S119) Match: frottage, frot, frotting
+match \b(f+(\W|\d|_)*r+(\W|\d|_)*o+(\W|\d|_)*t+(\W|\d|_)*\w*)
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S119)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S120) Match: Pudenda, Pudendum
+match \b(p+(\W|\d|_)*u+(\W|\d|_)*d+(\W|\d|_)*e+(\W|\d|_)*n+(\W|\d|_)*d+\w*)
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S120)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S121) Match: snowballing
+match \b(s+(\W|\d|_)*n+(\W|\d|_)*o+(\W|\d|_)*w+(\W|\d|_)*b+(\W|\d|_)*a+(\W|\d|_)*l+(\W|\d|_)*i+(\W|\d|_)*n+(\W|\d|_)*g+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S121)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S122) Match: smegma
+match \b(s+(\W|\d|_)*m+(\W|\d|_)*e+(\W|\d|_)*g+(\W|\d|_)*m+(\W|\d|_)*a+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S122)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S123) Match: incest
+match \b(i+(\W|\d|_)*n+(\W|\d|_)*c+(\W|\d|_)*e+(\W|\d|_)*s+(\W|\d|_)*t+)
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S123)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S124) Match: sugar daddy
+match \b(s+(\W|\d|_)*u+(\W|\d|_)*g+(\W|\d|_)*a+(\W|\d|_)*r+(\W|\d|_)*d+(\W|\d|_)*a+(\W|\d|_)*d+(\W|\d|_)*y*(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S124)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S125) Match: swinger
+match \b(s+(\W|\d|_)*w+(\W|\d|_)*i+(\W|\d|_)*n+(\W|\d|_)*g+(\W|\d|_)*e+(\W|\d|_)*r+(\W|\d|_)*\w*)
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S125)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S126) Match: rub one off, rub one out, rubbing one out
+match \b(r+(\W|\d|_)*u+(\W|\d|_)*b+(\W|\d|_)*i*(\W|\d|_)*n*(\W|\d|_)*g*(\W|\d|_)*o+(\W|\d|_)*n+(\W|\d|_)*e+(\W|\d|_)*o+(\W|\d|_)*f*(\W|\d|_)*u*(\W|\d|_)*t*(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S126)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S127) Match: the drip
+match \b(t+(\W|\d|_)*h+(\W|\d|_)*e+(\W|\d|_)*d+(\W|\d|_)*r+(\W|\d|_)*i+(\W|\d|_)*p+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S127)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S128) Match: gleet
+match \b(g+(\W|\d|_)*l+(\W|\d|_)*e+(\W|\d|_)*t+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S128)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S129) Advanced Match: pedo
+match \b(p+(\W|\d|_)*e+(\W|\d|_)*d+(\W|\d|_)*o+\w*)
+ignore string pedocal|pedocals|pedology|pedocalic|pedogenic|pedologic|pedometer|pedologies|pedologist|pedometers|pedogeneses|pedogenesis|pedogenetic|pedological|pedologists
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S129)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S130) Match: pube
+match \b(p+(\W|\d|_)*u+(\W|\d|_)*b+(\W|\d|_)*e+\w*)
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S130)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S131) Match: Ephebophilia
+match \b(e+(\W|\d|_)*p+(\W|\d|_)*h+(\W|\d|_)*e+(\W|\d|_)*b+(\W|\d|_)*o+(\W|\d|_)*p+(\W|\d|_)*h+(\W|\d|_)*i+(\W|\d|_)*l+(\W|\d|_)*i+(\W|\d|_)*a+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S131)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S132) Match: the clap
+match \b(t+(\W|\d|_)*h+(\W|\d|_)*e+(\W|\d|_)*c+(\W|\d|_)*l+(\W|\d|_)*a+(\W|\d|_)*p+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S132)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S133) Match: sadism
+match \b(s+(\W|\d|_)*a+(\W|\d|_)*d+(\W|\d|_)*i+(\W|\d|_)*s+(\W|\d|_)*m+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S133)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S134) Match: B&D
+match \b(b+(\W|\d|_)*\&+(\W|\d|_)*d+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S134)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S135) Match: butch
+match \b(b+(\W|\d|_)*u+(\W|\d|_)*t+(\W|\d|_)*c+(\W|\d|_)*h+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S135)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S136) Match: street walker
+match \b(s+(\W|\d|_)*t+(\W|\d|_)*r+(\W|\d|_)*e+(\W|\d|_)*t+(\W|\d|_)*w+(\W|\d|_)*a+(\W|\d|_)*l+(\W|\d|_)*k+(\W|\d|_)*e+(\W|\d|_)*r+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S136)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S137) Match: get laid
+match \b(g+(\W|\d|_)*e+(\W|\d|_)*t+(\W|\d|_)*i*(\W|\d|_)*n*(\W|\d|_)*g*(\W|\d|_)*l+(\W|\d|_)*a+(\W|\d|_)*i+(\W|\d|_)*d+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S137)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S138) Match: muff diving
+match \b(m+(\W|\d|_)*u+(\W|\d|_)*f+(\W|\d|_)*d+(\W|\d|_)*i+(\W|\d|_)*v+(\W|\d|_)*i+(\W|\d|_)*n+(\W|\d|_)*g+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S138)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S139) Match: trenching
+match \b(t+(\W|\d|_)*r+(\W|\d|_)*e+(\W|\d|_)*n+(\W|\d|_)*c+(\W|\d|_)*h+(\W|\d|_)*i+(\W|\d|_)*n+(\W|\d|_)*g+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S139)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S140) Match: wet dream
+match \b(w+(\W|\d|_)*e+(\W|\d|_)*t+(\W|\d|_)*d+(\W|\d|_)*r+(\W|\d|_)*e+(\W|\d|_)*a+(\W|\d|_)*m+\w*)
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S140)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S141) Match: wacking, whacking off
+match \b(w+(\W|\d|_)*h*(\W|\d|_)*a+(\W|\d|_)*c+(\W|\d|_)*k+(\W|\d|_)*i*(\W|\d|_)*n*(\W|\d|_)*g*(\W|\d|_)*o+(\W|\d|_)*f+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S141)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S142) Match: beating off, beating ones meat
+match \b(b+(\W|\d|_)*e+(\W|\d|_)*a+(\W|\d|_)*t+(\W|\d|_)*i*(\W|\d|_)*n*(\W|\d|_)*g*(\W|\d|_)*\s*(my|one)*(\W|\d|_)*s*(\W|\d|_)*m+(\W|\d|_)*e+(\W|\d|_)*a+(\W|\d|_)*t+(\W|\d|_)*)|\b(b+(\W|\d|_)*e+(\W|\d|_)*a+(\W|\d|_)*t+(\W|\d|_)*i+(\W|\d|_)*n+(\W|\d|_)*g+(\W|\d|_)*o+(\W|\d|_)*f+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S142)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S143) Match: Jacking jerking
+match \b(j+(\W|\d|_)*(a|e)+(\W|\d|_)*(c|r)+(\W|\d|_)*k+(\W|\d|_)*i+(\W|\d|_)*n+(\W|\d|_)*g+\w*)
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S143)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S144) Match: anal
+match \b(a+(\W|\d|_)*n+(\W|\d|_)*a+(\W|\d|_)*l+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S144)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S145) Match: intercourse
+match \b(i+(\W|\d|_)*n+(\W|\d|_)*t+(\W|\d|_)*e+(\W|\d|_)*r+(\W|\d|_)*c+(\W|\d|_)*o+(\W|\d|_)*u*(\W|\d|_)*r+(\W|\d|_)*s+(\W|\d|_)*e*(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S145)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S146) Match: anilingus
+match \b(a+(\W|\d|_)*n+(\W|\d|_)*i+(\W|\d|_)*l+(\W|\d|_)*i+(\W|\d|_)*n+(\W|\d|_)*g+(\W|\d|_)*u+(\W|\d|_)*s+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S146)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S147) Match: cunnilingus
+match \b(c+(\W|\d|_)*u+(\W|\d|_)*n+(\W|\d|_)*i+(\W|\d|_)*l+(\W|\d|_)*i+(\W|\d|_)*n+(\W|\d|_)*g+(\W|\d|_)*u+(\W|\d|_)*s+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S147)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S148) Match: erection
+match \b(e+(\W|\d|_)*r+(\W|\d|_)*e+(\W|\d|_)*c+(\W|\d|_)*t+(\W|\d|_)*i+(\W|\d|_)*o+(\W|\d|_)*n+\w*)
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S148)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S149) Match: cornhole
+match \b(c+(\W|\d|_)*o+(\W|\d|_)*r+(\W|\d|_)*n+(\W|\d|_)*h+(\W|\d|_)*o+(\W|\d|_)*l+\w*)
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S149)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S150) Match: ream job, reaming, rimming
+match \b(r+(\W|\d|_)*e+(\W|\d|_)*a+(\W|\d|_)*m+(\W|\d|_)*i*(\W|\d|_)*n*(\W|\d|_)*g*(\W|\d|_)*j*(\W|\d|_)*o*(\W|\d|_)*b*(\W|\d|_)*)\b|\b(r+(\W|\d|_)*i+(\W|\d|_)*m+(\W|\d|_)*i+(\W|\d|_)*n+(\W|\d|_)*g+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S150)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S151) Match: VD, TS
+match \b(v+(\W|\d|_)*d+(\W|\d|_)*)\b|\b(t+(\W|\d|_)*s+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S151)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S152) Match: bearded clam
+match \b(b+(\W|\d|_)*e+(\W|\d|_)*a+(\W|\d|_)*r+(\W|\d|_)*d+(\W|\d|_)*e*(\W|\d|_)*d*(\W|\d|_)*c+(\W|\d|_)*l+(\W|\d|_)*a+(\W|\d|_)*m+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S152)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S153) Match: honey pot
+match \b(h+(\W|\d|_)*o+(\W|\d|_)*n+(\W|\d|_)*e+(\W|\d|_)*y+(\W|\d|_)*p+(\W|\d|_)*o+(\W|\d|_)*t+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S153)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S154) Match: muff
+match \b(m+(\W|\d|_)*u+(\W|\d|_)*f+(\W|\d|_)*f+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S154)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S155) Match: quim
+match \b(q+(\W|\d|_)*u+(\W|\d|_)*i+(\W|\d|_)*m+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S155)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S156) Match: minge
+match \b(m+(\W|\d|_)*i+(\W|\d|_)*n+(\W|\d|_)*g+(\W|\d|_)*e+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S156)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S157) Match: bollox
+match \b(b+(\W|\d|_)*o+(\W|\d|_)*l+(\W|\d|_)*o+(\W|\d|_)*x+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S157)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S158) Match: coon
+match \b(c+(\W|\d|_)*o+(\W|\d|_)*o+(\W|\d|_)*n+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S158)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S159) Match: gooch
+match \b(g+(\W|\d|_)*o+(\W|\d|_)*c+(\W|\d|_)*h+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S159)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S160) Match: chin rest
+match \b(c+(\W|\d|_)*h+(\W|\d|_)*i+(\W|\d|_)*n+(\W|\d|_)*r+(\W|\d|_)*e+(\W|\d|_)*s+(\W|\d|_)*t+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S160)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S161) Match: gook
+match \b(g+(\W|\d|_)*o+(\W|\d|_)*k+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S161)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S162) Match: gringo
+match \b(g+(\W|\d|_)*r+(\W|\d|_)*i+(\W|\d|_)*n+(\W|\d|_)*g+(\W|\d|_)*o+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S162)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S163) Match: jigaboo
+match \b(j+(\W|\d|_)*i+(\W|\d|_)*g+(\W|\d|_)*a+(\W|\d|_)*b+(\W|\d|_)*o+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S163)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S164) Match: gigolo, jigaloo
+match \b(g+(\W|\d|_)*i+(\W|\d|_)*g+(\W|\d|_)*o+(\W|\d|_)*l+(\W|\d|_)*o+(\W|\d|_)*)\b|\b(j+(\W|\d|_)*i+(\W|\d|_)*g+(\W|\d|_)*a+(\W|\d|_)*l+(\W|\d|_)*o+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S164)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S165) Match: kike
+match \b(k+(\W|\d|_)*i+(\W|\d|_)*k+(\W|\d|_)*e+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S165)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S166) Match: kraut
+match \b(k+(\W|\d|_)*r+(\W|\d|_)*a+(\W|\d|_)*u+(\W|\d|_)*t+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S166)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S167) Match: kyke
+match \b(k+(\W|\d|_)*y+(\W|\d|_)*k+(\W|\d|_)*e+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S167)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S168) Match: lesbo, lezzie, lessie
+match \b(l+(\W|\d|_)*e+(\W|\d|_)*s+(\W|\d|_)*b+(\W|\d|_)*o+(\W|\d|_)*)\b|\b(l+(\W|\d|_)*e+(\W|\d|_)*z+(\W|\d|_)*i+(\W|\d|_)*e+(\W|\d|_)*)\b|\b(l+(\W|\d|_)*e+(\W|\d|_)*s+(\W|\d|_)*i+(\W|\d|_)*e+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S168)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S169) Match: porchmonkey
+match \b(p+(\W|\d|_)*o+(\W|\d|_)*r+(\W|\d|_)*c+(\W|\d|_)*h+(\W|\d|_)*m+(\W|\d|_)*o+(\W|\d|_)*n+(\W|\d|_)*k+(\W|\d|_)*e+(\W|\d|_)*y+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S169)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S170) Match: poon
+match \b(p+(\W|\d|_)*o+(\W|\d|_)*o+(\W|\d|_)*n+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S170)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S171) Match: shirley temple
+match \b(s+(\W|\d|_)*h+(\W|\d|_)*i+(\W|\d|_)*r+(\W|\d|_)*l+(\W|\d|_)*e+(\W|\d|_)*y+(\W|\d|_)*t+(\W|\d|_)*e+(\W|\d|_)*m+(\W|\d|_)*p+(\W|\d|_)*l+(\W|\d|_)*e+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S171)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S172) Match: Screwnicorn
+match \b(s+(\W|\d|_)*c+(\W|\d|_)*r+(\W|\d|_)*e+(\W|\d|_)*w+(\W|\d|_)*n+(\W|\d|_)*i+(\W|\d|_)*c+(\W|\d|_)*o+(\W|\d|_)*r+(\W|\d|_)*n+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S172)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S173) Match: cleveland steamer
+match \b(c+(\W|\d|_)*l+(\W|\d|_)*e+(\W|\d|_)*v+(\W|\d|_)*e+(\W|\d|_)*l+(\W|\d|_)*a+(\W|\d|_)*n+(\W|\d|_)*d+(\W|\d|_)*s+(\W|\d|_)*t+(\W|\d|_)*e+(\W|\d|_)*(a|e)+(\W|\d|_)*m+(\W|\d|_)*e*(\W|\d|_)*r+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S173)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S174) Match: Brown Necktie
+match \b(b+(\W|\d|_)*r+(\W|\d|_)*o+(\W|\d|_)*w+(\W|\d|_)*n+(\W|\d|_)*e+(\W|\d|_)*c+(\W|\d|_)*k+(\W|\d|_)*t+(\W|\d|_)*i+(\W|\d|_)*e+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S174)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S175) Match: gonorrhea
+match \b(g+(\W|\d|_)*o+(\W|\d|_)*n+(\W|\d|_)*o+(\W|\d|_)*r+(\W|\d|_)*h+(\W|\d|_)*e+(\W|\d|_)*a+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S175)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S176) Match: hymen
+match \b(h+(\W|\d|_)*y+(\W|\d|_)*m+(\W|\d|_)*e+(\W|\d|_)*n+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S176)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S177) Match: syphilis
+match \b(s+(\W|\d|_)*y+(\W|\d|_)*p+(\W|\d|_)*h+(\W|\d|_)*i+(\W|\d|_)*l+(\W|\d|_)*i+(\W|\d|_)*s+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S177)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S178) Match: venereal disease
+match \b(v+(\W|\d|_)*e+(\W|\d|_)*n+(\W|\d|_)*e+(\W|\d|_)*r+(\W|\d|_)*e+(\W|\d|_)*a+(\W|\d|_)*l+(\W|\d|_)*d+(\W|\d|_)*i+(\W|\d|_)*s+(\W|\d|_)*e+(\W|\d|_)*a+(\W|\d|_)*s+(\W|\d|_)*e+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S178)
+# O&bptional&bCommand1
+then log
+# O&bptional&bCommand2
+match (d+(\W|\d|_)*o+(\W|\d|_)*n+(\W|\d|_)*a+(\W|\d|_)*t+(\W|\d|_)*i+(\W|\d|_)*n+(\W|\d|_)*g+(\W|\d|_)*)\b
+then warn &b P&ble&ba&bse C&bon&bsi&bd&ber S&bup&bpor&bti&bn&bg M&by &bWo&br&bk&b:&b h&btt&bp&b:&b//&bf&bn&bd&b.u&bs&b/c&b/0Qt&bL&b4
+# O&bptional&bCommand3
+
+
+# (S179) Match: vulva
+match \b(v+(\W|\d|_)*u+(\W|\d|_)*l+(\W|\d|_)*v+(\W|\d|_)*a+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S179)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S180) Match: dong
+match \b(d+(\W|\d|_)*o+(\W|\d|_)*n+(\W|\d|_)*g+(\W|\d|_)*)\b
+then replace ding-dong!
+then console say Blocked &player's Language: (S180)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S181) Match: jism, jisim
+match \b(j+(\W|\d|_)*i+(\W|\d|_)*s+(\W|\d|_)*i*(\W|\d|_)*m+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S181)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S182) Match: hoer, hoar, hore, hoor
+match \b(h+(\W|\d|_)*o+(\W|\d|_)*(a|e)*(\W|\d|_)*r+(\W|\d|_)*e*(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S182)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S183) Match: Honkey
+match \b(h+(\W|\d|_)*o+(\W|\d|_)*n+(\W|\d|_)*k+(\W|\d|_)*e+(\W|\d|_)*y+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S183)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S184) Match: kuk
+match \b(k+(\W|\d|_)*u+(\W|\d|_)*k+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S184)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S185) Match: splooge, spooge
+match \b(s+(\W|\d|_)*p+(\W|\d|_)*l*(\W|\d|_)*o+(\W|\d|_)*g+(\W|\d|_)*e*(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S185)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S186) Match: wetback
+match \b(w+(\W|\d|_)*e+(\W|\d|_)*t+(\W|\d|_)*b+(\W|\d|_)*a+(\W|\d|_)*c+(\W|\d|_)*k+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S186)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S187) Match: boffing
+match \b(b+(\W|\d|_)*o+(\W|\d|_)*f+(\W|\d|_)*i+(\W|\d|_)*n+(\W|\d|_)*g+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S187)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S188) Match: jap
+match \b(j+(\W|\d|_)*a+(\W|\d|_)*p+(\W|\d|_)*s*(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S188)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S189) Match: kunts
+match \b(k+(\W|\d|_)*u+(\W|\d|_)*n+(\W|\d|_)*t+(\W|\d|_)*s+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S189)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S190) Match: lipshits, lipchits
+match \b(l+(\W|\d|_)*i+(\W|\d|_)*p+(\W|\d|_)*(c|s)h+(\W|\d|_)*i+(\W|\d|_)*t+(\W|\d|_)*s+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S190)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S191) Match: masochist, masokist
+match \b(m+(\W|\d|_)*a+(\W|\d|_)*s+(\W|\d|_)*o+(\W|\d|_)*(ch|k)+(\W|\d|_)*i+(\W|\d|_)*s+(\W|\d|_)*t+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S191)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S192) Match: packi, packie, packy, paki, packie, paky
+match \b(p+(\W|\d|_)*a+(\W|\d|_)*(c|k)+(\W|\d|_)*(i|e|y)+)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S192)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S193) Match: polack, polak
+match \b(p+(\W|\d|_)*o+(\W|\d|_)*l+(\W|\d|_)*a+(\W|\d|_)*c*(\W|\d|_)*k*(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S193)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S194) Match: poonani
+match \b(p+(\W|\d|_)*o+(\W|\d|_)*n+(\W|\d|_)*a+(\W|\d|_)*n+(\W|\d|_)*i+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S194)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S195) Match: arschloch
+match \b(a+(\W|\d|_)*r+(\W|\d|_)*s+(\W|\d|_)*c+(\W|\d|_)*h+(\W|\d|_)*l+(\W|\d|_)*o+(\W|\d|_)*c+(\W|\d|_)*h+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S195)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S196) Match: boiolas
+match \b(b+(\W|\d|_)*o+(\W|\d|_)*i+(\W|\d|_)*o+(\W|\d|_)*l+(\W|\d|_)*a+(\W|\d|_)*s+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S196)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S197) Match: buceta
+match \b(b+(\W|\d|_)*u+(\W|\d|_)*c+(\W|\d|_)*e+(\W|\d|_)*t+(\W|\d|_)*a+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S197)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S198) Match: chink
+match \b(c+(\W|\d|_)*h+(\W|\d|_)*i+(\W|\d|_)*n+(\W|\d|_)*k+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S198)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S199) Match: cipa
+match \b(c+(\W|\d|_)*i+(\W|\d|_)*p+(\W|\d|_)*a+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S199)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S200) Match: dirsa
+match \b(d+(\W|\d|_)*i+(\W|\d|_)*r+(\W|\d|_)*s+(\W|\d|_)*a+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S200)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S201) Match: feces
+match \b(f+(\W|\d|_)*e+(\W|\d|_)*c+(\W|\d|_)*i*(\W|\d|_)*e+(\W|\d|_)*s+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S201)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S202) Match: bukkake
+match \b(b+(\W|\d|_)*u+(\W|\d|_)*k+(\W|\d|_)*a+(\W|\d|_)*k+(\W|\d|_)*e*(\W|\d|_)*\w*)
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S202)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S203) Match: Gang Bang
+match \b(g+(\W|\d|_)*a+(\W|\d|_)*n+(\W|\d|_)*g+(\W|\d|_)*b+(\W|\d|_)*a+(\W|\d|_)*n+(\W|\d|_)*g+\w*)
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S203)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S204) Match: sexting, sexted
+match \b(s+(\W|\d|_)*e+(\W|\d|_)*x+(\W|\d|_)*t+(\W|\d|_)*i+(\W|\d|_)*n+(\W|\d|_)*g+(\W|\d|_)*)\b|\b(s+(\W|\d|_)*e+(\W|\d|_)*x+(\W|\d|_)*t+(\W|\d|_)*e+(\W|\d|_)*d+(\W|\d|_)*)\b
+then replace I Love This Filter!
+then console say Blocked &player's Language: (S204)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+then log
+
+# (S205) Match: Open
+#match \b(
+#then replace I Love This Filter!
+#then console say Blocked &player's Language: (S205)
+# O&bptional&bCommand1
+# O&bptional&bCommand2
+# O&bptional&bCommand3
+#then log
+
+# Test filter
+match ^(\!test)$
+then deny
+then console say (Testing Filter with command !test)
+
+# Test filter
+#match !random
+#then replace I Love This Filter!
+#then console say (Testing Filter with command !random)
+
+# Check to see which version is running
+# Type !version in game.
+match ^(\!version)$
+then rewrite &aVersion: 1.5.1-2.3.5-v9.0 3-28-2013 3:05 PM
+then console say (Checking version with command !version)
+
+# Filter's Change Log
+# Type !changelog to see in game.
+match ^(\!changelog)$
+then rewrite Minecraft 1.4.7. Pwnfilter 2.1.4. See File For Details
+then console say (Checking changelog with command !changelog)
+
+# Match: Look for ! at the beinning of a word.
+match ^(\!\w+).*
+ignore string test
+then warn &6Unknown Command, Please Check Spelling And Try Again
+then log
+
+# ---------- Change Log ----------
+# - Version 8.0 -
+#Added Friendly Caps Lock Detection
+#Edited Readme
+#Removed Old Advertising Filters
+#Rearranged Filter and organized into Light & Moderate, and Severe
+#Universal Match Filter
+#Added Advanced Match Filters
+#Shortened Server Language Warning
+#Renumbered All matches into L, M and S
+#Single Letter Spamming Fixed - Reduced false positves
+#Removed the term, "Allow Queen"
+#Removed Colors - Caused too many problems
+#Removed enemy and enemies
+#Removed all work that was not original to EpicATrain for copyright registration.
+#Removed old * commands
+#Added Circumvention Detection
+#Added & Edited Many Words. Total: 306
+#Created New Advertising Filters From Scratch
+#Added Important Section
+#Rewrote Planet Minecraft Filter
+#Rewrote Ask For Powers Filter
+#Rewrote Hate Server Filter
+#Added !opme (this auto bans players)
+#Rewrote Automatic Advertising Filter
+#Added a new letter and word spam filter
+#Added Sections for Optional Commands for each major filter
+#Removed All Unused Code
+#Basically the entire filter has been rewritten.
+#The Next Release Will Focus On Leet Speak.
+# - Version 8.12 -
+#Added Custom Lag Filters
+# - Version 8.15 -
+#Added and Tweaked Advanced Filters: Danm, Dick
+#Fixed numbers before words filter
+#Fixed Dollar Sign Filters
+#Fixed Stop annoying players from asking for admin, mod, etc Filter
+#Placed Copyright Information inside a comment
+#Divided Change Log into Versions
+# - Version 8.17 -
+#Disabled then kill commands until the filter is fixed
+#Attempted to fix the advertising filter
+# - Version 8.19 -
+#Fixed filter S192 - false positive for pack and pay
+#Thinking about making it easier for admins to make changes to the filter.
+#Disabled Numbers End Filter - causing too many problems
+#Happy Valentines day!
+# - Version 8.2 -
+#Added donation link and statement
+#Modified S2-2 to allow an additional variation
+#Moved around a few circumvention filters.
+#Disabled Numbers Begin Filter For Now Until I Design Something Better
+#Replaced Most Randrap Statements with I Love This Filter!
+#Disabled !random filter.
+# - Version 8.21 -
+#Modified L1-2
+# - Version 8.3 -
+#Added a few words
+#Fixed a few then log statements
+# - Version 8.41 -
+#Fixed a butt bug
+#Fixed You are now op thing
+# - Version 8.43 -
+#Adjusted the advertising filter
+#Added warn message to caps lock detection
+#Added warn message to Letter/Word Spam
+#I am the only one awake and all the dogs are snoring...
+#Who Actually Reads These?
+#Added Logging of caps lock detection and letter/word spam
+#Edited all warn messages to add color and style.
+#Added Donation Lines
+# - Version 8.46 -
+#Fixed a bug with the ! commands.
+#Adjusted Advertising Filters
+# - Version 8.47 -
+#Fixed & Tweaked L1-1 Filter
+# - Version 8.5 -
+#Added a Da-the filter
+#Rewrote the Letter/Word Spam Filter
+#Tweaked Caps Lock Warn Wording
+#Removed Warn Message For Letter/Word Spam Filter
+#Made the Letter/Word Spam Filter Always Active
+# - Version 9.0 -
+#Added Single Letter F Filter
+#Changed Experimental Spam Filter
+#Edited Filter To Allow As Soon As
+#Added M54
+#Added Thank You Filter Response
+#Added Hate Filter Response
+#Changed <Word Blocked> To I Love This Filter
+# ---------- End Change Log ----------
+
+# If you have any suggestions, please let me know!   Thank you!
+# Please add EpicATrain to your VIP list on your server!
+
+# ©2013 Addam Waitkus. All rights reserved.

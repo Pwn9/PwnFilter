@@ -1,0 +1,73 @@
+# Default message setups, can be overridden in rules.txt per match.
+# DO NOT remove quotes around messages!
+warnmsg: '&4[&6PwnFilter&4] &4Warned by PwnFilter!'
+kickmsg: '&4[&6PwnFilter&4] &4Kicked by PwnFilter!'
+burnmsg: '&4[&6PwnFilter&4] &4Burned by PwnFilter!'
+killmsg: '&4[&6PwnFilter&4] &4Killed by PwnFilter!'
+
+# Set the level for MATCH/SEND messages
+# Set to 'fine' if you don't want MATCH/SEND events in your main server log
+# NOTE: If you have the "then log" action set for a rule, it will log
+# at level INFO, regardless of the setting here.
+loglevel: info
+
+# Create a PwnFilter.log file in the plugins/PwnFilter directory
+# This file will contain all PwnFilter log messages, regardless of level.
+logfile: true
+
+# Debug mode (high is VERY verbose) (Enable logfile above)
+# NOTE: Changed in 3.0.1.  Now options are:
+# off, low, medium, high
+debug: false
+
+
+# Strip color from chat. Permission to bypass pwnfilter.color or pwnfilter.bypass
+decolor: true
+
+# Filter commands as well as chat true/false
+commandfilter: true
+
+# Filter text applied to signs
+signfilter: false
+
+# Activate item filter (Naming items with Anvil)  **EXPERIMENTAL FEATURE**
+itemfilter: false
+
+# Basic spam filter enabled (chat ONLY)
+spamfilter: false
+
+# Basic spam filter enabled (commands ONLY)
+commandspamfilter: false
+
+# Command White List: Commands to filter, if empty, will filter ALL (except blacklist)
+cmdlist: []
+
+# Command Black List: Commands to never filter
+cmdblist: 
+- tp
+- tpa
+- warp
+- help
+
+#### ADVANCED #####
+# Note: You can also change the priority of event handlers with:
+# priority, cmdpriority and signpriority
+# Changing priority can allow the event handlers to process messages before or after other
+# plugins.  This can sometimes help with plugin conflicts.  You really should know what you
+# are doing before you change these. :)
+
+# Change priority of PlayerListener (chat)
+# priority: lowest #(default)
+
+# Change priority of CommandListener
+# cmdpriority: lowest #(default)
+
+# Change priority of SignListener
+# signpriority: lowest #(default)
+
+# Change priority of ItemListener
+# itempriority: lowest
+
+
+
+

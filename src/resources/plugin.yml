@@ -1,0 +1,57 @@
+main: com.pwn9.PwnFilter.PwnFilter
+name: PwnFilter
+version: ${pwnfilter.version}
+author: tremor77
+description: Complete chat control with the power of RegEx
+website: http://pwn9.com
+softdepend: [Vault]
+
+commands:
+  pfcls:
+    description: Clear screen of all chat globally
+    usage: /<command> 
+    permission: pwnfilter.cls
+    permission-message: You dont have permission for this command
+  pfmute:
+    description: Mute all chat globally
+    usage: /<command> 
+    permission: pwnfilter.mute
+    permission-message: You dont have permission for this command    
+  pfreload:
+    description: Reloads the config of PwnFilter
+    usage: /<command> 
+    permission: pwnfilter.reload
+    permission-message: You don't have permission for this command
+  pfdumpcache:
+    description: Dump the contents of the DataCache
+    usage: /<command>
+    permission: pwnfilter.debug
+    permission-message: You don't have permission for this command
+
+permissions:
+  pwnfilter.*:
+    description: gives all permissions of the PwnFilter
+    default: op
+    children:
+      pwnfilter.reload:
+        description: Gives permission to reload the rules
+      pwnfilter.mute:
+        description: Gives permission to mute all chat and commands globally.
+      pwnfilter.cls:
+        description: Gives permission to clear chat
+      pwnfilter.color:
+        description: Gives permission to use color if color is blocked
+      pwnfilter.bypass:
+        description: Gives permission to bypass all rules
+        children:
+            pwnfilter.bypass.spam:
+                description: Gives permission to bypass spam filter
+            pwnfilter.bypass.chat:
+                description: Gives permission to bypass Chat rules
+            pwnfilter.bypass.commands:
+                description: Gives permission to bypass Command rules
+            pwnfilter.bypass.signs:
+                description: Gives permission to bypass Sign rules
+            pwnfilter.bypass.mute:
+                description: Gives permission to bypass global mute
+

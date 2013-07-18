@@ -1,0 +1,49 @@
+# PwnFilter rules.txt - Define Regular Expression Rules
+# SAMPLE RULES http://dev.bukkit.org/server-mods/pwnfilter/
+# NOTE: ALL MATCHES AUTOMATICALLY IGNORE CASE
+#
+# Rules are applied in the order they are listed in this file.  Using the "then abort" action
+# will stop further rule processing.  So, if you want a rule to take priority over the others,
+# list it first in this file.  If you want a rule to stop further processing, use "then abort"
+# as an action to that rule.
+#
+# Each rule must have one 'match' statement and at least one 'then' statement, everything else is optional.
+#
+# match <regular expression>
+#
+# events <chat,command,sign> (This format only applies to events listed. default = all events)
+# OR
+# events not <chat,command,sign> (This format applies to all events -except- those listed)
+#
+# ignore|require <user|permission|string|command> <string> *(optional)
+# then <replace|rewrite|warn|log|deny|debug|kick|kill|burn|command|console|abort> <string>
+# For more details visit http://dev.bukkit.org/server-mods/pwnfilter/
+# In "then command" statements, you can use &world, &player, &string, or &rawstring
+
+# EXAMPLES
+
+# Replace F Bomb variants with fudge. Also catches ffffuuuccckkk
+match f+u+c+k+|f+u+k+|f+v+c+k+|f+u+q+
+then replace fudge
+then warn Watch your language please
+then log
+
+# Replace a list of naughty words with random word! Let a certain permission swear.
+match cunt|whore|fag|slut|queer|bitch|bastard
+ignore permission permission.node
+then randrep meep|beep|bleep|herp|derp
+
+
+# FIX the .command typo with /command
+# But don't apply this to signs
+match ^\.(?=[a-z]+)
+events not sign
+then replace
+then command
+
+# Fun: rewrite tremor with pretty colors. Only let player tremor77 use it
+# Only do this for chat events
+match \btremor+\b|\btrem+\b
+events chat
+require user tremor77
+then rewrite &bt&cREM&bor&f
