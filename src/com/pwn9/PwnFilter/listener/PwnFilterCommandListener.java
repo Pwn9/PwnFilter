@@ -38,28 +38,31 @@ public class PwnFilterCommandListener implements Listener {
          Boolean filterSpam = plugin.getConfig().getBoolean("commandspamfilter");
          List<String> cmdblist;
          cmdblist = plugin.getConfig().getStringList("cmdblist");
-
+    	
+        // Player has bypass permission, don't filter
     	if (event.getPlayer().hasPermission("pwnfilter.bypass.commands")) {
-			//event.setCancelled(false);
+			event.setCancelled(false);
 			return;
 		}
-    	else if (cmdblist.contains(cmdmessage)) {
-			//event.setCancelled(false);
+    	
+    	// Command is on blacklist, don't filter
+    	if (cmdblist.contains(cmdmessage)) {
+			event.setCancelled(false);
 			return;    				
     	}
-    	else {
-    		if (filterSpam) {
-	        	// Player has spam bypass permission, don't filter
-	        	if (!(event.getPlayer().hasPermission("pwnfilter.bypass.spam"))) {
-			        if (messages.containsKey(event.getPlayer().getName()) && messages.get(event.getPlayer().getName()).equals(event.getMessage())) {
-						event.setCancelled(true);
-						// Could add a warning message here
-						return;
-					}
-					messages.put(event.getPlayer().getName(), event.getMessage());	
-	        	}
-    		}
-    		plugin.filterCommand(event);
-    	}
+        
+        if (filterSpam) {
+        	// Player has spam bypass permission, don't filter
+        	if (!(event.getPlayer().hasPermission("pwnfilter.bypass.spam"))) {
+		        if (messages.containsKey(event.getPlayer().getName()) && messages.get(event.getPlayer().getName()).equals(event.getMessage())) {
+					event.setCancelled(true);
+					// Could add a warning message here
+					return;
+				}
+				messages.put(event.getPlayer().getName(), event.getMessage());	
+        	}
+        }    	
+        
+    	plugin.filterCommand(event);
     }  
 }

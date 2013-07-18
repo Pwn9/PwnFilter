@@ -32,22 +32,20 @@ public class PwnFilterPlayerListener implements Listener {
 	
     public void onPlayerChat(AsyncPlayerChatEvent event) {
 		if (event.getPlayer().hasPermission("pwnfilter.bypass.chat")) {
-			//event.setCancelled(false);
+			event.setCancelled(false);
 			return;
 		}
-		else {
-	        Boolean filterSpam = plugin.getConfig().getBoolean("chatspamfilter");
-	        
-	        if (filterSpam) {
-	        	if (!(event.getPlayer().hasPermission("pwnfilter.bypass.spam"))) {
-			        if (messages.containsKey(event.getPlayer().getName()) && messages.get(event.getPlayer().getName()).equals(event.getMessage())) {
-						event.setCancelled(true);
-						return;
-					}
-					messages.put(event.getPlayer().getName(), event.getMessage());
-	        	}
-	        }
-	    	plugin.filterChat(event);
-		}
+        Boolean filterSpam = plugin.getConfig().getBoolean("chatspamfilter");
+        
+        if (filterSpam) {
+        	if (!(event.getPlayer().hasPermission("pwnfilter.bypass.spam"))) {
+		        if (messages.containsKey(event.getPlayer().getName()) && messages.get(event.getPlayer().getName()).equals(event.getMessage())) {
+					event.setCancelled(true);
+					return;
+				}
+				messages.put(event.getPlayer().getName(), event.getMessage());
+        	}
+        }
+    	plugin.filterChat(event);
     }  
 }
