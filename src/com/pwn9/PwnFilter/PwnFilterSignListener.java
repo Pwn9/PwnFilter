@@ -1,8 +1,6 @@
-package com.pwn9.PwnFilter.listener;
+package com.pwn9.PwnFilter;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
-
-import com.pwn9.PwnFilter.PwnFilter;
 
 
 /**
@@ -17,13 +15,8 @@ public class PwnFilterSignListener implements Listener {
     public PwnFilterSignListener(PwnFilter plugin) {
         this.plugin = plugin;
     }
-    
     // This is the handler
     public void onSignChange(SignChangeEvent event) {
-		if (event.getPlayer().hasPermission("pwnfilter.bypass.signs")) {
-			event.setCancelled(false);
-			return;
-		}
-        plugin.filterSign(event); 
+        plugin.filterSign(event);
     }
 }

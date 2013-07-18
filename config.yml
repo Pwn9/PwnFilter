@@ -1,11 +1,5 @@
-# Chat Filter Priority Configuration, options: lowest,low,normal,high,highest
+# Plugin Priority Configuration, options: lowest,low,normal,high,highest
 priority: lowest
-
-# Command Filter Priority, options: lowest,low,normal,high,highest
-cmdpriority: lowest
-
-# Sign Filter Priority, options: lowest,low,normal,high,highest
-signpriority: lowest
 
 # Default message setups, can be overridden in rules.txt per match, do not remove quotes around messages!
 warnmsg: '&4[&6PwnFilter&4] &4Warned by PwnFilter!'
@@ -19,17 +13,20 @@ logfile: true
 # Strip color from chat. Permission to bypass pwnfilter.color or pwnfilter.bypass
 decolor: true
 
-# Filter commands (helps to filter private messages and emotes)
+# Experimental, filter commands as well as chat true/false
 commandfilter: true
 
-# Filter text applied to signs (experimental)
+# Command Filter Priority, options: lowest,low,normal,high,highest
+cmdpriority: lowest
+
+# Filter text applied to signs
 signfilter: true
 
-# Spam filter for chat (blocks duplicate identical messages)
-chatspamfilter: true
+# Set priority for the onSignChange listener
+signpriority: lowest
 
-# Spam filter for commands (blocks duplicate identical commands - except blacklist)
-commandspamfilter: true
+# Basic spam filter enabled (chat and commands)
+spamfilter: true
 
 # Command White List: Commands to filter, if empty, will filter ALL (except blacklist)
 cmdlist: []
@@ -40,10 +37,3 @@ cmdblist:
 - tpa
 - warp
 - help
-- kick
-- warn
-- ban
-- mute
-- tempban
-- nick
-- at
