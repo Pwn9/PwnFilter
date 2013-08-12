@@ -98,7 +98,7 @@ public class RuleSet {
             }
         }
 
-        if (PwnFilter.debugMode == PwnFilter.DebugModes.high) {
+        if (PwnFilter.debugMode.compareTo(PwnFilter.DebugModes.high) >=0) {
             if (state.pattern != null) {
                 PwnFilter.logger.finer("Debug last match: " + state.pattern.pattern());
                 PwnFilter.logger.finer("Debug original: " + state.getOriginalMessage().getColoredString());
@@ -118,9 +118,7 @@ public class RuleSet {
         }
 
         for (String s : state.getLogMessages()) {
-            if (state.log) {
-                PwnFilter.logger.info(s);
-            } else if (PwnFilter.debugMode.compareTo(PwnFilter.DebugModes.low) >= 0) {
+            if (state.log || PwnFilter.debugMode.compareTo(PwnFilter.DebugModes.low) >= 0) {
                 PwnFilter.logger.log(plugin.ruleLogLevel,s);
             }
         }

@@ -3,10 +3,10 @@ package com.pwn9.PwnFilter.rules.action;
 import com.pwn9.PwnFilter.FilterState;
 
 /**
- * This action stops processing of any more rules.
+ * Log this event.
  */
 @SuppressWarnings("UnusedDeclaration")
-public class Actionabort implements Action {
+public class Actionlog implements Action {
 
     public void init(String s)
     {
@@ -14,8 +14,7 @@ public class Actionabort implements Action {
     }
 
     public boolean execute(final FilterState state ) {
-        state.stop = true;
-        state.addLogMessage("<Abort> Not processing more rules.");
+        state.log = true;
         return true;
     }
 }

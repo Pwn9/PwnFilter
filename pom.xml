@@ -39,7 +39,7 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.5.2-R1.0</version>
+            <version>1.6.1-R0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>net.milkbowl.vault</groupId>
@@ -239,7 +239,5 @@
     <properties>
         <powermock.version>1.5</powermock.version>
         <easymock.version>3.1</easymock.version>
-        <bukkit.version>1.5.1-R0.1-SNAPSHOT</bukkit.version>
-        <vault.version>1.2.26-SNAPSHOT</vault.version>
     </properties>
 </project>

@@ -114,13 +114,6 @@ public class PwnFilter extends JavaPlugin {
         try {
             Metrics metrics = new Metrics(this);
 
-            metrics.addCustomData(new Metrics.Plotter("Total Number of Server Rules") {
-                @Override
-                public int getValue() {
-                    return ruleset.ruleCount();
-                }
-            });
-
             Metrics.Graph graph = metrics.createGraph("Rules by Event");
 
             for (final EventType r : EventType.values()) {
