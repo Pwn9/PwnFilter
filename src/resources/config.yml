@@ -60,7 +60,7 @@ notifyperm: pwnfilter.admin
 # are doing before you change these. :)
 
 # Change priority of PlayerListener (chat)
-# priority: lowest #(default)
+# chatpriority: lowest #(default)
 
 # Change priority of CommandListener
 # cmdpriority: lowest #(default)

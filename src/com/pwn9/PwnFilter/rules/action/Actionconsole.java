@@ -19,7 +19,12 @@ public class Actionconsole implements Action {
     public boolean execute(final FilterState state ) {
         String cmd = Patterns.replaceVars(command, state);
         state.addLogMessage("Sending console command: " + cmd);
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
+        Bukkit.getScheduler().runTask(state.plugin, new BukkitRunnable() {
+            @Override
+            public void run() {
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
+            }
+        });
         return true;
     }
 }
