@@ -5,6 +5,7 @@ import com.pwn9.PwnFilter.PwnFilter;
 import com.pwn9.PwnFilter.rules.action.Action;
 import com.pwn9.PwnFilter.rules.action.ActionFactory;
 import com.pwn9.PwnFilter.util.Patterns;
+import com.pwn9.PwnFilter.util.LimitedRegexCharSequence;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -45,10 +46,17 @@ public class Rule {
         if (PwnFilter.debugMode.compareTo(PwnFilter.DebugModes.high) >= 0) {
             PwnFilter.logger.info("Testing Pattern: " + pattern.toString() + " on string: " + state.message.getPlainString());
         }
-            final Matcher matcher = pattern.matcher(state.message.getPlainString());
 
+            LimitedRegexCharSequence limitedRegexCharSequence = new LimitedRegexCharSequence(state.message.getPlainString(),1000);
+            final Matcher matcher = pattern.matcher(limitedRegexCharSequence);
         // If we don't match, return immediately with the original message
-        if (!matcher.find()) return false;
+        try {
+            if (!matcher.find()) return false;
+        } catch (RuntimeException ex) {
+            PwnFilter.logger.severe("Regex match timed out! Regex: " + pattern.toString());
+            PwnFilter.logger.severe("Failed string was: " + limitedRegexCharSequence);
+        }
+
         state.pattern = pattern;
 
         // If Match, log it and then check any conditions.

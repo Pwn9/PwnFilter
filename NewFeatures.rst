@@ -146,12 +146,14 @@ with a given permission.  Eg:
 
 Points System
 -------------
+
 New action: then points <##>
+
 New config: warning thresholds. drain rate
 
 Idea:
 
-Think of a bucket with holes in the bottom, and two lines on it::
+Think of a bucket with holes in the bottom, and multiple lines on it::
 
 
   \         / -- threshold3
@@ -230,6 +232,7 @@ Web-based configuration. (Drag and drop with modals for config)
 Name matcher.  Basically, a special "match" rule that would detect the name
 of an online player. eg: matchplayer
 
-Name filter: apply rules to player names in onPlayerJoin event.  If player has offensive name, then take action.
+Name filter: apply rules to player names in onPlayerJoin event.  If player
+has offensive name, then take action.
 
 Auto-updater
