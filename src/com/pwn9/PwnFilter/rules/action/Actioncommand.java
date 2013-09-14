@@ -20,20 +20,26 @@ public class Actioncommand implements Action {
     public boolean execute(final FilterState state ) {
         state.cancel = true;
         final String cmd;
-        if (!command.isEmpty()) {
-            cmd = Patterns.replaceVars(command, state);
-            state.addLogMessage("Helped " + state.playerName + " execute command: " + cmd);
-        } else {
-            cmd = state.message.getColoredString();
-        }
-        state.addLogMessage("Helped " + state.playerName + " execute command: " + cmd);
-        Bukkit.getScheduler().runTask(state.plugin, new BukkitRunnable() {
-            @Override
-            public void run() {
-                state.player.chat("/" + cmd);
+        if (state.getPlayer() != null ) {
+            if (!command.isEmpty()) {
+                cmd = Patterns.replaceVars(command, state);
+                state.addLogMessage("Helped " + state.playerName + " execute command: " + cmd);
+            } else {
+                cmd = state.message.getColoredString();
             }
-        });
+            state.addLogMessage("Helped " + state.playerName + " execute command: " + cmd);
+            Bukkit.getScheduler().runTask(state.plugin, new BukkitRunnable() {
+                @Override
+                public void run() {
+                    state.getPlayer().chat("/" + cmd);
+                }
+            });
 
-        return true;
+            return true;
+        } else {
+            state.addLogMessage("Could not execute command as non-player.");
+            state.setCancelled(true);
+            return false;
+        }
     }
 }

@@ -22,10 +22,13 @@ import java.util.regex.Pattern;
  * cancel: If true, this event will be set Cancelled (if possible)
  *
  */
+
+//TODO: Make all this stuff private and create getters/setters
+
 public class FilterState {
     private final ColoredString originalMessage; // Original message
     public final PwnFilter plugin; // Which plugin is this state attached to?
-    public final Player player; // Player that this event is connected to.
+    private final Player player; // Player that this event is connected to.
     public final String playerName,playerWorldName;
     public final PwnFilter.EventType eventType;
     public ColoredString message; // Modified message string
@@ -52,8 +55,16 @@ public class FilterState {
         message = new ColoredString(m);
         messageLen = originalMessage.length();
         player = p;
-        playerName = PwnFilter.dataCache.getPlayerName(p);
-        playerWorldName = PwnFilter.dataCache.getPlayerWorld(p);
+        if (p != null) {
+            playerName = PwnFilter.dataCache.getPlayerName(p);
+        } else {
+            playerName = "*CONSOLE*";
+        }
+        if (p != null) {
+            playerWorldName = PwnFilter.dataCache.getPlayerWorld(p);
+        } else {
+            playerWorldName = "";
+        }
         plugin = pl;
         eventType = et;
     }
@@ -79,8 +90,25 @@ public class FilterState {
     }
 
     public boolean playerHasPermission(String perm) {
-        return PwnFilter.dataCache.hasPermission(player,perm);
+        if (player != null) {
+            return PwnFilter.dataCache.hasPermission(player,perm);
+        } else {
+            return false;
+        }
     }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public boolean isCancelled() {
+        return cancel;
+    }
+
+    public void setCancelled(boolean cancel) {
+        this.cancel = cancel;
+    }
+
     /**
      *
      * @return a new Instance of ColouredString with a copy of the originalMessage.

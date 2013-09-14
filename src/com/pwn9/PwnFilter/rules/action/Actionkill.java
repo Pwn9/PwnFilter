@@ -19,13 +19,15 @@ public class Actionkill implements Action {
     }
 
     public boolean execute(final FilterState state ) {
-        state.plugin.killedPlayers.put(state.player, state.playerName + " " + messageString);
+        if ( state.getPlayer() == null ) return false;
+
+        state.plugin.killedPlayers.put(state.getPlayer(), state.playerName + " " + messageString);
         state.addLogMessage("Killed by Filter: " + state.playerName + " " + messageString);
 
         Bukkit.getScheduler().runTask(state.plugin, new BukkitRunnable() {
             @Override
             public void run() {
-                state.player.setHealth(0);
+                state.getPlayer().setHealth(0);
             }
         });
         return true;

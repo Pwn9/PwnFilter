@@ -35,6 +35,9 @@ public class Actionfine implements Action {
     }
 
     public boolean execute(final FilterState state ) {
+
+        if (state.getPlayer() == null) return false;
+
         if (PwnFilter.economy != null ) {
             EconomyResponse resp = PwnFilter.economy.withdrawPlayer(state.playerName,fineAmount);
             if (resp.transactionSuccess()) {
@@ -47,7 +50,7 @@ public class Actionfine implements Action {
             Bukkit.getScheduler().runTask(state.plugin, new BukkitRunnable() {
                 @Override
                 public void run() {
-                    state.player.sendMessage(messageString);
+                    state.getPlayer().sendMessage(messageString);
                 }
             });
 

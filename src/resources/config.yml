@@ -39,6 +39,9 @@ spamfilter: false
 # Basic spam filter enabled (commands ONLY)
 commandspamfilter: false
 
+# Console Filter -- Filter commands entered on console (EXPERIMENTAL)
+consolefilter: false
+
 # Command White List: Commands to filter, if empty, will filter ALL (except blacklist)
 cmdlist: []
 

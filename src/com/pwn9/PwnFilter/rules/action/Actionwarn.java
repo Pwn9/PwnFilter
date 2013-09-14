@@ -19,12 +19,13 @@ public class Actionwarn implements Action {
     }
 
     public boolean execute(final FilterState state ) {
+        if ( state.getPlayer() == null ) return false;
 
         state.addLogMessage("Warned " + state.playerName + ": " + messageString);
         Bukkit.getScheduler().runTask(state.plugin, new BukkitRunnable() {
             @Override
             public void run() {
-                state.player.sendMessage(messageString);
+                state.getPlayer().sendMessage(messageString);
             }
         });
 

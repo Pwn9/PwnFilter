@@ -20,11 +20,13 @@ public class Actionkick implements Action {
 
     public boolean execute(final FilterState state ) {
 
+        if (state.getPlayer() == null ) return false;
+
         state.addLogMessage("Kicked " + state.playerName + ": " + messageString);
         Bukkit.getScheduler().runTask(state.plugin, new BukkitRunnable() {
             @Override
             public void run() {
-                state.player.kickPlayer(messageString);
+                state.getPlayer().kickPlayer(messageString);
             }
         });
 

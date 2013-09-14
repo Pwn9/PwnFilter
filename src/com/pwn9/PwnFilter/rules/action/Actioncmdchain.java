@@ -23,18 +23,23 @@ public class Actioncmdchain implements Action {
         state.cancel = true;
         String cmds = Patterns.replaceVars(commands, state);
         String cmdchain[] = cmds.split("\\|");
-        for (final String cmd : cmdchain) {
-            state.addLogMessage("Helped " + state.playerName + " execute command: " + cmd);
 
-            Bukkit.getScheduler().runTask(state.plugin, new BukkitRunnable() {
-                @Override
-                public void run() {
-                    state.player.chat("/" + cmd);
-                }
-            });
+        if (state.getPlayer() != null ) {
+            for (final String cmd : cmdchain) {
+                state.addLogMessage("Helped " + state.playerName + " execute command: " + cmd);
+
+                Bukkit.getScheduler().runTask(state.plugin, new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        state.getPlayer().chat("/" + cmd);
+                    }
+                });
+            }
+            return true;
+        } else {
+            state.addLogMessage("Could not execute cmdchain on non-player.");
+            state.setCancelled(true);
+            return false;
         }
-
-
-        return true;
     }
 }

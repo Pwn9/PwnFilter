@@ -53,6 +53,7 @@ public class PwnFilter extends JavaPlugin {
         SIGN,
         COMMAND,
         ITEM,
+        CONSOLE
     }
     public enum DebugModes {
         off, // Off
@@ -67,7 +68,7 @@ public class PwnFilter extends JavaPlugin {
     public static Logger logger;
     public Level ruleLogLevel;
     FileHandler logfileHandler;
-    public static EventPriority cmdPriority, chatPriority, signPriority, invPriority;
+    public static EventPriority cmdPriority, chatPriority, signPriority, invPriority, consolePriority;
     public static HashMap<Player, String> lastMessage = new HashMap<Player, String>();
     public static EnumSet<EventType> enabledEvents = EnumSet.allOf(EventType.class); // The list of active Events
     public static Economy economy = null;
@@ -147,11 +148,11 @@ public class PwnFilter extends JavaPlugin {
         if (enabledEvents.contains(EventType.COMMAND)) new PwnFilterCommandListener(this);
         if (enabledEvents.contains(EventType.SIGN)) new PwnFilterSignListener(this);
         if (enabledEvents.contains(EventType.ITEM)) new PwnFilterInvListener(this);
+        if (enabledEvents.contains(EventType.CONSOLE)) new PwnFilterServerCommandListener(this);
 
     }
 
     public void configurePlugin() {
-
 
 
         if (getConfig().getBoolean("logfile")) {
@@ -213,6 +214,14 @@ public class PwnFilter extends JavaPlugin {
                         enabledEvents.add(EventType.ITEM);
                     }
                     break;
+                case CONSOLE:
+                    if(getConfig().getBoolean("consolefilter",false)) {
+                        consolePriority = EventPriority.valueOf(getConfig()
+                                .getString("consolepriority","LOWEST").toUpperCase());
+                        enabledEvents.add(EventType.CONSOLE);
+                    }
+                    break;
+
             }
 
         }

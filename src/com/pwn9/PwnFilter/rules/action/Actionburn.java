@@ -22,15 +22,19 @@ public class Actionburn implements Action {
     }
 
     public boolean execute(final FilterState state ) {
-        Bukkit.getScheduler().runTask(state.plugin, new BukkitRunnable() {
-            @Override
-            public void run() {
-                state.player.setFireTicks(5000);
-                state.player.sendMessage(messageString);
-            }
-        });
+        if (state.getPlayer() != null ) {
+            Bukkit.getScheduler().runTask(state.plugin, new BukkitRunnable() {
+                @Override
+                public void run() {
+                    state.getPlayer().setFireTicks(5000);
+                    state.getPlayer().sendMessage(messageString);
+                }
+            });
 
-        state.addLogMessage("Burned " + state.playerName + ": " + messageString);
-        return true;
+            state.addLogMessage("Burned " + state.playerName + ": " + messageString);
+            return true;
+        }
+        return false;
+
     }
 }
