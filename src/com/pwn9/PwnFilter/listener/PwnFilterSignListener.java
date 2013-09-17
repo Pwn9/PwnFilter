@@ -88,7 +88,7 @@ public class PwnFilterSignListener implements Listener {
 
         if (state.cancel) {
             event.setCancelled(true);
-            state.player.sendMessage("Your sign broke, there must be something wrong with it.");
+            state.getPlayer().sendMessage("Your sign broke, there must be something wrong with it.");
             state.addLogMessage("SIGN " + state.playerName + " sign text: "
                     + state.getOriginalMessage().getColoredString());
         }
