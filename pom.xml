@@ -113,7 +113,7 @@
         <extensions>
             <extension>
                 <groupId>org.apache.maven.wagon</groupId>
-                <artifactId>wagon-ssh</artifactId>
+                <artifactId>wagon-ssh-external</artifactId>
                 <version>2.4</version>
             </extension>
         </extensions>
@@ -211,7 +211,7 @@
         </plugins>
     </build>
     <scm>
-        <connection>scm:git:https://github.com/ptoal/PwnFilter.git</connection>
+        <connection>scm:git:ssh://github.com/ptoal/PwnFilter.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/ptoal/PwnFilter.git</developerConnection>
       <tag>HEAD</tag>
   </scm>
