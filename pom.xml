@@ -226,12 +226,12 @@
         <repository>
             <id>pwnfilter-repo</id>
             <name>PwnFilter Release</name>
-            <url>scp://ci.toal.ca/home/tkflight/domains/toal.ca/public_html/repo/</url>
+            <url>scpexe://ci.toal.ca/home/tkflight/domains/toal.ca/public_html/repo/</url>
         </repository>
         <snapshotRepository>
             <id>pwnfilter-repo</id>
             <name>PwnFilter Snapshot</name>
-            <url>scp://ci.toal.ca/home/tkflight/domains/toal.ca/public_html/repo/snapshots</url>
+            <url>scpexe://ci.toal.ca/home/tkflight/domains/toal.ca/public_html/repo/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
 
