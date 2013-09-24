@@ -21,9 +21,7 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -47,6 +45,9 @@ public class PwnFilter extends JavaPlugin {
     public static Boolean pwnMute = false;
     public List<String> cmdlist;
     public List<String> cmdblist;
+    // A map of RuleSets by name;
+    private Map<String, RuleSet> ruleSets;
+
 
     public enum EventType {
         CHAT,
@@ -66,7 +67,7 @@ public class PwnFilter extends JavaPlugin {
     public static DebugModes debugMode;
     public ConcurrentHashMap<Player, String> killedPlayers = new ConcurrentHashMap<Player,String>();
     public static Logger logger;
-    public Level ruleLogLevel;
+    public static Level ruleLogLevel;
     FileHandler logfileHandler;
     public static EventPriority cmdPriority, chatPriority, signPriority, invPriority, consolePriority;
     public static HashMap<Player, String> lastMessage = new HashMap<Player, String>();
@@ -95,9 +96,8 @@ public class PwnFilter extends JavaPlugin {
         // Set up a Vault economy for actions like "fine" (optional)
         setupEconomy();
 
-        // Create a new RuleSet object, loading in the rulesFile
-        ruleset = new RuleSet(this);
-        ruleset.init(getRulesFile());
+        // Initialize the ruleSets map.  This holds all the ruleSets that we have active.
+        ruleSets = new TreeMap<String, RuleSet>();
 
         // Start the dataCache
         dataCache = new DataCache(this, ruleset.permList);
@@ -117,11 +117,11 @@ public class PwnFilter extends JavaPlugin {
 
             Metrics.Graph graph = metrics.createGraph("Rules by Event");
 
-            for (final EventType r : EventType.values()) {
-                graph.addPlotter(new Metrics.Plotter(r.toString()) {
+            for (final String ruleSetName : ruleSets.keySet()) {
+                graph.addPlotter(new Metrics.Plotter(ruleSetName) {
                     @Override
                     public int getValue() {
-                        return ruleset.ruleCount(r); // Number of rules for this event type
+                        return ruleSets.get(ruleSetName).ruleCount(); // Number of rules for this event type
                     }
                 });
             }
@@ -241,7 +241,6 @@ public class PwnFilter extends JavaPlugin {
 
         // Shutdown the DataCache
         dataCache.stop();
-        dataCache = null;
 
     }
 
@@ -294,16 +293,19 @@ public class PwnFilter extends JavaPlugin {
 
             reloadConfig();
             configurePlugin();
+            logger.config("Reloaded config.yml as requested by " + sender.getName());
 
-            ruleset = new RuleSet(this);
-            if (ruleset.init(getRulesFile())) {
-                logger.config("rules.txt and config.yml reloaded by " + sender.getName());
-            } else {
-                logger.warning("failed to reload rules.txt as requested by " + sender.getName());
+            for (RuleSet ruleSet : ruleSets.values()) {
+                if (ruleset.loadConfigFile()) {
+                    logger.config(ruleset.getConfigName() + " reloaded by " + sender.getName());
+                } else {
+                    logger.warning("failed to reload" + ruleset.getConfigName() + " as requested by " + sender.getName());
+                }
             }
 
+
             // Start the DataCache again
-            dataCache = new DataCache(this, ruleset.permList);
+            dataCache.start();
 
             // Re-register our listeners
             registerListeners();
@@ -341,6 +343,9 @@ public class PwnFilter extends JavaPlugin {
         return false;
     }
 
+    public static Level getRuleLogLevel() {
+        return ruleLogLevel;
+    }
 
     /**
      * Selects string from the first not null of: message, default from config.yml or null.
@@ -360,11 +365,11 @@ public class PwnFilter extends JavaPlugin {
         return retVal.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
     }
 
-    private File getRulesFile() {
+    public File getRulesFile(String fname) {
 
         File dataFolder = getDataFolder();
         File rulesFile;
-        String fname = "rules.txt";
+
 
         // Ensure that directory exists
         if(!dataFolder.exists()) {

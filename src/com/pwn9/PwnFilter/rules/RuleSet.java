@@ -8,8 +8,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EnumMap;
+import java.util.Set;
+import java.util.TreeSet;
 
 
 /**
@@ -24,32 +24,25 @@ import java.util.EnumMap;
  *
  *
  * TODO: More documentation
- * TODO: Implement ObuShutTheHellUp style functionality.
  *
  * User: ptoal
  * Date: 13-04-05
  * Time: 12:38 PM
  */
 
-public class RuleSet {
-    public final PwnFilter plugin;
-    private ArrayList<Rule> ruleChain = new ArrayList<Rule>();
-    public ArrayList<String> permList = new ArrayList<String>();
+public class RuleSet implements ChainEntry {
+    private ArrayList<ChainEntry> ruleChain = new ArrayList<ChainEntry>();
+    private final String configFile;
+    private PwnFilter plugin;
 
-    // EnumMap that contains a ruleChain (also ArrayList) for each type of event.
-    private EnumMap<PwnFilter.EventType,ArrayList<Rule>> eventChain;
-
-    public RuleSet(final PwnFilter p) {
-        plugin = p;
-
-        eventChain = new EnumMap<PwnFilter.EventType,ArrayList<Rule>>(PwnFilter.EventType.class);
-
-        for (PwnFilter.EventType e : PwnFilter.EventType.values()) {
-            eventChain.put(e, new ArrayList<Rule>());
-        }
+    public RuleSet(PwnFilter plugin, String configFile) {
+        this.plugin = plugin;
+        this.configFile = configFile;
     }
 
-    public boolean init(final File f) {
+    public boolean loadConfigFile() {
+        final File f = plugin.getRulesFile(configFile);
+        ruleChain = new ArrayList<ChainEntry>();
 
         try {
             return loadRules(new FileReader(f));
@@ -58,14 +51,11 @@ public class RuleSet {
         }
     }
 
+    public String getConfigName() { return configFile ;}
+
     public int ruleCount() {
         return ruleChain.size();
     }
-
-    public int ruleCount(PwnFilter.EventType r) {
-        return eventChain.get(r).size();
-    }
-
 
     /**
      * Iterate over the ruleChain in order, checking the Rule pattern against the
@@ -76,23 +66,21 @@ public class RuleSet {
      * (possibly modified) message against subsequent rules.
      */
 
-    public void runFilter(FilterState state) {
+    public boolean apply(FilterState state) {
 
         PwnFilter.EventType eventType = state.eventType;
 
-        ArrayList<Rule> chain = eventChain.get(eventType);
-
-        if (chain == null) {
+        if (ruleChain == null) {
             PwnFilter.logger.severe("ruleChain not found.  Please report this as a bug.");
-            return;
+            return false;
         }
 
         if (PwnFilter.debugMode.compareTo(PwnFilter.DebugModes.medium) >= 0) {
               PwnFilter.logger.finer("Event: " + state.eventType.toString() + " message: " + state.getOriginalMessage());
         }
 
-        for (Rule rule : chain) {
-            rule.apply(state);
+        for (ChainEntry entry : ruleChain) {
+            entry.apply(state);
             if (state.stop) {
                 break;
             }
@@ -119,23 +107,15 @@ public class RuleSet {
 
         for (String s : state.getLogMessages()) {
             if (state.log || PwnFilter.debugMode.compareTo(PwnFilter.DebugModes.low) >= 0) {
-                PwnFilter.logger.log(plugin.ruleLogLevel,s);
+                PwnFilter.logger.log(PwnFilter.getRuleLogLevel(),s);
             }
         }
-
+        return true;
     }
 
     public boolean append(Rule r) {
         if (r.isValid()) {
-            ruleChain.add(r); // Add the Rule to the master chain
-            for (PwnFilter.EventType e : r.events ) {
-                if (PwnFilter.enabledEvents.contains(e)) {
-                    eventChain.get(e).add(r);
-                } else if (PwnFilter.debugMode.compareTo(PwnFilter.DebugModes.low) >= 0) {
-                    PwnFilter.logger.fine("Unable to add rule: " + r.toString() + " to the: " + e.toString()
-                            + " chain, as that filter is not enabled in the config.yml");
-                }
-            }
+            ruleChain.add(r); // Add the Rule to this chain
             return true;
         } else return false;
     }
@@ -201,25 +181,28 @@ public class RuleSet {
 
             PwnFilter.logger.config("Read " + count.toString() + " rules from file.  Installed " + ruleChain.size() + " valid rules.");
             StringBuilder sb = new StringBuilder();
-            for (PwnFilter.EventType e : PwnFilter.enabledEvents) {
-                sb.append(e.toString()).append(" Rules:").append(eventChain.get(e).size()).append(" ");
-            }
             PwnFilter.logger.config(sb.toString());
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        // Add all permissions to the list of those we are interested in for the DataCache
-        for (Rule r : ruleChain ) {
-            for (Condition c : r.conditions) {
-                if (c.type == Condition.CondType.permission) {
-                    Collections.addAll(permList, c.parameters.split("\\|"));
-                }
-            }
-        }
-
         return !ruleChain.isEmpty();
     }
 
+    public boolean isValid() {
+        return !ruleChain.isEmpty();
+    }
+
+    @Override
+    public Set<String> getPermissionList() {
+        TreeSet<String> permList = new TreeSet<String>();
+
+        for (ChainEntry r : ruleChain ) {
+            permList.addAll(r.getPermissionList());
+        }
+
+        return permList;
+
+    }
 }

@@ -5,9 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.Plugin;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
@@ -21,9 +19,10 @@ public class DataCache {
     public final static int runEveryTicks = 20;
 
     // Permissions we are interested in caching
-    protected ArrayList<String> permSet = new ArrayList<String>();
+    protected Set<String> permSet = new TreeSet<String>();
 
     //private
+    private final Plugin plugin;
     private int taskId;
     private ConcurrentHashMap<Player,String> playerName;
     private ConcurrentHashMap<Player,String> playerWorld;
@@ -34,19 +33,15 @@ public class DataCache {
         playerName = new ConcurrentHashMap<Player,String>();
         playerWorld = new ConcurrentHashMap<Player,String>();
         playerPermissions = new ConcurrentHashMap<Player,HashSet<String>>();
+        this.plugin = plugin;
 
         for (Permission p : plugin.getDescription().getPermissions()) {
             permSet.add(p.getName());
         }
         // Add any extra permissions of interest
-        permSet.addAll(perms);
+        addPermissions(perms);
 
-        taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
-            @Override
-            public void run() {
-                updateCache();
-            }
-        },0,DataCache.runEveryTicks);
+        start();
     }
 
     private void cachePlayerPermissions(Player p) {
@@ -61,6 +56,9 @@ public class DataCache {
         playerPermissions.put(p,playerPerms);
     }
 
+    public void addPermissions(ArrayList<String> permissions) {
+        permSet.addAll(permissions);
+    }
 
     public boolean hasPermission(Player p, String s) {
         HashSet<String> perms = playerPermissions.get(p);
@@ -114,6 +112,16 @@ public class DataCache {
             cachePlayerPermissions(player);
 
         }
+    }
+
+
+    public void start() {
+        taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
+            @Override
+            public void run() {
+                updateCache();
+            }
+        },0,DataCache.runEveryTicks);
     }
 
     public void stop() {

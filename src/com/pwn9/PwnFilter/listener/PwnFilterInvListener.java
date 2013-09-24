@@ -62,7 +62,7 @@ public class PwnFilterInvListener implements Listener {
 
             FilterState state = new FilterState(plugin, message, player, PwnFilter.EventType.ITEM);
 
-            PwnFilter.ruleset.runFilter(state);
+            PwnFilter.ruleset.apply(state);
             if (state.cancel) event.setCancelled(true);
 
             // Only update the message if it has been changed.

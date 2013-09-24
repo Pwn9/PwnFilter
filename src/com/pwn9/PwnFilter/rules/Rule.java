@@ -4,10 +4,10 @@ import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.PwnFilter;
 import com.pwn9.PwnFilter.rules.action.Action;
 import com.pwn9.PwnFilter.rules.action.ActionFactory;
-import com.pwn9.PwnFilter.util.Patterns;
 import com.pwn9.PwnFilter.util.LimitedRegexCharSequence;
+import com.pwn9.PwnFilter.util.Patterns;
 
-import java.util.ArrayList;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,19 +17,19 @@ import java.util.regex.Pattern;
  * <P>Each Rule has a single match Pattern, an ArrayList of {@link Condition}'s and an ArrayList of {@link com.pwn9.PwnFilter.rules.action.Action}'s</P>
  * TODO: Finish docs
  */
-public class Rule {
+public class Rule implements ChainEntry {
     final Pattern pattern;
 //    String name; // TODO: Give rules names for logs and troubleshooting
     ArrayList<Condition> conditions = new ArrayList<Condition>();
     ArrayList<Action> actions = new ArrayList<Action>();
-    ArrayList<PwnFilter.EventType> events = new ArrayList<PwnFilter.EventType>();
+    ArrayList<String> includeEvents = new ArrayList<String>();
+    ArrayList<String> excludeEvents = new ArrayList<String>();
 
         /* Constructors */
 
     // All rules must have a matchStr, hence no parameter-less constructor.
     public Rule(String matchStr) {
         this.pattern = Patterns.compilePattern(matchStr);
-        events.addAll(PwnFilter.enabledEvents); // Add to all enabled events by default.
     }
 
     /* Methods */
@@ -82,6 +82,10 @@ public class Rule {
         return true;
     }
 
+    public List<Condition> getConditions() {
+        return conditions;
+    }
+
     /**
      * When we are building a new rule chain (eg, by reloading a file), this routine parses
      * out a line (eg: "then replace") and adds it to this rule.
@@ -107,21 +111,15 @@ public class Rule {
         }
         else if (command.matches("events")) {
             String[] parts = parameterString.split("[\\s|,]");
-            try {
-                if (parts[0].matches("not")) {
-                    for (int i = 1; i < parts.length ; i++ ) {
-                        events.remove(PwnFilter.EventType.valueOf(parts[i].toUpperCase()));
-                    }
-                } else {
-                    events.clear();
-                    for (String event : parts ) {
-                        events.add(PwnFilter.EventType.valueOf(event.toUpperCase()));
-                    }
+
+            if (parts[0].matches("not")) {
+                for (int i = 1; i < parts.length ; i++ ) {
+                    excludeEvents.add(parts[i].toUpperCase());
                 }
-            } catch (IllegalArgumentException e ) {
-                return false;
-            } catch (NullPointerException e) {
-                return false;
+            } else {
+                for (String event : parts ) {
+                    includeEvents.add(event.toUpperCase());
+                }
             }
 
             return true;
@@ -145,5 +143,18 @@ public class Rule {
 
     public String toString() {
         return pattern.toString();
+    }
+
+    @Override
+    public Set<String> getPermissionList() {
+        TreeSet<String> permList = new TreeSet<String>();
+
+        for (Condition c : conditions) {
+            if (c.type == Condition.CondType.permission) {
+                Collections.addAll(permList, c.parameters.split("\\|"));
+            }
+        }
+
+        return permList;
     }
 }

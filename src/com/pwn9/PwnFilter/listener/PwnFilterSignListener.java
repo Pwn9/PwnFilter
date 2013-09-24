@@ -54,7 +54,7 @@ public class PwnFilterSignListener implements Listener {
 
         FilterState state = new FilterState(plugin, signLines, event.getPlayer(), PwnFilter.EventType.SIGN);
 
-        PwnFilter.ruleset.runFilter(state);
+        PwnFilter.ruleset.apply(state);
 
         if (state.messageChanged()){
             // TODO: Can colors be placed on signs?  Wasn't working. Find out why.
