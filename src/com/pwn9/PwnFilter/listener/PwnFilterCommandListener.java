@@ -4,39 +4,69 @@ import com.pwn9.PwnFilter.DataCache;
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.PwnFilter;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.PluginManager;
 
+import java.util.List;
+
 /**
 * Apply the filter to commands.
 */
 
-public class PwnFilterCommandListener implements Listener {
+public class PwnFilterCommandListener implements FilterListener {
     private final PwnFilter plugin;
+    private boolean active;
+    final static String ShortName = "COMMAND";
+
+    public List<String> cmdlist;
+    public List<String> cmdblist;
+
 
     public PwnFilterCommandListener(PwnFilter p) {
 	    plugin = p;
-        PluginManager pm = Bukkit.getPluginManager();
-
-        pm.registerEvent(PlayerCommandPreprocessEvent.class, this, PwnFilter.cmdPriority,
-                new EventExecutor() {
-                    public void execute(Listener l, Event e) { onPlayerCommandPreprocess((PlayerCommandPreprocessEvent)e); }
-                },
-                plugin);
-        PwnFilter.logger.info("Activated CommandListener with Priority Setting: " + PwnFilter.cmdPriority.toString());
-
     }
 
-    public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
+    public String getShortName() { return ShortName ;}
+
+    public void setCmdlists(List<String> whiteList, List<String> blackList) {
+        cmdlist = whiteList;
+        cmdblist = blackList;
+    }
+
+    public void activate(Configuration config) {
+        EventPriority priority = EventPriority.valueOf(config.getString("chatpriority", "LOWEST").toUpperCase());
+        if (!active) {
+            PluginManager pm = Bukkit.getPluginManager();
+            pm.registerEvent(PlayerCommandPreprocessEvent.class, this, priority,
+                    new EventExecutor() {
+                public void execute(Listener l, Event e) { eventProcessor((PlayerCommandPreprocessEvent) e); }
+            },
+            plugin);
+            active = true;
+            PwnFilter.logger.info("Activated CommandListener with Priority Setting: " + priority.toString());
+        }
+    }
+
+    public void deactivate() {
+        if (active) {
+            HandlerList.unregisterAll(this);
+            active = false;
+        }
+    }
+
+    public void eventProcessor(PlayerCommandPreprocessEvent event) {
 
         if (event.isCancelled()) return;
 
         final Player player = event.getPlayer();
-        DataCache dCache = PwnFilter.dataCache;
+        DataCache dCache = DataCache.getInstance();
 
         if (dCache.hasPermission(player, "pwnfilter.bypass.commands")) return;
 
@@ -45,8 +75,8 @@ public class PwnFilterCommandListener implements Listener {
         //Gets the actual command as a string
         String cmdmessage = message.substring(1).split(" ")[0];
 
-        if (!plugin.cmdlist.isEmpty() && !plugin.cmdlist.contains(cmdmessage)) return;
-        if (plugin.cmdblist.contains(cmdmessage)) return;
+        if (!cmdlist.isEmpty() && !cmdlist.contains(cmdmessage)) return;
+        if (cmdblist.contains(cmdmessage)) return;
 
         // Global mute
         if ((PwnFilter.pwnMute) && (!(dCache.hasPermission(player, "pwnfilter.bypass.mute")))) {
@@ -66,8 +96,7 @@ public class PwnFilterCommandListener implements Listener {
         }
 
 
-        FilterState state = new FilterState(plugin, message, player,
-                PwnFilter.EventType.COMMAND);
+        FilterState state = new FilterState(plugin, message, player, this);
 
         // Global decolor
         if ((PwnFilter.decolor) && !(dCache.hasPermission(player,"pwnfilter.color"))) {

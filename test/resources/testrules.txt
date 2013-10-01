@@ -58,7 +58,7 @@
 # 	information into the code to allow the script to run without errors.
 # ---------- End Read Me ----------
 #
-#
+include ExtraRules.txt
 #
 # Domain Advertising Filter
 match ((http)*(\w|\W|\d|_)*(www)*(\w|\W|\d|_)*[a-zA-Z0-9\.\-\*_\^\+\~\`\=\,\&*]{3,}(\W|\d|_|dot|\(dot\))+(com\b|org\b|net\b|edu\b|co\b|uk\b|de\b|cc\b|biz\b|mobi\b|xxx\b|tv\b))

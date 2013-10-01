@@ -1,7 +1,9 @@
 package com.pwn9.PwnFilter;
 
+import com.pwn9.PwnFilter.listener.FilterListener;
 import com.pwn9.PwnFilter.util.ColoredString;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +29,10 @@ import java.util.regex.Pattern;
 
 public class FilterState {
     private final ColoredString originalMessage; // Original message
-    public final PwnFilter plugin; // Which plugin is this state attached to?
+    public final Plugin plugin; // Which plugin is this state attached to?
     private final Player player; // Player that this event is connected to.
     public final String playerName,playerWorldName;
-    public final PwnFilter.EventType eventType;
+    public final FilterListener listener;
     public ColoredString message; // Modified message string
     final int messageLen; // New message can't be longer than original.
     private List<String> logMessages = new ArrayList<String>(); // Rules can add strings to this array.  They will be output to log if log=true
@@ -50,23 +52,23 @@ public class FilterState {
      *
      * @param m The original text string to run rules against.
      */
-    public FilterState(PwnFilter pl, String m, Player p, PwnFilter.EventType et) {
+    public FilterState(Plugin pl, String m, Player p, FilterListener l) {
         originalMessage = new ColoredString(m);
         message = new ColoredString(m);
         messageLen = originalMessage.length();
         player = p;
         if (p != null) {
-            playerName = PwnFilter.dataCache.getPlayerName(p);
+            playerName = DataCache.getInstance().getPlayerName(p);
         } else {
             playerName = "*CONSOLE*";
         }
         if (p != null) {
-            playerWorldName = PwnFilter.dataCache.getPlayerWorld(p);
+            playerWorldName = DataCache.getInstance().getPlayerWorld(p);
         } else {
             playerWorldName = "";
         }
         plugin = pl;
-        eventType = et;
+        listener = l;
     }
 
     /**
@@ -91,7 +93,7 @@ public class FilterState {
 
     public boolean playerHasPermission(String perm) {
         if (player != null) {
-            return PwnFilter.dataCache.hasPermission(player,perm);
+            return DataCache.getInstance().hasPermission(player,perm);
         } else {
             return false;
         }

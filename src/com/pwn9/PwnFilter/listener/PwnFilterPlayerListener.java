@@ -16,8 +16,12 @@ import org.bukkit.plugin.PluginManager;
 * Listen for Chat events and apply the filter.
 */
 
-public class PwnFilterPlayerListener implements Listener {
+public class PwnFilterPlayerListener implements FilterListener {
     private final PwnFilter plugin;
+
+    public String getShortName() {
+        return "CHAT";
+    }
 
 	public PwnFilterPlayerListener(PwnFilter p) {
         plugin = p;
@@ -51,7 +55,7 @@ public class PwnFilterPlayerListener implements Listener {
         if (event.isCancelled()) return;
 
         final Player player = event.getPlayer();
-        DataCache dCache = PwnFilter.dataCache;
+        DataCache dCache = DataCache.getInstance();
 
         // Permissions Check, if player has bypass permissions, then skip everything.
         if (dCache.hasPermission(player,"pwnfilter.bypass.chat")) return;
@@ -74,7 +78,7 @@ public class PwnFilterPlayerListener implements Listener {
 
         }
 
-        FilterState state = new FilterState(plugin, message, event.getPlayer(), PwnFilter.EventType.CHAT);
+        FilterState state = new FilterState(plugin, message, event.getPlayer(), this);
 
         // Global decolor
         if ((PwnFilter.decolor) && !(dCache.hasPermission(player, "pwnfilter.color"))) {

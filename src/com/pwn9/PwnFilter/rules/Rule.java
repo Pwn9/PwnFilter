@@ -18,7 +18,9 @@ import java.util.regex.Pattern;
  * TODO: Finish docs
  */
 public class Rule implements ChainEntry {
-    final Pattern pattern;
+    private Pattern pattern;
+    private String description;
+    private String id;
 //    String name; // TODO: Give rules names for logs and troubleshooting
     ArrayList<Condition> conditions = new ArrayList<Condition>();
     ArrayList<Action> actions = new ArrayList<Action>();
@@ -27,9 +29,50 @@ public class Rule implements ChainEntry {
 
         /* Constructors */
 
-    // All rules must have a matchStr, hence no parameter-less constructor.
     public Rule(String matchStr) {
         this.pattern = Patterns.compilePattern(matchStr);
+    }
+
+    public Rule(String id, String description) {
+        this.id = id;
+        this.description = description;
+    }
+
+    public Pattern getPattern() {
+        return pattern;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setPattern(String pattern) {
+        this.pattern = Patterns.compilePattern(pattern);
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    @Override
+    public Set<String> getPermissionList() {
+        TreeSet<String> permList = new TreeSet<String>();
+
+        for (Condition c : conditions) {
+            if (c.type == Condition.CondType.permission) {
+                Collections.addAll(permList, c.parameters.split("\\|"));
+            }
+        }
+
+        return permList;
     }
 
     /* Methods */
@@ -60,10 +103,9 @@ public class Rule implements ChainEntry {
         state.pattern = pattern;
 
         // If Match, log it and then check any conditions.
-        state.addLogMessage("|" + state.eventType.toString() +  "| MATCH <" +
+        state.addLogMessage("|" + state.listener.getShortName() +  "| MATCH <" +
                 state.playerName + "> " + state.message.getPlainString());
 
-        PwnFilter.matchTracker.increment(); // Update Match Statistics
 
         for (Condition c : conditions) {
             // This checks that EVERY condition is met (conditions are AND)
@@ -73,6 +115,10 @@ public class Rule implements ChainEntry {
                 return false;
             }
 
+        }
+
+        if(PwnFilter.matchTracker != null) {
+            PwnFilter.matchTracker.increment(); // Update Match Statistics
         }
 
         // If we get this far, execute the actions
@@ -145,16 +191,4 @@ public class Rule implements ChainEntry {
         return pattern.toString();
     }
 
-    @Override
-    public Set<String> getPermissionList() {
-        TreeSet<String> permList = new TreeSet<String>();
-
-        for (Condition c : conditions) {
-            if (c.type == Condition.CondType.permission) {
-                Collections.addAll(permList, c.parameters.split("\\|"));
-            }
-        }
-
-        return permList;
-    }
 }

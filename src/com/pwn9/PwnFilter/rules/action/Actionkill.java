@@ -21,7 +21,7 @@ public class Actionkill implements Action {
     public boolean execute(final FilterState state ) {
         if ( state.getPlayer() == null ) return false;
 
-        state.plugin.killedPlayers.put(state.getPlayer(), state.playerName + " " + messageString);
+        PwnFilter.addKilledPlayer(state.getPlayer(), state.playerName + " " + messageString);
         state.addLogMessage("Killed by Filter: " + state.playerName + " " + messageString);
 
         Bukkit.getScheduler().runTask(state.plugin, new BukkitRunnable() {

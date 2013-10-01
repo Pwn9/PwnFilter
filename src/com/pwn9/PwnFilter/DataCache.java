@@ -12,11 +12,19 @@ import java.util.logging.Logger;
 /**
  * Handles keeping a cache of data that we need during Async event handling.
  * We can't get this data in our Async method, as Bukkit API calls are not threadsafe.
+ *
+ * Making this a singleton, since it will be needed for lookups across multiple threads
+ * and we don't want to have to pass around a reference to it.
+ *
+ * The DataCache runs in the main bukkit thread every second, pulling the required
+ * information.
  */
 
 public class DataCache {
 
     public final static int runEveryTicks = 20;
+
+    private static DataCache _instance = null;
 
     // Permissions we are interested in caching
     protected Set<String> permSet = new TreeSet<String>();
@@ -28,20 +36,29 @@ public class DataCache {
     private ConcurrentHashMap<Player,String> playerWorld;
     private ConcurrentHashMap<Player,HashSet<String>> playerPermissions;
     private ArrayList<Player> queuedPlayerList = new ArrayList<Player>();
-
-    public DataCache(Plugin plugin, ArrayList<String> perms) {
+    //TODO: Add a "registration" system for interesting permissions, etc.
+    // so that plugins can add/remove things they want cached.
+    private DataCache(Plugin plugin) {
         playerName = new ConcurrentHashMap<Player,String>();
         playerWorld = new ConcurrentHashMap<Player,String>();
         playerPermissions = new ConcurrentHashMap<Player,HashSet<String>>();
         this.plugin = plugin;
-
-        for (Permission p : plugin.getDescription().getPermissions()) {
-            permSet.add(p.getName());
-        }
-        // Add any extra permissions of interest
-        addPermissions(perms);
-
         start();
+    }
+
+    // This method is for the owning plugin (PwnFilter) to initialize the cache.
+    public static DataCache getInstance(Plugin p) {
+        if ( _instance == null ) {
+            _instance = new DataCache(p);
+            return _instance;
+        } else return _instance;
+    }
+
+    // This method is for other classes to call to query the cache.
+    public static DataCache getInstance() throws IllegalStateException {
+        if ( _instance == null ) {
+            throw new IllegalStateException("DataCache accessed before initialized!");
+        } else return _instance;
     }
 
     private void cachePlayerPermissions(Player p) {
@@ -56,9 +73,14 @@ public class DataCache {
         playerPermissions.put(p,playerPerms);
     }
 
-    public void addPermissions(ArrayList<String> permissions) {
+    public synchronized void addPermissions(ArrayList<String> permissions) {
         permSet.addAll(permissions);
     }
+
+    public synchronized void addPermissions(Set<String> permissions) {
+        permSet.addAll(permissions);
+    }
+
 
     public boolean hasPermission(Player p, String s) {
         HashSet<String> perms = playerPermissions.get(p);
@@ -76,10 +98,6 @@ public class DataCache {
 
     public String getPlayerName(Player p) {
         return playerName.get(p);
-    }
-
-    public void addCachedPermission(String perm) {
-        permSet.add(perm);
     }
 
     private synchronized void updateCache() {
