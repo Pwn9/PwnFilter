@@ -2,6 +2,8 @@ package com.pwn9.PwnFilter.rules;
 
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.PwnFilter;
+import com.pwn9.PwnFilter.listener.FilterListener;
+import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.Player;
 import org.junit.After;
 import org.junit.Before;
@@ -28,7 +30,7 @@ public class RuleSetTest {
 
     @Before
     public void setUp() throws Exception {
-        ruleManager = RuleManager.getInstance();
+        ruleManager = RuleManager.getInstance(mockPlugin);
         File testFile = new File(this.getClass().getClassLoader().getResource("testrules.txt").getPath());
         ruleManager.setRuleDir(new File(testFile.getParent()));
         rs = ruleManager.getRuleChain("testrules.txt");
@@ -42,7 +44,32 @@ public class RuleSetTest {
     @Test
     public void testApplyRules() {
         rs.loadConfigFile();
-        FilterState testState = new FilterState(mockPlugin,"This is a test", null, PwnFilter.EventType.CHAT);
+        FilterState testState = new FilterState(mockPlugin,"This is a test", null, new FilterListener() {
+            @Override
+            public String getShortName() {
+                return "TEST";  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            @Override
+            public RuleChain getRuleChain() {
+                return ruleManager.getRuleChain("testrules.txt");  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            @Override
+            public boolean isActive() {
+                return false;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            @Override
+            public void activate(Configuration config) {
+                //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            @Override
+            public void shutdown() {
+                //To change body of implemented methods use File | Settings | File Templates.
+            }
+        });
         rs.apply(testState);
         System.out.println(rs.ruleCount());
         assertEquals("This WAS a test", testState.message.getPlainString());

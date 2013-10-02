@@ -2,7 +2,6 @@ package com.pwn9.PwnFilter.listener;
 
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.PwnFilter;
-import com.pwn9.PwnFilter.rules.RuleChain;
 import com.pwn9.PwnFilter.rules.RuleManager;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.Configuration;
@@ -10,7 +9,6 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -24,16 +22,16 @@ import org.bukkit.plugin.PluginManager;
  * Listen for Sign Change events and apply the filter to the text.
  */
 
-public class PwnFilterInvListener implements FilterListener {
-
-    private final PwnFilter plugin;
-    private RuleChain ruleChain;
-    private boolean active;
+public class PwnFilterInvListener extends BaseListener {
 
     public PwnFilterInvListener(PwnFilter p) {
-        plugin = p;
-        ruleChain = RuleManager.getInstance().getRuleChain("item.txt");
+        super(p);
+        setRuleChain(RuleManager.getInstance().getRuleChain("item.txt"));
+    }
 
+    @Override
+    public String getShortName() {
+        return "ITEM";
     }
 
     // This is the handler
@@ -81,32 +79,6 @@ public class PwnFilterInvListener implements FilterListener {
 
     }
 
-    /**
-     * A short name for this filter to be used in log messages and statistics.
-     * eg: CHAT, COMMAND, ANVIL, etc.
-     *
-     * @return String containing the listeners short name.
-     */
-    @Override
-    public String getShortName() {
-        return "ITEM";
-    }
-
-    /**
-     * @return The primary rulechain for this filter
-     */
-    @Override
-    public RuleChain getRuleChain() {
-        return ruleChain;
-    }
-
-    /**
-     * @return True if this FilterListener is currently active
-     */
-    @Override
-    public boolean isActive() {
-        return active;
-    }
 
     /**
      * Activate this listener.  This method can be called either by the owning plugin
@@ -121,6 +93,8 @@ public class PwnFilterInvListener implements FilterListener {
      */
     @Override
     public void activate(Configuration config) {
+        if (isActive()) return;
+
         PluginManager pm = Bukkit.getPluginManager();
         EventPriority priority = EventPriority.valueOf(config.getString("itempriority", "LOWEST").toUpperCase());
 
@@ -131,24 +105,11 @@ public class PwnFilterInvListener implements FilterListener {
                         public void execute(Listener l, Event e) { onInventoryEvent((InventoryClickEvent) e); }
                     },
                     plugin);
-            active = true;
-            PwnFilter.logger.info("Activated ItemListener with Priority Setting: " + priority.toString());
-        }
-    }
+            setActive();
+            PwnFilter.logger.info("Activated ItemListener with Priority Setting: " + priority.toString()
+                    + " Rule Count: " + getRuleChain().ruleCount() );
 
-    /**
-     * Shutdown this listener.  This method can be called either by the owning plugin
-     * or by PwnFilter.  PwnFilter will call the activate / shutdown methods when PwnFilter
-     * is enabled / disabled and whenever it is reloading its config / rules.
-     * <p/>
-     * These methods could either register / deregister the listener with Bukkit, or
-     * they could just enable / disable the use of the filter.
-     */
-    @Override
-    public void shutdown() {
-        if (active) {
-            HandlerList.unregisterAll(this);
-            active = false;
         }
     }
 }
+

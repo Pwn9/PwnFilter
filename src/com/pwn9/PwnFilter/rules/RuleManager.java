@@ -3,7 +3,9 @@ package com.pwn9.PwnFilter.rules;
 import com.pwn9.PwnFilter.PwnFilter;
 
 import java.io.File;
-import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Manage RuleSets, rulefiles, etc.  All ruleChains that are to be managed by
@@ -15,7 +17,7 @@ import java.util.HashMap;
 
 public class RuleManager {
     private static RuleManager _instance = null;
-    private HashMap<String, RuleChain> ruleChains = new HashMap<String, RuleChain>();
+    private ConcurrentHashMap<String, RuleChain> ruleChains = new ConcurrentHashMap<String, RuleChain>();
     private File ruleDir;
     private PwnFilter plugin;
 
@@ -89,15 +91,23 @@ public class RuleManager {
         // starting to reload the configs.  This ensures we check for cyclic
         // references properly.
 
+        // Invalidate all ruleChains
         for (RuleChain rc : ruleChains.values()) {
             rc.resetChain();
         }
 
         // Now, reparse the configs
-        for (String ruleSetName : ruleChains.keySet()) {
+        for (String ruleSetName : new CopyOnWriteArrayList<String>(ruleChains.keySet())) {
             RuleChain chain = ruleChains.get(ruleSetName);
             if (!chain.loadConfigFile()) {
                 ruleChains.remove(ruleSetName);
+            }
+        }
+
+        // Now remove the ones that aren't fully loaded.
+        for (Map.Entry <String, RuleChain>e : ruleChains.entrySet()) {
+            if (e.getValue().isValid()) {
+                ruleChains.remove(e.getKey());
             }
         }
     }

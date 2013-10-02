@@ -6,6 +6,7 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -47,6 +48,10 @@ public class ListenerManager {
             if (f.isActive()) retVal.add(f);
         }
         return retVal;
+    }
+
+    public Map<FilterListener,Plugin> getRegisteredListeners() {
+        return registeredListeners;
     }
 
     public void enableListeners() {

@@ -3,14 +3,12 @@ package com.pwn9.PwnFilter.listener;
 import com.pwn9.PwnFilter.DataCache;
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.PwnFilter;
-import com.pwn9.PwnFilter.rules.RuleChain;
 import com.pwn9.PwnFilter.rules.RuleManager;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -21,18 +19,15 @@ import org.bukkit.plugin.PluginManager;
 * Listen for Chat events and apply the filter.
 */
 
-public class PwnFilterPlayerListener implements FilterListener {
-    private final PwnFilter plugin;
-    private boolean active;
-    private RuleChain ruleChain;
+public class PwnFilterPlayerListener extends BaseListener {
 
     public String getShortName() {
         return "CHAT";
     }
 
 	public PwnFilterPlayerListener(PwnFilter p) {
-        plugin = p;
-        ruleChain = RuleManager.getInstance().getRuleChain("chat.txt");
+        super(p);
+        setRuleChain(RuleManager.getInstance().getRuleChain("chat.txt"));
     }
 
     public void onPlayerQuit(PlayerQuitEvent event) {
@@ -89,22 +84,6 @@ public class PwnFilterPlayerListener implements FilterListener {
     }
 
     /**
-     * @return The primary rulechain for this filter
-     */
-    @Override
-    public RuleChain getRuleChain() {
-        return ruleChain;
-    }
-
-    /**
-     * @return True if this FilterListener is currently active
-     */
-    @Override
-    public boolean isActive() {
-        return active;
-    }
-
-    /**
      * Activate this listener.  This method can be called either by the owning plugin
      * or by PwnFilter.  PwnFilter will call the shutdown / activate methods when PwnFilter
      * is enabled / disabled and whenever it is reloading its config / rules.
@@ -118,44 +97,31 @@ public class PwnFilterPlayerListener implements FilterListener {
     @Override
     public void activate(Configuration config) {
 
+        if (isActive()) return;
+
         PluginManager pm = Bukkit.getServer().getPluginManager();
         EventPriority priority = EventPriority.valueOf(config.getString("chatpriority", "LOWEST").toUpperCase());
 
-        if (!active) {
+        /* Hook up the Listener for PlayerChat events */
+        pm.registerEvent(AsyncPlayerChatEvent.class, this, priority,
+                new EventExecutor() {
+                    public void execute(Listener l, Event e) { onPlayerChat((AsyncPlayerChatEvent)e); }
+                },
+                plugin);
 
-            /* Hook up the Listener for PlayerChat events */
-            pm.registerEvent(AsyncPlayerChatEvent.class, this, priority,
-                    new EventExecutor() {
-                        public void execute(Listener l, Event e) { onPlayerChat((AsyncPlayerChatEvent)e); }
-                    },
-                    plugin);
+        pm.registerEvent(PlayerQuitEvent.class, this, priority,
+                new EventExecutor() {
+                    public void execute(Listener l, Event e) { onPlayerQuit((PlayerQuitEvent)e); }
+                },
+                plugin);
 
-            pm.registerEvent(PlayerQuitEvent.class, this, priority,
-                    new EventExecutor() {
-                        public void execute(Listener l, Event e) { onPlayerQuit((PlayerQuitEvent)e); }
-                    },
-                    plugin);
+        PwnFilter.logger.info("Activated PlayerListener with Priority Setting: " + priority.toString()
+                + " Rule Count: " + getRuleChain().ruleCount() );
 
-            PwnFilter.logger.info("Activated PlayerListener with Priority Setting: " + priority.toString());
-            active = true;
-        }
+        setActive();
+
     }
 
-    /**
-     * Shutdown this listener.  This method can be called either by the owning plugin
-     * or by PwnFilter.  PwnFilter will call the activate / shutdown methods when PwnFilter
-     * is enabled / disabled and whenever it is reloading its config / rules.
-     * <p/>
-     * These methods could either register / deregister the listener with Bukkit, or
-     * they could just enable / disable the use of the filter.
-     */
-    @Override
-    public void shutdown() {
-        if (active) {
-            HandlerList.unregisterAll(this);
-            active = false;
-        }
-    }
 }
 
 

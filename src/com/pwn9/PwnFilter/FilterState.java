@@ -111,6 +111,9 @@ public class FilterState {
         this.cancel = cancel;
     }
 
+    public String getListenerName() {
+        return listener.getShortName();
+    }
     /**
      *
      * @return a new Instance of ColouredString with a copy of the originalMessage.

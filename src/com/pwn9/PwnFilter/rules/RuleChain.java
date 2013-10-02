@@ -1,3 +1,14 @@
+
+/*
+ * PwnFilter -- Regex-based User Filter Plugin for Bukkit-based Minecraft servers.
+ * Copyright (c) 2013 Pwn9.com. Tremor77 <admin@pwn9.com> / Sage905
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 3
+ * of the License, or (at your option) any later version.
+ */
+
 package com.pwn9.PwnFilter.rules;
 
 import com.pwn9.PwnFilter.FilterState;
@@ -57,11 +68,13 @@ public class RuleChain implements ChainEntry {
     public boolean loadConfigFile() {
         chain = new ArrayList<ChainEntry>();
         File ruleFile = manager.getFile(configName);
-        try {
-            return parseRules(new FileReader(ruleFile));
-        } catch (FileNotFoundException e) {
-            return false;
-        }
+        if (ruleFile != null) {
+            try {
+                return parseRules(new FileReader(ruleFile));
+            } catch (FileNotFoundException e) {
+                return false;
+            }
+        } else return false;
     }
 
     public String getConfigName() { return configName;}

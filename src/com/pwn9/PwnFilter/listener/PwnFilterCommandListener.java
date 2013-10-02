@@ -3,14 +3,12 @@ package com.pwn9.PwnFilter.listener;
 import com.pwn9.PwnFilter.DataCache;
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.PwnFilter;
-import com.pwn9.PwnFilter.rules.RuleChain;
 import com.pwn9.PwnFilter.rules.RuleManager;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.plugin.EventExecutor;
@@ -22,42 +20,35 @@ import java.util.List;
 * Apply the filter to commands.
 */
 
-public class PwnFilterCommandListener implements FilterListener {
-    private final PwnFilter plugin;
-    private boolean active;
-    private RuleChain ruleChain;
+public class PwnFilterCommandListener extends BaseListener {
 
     public List<String> cmdlist;
     public List<String> cmdblist;
 
-
-    public PwnFilterCommandListener(PwnFilter p) {
-	    plugin = p;
-        ruleChain = RuleManager.getInstance().getRuleChain("command.txt");
-    }
-
     public String getShortName() { return "COMMAND" ;}
 
+    public PwnFilterCommandListener(PwnFilter p) {
+	    super(p);
+        setRuleChain(RuleManager.getInstance().getRuleChain("command.txt"));
+    }
+
     public void activate(Configuration config) {
+        if (isActive()) return;
+
         EventPriority priority = EventPriority.valueOf(config.getString("cmdpriority", "LOWEST").toUpperCase());
-        if (!active && config.getBoolean("commandfilter")) {
+        if (config.getBoolean("commandfilter")) {
             PluginManager pm = Bukkit.getPluginManager();
             pm.registerEvent(PlayerCommandPreprocessEvent.class, this, priority,
                     new EventExecutor() {
                 public void execute(Listener l, Event e) { eventProcessor((PlayerCommandPreprocessEvent) e); }
             },
             plugin);
-            active = true;
-            PwnFilter.logger.info("Activated CommandListener with Priority Setting: " + priority.toString());
+            setActive();
+            PwnFilter.logger.info("Activated CommandListener with Priority Setting: " + priority.toString()
+                    + " Rule Count: " + getRuleChain().ruleCount() );
         }
     }
 
-    public void shutdown() {
-        if (active) {
-            HandlerList.unregisterAll(this);
-            active = false;
-        }
-    }
 
     public void eventProcessor(PlayerCommandPreprocessEvent event) {
 
@@ -96,7 +87,6 @@ public class PwnFilterCommandListener implements FilterListener {
 
         }
 
-
         FilterState state = new FilterState(plugin, message, player, this);
 
         // Global decolor
@@ -116,22 +106,6 @@ public class PwnFilterCommandListener implements FilterListener {
 
         if (state.cancel) event.setCancelled(true);
 
-    }
-
-    /**
-     * @return The primary rulechain for this filter
-     */
-    @Override
-    public RuleChain getRuleChain() {
-        return ruleChain;
-    }
-
-    /**
-     * @return True if this FilterListener is currently active
-     */
-    @Override
-    public boolean isActive() {
-        return active;
     }
 
 }

@@ -2,13 +2,11 @@ package com.pwn9.PwnFilter.listener;
 
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.PwnFilter;
-import com.pwn9.PwnFilter.rules.RuleChain;
 import com.pwn9.PwnFilter.rules.RuleManager;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.ServerCommandEvent;
 import org.bukkit.plugin.EventExecutor;
@@ -20,17 +18,19 @@ import java.util.List;
 * Apply the filter to commands.
 */
 
-public class PwnFilterServerCommandListener implements FilterListener {
-    private final PwnFilter plugin;
-    private boolean active;
-    private RuleChain ruleChain;
+public class PwnFilterServerCommandListener extends BaseListener {
 
     public List<String> cmdlist;
     public List<String> cmdblist;
 
     public PwnFilterServerCommandListener(PwnFilter p) {
-	    plugin = p;
-        ruleChain = RuleManager.getInstance().getRuleChain("console.txt");
+	    super(p);
+        setRuleChain(RuleManager.getInstance().getRuleChain("console.txt"));
+    }
+
+    @Override
+    public String getShortName() {
+        return "CONSOLE";
     }
 
     public void onServerCommandEvent(ServerCommandEvent event) {
@@ -62,33 +62,6 @@ public class PwnFilterServerCommandListener implements FilterListener {
     }
 
     /**
-     * A short name for this filter to be used in log messages and statistics.
-     * eg: CHAT, COMMAND, ANVIL, etc.
-     *
-     * @return String containing the listeners short name.
-     */
-    @Override
-    public String getShortName() {
-        return "CONSOLE";
-    }
-
-    /**
-     * @return The primary rulechain for this filter
-     */
-    @Override
-    public RuleChain getRuleChain() {
-        return ruleChain;
-    }
-
-    /**
-     * @return True if this FilterListener is currently active
-     */
-    @Override
-    public boolean isActive() {
-        return active;
-    }
-
-    /**
      * Activate this listener.  This method can be called either by the owning plugin
      * or by PwnFilter.  PwnFilter will call the shutdown / activate methods when PwnFilter
      * is enabled / disabled and whenever it is reloading its config / rules.
@@ -101,7 +74,9 @@ public class PwnFilterServerCommandListener implements FilterListener {
      */
     @Override
     public void activate(Configuration config) {
-        if (!active && config.getBoolean("commandfilter")) {
+        if (isActive()) return;
+
+        if (config.getBoolean("commandfilter")) {
 
             PluginManager pm = Bukkit.getPluginManager();
             EventPriority priority = EventPriority.valueOf(config.getString("cmdpriority", "LOWEST").toUpperCase());
@@ -111,24 +86,11 @@ public class PwnFilterServerCommandListener implements FilterListener {
                         public void execute(Listener l, Event e) { onServerCommandEvent((ServerCommandEvent) e); }
                     },
                     plugin);
-            PwnFilter.logger.info("Activated ServerCommandListener with Priority Setting: " + priority.toString());
-            active = true;
+            PwnFilter.logger.info("Activated ServerCommandListener with Priority Setting: " + priority.toString()
+                    + " Rule Count: " + getRuleChain().ruleCount() );
+
+            setActive();
         }
     }
 
-    /**
-     * Shutdown this listener.  This method can be called either by the owning plugin
-     * or by PwnFilter.  PwnFilter will call the activate / shutdown methods when PwnFilter
-     * is enabled / disabled and whenever it is reloading its config / rules.
-     * <p/>
-     * These methods could either register / deregister the listener with Bukkit, or
-     * they could just enable / disable the use of the filter.
-     */
-    @Override
-    public void shutdown() {
-        if (active) {
-            HandlerList.unregisterAll(this);
-            active = false;
-        }
-    }
 }
