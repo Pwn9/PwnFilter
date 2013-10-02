@@ -1,7 +1,7 @@
 package com.pwn9.PwnFilter.rules.action;
 
 import com.pwn9.PwnFilter.FilterState;
-import com.pwn9.PwnFilter.PwnFilter;
+import com.pwn9.PwnFilter.util.DefaultMessages;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -15,7 +15,7 @@ public class Actionkick implements Action {
 
     public void init(String s)
     {
-        messageString = PwnFilter.prepareMessage(s,"kickmsg");
+        messageString = DefaultMessages.prepareMessage(s, "kickmsg");
     }
 
     public boolean execute(final FilterState state ) {

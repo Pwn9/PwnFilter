@@ -3,6 +3,8 @@ package com.pwn9.PwnFilter.listener;
 import com.pwn9.PwnFilter.DataCache;
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.PwnFilter;
+import com.pwn9.PwnFilter.rules.RuleChain;
+import com.pwn9.PwnFilter.rules.RuleManager;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.Player;
@@ -23,7 +25,7 @@ import java.util.List;
 public class PwnFilterCommandListener implements FilterListener {
     private final PwnFilter plugin;
     private boolean active;
-    final static String ShortName = "COMMAND";
+    private RuleChain ruleChain;
 
     public List<String> cmdlist;
     public List<String> cmdblist;
@@ -31,18 +33,14 @@ public class PwnFilterCommandListener implements FilterListener {
 
     public PwnFilterCommandListener(PwnFilter p) {
 	    plugin = p;
+        ruleChain = RuleManager.getInstance().getRuleChain("command.txt");
     }
 
-    public String getShortName() { return ShortName ;}
-
-    public void setCmdlists(List<String> whiteList, List<String> blackList) {
-        cmdlist = whiteList;
-        cmdblist = blackList;
-    }
+    public String getShortName() { return "COMMAND" ;}
 
     public void activate(Configuration config) {
-        EventPriority priority = EventPriority.valueOf(config.getString("chatpriority", "LOWEST").toUpperCase());
-        if (!active) {
+        EventPriority priority = EventPriority.valueOf(config.getString("cmdpriority", "LOWEST").toUpperCase());
+        if (!active && config.getBoolean("commandfilter")) {
             PluginManager pm = Bukkit.getPluginManager();
             pm.registerEvent(PlayerCommandPreprocessEvent.class, this, priority,
                     new EventExecutor() {
@@ -54,7 +52,7 @@ public class PwnFilterCommandListener implements FilterListener {
         }
     }
 
-    public void deactivate() {
+    public void shutdown() {
         if (active) {
             HandlerList.unregisterAll(this);
             active = false;
@@ -74,6 +72,9 @@ public class PwnFilterCommandListener implements FilterListener {
 
         //Gets the actual command as a string
         String cmdmessage = message.substring(1).split(" ")[0];
+
+        cmdlist = plugin.getConfig().getStringList("cmdlist");
+        cmdblist = plugin.getConfig().getStringList("cmdblist");
 
         if (!cmdlist.isEmpty() && !cmdlist.contains(cmdmessage)) return;
         if (cmdblist.contains(cmdmessage)) return;
@@ -106,7 +107,7 @@ public class PwnFilterCommandListener implements FilterListener {
 
         // Take the message from the Command Event and send it through the filter.
 
-        PwnFilter.ruleset.apply(state);
+        ruleChain.apply(state);
 
         // Only update the message if it has been changed.
         if (state.messageChanged()){
@@ -116,4 +117,21 @@ public class PwnFilterCommandListener implements FilterListener {
         if (state.cancel) event.setCancelled(true);
 
     }
+
+    /**
+     * @return The primary rulechain for this filter
+     */
+    @Override
+    public RuleChain getRuleChain() {
+        return ruleChain;
+    }
+
+    /**
+     * @return True if this FilterListener is currently active
+     */
+    @Override
+    public boolean isActive() {
+        return active;
+    }
+
 }

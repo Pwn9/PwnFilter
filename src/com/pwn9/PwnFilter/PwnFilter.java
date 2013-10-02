@@ -1,18 +1,17 @@
 package com.pwn9.PwnFilter;
 
-import com.pwn9.PwnFilter.listener.FilterListener;
-import com.pwn9.PwnFilter.listener.ListenerManager;
+import com.pwn9.PwnFilter.listener.*;
 import com.pwn9.PwnFilter.rules.RuleChain;
+import com.pwn9.PwnFilter.rules.RuleManager;
+import com.pwn9.PwnFilter.util.DefaultMessages;
 import com.pwn9.PwnFilter.util.PwnFormatter;
 import com.pwn9.PwnFilter.util.Tracker;
 import net.milkbowl.vault.economy.Economy;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -22,7 +21,6 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.FileSystemException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
@@ -43,8 +41,6 @@ import java.util.logging.SimpleFormatter;
 // TODO: Multiverse-support? (Different configs for different worlds)
 
 public class PwnFilter extends JavaPlugin {
-
-    private ListenerManager listenerManager;
 
     private Metrics metrics;
     private static Tracker matchTracker;
@@ -70,12 +66,10 @@ public class PwnFilter extends JavaPlugin {
     public static boolean decolor;
     public static Boolean pwnMute = false;
 
-    public static EventPriority cmdPriority, chatPriority, signPriority, invPriority, consolePriority;
     public static HashMap<Player, String> lastMessage = new HashMap<Player, String>();
     public static Economy economy = null;
 
     private static File ruleDir;
-    public static RuleChain ruleset;
     private Metrics.Graph eventGraph;
 
     @Override
@@ -89,7 +83,10 @@ public class PwnFilter extends JavaPlugin {
         DataCache.getInstance(this);
 
         // Initialize the manager for FilterListeners
-        listenerManager = ListenerManager.getInstance(this);
+        ListenerManager.getInstance(this);
+
+        // Initialize the ruleManager
+        RuleManager.getInstance(this);
 
         // Set up a Vault economy for actions like "fine" (optional)
         setupEconomy();
@@ -108,6 +105,19 @@ public class PwnFilter extends JavaPlugin {
 
         // Activate Plugin Metrics
         activateMetrics();
+
+        //Load up our listeners
+        ListenerManager listenerManager = ListenerManager.getInstance();
+        listenerManager.registerListener(new PwnFilterCommandListener(this), this);
+        listenerManager.registerListener(new PwnFilterInvListener(this),this);
+        listenerManager.registerListener(new PwnFilterPlayerListener(this),this);
+        listenerManager.registerListener(new PwnFilterServerCommandListener(this),this);
+        listenerManager.registerListener(new PwnFilterSignListener(this),this);
+
+
+        // And the Entity Death handler, for custom death messages.
+        new PwnFilterEntityListener(this);
+
 
     }
 
@@ -135,7 +145,7 @@ public class PwnFilter extends JavaPlugin {
     public void updateMetrics() {
 
         ArrayList<String> activeListenerNames = new ArrayList<String>();
-        for (FilterListener f : listenerManager.getActiveListeners()) {
+        for (FilterListener f : ListenerManager.getInstance().getActiveListeners()) {
             activeListenerNames.add(f.getShortName());
         }
 
@@ -147,7 +157,7 @@ public class PwnFilter extends JavaPlugin {
         }
 
         // Add new plotters
-        for (final FilterListener f : listenerManager.getActiveListeners()) {
+        for (final FilterListener f : ListenerManager.getInstance().getActiveListeners()) {
             final String eventName = f.getShortName();
             eventGraph.addPlotter(new Metrics.Plotter(eventName) {
                 @Override
@@ -176,9 +186,29 @@ public class PwnFilter extends JavaPlugin {
             }
         }
 
-        ruleDir = new File(getDataFolder(),"rules");
+        String ruledirectory = getConfig().getString("ruledirectory");
+        if (ruledirectory != null ) {
+            ruleDir = new File(ruledirectory);
+        } else {
+            ruleDir = new File(getDataFolder(),"rules");
+        }
+
         if (!ruleDir.exists()) {
-            ruleDir.mkdir();
+            try {
+                if (!ruleDir.mkdir()) {
+                    logger.severe("Unable to create rule directory: " + ruleDir.getAbsolutePath());
+                    logger.severe("Disabling PwnFilter");
+                    getPluginLoader().disablePlugin(this);
+                    return;
+                }
+            } catch (SecurityException ex) {
+                logger.severe("Unable to create rule directory: " + ruleDir.getAbsolutePath());
+                logger.severe("Exception: " + ex.getMessage());
+                logger.severe("Disabling PwnFilter");
+                getPluginLoader().disablePlugin(this);
+                return;
+            }
+
         }
 
         try {
@@ -195,19 +225,23 @@ public class PwnFilter extends JavaPlugin {
             debugMode = DebugModes.off;
         }
 
+        DefaultMessages.setConfig(getConfig());
+
+
+
     }
 
     public void onDisable() {
 
-        ruleset = null;
         if (logfileHandler != null) {
             logfileHandler.close();
             logger.removeHandler(logfileHandler);
             logfileHandler = null;
         }
 
-        // Shutdown all our listeners, first.
-        listenerManager.disableListeners();
+        ListenerManager.getInstance().disableListeners();
+
+        HandlerList.unregisterAll(this); // Unregister all remaining handlers.
 
         // Shutdown the DataCache
         DataCache.getInstance().stop();
@@ -255,30 +289,26 @@ public class PwnFilter extends JavaPlugin {
         if (cmd.getName().equalsIgnoreCase("pfreload")) {
             sender.sendMessage(ChatColor.RED + "Reloading config.yml and rules.txt");
 
-            // Remove all our listeners, first.
-            HandlerList.unregisterAll(this);
+            logger.info("Disabling all listeners");
+            ListenerManager.getInstance().disableListeners();
 
             // Shut down the DataCache
             DataCache.getInstance().stop();
 
             reloadConfig();
             configurePlugin();
+
             logger.config("Reloaded config.yml as requested by " + sender.getName());
 
-            for (RuleChain ruleSet : ruleSets.values()) {
-                if (ruleset.loadConfigFile()) {
-                    logger.config(ruleset.getConfigName() + " reloaded by " + sender.getName());
-                } else {
-                    logger.warning("failed to reload" + ruleset.getConfigName() + " as requested by " + sender.getName());
-                }
-            }
-
+            RuleManager.getInstance().reloadAllConfigs();
+            logger.config("All rules reloaded by " + sender.getName());
 
             // Start the DataCache again
             DataCache.getInstance().start();
 
             // Re-register our listeners
-            listenerManager.startup();
+            ListenerManager.getInstance().enableListeners();
+            logger.info("All listeners re-enabled");
 
             return true;
         }
@@ -314,80 +344,12 @@ public class PwnFilter extends JavaPlugin {
     }
 
 
-    /**
-     * Selects string from the first not null of: message, default from config.yml or null.
-     * Converts & to u00A7
-     * Used by Action.init() methods.
-     * @return String containing message to be used.
-     */
-    public static String prepareMessage(String message, String configName) {
-        String retVal;
-        if (message.isEmpty()) {
-            // TODO: Feels wrong...
-            String defmsg = Bukkit.getPluginManager().getPlugin("PwnFilter").getConfig().getString(configName);
-            retVal = (defmsg != null) ? defmsg : "";
-        } else {
-            retVal = message;
-        }
-        return retVal.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
-    }
-
     public File getRuleDir() {
         return ruleDir;
     }
 
-    public RuleChain getRuleset(String name) {
-        return ruleSets.get(name);
-    }
-
-
     public static Level getRuleLogLevel() {
         return ruleLogLevel;
-    }
-
-    public File getRulesFile(String fname) {
-
-        File rulesFile;
-
-        rulesFile = new File(ruleDir,fname);
-        // Check to see if rules file exists.  If not, create a basic file from template
-        if (!rulesFile.exists()) {
-            try{
-                //noinspection ResultOfMethodCallIgnored
-                rulesFile.createNewFile();
-                BufferedInputStream fin = new BufferedInputStream(this.getResource(fname));
-                FileOutputStream fout = new FileOutputStream(rulesFile);
-                byte[] data = new byte[1024];
-                int c;
-                while ((c = fin.read(data, 0, 1024)) != -1)
-                    fout.write(data, 0, c);
-                fin.close();
-                fout.close();
-                logger.warning("created sample rules file '" + fname + "'");
-            }catch(Exception ex){
-                ex.printStackTrace();
-            }
-        }
-        return rulesFile;
-    }
-
-    public void loadRuleSets() throws FileSystemException {
-        File ruleDir = getRuleDir();
-        if (!ruleDir.exists()) {
-            throw new FileSystemException("Could not find Rule Dir.") ;
-        }
-         // TODO: Adapt this to use the RuleManager properly.  We probably only need to keep track
-        // of the "base" rulesets (eg, used by our event handlers).  Other plugins will keep track of
-        // their own.  The RuleManager will track all.
-
-        for (File f : ruleDir.listFiles()) {
-            RuleChain newRuleSet = ruleManager.getRuleChain(f.getName());
-            ruleSets.put(f.getName(),newRuleSet);
-            DataCache.getInstance().addPermissions(newRuleSet.getPermissionList());
-
-            logger.info("Loaded config file: " + f.getName());
-        }
-
     }
 
     public static void logLow(String message) {
@@ -411,6 +373,30 @@ public class PwnFilter extends JavaPlugin {
     //TODO: Handle this better
     public static void addKilledPlayer(Player p, String message) {
         killedPlayers.put(p, message);
+    }
+
+
+    public boolean copyRuleTemplate(File rulesFile, String configName) {
+        try{
+            if (rulesFile.createNewFile()) {
+                BufferedInputStream fin = new BufferedInputStream(getResource(configName));
+                FileOutputStream fout = new FileOutputStream(rulesFile);
+                byte[] data = new byte[1024];
+                int c;
+                while ((c = fin.read(data, 0, 1024)) != -1)
+                    fout.write(data, 0, c);
+                fin.close();
+                fout.close();
+                getLogger().info("Created rules file from template: " + configName);
+                return true;
+            } else {
+                getLogger().warning("Failed to create rule file from template: " + configName);
+                return false;
+            }
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return false;
     }
 
 }

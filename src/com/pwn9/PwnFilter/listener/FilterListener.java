@@ -3,7 +3,6 @@ package com.pwn9.PwnFilter.listener;
 import com.pwn9.PwnFilter.rules.RuleChain;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.event.Listener;
-import org.bukkit.plugin.Plugin;
 
 /**
  * Listeners that can call PwnFilter
@@ -56,34 +55,5 @@ public interface FilterListener extends Listener {
      * they could just enable / disable the use of the filter.
      */
     public void shutdown();
-
-    /**
-     * Add a listener to the PwnFilter ListenerManager.  This allows PwnFilter
-     * to notify the listener when it should try to activate or shutdown.
-     * PwnFilter will call the activate / shutdown methods when reloading
-     * rules configs.
-     *
-     * The FilterListener must register *before* attempting to use any other
-     * PwnFilter resources.
-     *
-     * @param f FilterListener instance
-     * @param p Plugin that the listener belongs to.
-     * @return
-     */
-    public boolean registerListener(FilterListener f, Plugin p );
-
-    /**
-     * Remove a listener from the PwnFilter ListenerManager.
-     * The listener will no longer be activated / deactivated when PwnFilter
-     * reloads configs, rules, etc.
-     * IMPORTANT: Before de-registering, the FilterListener must remove all
-     * references to RuleSets.
-     *
-     * @param f FilterListener to remove.
-     * @return true if the listener was previously registered and successfully
-     * removed. False if it was not registered.
-     */
-    public boolean unregisterListener(FilterListener f);
-
 
 }

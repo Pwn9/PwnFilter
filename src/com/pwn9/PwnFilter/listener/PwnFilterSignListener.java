@@ -2,8 +2,12 @@ package com.pwn9.PwnFilter.listener;
 
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.PwnFilter;
+import com.pwn9.PwnFilter.rules.RuleChain;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.Configuration;
 import org.bukkit.event.Event;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.plugin.EventExecutor;
@@ -14,21 +18,13 @@ import org.bukkit.plugin.PluginManager;
  * Listen for Sign Change events and apply the filter to the text.
  */
 
-public class PwnFilterSignListener implements Listener {
+public class PwnFilterSignListener implements FilterListener {
     private final PwnFilter plugin;
+    private boolean active;
+    private RuleChain ruleChain;
+
     public PwnFilterSignListener(PwnFilter p) {
         plugin = p;
-        PluginManager pm = Bukkit.getPluginManager();
-
-        // Now register the listener with the appropriate priority
-        pm.registerEvent(SignChangeEvent.class, this, PwnFilter.signPriority,
-                new EventExecutor() {
-                    public void execute(Listener l, Event e) { onSignChange((SignChangeEvent)e); }
-                },
-                plugin);
-
-        PwnFilter.logger.info("Activated SignListener with Priority Setting: " + PwnFilter.signPriority.toString());
-
     }
     /**
      * The sign filter has extra work to do that the chat doesn't:
@@ -52,9 +48,9 @@ public class PwnFilterSignListener implements Listener {
         }
         String signLines = builder.toString();
 
-        FilterState state = new FilterState(plugin, signLines, event.getPlayer(), PwnFilter.EventType.SIGN);
+        FilterState state = new FilterState(plugin, signLines, event.getPlayer(),this);
 
-        PwnFilter.ruleset.apply(state);
+        ruleChain.apply(state);
 
         if (state.messageChanged()){
             // TODO: Can colors be placed on signs?  Wasn't working. Find out why.
@@ -93,5 +89,77 @@ public class PwnFilterSignListener implements Listener {
                     + state.getOriginalMessage().getColoredString());
         }
 
+    }
+
+    /**
+     * A short name for this filter to be used in log messages and statistics.
+     * eg: CHAT, COMMAND, ANVIL, etc.
+     *
+     * @return String containing the listeners short name.
+     */
+    @Override
+    public String getShortName() {
+        return "SIGN";
+    }
+
+    /**
+     * @return The primary rulechain for this filter
+     */
+    @Override
+    public RuleChain getRuleChain() {
+        return ruleChain;
+    }
+
+    /**
+     * @return True if this FilterListener is currently active
+     */
+    @Override
+    public boolean isActive() {
+        return active;
+    }
+
+    /**
+     * Activate this listener.  This method can be called either by the owning plugin
+     * or by PwnFilter.  PwnFilter will call the shutdown / activate methods when PwnFilter
+     * is enabled / disabled and whenever it is reloading its config / rules.
+     * <p/>
+     * These methods could either register / deregister the listener with Bukkit, or
+     * they could just enable / disable the use of the filter.
+     *
+     * @param config PwnFilter Configuration object, which the plugin can read for configuration
+     *               information. (eg: config.getString("ruledir")
+     */
+    @Override
+    public void activate(Configuration config) {
+        PluginManager pm = Bukkit.getPluginManager();
+        EventPriority priority = EventPriority.valueOf(config.getString("signpriority", "LOWEST").toUpperCase());
+
+        if (!active && config.getBoolean("signfilter")) {
+            // Now register the listener with the appropriate priority
+            pm.registerEvent(SignChangeEvent.class, this, priority,
+                    new EventExecutor() {
+                        public void execute(Listener l, Event e) { onSignChange((SignChangeEvent)e); }
+                    },
+                    plugin);
+
+            PwnFilter.logger.info("Activated SignListener with Priority Setting: " + priority.toString());
+            active = true;
+        }
+    }
+
+    /**
+     * Shutdown this listener.  This method can be called either by the owning plugin
+     * or by PwnFilter.  PwnFilter will call the activate / shutdown methods when PwnFilter
+     * is enabled / disabled and whenever it is reloading its config / rules.
+     * <p/>
+     * These methods could either register / deregister the listener with Bukkit, or
+     * they could just enable / disable the use of the filter.
+     */
+    @Override
+    public void shutdown() {
+        if (active) {
+            HandlerList.unregisterAll(this);
+            active = false;
+        }
     }
 }

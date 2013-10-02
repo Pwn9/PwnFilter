@@ -3,9 +3,7 @@ package com.pwn9.PwnFilter.rules;
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.PwnFilter;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.TreeSet;
@@ -46,7 +44,6 @@ public class RuleChain implements ChainEntry {
         this.configName = configName;
         this.manager = manager;
         chainState = ChainState.INIT;
-
     }
 
     /**
@@ -59,8 +56,9 @@ public class RuleChain implements ChainEntry {
      */
     public boolean loadConfigFile() {
         chain = new ArrayList<ChainEntry>();
+        File ruleFile = manager.getFile(configName);
         try {
-            return parseRules(new FileReader(manager.getFile(configName)));
+            return parseRules(new FileReader(ruleFile));
         } catch (FileNotFoundException e) {
             return false;
         }
@@ -254,6 +252,5 @@ public class RuleChain implements ChainEntry {
 
         return !chain.isEmpty();
     }
-
 
 }

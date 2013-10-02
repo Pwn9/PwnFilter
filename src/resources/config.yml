@@ -24,9 +24,6 @@ debug: off
 # Strip color from chat. Permission to bypass pwnfilter.color or pwnfilter.bypass
 decolor: true
 
-# Filter commands as well as chat true/false
-commandfilter: true
-
 # Filter text applied to signs
 signfilter: false
 
@@ -36,11 +33,17 @@ itemfilter: false
 # Basic spam filter enabled (chat ONLY)
 spamfilter: false
 
-# Basic spam filter enabled (commands ONLY)
-commandspamfilter: false
 
 # Console Filter -- Filter commands entered on console (EXPERIMENTAL)
 consolefilter: false
+
+
+
+# Filter commands as well as chat true/false
+commandfilter: true
+
+# Basic spam filter enabled (commands ONLY)
+commandspamfilter: false
 
 # Command White List: Commands to filter, if empty, will filter ALL (except blacklist)
 cmdlist: []
@@ -54,6 +57,8 @@ cmdblist:
 
 # "then notify" actions will send a message to all users with this permission
 notifyperm: pwnfilter.admin
+
+#ruledirectory: /path/to/rules
 
 #### ADVANCED #####
 # Note: You can also change the priority of event handlers with:

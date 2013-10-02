@@ -64,6 +64,19 @@ public class ListenerManager {
         }
     }
 
+    /**
+     * Add a listener to the PwnFilter ListenerManager.  This allows PwnFilter
+     * to notify the listener when it should try to activate or shutdown.
+     * PwnFilter will call the activate / shutdown methods when reloading
+     * rules configs.
+     *
+     * The FilterListener must register *before* attempting to use any other
+     * PwnFilter resources.
+     *
+     * @param f FilterListener instance
+     * @param p Plugin that the listener belongs to.
+     * @return True if the listener was added, false if it was already registered.
+     */
     public boolean registerListener(FilterListener f, Plugin p) {
         if (registeredListeners.containsKey(f)) {
             return false; // Already Registered
@@ -73,6 +86,17 @@ public class ListenerManager {
         return true;
     }
 
+    /**
+     * Remove a listener from the PwnFilter ListenerManager.
+     * The listener will no longer be activated / deactivated when PwnFilter
+     * reloads configs, rules, etc.
+     * IMPORTANT: Before de-registering, the FilterListener must remove all
+     * references to RuleSets.
+     *
+     * @param f FilterListener to remove.
+     * @return true if the listener was previously registered and successfully
+     * removed. False if it was not registered.
+     */
     public boolean unregisterListener(FilterListener f) {
         if (registeredListeners.containsKey(f)) {
             registeredListeners.remove(f);
