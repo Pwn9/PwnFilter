@@ -3,6 +3,7 @@ package com.pwn9.PwnFilter.rules.action;
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.PwnFilter;
 import com.pwn9.PwnFilter.util.DefaultMessages;
+import com.pwn9.PwnFilter.util.LogManager;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -29,7 +30,7 @@ public class Actionfine implements Action {
         String message = (parts.length > 1)?parts[1]:"";
         messageString = DefaultMessages.prepareMessage(parts[1], "finemsg");
         if (PwnFilter.economy == null) {
-            PwnFilter.logger.warning("Parsed rule requiring an Economy, but one was not detected. " +
+            LogManager.logger.warning("Parsed rule requiring an Economy, but one was not detected. " +
                     "Check Vault configuration, or remove 'then fine' rules.");
         }
 

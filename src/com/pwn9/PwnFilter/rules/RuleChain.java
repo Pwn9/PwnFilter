@@ -12,7 +12,7 @@
 package com.pwn9.PwnFilter.rules;
 
 import com.pwn9.PwnFilter.FilterState;
-import com.pwn9.PwnFilter.PwnFilter;
+import com.pwn9.PwnFilter.util.LogManager;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -80,7 +80,13 @@ public class RuleChain implements ChainEntry {
     public String getConfigName() { return configName;}
 
     public int ruleCount() {
-        return chain.size();
+        Integer count = 0;
+        for (ChainEntry c : chain) {
+            if (c instanceof RuleChain) {
+                count += ((RuleChain) c).ruleCount();
+            } else count++;
+        }
+        return count;
     }
 
     /**
@@ -94,16 +100,13 @@ public class RuleChain implements ChainEntry {
      * @param state A FilterState object which is used to get information about
      *              this event, and update its status (eg: set cancelled)
      *
-     * @return false if an error occurred while applying this ruleChain.
      */
 
-    public boolean apply(FilterState state) throws IllegalStateException {
+    public void apply(FilterState state) throws IllegalStateException {
 
         if (chain == null) {
             throw new IllegalStateException("Chain is empty: " + configName);
         }
-
-        PwnFilter.logLow("Event: " + state.listener.getShortName() + " message: " + state.getOriginalMessage());
 
         for (ChainEntry entry : chain) {
             entry.apply(state);
@@ -111,15 +114,22 @@ public class RuleChain implements ChainEntry {
                 break;
             }
         }
+    }
+
+    public void execute(FilterState state ) {
+
+        LogManager logManager = LogManager.getInstance();
+
+        apply(state);
 
         if (state.pattern != null) {
-            PwnFilter.logHigh("Debug last match: " + state.pattern.pattern());
-            PwnFilter.logHigh("Debug original: " + state.getOriginalMessage().getColoredString());
-            PwnFilter.logHigh("Debug current: " + state.message.getColoredString());
-            PwnFilter.logHigh("Debug log: " + (state.log?"yes":"no"));
-            PwnFilter.logHigh("Debug deny: " + (state.cancel?"yes":"no"));
+            logManager.debugLogHigh("Debug last match: " + state.pattern.pattern());
+            logManager.debugLogHigh("Debug original: " + state.getOriginalMessage().getColoredString());
+            logManager.debugLogHigh("Debug current: " + state.message.getColoredString());
+            logManager.debugLogHigh("Debug log: " + (state.log ? "yes" : "no"));
+            logManager.debugLogHigh("Debug deny: " + (state.cancel ? "yes" : "no"));
         } else {
-            PwnFilter.logHigh("[PwnFilter] Debug no match: " + state.getOriginalMessage().getColoredString());
+            logManager.debugLogHigh("[PwnFilter] Debug no match: " + state.getOriginalMessage().getColoredString());
         }
 
         if (state.cancel){
@@ -131,13 +141,11 @@ public class RuleChain implements ChainEntry {
 
         for (String s : state.getLogMessages()) {
             if (state.log) {
-                PwnFilter.logger.log(PwnFilter.getRuleLogLevel(),s);
+                LogManager.logger.log(LogManager.getRuleLogLevel(),s);
             } else {
-                PwnFilter.logLow(s);
+                logManager.debugLogLow(s);
             }
         }
-
-        return true;
     }
 
     public boolean append(ChainEntry r) {
@@ -192,9 +200,10 @@ public class RuleChain implements ChainEntry {
             String line;
             Rule currentRule = null;
             Integer count = 0;
+            Integer lineNo = 0;
 
             while ((line = input.readLine()) != null) {
-
+                lineNo++;
                 line = line.trim();
                 String command;
                 String lineData = "";
@@ -219,20 +228,25 @@ public class RuleChain implements ChainEntry {
                     // If we currently have a valid rule, add it to the set.
                     if (currentRule != null && currentRule.isValid()) {
                         append(currentRule);
+                        count++;
                     }
-                    count++;
 
                     if (command.equalsIgnoreCase("include")) {
                         // We need to find and parse the dependant file.  It may be valid
                         // currently, but we are going to force it to reload, to ensure
                         // no recursion loops.
+                        LogManager.getInstance().debugLogMedium("Including chain: " + lineData + " in: " + getConfigName());
                         RuleChain includedChain = manager.getRuleChain(lineData);
-                        includedChain.resetChain();
-                        if (includedChain.chainState != ChainState.PARTIAL && includedChain.loadConfigFile()) {
+                        if (includedChain.chainState == ChainState.PARTIAL) {
+                            LogManager.logger.warning("Recursion loop detected in: " + getConfigName() +
+                            "at line #:" + lineNo);
+                            continue;
+                        }
+                        if (includedChain.loadConfigFile()) {
                             append(includedChain);
                             count = count + includedChain.ruleCount();
                         } else {
-                            PwnFilter.logger.warning("Failed to include: " + lineData + " in rulechain: " + configName + ".");
+                            LogManager.logger.warning("Failed to include: " + lineData + " in rulechain: " + configName + ".");
                         }
                     } else {
                         // Now start on a new rule.  If the match string is invalid, we'll still get the new rule,
@@ -245,7 +259,7 @@ public class RuleChain implements ChainEntry {
                     // Not a match statement, so much be part of a rule.
                     if (currentRule != null) {
                         if (!currentRule.addLine(command, lineData)) {
-                            PwnFilter.logger.warning("Unable to add action/condition to rule: " + command + " " + lineData);
+                            LogManager.logger.warning("Unable to add action/condition to rule: " + command + " " + lineData);
                         }
                     }
                 }
@@ -256,7 +270,7 @@ public class RuleChain implements ChainEntry {
 
             input.close();
 
-            PwnFilter.logger.config("Read " + count.toString() + " rules from file.  Installed " + chain.size() + " valid rules.");
+            LogManager.logger.config("Read " + count.toString() + " rules from file: " + getConfigName() + ".");
             chainState = ChainState.READY;
 
         } catch (Exception e) {

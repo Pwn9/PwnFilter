@@ -3,6 +3,7 @@ package com.pwn9.PwnFilter.listener;
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.PwnFilter;
 import com.pwn9.PwnFilter.rules.RuleManager;
+import com.pwn9.PwnFilter.util.LogManager;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.event.Event;
@@ -21,7 +22,6 @@ public class PwnFilterSignListener extends BaseListener {
 
     public PwnFilterSignListener(PwnFilter p) {
         super(p);
-        setRuleChain(RuleManager.getInstance().getRuleChain("sign.txt"));
     }
 
     @Override
@@ -53,7 +53,7 @@ public class PwnFilterSignListener extends BaseListener {
 
         FilterState state = new FilterState(plugin, signLines, event.getPlayer(),this);
 
-        ruleChain.apply(state);
+        ruleChain.execute(state);
 
         if (state.messageChanged()){
             // TODO: Can colors be placed on signs?  Wasn't working. Find out why.
@@ -108,6 +108,7 @@ public class PwnFilterSignListener extends BaseListener {
     @Override
     public void activate(Configuration config) {
         if (isActive()) return;
+        setRuleChain(RuleManager.getInstance().getRuleChain("sign.txt"));
 
         PluginManager pm = Bukkit.getPluginManager();
         EventPriority priority = EventPriority.valueOf(config.getString("signpriority", "LOWEST").toUpperCase());
@@ -120,7 +121,7 @@ public class PwnFilterSignListener extends BaseListener {
                     },
                     plugin);
 
-            PwnFilter.logger.info("Activated SignListener with Priority Setting: " + priority.toString()
+            LogManager.logger.info("Activated SignListener with Priority Setting: " + priority.toString()
                     + " Rule Count: " + getRuleChain().ruleCount());
 
             setActive();

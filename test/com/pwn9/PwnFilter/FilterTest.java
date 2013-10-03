@@ -1,6 +1,7 @@
 package com.pwn9.PwnFilter;
 
 import com.pwn9.PwnFilter.util.ColoredString;
+import com.pwn9.PwnFilter.util.LogManager;
 import junit.framework.TestCase;
 import org.junit.runner.RunWith;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -24,7 +25,7 @@ public class FilterTest extends TestCase {
 
     public FilterTest() {
         logger = Logger.getLogger("Test");
-        PwnFilter.logger = logger;
+        LogManager.logger = logger;
     }
 
 

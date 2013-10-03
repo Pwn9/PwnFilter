@@ -4,6 +4,7 @@ import com.pwn9.PwnFilter.DataCache;
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.PwnFilter;
 import com.pwn9.PwnFilter.rules.RuleManager;
+import com.pwn9.PwnFilter.util.LogManager;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.Player;
@@ -29,11 +30,15 @@ public class PwnFilterCommandListener extends BaseListener {
 
     public PwnFilterCommandListener(PwnFilter p) {
 	    super(p);
-        setRuleChain(RuleManager.getInstance().getRuleChain("command.txt"));
     }
 
     public void activate(Configuration config) {
         if (isActive()) return;
+
+        cmdlist = plugin.getConfig().getStringList("cmdlist");
+        cmdblist = plugin.getConfig().getStringList("cmdblist");
+
+        setRuleChain(RuleManager.getInstance().getRuleChain("command.txt"));
 
         EventPriority priority = EventPriority.valueOf(config.getString("cmdpriority", "LOWEST").toUpperCase());
         if (config.getBoolean("commandfilter")) {
@@ -44,7 +49,7 @@ public class PwnFilterCommandListener extends BaseListener {
             },
             plugin);
             setActive();
-            PwnFilter.logger.info("Activated CommandListener with Priority Setting: " + priority.toString()
+            LogManager.logger.info("Activated CommandListener with Priority Setting: " + priority.toString()
                     + " Rule Count: " + getRuleChain().ruleCount() );
         }
     }
@@ -63,9 +68,6 @@ public class PwnFilterCommandListener extends BaseListener {
 
         //Gets the actual command as a string
         String cmdmessage = message.substring(1).split(" ")[0];
-
-        cmdlist = plugin.getConfig().getStringList("cmdlist");
-        cmdblist = plugin.getConfig().getStringList("cmdblist");
 
         if (!cmdlist.isEmpty() && !cmdlist.contains(cmdmessage)) return;
         if (cmdblist.contains(cmdmessage)) return;
@@ -97,7 +99,7 @@ public class PwnFilterCommandListener extends BaseListener {
 
         // Take the message from the Command Event and send it through the filter.
 
-        ruleChain.apply(state);
+        ruleChain.execute(state);
 
         // Only update the message if it has been changed.
         if (state.messageChanged()){

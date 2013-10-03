@@ -1,6 +1,7 @@
 package com.pwn9.PwnFilter.rules;
 
 import com.pwn9.PwnFilter.PwnFilter;
+import com.pwn9.PwnFilter.util.LogManager;
 
 import java.io.File;
 import java.util.Map;
@@ -69,7 +70,7 @@ public class RuleManager {
                 }
             }
         }
-        PwnFilter.logger.warning("Unable to find or create rule file:" + configName);
+        LogManager.logger.warning("Unable to find or create rule file:" + configName);
         return null;
     }
 
@@ -99,8 +100,10 @@ public class RuleManager {
         // Now, reparse the configs
         for (String ruleSetName : new CopyOnWriteArrayList<String>(ruleChains.keySet())) {
             RuleChain chain = ruleChains.get(ruleSetName);
-            if (!chain.loadConfigFile()) {
-                ruleChains.remove(ruleSetName);
+            if (chain.loadConfigFile()) {
+                LogManager.getInstance().debugLogMedium("Re-loaded RuleChain from config: " + chain.getConfigName() );
+            } else {
+                LogManager.getInstance().debugLogMedium("Unable to load RuleChain from config: " + chain.getConfigName());
             }
         }
 

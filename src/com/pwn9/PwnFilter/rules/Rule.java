@@ -5,6 +5,7 @@ import com.pwn9.PwnFilter.PwnFilter;
 import com.pwn9.PwnFilter.rules.action.Action;
 import com.pwn9.PwnFilter.rules.action.ActionFactory;
 import com.pwn9.PwnFilter.util.LimitedRegexCharSequence;
+import com.pwn9.PwnFilter.util.LogManager;
 import com.pwn9.PwnFilter.util.Patterns;
 
 import java.util.*;
@@ -80,24 +81,23 @@ public class Rule implements ChainEntry {
     /**
      * apply this action to the current message / event.  May trigger other bukkit events.
      * @param state A FilterState object for this event.
-     * @return true if action was taken, false if not.
      */
-    public boolean apply(FilterState state) {
+    public void apply(FilterState state) {
 
         // Check if action matches the current state of the message
 
-        if (PwnFilter.debugMode.compareTo(PwnFilter.DebugModes.high) >= 0) {
-            PwnFilter.logger.info("Testing Pattern: " + pattern.toString() + " on string: " + state.message.getPlainString());
+        if (LogManager.debugMode.compareTo(LogManager.DebugModes.high) >= 0) {
+            LogManager.logger.info("Testing Pattern: " + pattern.toString() + " on string: " + state.message.getPlainString());
         }
 
             LimitedRegexCharSequence limitedRegexCharSequence = new LimitedRegexCharSequence(state.message.getPlainString(),1000);
             final Matcher matcher = pattern.matcher(limitedRegexCharSequence);
         // If we don't match, return immediately with the original message
         try {
-            if (!matcher.find()) return false;
+            if (!matcher.find()) return;
         } catch (RuntimeException ex) {
-            PwnFilter.logger.severe("Regex match timed out! Regex: " + pattern.toString());
-            PwnFilter.logger.severe("Failed string was: " + limitedRegexCharSequence);
+            LogManager.logger.severe("Regex match timed out! Regex: " + pattern.toString());
+            LogManager.logger.severe("Failed string was: " + limitedRegexCharSequence);
         }
 
         state.pattern = pattern;
@@ -112,7 +112,7 @@ public class Rule implements ChainEntry {
             if (!c.check(state)) {
                 state.addLogMessage("CONDITION not met <"+ c.flag.toString()+
                         " " + c.type.toString()+" " + c.parameters + "> " + state.getOriginalMessage());
-                return false;
+                return;
             }
 
         }
@@ -125,7 +125,7 @@ public class Rule implements ChainEntry {
         for (Action a : actions) {
             a.execute(state);
         }
-        return true;
+
     }
 
     public List<Condition> getConditions() {

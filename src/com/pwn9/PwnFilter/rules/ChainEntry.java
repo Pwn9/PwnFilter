@@ -17,7 +17,7 @@ public interface ChainEntry {
 
     public boolean isValid();
 
-    public boolean apply(FilterState state);
+    public void apply(FilterState state);
 
     public Set<String> getPermissionList();
 

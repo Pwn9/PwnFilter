@@ -3,6 +3,7 @@ package com.pwn9.PwnFilter.rules;
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.PwnFilter;
 import com.pwn9.PwnFilter.listener.FilterListener;
+import com.pwn9.PwnFilter.util.LogManager;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.Player;
 import org.junit.After;
@@ -10,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.util.logging.Logger;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -34,6 +36,7 @@ public class RuleSetTest {
         File testFile = new File(this.getClass().getClassLoader().getResource("testrules.txt").getPath());
         ruleManager.setRuleDir(new File(testFile.getParent()));
         rs = ruleManager.getRuleChain("testrules.txt");
+        LogManager.getInstance(Logger.getAnonymousLogger(),new File("/tmp/test"));
     }
 
     @Test
@@ -70,7 +73,7 @@ public class RuleSetTest {
                 //To change body of implemented methods use File | Settings | File Templates.
             }
         });
-        rs.apply(testState);
+        rs.execute(testState);
         System.out.println(rs.ruleCount());
         assertEquals("This WAS a test", testState.message.getPlainString());
     }

@@ -4,6 +4,7 @@ import com.pwn9.PwnFilter.DataCache;
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.PwnFilter;
 import com.pwn9.PwnFilter.rules.RuleManager;
+import com.pwn9.PwnFilter.util.LogManager;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.Player;
@@ -27,7 +28,6 @@ public class PwnFilterPlayerListener extends BaseListener {
 
 	public PwnFilterPlayerListener(PwnFilter p) {
         super(p);
-        setRuleChain(RuleManager.getInstance().getRuleChain("chat.txt"));
     }
 
     public void onPlayerQuit(PlayerQuitEvent event) {
@@ -74,7 +74,8 @@ public class PwnFilterPlayerListener extends BaseListener {
         }
 
         // Take the message from the ChatEvent and send it through the filter.
-        ruleChain.apply(state);
+        LogManager.getInstance().debugLogHigh("Applying '"+ ruleChain.getConfigName() + "' to message: "+state.message);
+        ruleChain.execute(state);
 
         // Only update the message if it has been changed.
         if (state.messageChanged()){
@@ -99,6 +100,8 @@ public class PwnFilterPlayerListener extends BaseListener {
 
         if (isActive()) return;
 
+        setRuleChain(RuleManager.getInstance().getRuleChain("chat.txt"));
+
         PluginManager pm = Bukkit.getServer().getPluginManager();
         EventPriority priority = EventPriority.valueOf(config.getString("chatpriority", "LOWEST").toUpperCase());
 
@@ -115,7 +118,7 @@ public class PwnFilterPlayerListener extends BaseListener {
                 },
                 plugin);
 
-        PwnFilter.logger.info("Activated PlayerListener with Priority Setting: " + priority.toString()
+        LogManager.logger.info("Activated PlayerListener with Priority Setting: " + priority.toString()
                 + " Rule Count: " + getRuleChain().ruleCount() );
 
         setActive();

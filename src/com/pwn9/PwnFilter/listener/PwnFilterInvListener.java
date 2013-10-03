@@ -3,6 +3,7 @@ package com.pwn9.PwnFilter.listener;
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.PwnFilter;
 import com.pwn9.PwnFilter.rules.RuleManager;
+import com.pwn9.PwnFilter.util.LogManager;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.EntityType;
@@ -26,7 +27,6 @@ public class PwnFilterInvListener extends BaseListener {
 
     public PwnFilterInvListener(PwnFilter p) {
         super(p);
-        setRuleChain(RuleManager.getInstance().getRuleChain("item.txt"));
     }
 
     @Override
@@ -61,7 +61,7 @@ public class PwnFilterInvListener extends BaseListener {
 
             FilterState state = new FilterState(plugin, message, player, this);
 
-            ruleChain.apply(state);
+            ruleChain.execute(state);
             if (state.cancel) event.setCancelled(true);
 
             // Only update the message if it has been changed.
@@ -95,6 +95,8 @@ public class PwnFilterInvListener extends BaseListener {
     public void activate(Configuration config) {
         if (isActive()) return;
 
+        setRuleChain(RuleManager.getInstance().getRuleChain("item.txt"));
+
         PluginManager pm = Bukkit.getPluginManager();
         EventPriority priority = EventPriority.valueOf(config.getString("itempriority", "LOWEST").toUpperCase());
 
@@ -106,7 +108,7 @@ public class PwnFilterInvListener extends BaseListener {
                     },
                     plugin);
             setActive();
-            PwnFilter.logger.info("Activated ItemListener with Priority Setting: " + priority.toString()
+            LogManager.logger.info("Activated ItemListener with Priority Setting: " + priority.toString()
                     + " Rule Count: " + getRuleChain().ruleCount() );
 
         }
