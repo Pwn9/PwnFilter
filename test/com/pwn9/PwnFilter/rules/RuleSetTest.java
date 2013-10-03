@@ -34,8 +34,6 @@ public class RuleSetTest {
     public void setUp() throws Exception {
         ruleManager = RuleManager.getInstance(mockPlugin);
         File testFile = new File(getClass().getResource("/testrules.txt").getFile());
-        System.out.println(testFile.getPath());
-        System.out.println(testFile.getCanonicalPath());
         ruleManager.setRuleDir(new File(testFile.getParent()));
         rs = ruleManager.getRuleChain("testrules.txt");
         LogManager.getInstance(Logger.getAnonymousLogger(),new File("/tmp/test"));
