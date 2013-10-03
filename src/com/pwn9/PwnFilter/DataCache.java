@@ -43,7 +43,6 @@ public class DataCache {
         playerWorld = new ConcurrentHashMap<Player,String>();
         playerPermissions = new ConcurrentHashMap<Player,HashSet<String>>();
         this.plugin = plugin;
-        start();
     }
 
     // This method is for the owning plugin (PwnFilter) to initialize the cache.

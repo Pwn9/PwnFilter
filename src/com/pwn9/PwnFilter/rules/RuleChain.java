@@ -11,6 +11,7 @@
 
 package com.pwn9.PwnFilter.rules;
 
+import com.pwn9.PwnFilter.DataCache;
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.util.LogManager;
 
@@ -70,7 +71,12 @@ public class RuleChain implements ChainEntry {
         File ruleFile = manager.getFile(configName);
         if (ruleFile != null) {
             try {
-                return parseRules(new FileReader(ruleFile));
+                if (parseRules(new FileReader(ruleFile))) {
+                    DataCache.getInstance().addPermissions(getPermissionList());
+                    return true;
+                } else {
+                    return false;
+                }
             } catch (FileNotFoundException e) {
                 return false;
             }

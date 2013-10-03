@@ -1,5 +1,6 @@
 package com.pwn9.PwnFilter.rules;
 
+import com.pwn9.PwnFilter.DataCache;
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.PwnFilter;
 import com.pwn9.PwnFilter.listener.FilterListener;
@@ -37,6 +38,7 @@ public class RuleSetTest {
         ruleManager.setRuleDir(new File(testFile.getParent()));
         rs = ruleManager.getRuleChain("testrules.txt");
         LogManager.getInstance(Logger.getAnonymousLogger(),new File("/tmp/test"));
+        DataCache.getInstance(mockPlugin);
     }
 
     @Test
