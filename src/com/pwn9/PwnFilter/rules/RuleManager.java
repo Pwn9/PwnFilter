@@ -78,9 +78,13 @@ public class RuleManager {
      * Get a rulechain, or create a new one from the named config
      */
     public RuleChain getRuleChain(String configName) {
-        RuleChain newRuleChain = new RuleChain(this, configName);
-        ruleChains.put(configName,newRuleChain);
-        return newRuleChain;
+        if (ruleChains.containsKey(configName)) {
+            return ruleChains.get(configName);
+        } else {
+            RuleChain newRuleChain = new RuleChain(this, configName);
+            ruleChains.put(configName,newRuleChain);
+            return newRuleChain;
+        }
     }
 
     /*
