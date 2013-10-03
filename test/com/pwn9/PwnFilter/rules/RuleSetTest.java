@@ -33,7 +33,7 @@ public class RuleSetTest {
     @Before
     public void setUp() throws Exception {
         ruleManager = RuleManager.getInstance(mockPlugin);
-        File testFile = new File(this.getClass().getClassLoader().getResource("testrules.txt").getPath());
+        File testFile = new File(getClass().getResource("/testrules.txt").getPath());
         ruleManager.setRuleDir(new File(testFile.getParent()));
         rs = ruleManager.getRuleChain("testrules.txt");
         LogManager.getInstance(Logger.getAnonymousLogger(),new File("/tmp/test"));
@@ -73,7 +73,7 @@ public class RuleSetTest {
                 //To change body of implemented methods use File | Settings | File Templates.
             }
         });
-        rs.execute(testState);
+        rs.apply(testState);
         System.out.println(rs.ruleCount());
         assertEquals("This WAS a test", testState.message.getPlainString());
     }
