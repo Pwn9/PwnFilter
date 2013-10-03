@@ -78,7 +78,7 @@ public class PwnFilterServerCommandListener extends BaseListener {
 
         setRuleChain(RuleManager.getInstance().getRuleChain("console.txt"));
 
-        if (config.getBoolean("commandfilter")) {
+        if (config.getBoolean("consolefilter")) {
 
             PluginManager pm = Bukkit.getPluginManager();
             EventPriority priority = EventPriority.valueOf(config.getString("cmdpriority", "LOWEST").toUpperCase());

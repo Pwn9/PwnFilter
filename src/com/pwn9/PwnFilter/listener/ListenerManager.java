@@ -112,6 +112,14 @@ public class ListenerManager {
         }
     }
 
+    public void unregisterListeners() {
+        for (FilterListener f : registeredListeners.keySet() ) {
+            f.shutdown();
+            registeredListeners.remove(f);
+            plugin.updateMetrics();
+        }
+    }
+
     @Override
     protected void finalize() throws Throwable {
         super.finalize();

@@ -104,7 +104,7 @@ public class PwnFilter extends JavaPlugin {
 
     public void onDisable() {
 
-        ListenerManager.getInstance().disableListeners();
+        ListenerManager.getInstance().unregisterListeners();
 
         HandlerList.unregisterAll(this); // Unregister all remaining handlers.
 
@@ -118,17 +118,19 @@ public class PwnFilter extends JavaPlugin {
     public void activateMetrics() {
         // Activate Plugin Metrics
         try {
-            metrics = new Metrics(this);
+            if (metrics == null) {
+                metrics = new Metrics(this);
 
-            eventGraph = metrics.createGraph("Rules by Event");
-            updateMetrics();
+                eventGraph = metrics.createGraph("Rules by Event");
+                updateMetrics();
 
-            Metrics.Graph matchGraph = metrics.createGraph("Matches");
-            matchTracker = new Tracker("Matches");
+                Metrics.Graph matchGraph = metrics.createGraph("Matches");
+                matchTracker = new Tracker("Matches");
 
-            matchGraph.addPlotter(matchTracker);
-
+                matchGraph.addPlotter(matchTracker);
+            }
             metrics.start();
+
 
         } catch (IOException e) {
             LogManager.logger.fine(e.getMessage());
