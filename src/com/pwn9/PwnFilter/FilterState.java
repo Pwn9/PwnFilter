@@ -1,6 +1,7 @@
 package com.pwn9.PwnFilter;
 
 import com.pwn9.PwnFilter.listener.FilterListener;
+import com.pwn9.PwnFilter.rules.Rule;
 import com.pwn9.PwnFilter.util.ColoredString;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -39,7 +40,7 @@ public class FilterState {
     public boolean log = false;  // If true, actions will be logged
     public boolean stop = false; // If set true by a rule, will stop further processing.
     public boolean cancel = false; // If set true, will cancel this event.
-    public String ruleID; // ID of the rule we currently match
+    public Rule rule; // Rule we currently match
     public Pattern pattern; // Pattern that we currently matched.
 
     // NOTE: pattern should always match originalMessage, but may not match
@@ -92,11 +93,7 @@ public class FilterState {
     }
 
     public boolean playerHasPermission(String perm) {
-        if (player != null) {
-            return DataCache.getInstance().hasPermission(player,perm);
-        } else {
-            return false;
-        }
+        return player != null && DataCache.getInstance().hasPermission(player, perm);
     }
 
     public Player getPlayer() {

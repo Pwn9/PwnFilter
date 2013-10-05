@@ -228,7 +228,6 @@ public class RuleChain implements ChainEntry {
 
                 // Statements which will terminate a rule
                 // TODO: Rewrite the parser logic.  Should a blank line terminate a rule, instead?
-
                 if (command.matches("match|catch|replace|rewrite|include")) {
                     // This terminates the last rule.
                     // If we currently have a valid rule, add it to the set.
@@ -236,7 +235,6 @@ public class RuleChain implements ChainEntry {
                         append(currentRule);
                         count++;
                     }
-
                     if (command.equalsIgnoreCase("include")) {
                         // We need to find and parse the dependant file.  It may be valid
                         // currently, but we are going to force it to reload, to ensure
@@ -262,9 +260,13 @@ public class RuleChain implements ChainEntry {
                     }
 
                 } else {
-                    // Not a match statement, so much be part of a rule.
+                    // Not a rule/match/include statement, so much be part of a rule.
                     if (currentRule != null) {
-                        if (!currentRule.addLine(command, lineData)) {
+                        if (command.equalsIgnoreCase("rule")) {
+                            String[] data = lineData.split("\\s",2);
+                            if (data.length > 0) currentRule.setId(data[0]);
+                            if (data.length > 1) currentRule.setDescription(data[1]);
+                        } else if (!currentRule.addLine(command, lineData)) {
                             LogManager.logger.warning("Unable to add action/condition to rule: " + command + " " + lineData);
                         }
                     }

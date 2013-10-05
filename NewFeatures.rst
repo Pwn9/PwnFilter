@@ -39,8 +39,8 @@ Named Rules
 -----------
 Adding a name / ID to a rule.  eg::
 
+  match <matchstring>
   rule <id> [Optional description]
-    match <matchstring>
   ... etc...
 
 Shortcuts

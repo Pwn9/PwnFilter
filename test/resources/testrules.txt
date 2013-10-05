@@ -98,10 +98,12 @@ then log
 
 # rewrite da with the
 match \bda\b
+rule GR1 Grammar repair
 then rewrite the
 
 # rewrite asap with as soon as possible
 match \basap\b
+rule AC1 Acronym Expansion
 then rewrite as soon as possible
 
 # rewrite bbl with be back later

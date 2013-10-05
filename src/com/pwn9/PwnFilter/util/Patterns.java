@@ -39,7 +39,8 @@ public class Patterns {
                 replaceAll("&string", state.message.getColoredString()).
                 replaceAll("&rawstring", state.getOriginalMessage().getColoredString()).
                 replaceAll("&event", (state.getListenerName() != null)?state.getListenerName():"No Event!").
-                replaceAll("&id", (state.ruleID != null)?state.ruleID:"-");
+                replaceAll("&ruleid", (state.rule != null)?state.rule.getId():"-").
+                replaceAll("&ruledescr", (state.rule !=null)?state.rule.getDescription():"''");
         return line;
     }
 }

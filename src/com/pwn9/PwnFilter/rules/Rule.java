@@ -32,6 +32,7 @@ public class Rule implements ChainEntry {
 
     public Rule(String matchStr) {
         this.pattern = Patterns.compilePattern(matchStr);
+        this.id = "";
     }
 
     public Rule(String id, String description) {
@@ -101,10 +102,14 @@ public class Rule implements ChainEntry {
         }
 
         state.pattern = pattern;
+        state.rule = this;
 
         // If Match, log it and then check any conditions.
-        state.addLogMessage("|" + state.listener.getShortName() +  "| MATCH <" +
+        state.addLogMessage("|" + state.listener.getShortName() +  "| MATCH " +
+                (id.isEmpty()?"":"("+id+")") +
+                " <" +
                 state.playerName + "> " + state.message.getPlainString());
+        LogManager.getInstance().debugLogLow("Match String: " + matcher.group());
 
 
         for (Condition c : conditions) {
