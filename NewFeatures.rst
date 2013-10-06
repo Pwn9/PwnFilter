@@ -4,44 +4,55 @@ Proposed New Features for PwnFilter 3.2.0
 Rules file format / features
 +++++++++++++++++++++++++++++
 
-Rules.txt format
-----------------
+Rules.txt format * COMPLETE *
+------------------------------
 
 New folder structure::
 
     plugins/PwnFilter
-             \->rulesets
-             |     \-> tamewords.txt
-             |     \-> badwords.txt
-             |     \-> reallybadwords.txt
-             |     \-> commandaliases.txt
-             |     \-> etc.
-             |-> signrules.txt
-             |-> chatrules.txt
-             |-> itemrules.txt
-             \-> bookrules.txt
+             \->rules
+                |-> tamewords.txt
+                |-> badwords.txt
+                |-> reallybadwords.txt
+                |-> sign.txt
+                |-> chat.txt
+                |-> item.txt
+                |-> command.txt
+                \-> console.txt
 
-Each of the signrules, chatrules, etc. are rulesets for specific event
-handlers.  They can import from any of the files in the rulesets directory,
+Each of the sign, chat, etc. are rulesets for specific event
+handlers.  They can import from any of the files in the rules directory
+(or, in fact, any file that can be referred to relative to where it is, eg: ../rules.txt)
 and/or they can just have rules directly entered.  Eg:
 
-chatrules.txt::
+chat.txt::
 
-    import tamewords.txt
-    import badwords.txt
+    include tamewords.txt
+    include badwords.txt
 
     match derp
     then ...
 
 and so on...
 
-Named Rules
------------
+Named Rules * COMPLETE *
+------------------------
 Adding a name / ID to a rule.  eg::
 
   match <matchstring>
   rule <id> [Optional description]
   ... etc...
+
+Also, you can use &ruleid and &ruledescr in "then command" and "then console" messages.  Eg::
+
+  match badword
+  rule BW1 Badword Rule
+  then console ban &player 1d (&ruleid) &ruledescr
+
+would cause the following command to be run::
+
+  /ban PlayerName 1d (BW1) Badword Rule
+
 
 Shortcuts
 ---------
