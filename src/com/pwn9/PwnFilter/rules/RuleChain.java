@@ -19,10 +19,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 
 /**
@@ -53,6 +50,9 @@ public class RuleChain implements ChainEntry {
     private final RuleManager manager;
     private ChainState chainState;
     private ArrayList<ChainEntry> chain = new ArrayList<ChainEntry>();
+    private HashMap<String, ArrayList<String[]>> actionGroups = new HashMap<String, ArrayList<String[]>>();
+    private HashMap<String, ArrayList<String[]>> conditionGroups = new HashMap<String, ArrayList<String[]>>();
+
     private final String configName;
 
 
@@ -188,6 +188,13 @@ public class RuleChain implements ChainEntry {
         return permList;
     }
 
+    public HashMap<String,ArrayList<String[]>> getActionGroups() {
+        return actionGroups;
+    }
+
+    public HashMap<String,ArrayList<String[]>> getConditionGroups() {
+        return conditionGroups;
+    }
     /**
      * Delete all rules in the chain, and reset its state to INIT
      */
@@ -203,35 +210,74 @@ public class RuleChain implements ChainEntry {
      */
     public boolean parseRules(java.io.Reader rulesStream) {
         chainState = ChainState.PARTIAL;
-
+        // TODO: Needs a serious logic cleanup.
         // Now read in the rules.txt file
+
+        String actionGroup = null;
+        String conditionGroup = null;
+        HashMap<String,String> shortcuts = null;
+        Rule currentRule = null;
+        Integer count = 0;
+        Integer lineNo = 0;
+
         try {
             BufferedReader input = new BufferedReader(rulesStream);
             String line;
-            Rule currentRule = null;
-            Integer count = 0;
-            Integer lineNo = 0;
-            HashMap<String,String> shortcuts = null;
 
             while ((line = input.readLine()) != null) {
                 lineNo++;
                 line = line.trim();
                 String command;
-                String lineData = "";
+                String lineData;
 
-                // SKIP this line if it is empty, or a comment
-                if (line.isEmpty() || line.matches("^#.*")) continue;
+                // SKIP this line if it is a comment
+                if (line.matches("^#.*")) continue;
+
+                if (line.isEmpty()) {
+                    if (currentRule != null && currentRule.isValid()) {
+                        append(currentRule);
+                        count++;
+                    }
+                    currentRule = null;
+                    actionGroup = null;
+                    conditionGroup = null;
+                    continue;
+                }
+
 
                 // SPLIT the line into the token and remainder.
-                {
-                    String[] parts = line.split("\\s", 2);
-                    command = parts[0];
-                    if (parts.length > 1 ) {
-                        lineData = parts[1];
-                    } else {
-                        lineData = "";
-                    }
+                String[] parts = line.split("\\s", 2);
+                command = parts[0];
+                if (parts.length > 1 ) {
+                    lineData = parts[1];
+                } else {
+                    lineData = "";
                 }
+
+                /* Actiongroup / Condition group sub-parser */
+
+                // Check if this is the start of an actiongroup or conditiongroup.
+                if (command.equalsIgnoreCase("actiongroup")) {
+                    actionGroup = lineData;
+                    actionGroups.put(actionGroup,new ArrayList<String[]>());
+                    continue;
+                }
+                if (command.equalsIgnoreCase("conditiongroup")) {
+                    conditionGroup = lineData;
+                    conditionGroups.put(conditionGroup,new ArrayList<String[]>());
+                    continue;
+                }
+
+                if (actionGroup != null) {
+                    actionGroups.get(actionGroup).add(new String[]{command,lineData});
+                    continue;
+                }
+                if (conditionGroup != null) {
+                    conditionGroups.get(actionGroup).add(new String[]{command,lineData});
+                    continue;
+                }
+
+                /* End Actiongroup / Conditiongroup sub-parser */
 
                 // Check if this is a toggle for shortcuts.
                 if (command.matches("shortcuts")) {
@@ -242,7 +288,6 @@ public class RuleChain implements ChainEntry {
                     }
                 }
                 // Statements which will terminate a rule
-                // TODO: Rewrite the parser logic.  Should a blank line terminate a rule, instead?
                 if (command.matches("match|catch|replace|rewrite|include")) {
 
                     // This terminates the last rule.
@@ -264,6 +309,8 @@ public class RuleChain implements ChainEntry {
                         }
                         if (includedChain.loadConfigFile()) {
                             append(includedChain);
+                            actionGroups.putAll(includedChain.getActionGroups());
+                            conditionGroups.putAll(includedChain.getConditionGroups());
                             count = count + includedChain.ruleCount();
                         } else {
                             LogManager.logger.warning("Failed to include: " + lineData + " in rulechain: " + configName + ".");
@@ -281,6 +328,34 @@ public class RuleChain implements ChainEntry {
                 } else {
                     // Not a rule/match/include statement, so much be part of a rule.
                     if (currentRule != null) {
+                        if (command.equalsIgnoreCase("conditions")) {
+                            List<String[]> conditions = conditionGroups.get(lineData);
+                            if (conditions != null ) {
+                                for (String[] e : conditions) {
+                                    if (!currentRule.addLine(e[0], e[1])) {
+                                        LogManager.logger.warning("Unable to add condition to rule: " + e[0] + " " + e[1]);
+                                    }
+                                }
+                            } else {
+                                LogManager.logger.warning("Unable to add conditiongroup: " + lineData);
+                            }
+                            continue;
+                        }
+
+                        if (command.equalsIgnoreCase("actions")) {
+                            List<String[]> actions = actionGroups.get(lineData);
+                            if (actions != null ) {
+                                for (String[] e : actions) {
+                                    if (!currentRule.addLine(e[0], e[1])) {
+                                        LogManager.logger.warning("Unable to add action to rule: " + e[0] + " " + e[1]);
+                                    }
+                                }
+                            } else {
+                                LogManager.logger.warning("Unable to add actiongroup: " + lineData);
+                            }
+                            continue;
+                        }
+
                         if (command.equalsIgnoreCase("rule")) {
                             String[] data = lineData.split("\\s",2);
                             if (data.length > 0) currentRule.setId(data[0]);

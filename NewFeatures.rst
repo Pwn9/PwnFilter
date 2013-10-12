@@ -4,6 +4,48 @@ Proposed New Features for PwnFilter 3.2.0
 Rules file format / features
 +++++++++++++++++++++++++++++
 
+***NOTE****
+A subtle, but important change has been made to the rules file format.  If a blank line is detected,
+this will cause the parser to finish a rule.  This used to be valid::
+
+  match blah
+  then warn Hey!
+
+  then deny
+
+This is no longer valid, though, and the "then deny" will not ba attached to the rule.
+
+Further, at least one blank line must separate all statement groups.  eg::
+
+  VALID:
+    match blah
+    then action
+
+    match foo
+    then action
+
+  NOT VALID:
+    match blah
+    then action
+    match foo
+    then action
+
+Comments do not count as blank line.  eg::
+
+  VALID:
+    match blah
+    #Now do an action.
+    then action
+
+  NOT VALID:
+    match blah
+    then action
+    #Now another rule
+    match foo
+    then blah
+
+Got it? :)
+
 Rules.txt format * COMPLETE *
 ------------------------------
 
@@ -54,7 +96,7 @@ would cause the following command to be run::
   /ban PlayerName 1d (BW1) Badword Rule
 
 
-Shortcuts
+Shortcuts * COMPLETE *
 ---------
 
 Writing regex's can be tedious.  Shortcuts allow the use of configurable
@@ -93,7 +135,7 @@ This file is called letters.vars::
 
 If you want to match an actual less-than (<) or greater-than (>), use a backslash (\\).
 
-Allowed Characters in shortcut names: [a-zA-z_]
+Allowed Characters in shortcut names: [_a-zA-z]
 
 Action Groups
 -------------
@@ -229,7 +271,7 @@ Must take into consideration that some rules may not be 'bypassable'.
 Troubleshooting
 +++++++++++++++
 
-Regex Timeout
+Regex Timeout * COMPLETE *
 -------------
 An enhancement to the Regex which will automatically time-out if a Regex
 takes more than 500ms to execute.  Upon triggering the timeout, PwnFilter
