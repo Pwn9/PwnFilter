@@ -97,7 +97,7 @@ would cause the following command to be run::
 
 
 Shortcuts * COMPLETE *
----------
+----------------------
 
 Writing regex's can be tedious.  Shortcuts allow the use of configurable
 "variables" that can are replaced in the regex.  Eg::
@@ -108,7 +108,7 @@ could be replaced with::
 
     shortcuts words.vars
     match ((http)*<chr>*(www)*<chr>*<xta>{3,}<dot>+<dom>)
-    noshortcuts
+    shortcuts
     # ^ This will disable the shortcuts for future rules.
 
 Internally, this would be expanded out to the regex above.
@@ -137,43 +137,42 @@ If you want to match an actual less-than (<) or greater-than (>), use a backslas
 
 Allowed Characters in shortcut names: [_a-zA-z]
 
-Action Groups
--------------
+Action Groups * COMPLETE *
+--------------------------
 
 Sometimes, you want to have multiple rules that all do the same actions.
 An Action Group allows you to predefine a set of actions which you can
 then apply to a rule.  Eg::
 
   actiongroup swearactions
-    then warn "Don't say that!"
-    then fine 50 Pay $50 to the swear jar!
+  then warn "Don't say that!"
+  then fine 50 Pay $50 to the swear jar!
 
   .. later in the rules.txt ..
 
-  rule L3 Match jerk
-    matchusing varset j+<_>*<E>+<_>*r+<_>*<K>+<_>*s*
-    then replace meanie
-    then actions swearactions
+  match jerk
+  then replace meanie
+  then actions swearactions
 
-Condition Groups
-----------------
+Condition Groups * COMPLETE *
+-----------------------------
 
 Just as with action groups, condition groups let you specify common conditions
 you wish to apply to multiple rules.   Eg::
 
   conditiongroup ignoreAdmins
-    ignore user Sage905
-    ignore user tremor77
-    ignore user DreamPhreak
-    ignore user EpicATrain
+  ignore user Sage905
+  ignore user tremor77
+  ignore user DreamPhreak
+  ignore user EpicATrain
 
   ... later in the rules.txt ...
 
   rule L3 Match jerk
-    matchusing varset j+<_>*<E>+<_>*r+<_>*<K>+<_>*s*
-    conditions ignoreAdmins
-    then replace meanie
-    then actions swearactions
+  matchusing varset j+<_>*<E>+<_>*r+<_>*<K>+<_>*s*
+  conditions ignoreAdmins
+  then replace meanie
+  then actions swearactions
 
 
 
@@ -272,7 +271,7 @@ Troubleshooting
 +++++++++++++++
 
 Regex Timeout * COMPLETE *
--------------
+---------------------------
 An enhancement to the Regex which will automatically time-out if a Regex
 takes more than 500ms to execute.  Upon triggering the timeout, PwnFilter
 will log an error showing the failed rule as well as the text that triggered

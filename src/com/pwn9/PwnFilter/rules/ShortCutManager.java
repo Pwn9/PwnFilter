@@ -46,13 +46,13 @@ public class ShortCutManager {
         while (matcher.find()) {
             String thisMatch = matcher.group();
             String var = thisMatch.substring(1,thisMatch.length()-1);
-            String replacement = shortcuts.get(var);
-            if (replacement == null) {
+            String replacement = shortcuts.get(var.toLowerCase());
+            if (replacement == null || replacement.isEmpty()) {
                 LogManager.logger.warning("Could not find shortcut: <"+var+">" +
                         "when parsing: '"+lineData+"'");
                 matcher.appendReplacement(newLineData,"");
             } else {
-                matcher.appendReplacement(newLineData, replacement);
+                matcher.appendReplacement(newLineData, Matcher.quoteReplacement(replacement));
             }
         }
         matcher.appendTail(newLineData);
@@ -103,7 +103,7 @@ public class ShortCutManager {
                     LogManager.logger.info("Syntax error in " + fileName + " line: " + lineNo);
                     continue;
                 }
-                varset.put(parts[0],parts[1]);
+                varset.put(parts[0].toLowerCase(),parts[1]);
 
             }
 
