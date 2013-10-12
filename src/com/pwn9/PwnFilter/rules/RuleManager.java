@@ -54,23 +54,23 @@ public class RuleManager {
      * Get a File object pointing to the named configuration in the configured
      * Rule Directory.
      *
-     * @param configName Name of configuration File to load
+     * @param fileName Name of configuration File to load
      * @return File object for requested config, or null if not found.
      */
-    public File getFile(String configName) {
+    public File getFile(String fileName) {
         if (ruleDir.exists()) {
-            File ruleFile = new File(ruleDir,configName);
+            File ruleFile = new File(ruleDir,fileName);
             if (ruleFile.exists()) {
                 return ruleFile;
             } else {
-                if (plugin.copyRuleTemplate(ruleFile, configName)) {
+                if (plugin.copyRuleTemplate(ruleFile, fileName)) {
                     return ruleFile;
                 } else {
                     return null;
                 }
             }
         }
-        LogManager.logger.warning("Unable to find or create rule file:" + configName);
+        LogManager.logger.warning("Unable to find or create rule file:" + fileName);
         return null;
     }
 
@@ -101,13 +101,16 @@ public class RuleManager {
             rc.resetChain();
         }
 
+        // Reload all the shortcuts
+        ShortCutManager.getInstance().reloadFiles();
+
         // Now, reparse the configs
         for (String ruleSetName : new CopyOnWriteArrayList<String>(ruleChains.keySet())) {
             RuleChain chain = ruleChains.get(ruleSetName);
             if (chain.loadConfigFile()) {
-                LogManager.getInstance().debugLogMedium("Re-loaded RuleChain from config: " + chain.getConfigName() );
+                LogManager.getInstance().debugMedium("Re-loaded RuleChain from config: " + chain.getConfigName());
             } else {
-                LogManager.getInstance().debugLogMedium("Unable to load RuleChain from config: " + chain.getConfigName());
+                LogManager.getInstance().debugMedium("Unable to load RuleChain from config: " + chain.getConfigName());
             }
         }
 

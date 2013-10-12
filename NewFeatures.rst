@@ -64,29 +64,32 @@ Writing regex's can be tedious.  Shortcuts allow the use of configurable
 
 could be replaced with::
 
-    matchusing <varset> ((http)*<chr>*(www)*<chr>*<xta>{3,}<dot>+<dom>)
+    shortcuts words.vars
+    match ((http)*<chr>*(www)*<chr>*<xta>{3,}<dot>+<dom>)
+    noshortcuts
+    # ^ This will disable the shortcuts for future rules.
 
 Internally, this would be expanded out to the regex above.
 
-In a file called <varset>.yml, you would specify::
+In a file called words.vars, you would specify::
 
-    chr: (\w|\W|\d|_)
-    dom: (com\b|org\b|net\b|edu\b|co\b|uk\b|de\b|cc\b|biz\b|mobi\b|xxx\b|tv\b)
-    dot: (\W|\d|_|dot|\(dot\))
-    xta: [a-zA-Z0-9\.\-\*_\^\+\~\`\=\,\&*]
+    chr (\w|\W|\d|_)
+    dom (com\b|org\b|net\b|edu\b|co\b|uk\b|de\b|cc\b|biz\b|mobi\b|xxx\b|tv\b)
+    dot (\W|\d|_|dot|\(dot\))
+    xta [a-zA-Z0-9\.\-\*_\^\+\~\`\=\,\&*]
 
 You can surround up to 3 characters with <> and they will
 be replaced with whatever is defined in that varset.yml file.
 
 Another example:
 
-varset.yml as above, with the addition of::
+This file is called letters.vars::
 
-    _: (\W|\d|_)
-    E: [eu]
-    K: [ck]
+    _ (\W|\d|_)
+    E [eu]
+    K [ck]
 
-    matchusing <varset> j+<_>*<E>+<_>*r+<_>*<K>+<_>*s*
+    matchusing letters.var j+<_>*<E>+<_>*r+<_>*<K>+<_>*s*
 
 If you want to match an actual less-than (<) or greater-than (>), use a backslash (\\).
 

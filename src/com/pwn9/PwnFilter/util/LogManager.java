@@ -31,19 +31,19 @@ public class LogManager {
         return ruleLogLevel;
     }
 
-    public void debugLogLow(String message) {
+    public void debugLow(String message) {
         if (debugMode.compareTo(DebugModes.low) >= 0) {
             logger.finer(message);
         }
     }
 
-    public void debugLogMedium(String message) {
+    public void debugMedium(String message) {
         if (debugMode.compareTo(DebugModes.medium) >= 0) {
             logger.finer(message);
         }
     }
 
-    public void debugLogHigh(String message) {
+    public void debugHigh(String message) {
         if (debugMode.compareTo(DebugModes.high) >= 0) {
             logger.finer(message);
         }

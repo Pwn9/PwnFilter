@@ -74,7 +74,7 @@ public class PwnFilterPlayerListener extends BaseListener {
         }
 
         // Take the message from the ChatEvent and send it through the filter.
-        LogManager.getInstance().debugLogHigh("Applying '"+ ruleChain.getConfigName() + "' to message: "+state.message);
+        LogManager.getInstance().debugHigh("Applying '" + ruleChain.getConfigName() + "' to message: " + state.message);
         ruleChain.execute(state);
 
         // Only update the message if it has been changed.

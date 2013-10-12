@@ -109,7 +109,7 @@ public class Rule implements ChainEntry {
                 (id.isEmpty()?"":"("+id+")") +
                 " <" +
                 state.playerName + "> " + state.message.getPlainString());
-        LogManager.getInstance().debugLogLow("Match String: " + matcher.group());
+        LogManager.getInstance().debugLow("Match String: " + matcher.group());
 
 
         for (Condition c : conditions) {

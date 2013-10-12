@@ -14,11 +14,18 @@ package com.pwn9.PwnFilter.rules;
 import com.pwn9.PwnFilter.DataCache;
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.util.LogManager;
+import com.pwn9.PwnFilter.util.Patterns;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -129,13 +136,13 @@ public class RuleChain implements ChainEntry {
         apply(state);
 
         if (state.pattern != null) {
-            logManager.debugLogHigh("Debug last match: " + state.pattern.pattern());
-            logManager.debugLogHigh("Debug original: " + state.getOriginalMessage().getColoredString());
-            logManager.debugLogHigh("Debug current: " + state.message.getColoredString());
-            logManager.debugLogHigh("Debug log: " + (state.log ? "yes" : "no"));
-            logManager.debugLogHigh("Debug deny: " + (state.cancel ? "yes" : "no"));
+            logManager.debugHigh("Debug last match: " + state.pattern.pattern());
+            logManager.debugHigh("Debug original: " + state.getOriginalMessage().getColoredString());
+            logManager.debugHigh("Debug current: " + state.message.getColoredString());
+            logManager.debugHigh("Debug log: " + (state.log ? "yes" : "no"));
+            logManager.debugHigh("Debug deny: " + (state.cancel ? "yes" : "no"));
         } else {
-            logManager.debugLogHigh("[PwnFilter] Debug no match: " + state.getOriginalMessage().getColoredString());
+            logManager.debugHigh("[PwnFilter] Debug no match: " + state.getOriginalMessage().getColoredString());
         }
 
         if (state.cancel){
@@ -149,7 +156,7 @@ public class RuleChain implements ChainEntry {
             if (state.log) {
                 LogManager.logger.log(LogManager.getRuleLogLevel(),s);
             } else {
-                logManager.debugLogLow(s);
+                logManager.debugLow(s);
             }
         }
     }
@@ -207,6 +214,7 @@ public class RuleChain implements ChainEntry {
             Rule currentRule = null;
             Integer count = 0;
             Integer lineNo = 0;
+            HashMap<String,String> shortcuts = null;
 
             while ((line = input.readLine()) != null) {
                 lineNo++;
@@ -223,12 +231,23 @@ public class RuleChain implements ChainEntry {
                     command = parts[0];
                     if (parts.length > 1 ) {
                         lineData = parts[1];
+                    } else {
+                        lineData = "";
                     }
                 }
 
+                // Check if this is a toggle for shortcuts.
+                if (command.matches("shortcuts")) {
+                    if (lineData.isEmpty()) {
+                        shortcuts = null;
+                    } else {
+                        shortcuts = ShortCutManager.getInstance().getShortcutMap(lineData);
+                    }
+                }
                 // Statements which will terminate a rule
                 // TODO: Rewrite the parser logic.  Should a blank line terminate a rule, instead?
                 if (command.matches("match|catch|replace|rewrite|include")) {
+
                     // This terminates the last rule.
                     // If we currently have a valid rule, add it to the set.
                     if (currentRule != null && currentRule.isValid()) {
@@ -239,7 +258,7 @@ public class RuleChain implements ChainEntry {
                         // We need to find and parse the dependant file.  It may be valid
                         // currently, but we are going to force it to reload, to ensure
                         // no recursion loops.
-                        LogManager.getInstance().debugLogMedium("Including chain: " + lineData + " in: " + getConfigName());
+                        LogManager.getInstance().debugMedium("Including chain: " + lineData + " in: " + getConfigName());
                         RuleChain includedChain = manager.getRuleChain(lineData);
                         if (includedChain.chainState == ChainState.PARTIAL) {
                             LogManager.logger.warning("Recursion loop detected in: " + getConfigName() +
@@ -256,6 +275,24 @@ public class RuleChain implements ChainEntry {
                         // Now start on a new rule.  If the match string is invalid, we'll still get the new rule,
                         // and we'll still collect statements until the next match, but we'll throw it all away,
                         // because it won't be valid.
+                        if (shortcuts != null ) {
+                            Pattern shortcutMatch = Patterns.compilePattern("<.{0,3}>");
+                            Matcher matcher = shortcutMatch.matcher(lineData);
+                            StringBuffer newLineData = new StringBuffer();
+                            while (matcher.find()) {
+                                String thisMatch = matcher.group();
+                                String var = thisMatch.substring(1,thisMatch.length()-1);
+                                String replacement = shortcuts.get(var);
+                                if (replacement == null) {
+                                    LogManager.logger.warning("Could not find shortcut: <"+var+">" +
+                                            "when parsing '"+configName+"' line: "+ lineNo);
+                                } else {
+                                    matcher.appendReplacement(newLineData, replacement);
+                                }
+                                matcher.appendTail(newLineData);
+                                lineData = newLineData.toString();
+                            }
+                        }
                         currentRule = new Rule(lineData);
                     }
 

@@ -38,7 +38,12 @@ public class PwnFilterServerCommandListener extends BaseListener {
         String command = event.getCommand();
 
         //Gets the actual command as a string
-        String cmdmessage = command.split(" ")[0];
+        String cmdmessage;
+        try {
+            cmdmessage = command.split(" ")[0];
+        } catch (IndexOutOfBoundsException ex) {
+            return;
+        }
 
         if (!cmdlist.isEmpty() && !cmdlist.contains(cmdmessage)) return;
         if (cmdblist.contains(cmdmessage)) return;
