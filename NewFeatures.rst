@@ -93,6 +93,8 @@ This file is called letters.vars::
 
 If you want to match an actual less-than (<) or greater-than (>), use a backslash (\\).
 
+Allowed Characters in shortcut names: [a-zA-z_]
+
 Action Groups
 -------------
 

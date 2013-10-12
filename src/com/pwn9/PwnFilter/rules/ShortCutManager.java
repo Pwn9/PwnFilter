@@ -1,12 +1,15 @@
 package com.pwn9.PwnFilter.rules;
 
 import com.pwn9.PwnFilter.util.LogManager;
+import com.pwn9.PwnFilter.util.Patterns;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Manage all the shortcut mappings
@@ -36,6 +39,29 @@ public class ShortCutManager {
         } else return false;
     }
 
+    public static String replace(HashMap<String,String> shortcuts, String lineData) {
+        Pattern shortcutMatch = Patterns.compilePattern("<[a-zA-Z_]{0,3}>");
+        Matcher matcher = shortcutMatch.matcher(lineData);
+        StringBuffer newLineData = new StringBuffer();
+        while (matcher.find()) {
+            String thisMatch = matcher.group();
+            String var = thisMatch.substring(1,thisMatch.length()-1);
+            String replacement = shortcuts.get(var);
+            if (replacement == null) {
+                LogManager.logger.warning("Could not find shortcut: <"+var+">" +
+                        "when parsing: '"+lineData+"'");
+                matcher.appendReplacement(newLineData,"");
+            } else {
+                matcher.appendReplacement(newLineData, replacement);
+            }
+        }
+        matcher.appendTail(newLineData);
+        if (!newLineData.toString().equals(lineData)) {
+            LogManager.getInstance().debugHigh("Original regex: " + lineData + "\n New regex: " + newLineData);
+        }
+        return newLineData.toString();
+
+    }
 
     public HashMap<String, String> getShortcutMap(String mapFileName) {
         HashMap<String, String> returnValue = shortcutFiles.get(mapFileName);
@@ -74,7 +100,7 @@ public class ShortCutManager {
 
                 // Line must have shortcut/replacement.  shortcut must be < 3 characters long
                 if (parts.length < 2 || parts[0].length() > 3) {
-                    LogManager.logger.info("Syntax error in " + fileName+ " line: " + lineNo);
+                    LogManager.logger.info("Syntax error in " + fileName + " line: " + lineNo);
                     continue;
                 }
                 varset.put(parts[0],parts[1]);

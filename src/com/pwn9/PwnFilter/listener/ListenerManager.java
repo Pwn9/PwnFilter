@@ -116,7 +116,6 @@ public class ListenerManager {
         for (FilterListener f : registeredListeners.keySet() ) {
             f.shutdown();
             registeredListeners.remove(f);
-            plugin.updateMetrics();
         }
     }
 

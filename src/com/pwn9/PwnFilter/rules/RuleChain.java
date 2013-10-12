@@ -14,7 +14,6 @@ package com.pwn9.PwnFilter.rules;
 import com.pwn9.PwnFilter.DataCache;
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.util.LogManager;
-import com.pwn9.PwnFilter.util.Patterns;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -24,8 +23,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 /**
@@ -276,22 +273,7 @@ public class RuleChain implements ChainEntry {
                         // and we'll still collect statements until the next match, but we'll throw it all away,
                         // because it won't be valid.
                         if (shortcuts != null ) {
-                            Pattern shortcutMatch = Patterns.compilePattern("<.{0,3}>");
-                            Matcher matcher = shortcutMatch.matcher(lineData);
-                            StringBuffer newLineData = new StringBuffer();
-                            while (matcher.find()) {
-                                String thisMatch = matcher.group();
-                                String var = thisMatch.substring(1,thisMatch.length()-1);
-                                String replacement = shortcuts.get(var);
-                                if (replacement == null) {
-                                    LogManager.logger.warning("Could not find shortcut: <"+var+">" +
-                                            "when parsing '"+configName+"' line: "+ lineNo);
-                                } else {
-                                    matcher.appendReplacement(newLineData, replacement);
-                                }
-                                matcher.appendTail(newLineData);
-                                lineData = newLineData.toString();
-                            }
+                            lineData = ShortCutManager.replace(shortcuts, lineData);
                         }
                         currentRule = new Rule(lineData);
                     }

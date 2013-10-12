@@ -3,6 +3,7 @@ package com.pwn9.PwnFilter;
 import com.pwn9.PwnFilter.listener.*;
 import com.pwn9.PwnFilter.rules.RuleChain;
 import com.pwn9.PwnFilter.rules.RuleManager;
+import com.pwn9.PwnFilter.rules.ShortCutManager;
 import com.pwn9.PwnFilter.util.DefaultMessages;
 import com.pwn9.PwnFilter.util.LogManager;
 import com.pwn9.PwnFilter.util.Tracker;
@@ -203,6 +204,8 @@ public class PwnFilter extends JavaPlugin {
             }
         }
         RuleManager.getInstance().setRuleDir(ruleDir);
+
+        ShortCutManager.getInstance().setShortcutDir(ruleDir);
 
         try {
             LogManager.ruleLogLevel = Level.parse(getConfig().getString("loglevel","info").toUpperCase());
