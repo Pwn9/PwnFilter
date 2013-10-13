@@ -36,6 +36,8 @@ public class DataCache {
     private ConcurrentHashMap<Player,String> playerWorld;
     private ConcurrentHashMap<Player,HashSet<String>> playerPermissions;
     private ArrayList<Player> queuedPlayerList = new ArrayList<Player>();
+    private Player[] onlinePlayers = {};
+
     //TODO: Add a "registration" system for interesting permissions, etc.
     // so that plugins can add/remove things they want cached.
     private DataCache(Plugin plugin) {
@@ -60,6 +62,10 @@ public class DataCache {
         } else return _instance;
     }
 
+    public Player[] getOnlinePlayers() {
+        return onlinePlayers;
+    }
+
     private void cachePlayerPermissions(Player p) {
         HashSet<String> playerPerms = new HashSet<String>();
 
@@ -70,6 +76,10 @@ public class DataCache {
         }
 
         playerPermissions.put(p,playerPerms);
+    }
+
+    public synchronized void addPermission(String permission) {
+        permSet.add(permission);
     }
 
     public synchronized void addPermissions(ArrayList<String> permissions) {
@@ -107,7 +117,8 @@ public class DataCache {
           grab the list of online players, and add it to the list.
          */
         if (queuedPlayerList.size() < 1) {
-            Player[] onlinePlayers = Bukkit.getOnlinePlayers();
+            onlinePlayers = Bukkit.getOnlinePlayers();
+
             if (onlinePlayers.length > 0) {
                 queuedPlayerList.addAll(Arrays.asList(onlinePlayers));
             }
