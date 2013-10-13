@@ -3,6 +3,7 @@ package com.pwn9.PwnFilter.util;
 import com.pwn9.PwnFilter.FilterState;
 
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
@@ -34,13 +35,13 @@ public class Patterns {
     }
 
     public static String replaceVars(String line, FilterState state) {
-        line = line.replaceAll("&world", (state.playerWorldName != null)?state.playerWorldName:"NoWorld").
-                replaceAll("&player", (state.playerName != null)?state.playerName:"NoPlayer!").
-                replaceAll("&string", state.message.getColoredString()).
-                replaceAll("&rawstring", state.getOriginalMessage().getColoredString()).
+        line = line.replaceAll("&world", (state.playerWorldName != null)?Matcher.quoteReplacement(state.playerWorldName):"NoWorld").
+                replaceAll("&player", (state.playerName != null)?Matcher.quoteReplacement(state.playerName):"NoPlayer!").
+                replaceAll("&string", Matcher.quoteReplacement(state.message.getColoredString())).
+                replaceAll("&rawstring", Matcher.quoteReplacement(state.getOriginalMessage().getColoredString())).
                 replaceAll("&event", (state.getListenerName() != null)?state.getListenerName():"No Event!").
-                replaceAll("&ruleid", (state.rule != null)?state.rule.getId():"-").
-                replaceAll("&ruledescr", (state.rule !=null)?state.rule.getDescription():"''");
+                replaceAll("&ruleid", (state.rule != null)?Matcher.quoteReplacement(state.rule.getId()):"-").
+                replaceAll("&ruledescr", (state.rule !=null)? Matcher.quoteReplacement(state.rule.getDescription()):"''");
         return line;
     }
 }

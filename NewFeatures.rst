@@ -176,8 +176,8 @@ you wish to apply to multiple rules.   Eg::
 
 
 
-Match Group References
-----------------------
+Match Group References *DEFERRED*
+----------------------------------
 When doing an action, there is currently no way to get the actual string that
 matched.  This will allow a match group to be referenced in actions.  Eg::
 
@@ -194,8 +194,8 @@ Respond with File
 -----------------
 Add then respondfile <filename.txt> which will be send to player.
 
-Notify Action
--------------
+Notify Action * COMPLETED *
+----------------------------
 A "then notify" action will send the notify string to any logged in player
 with a given permission.  Eg:
 
