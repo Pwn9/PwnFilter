@@ -35,13 +35,17 @@ public class Patterns {
     }
 
     public static String replaceVars(String line, FilterState state) {
-        line = line.replaceAll("&world", (state.playerWorldName != null)?Matcher.quoteReplacement(state.playerWorldName):"NoWorld").
-                replaceAll("&player", (state.playerName != null)?Matcher.quoteReplacement(state.playerName):"NoPlayer!").
-                replaceAll("&string", Matcher.quoteReplacement(state.message.getColoredString())).
-                replaceAll("&rawstring", Matcher.quoteReplacement(state.getOriginalMessage().getColoredString())).
-                replaceAll("&event", (state.getListenerName() != null)?state.getListenerName():"No Event!").
-                replaceAll("&ruleid", (state.rule != null)?Matcher.quoteReplacement(state.rule.getId()):"-").
-                replaceAll("&ruledescr", (state.rule !=null)? Matcher.quoteReplacement(state.rule.getDescription()):"''");
+        line = line.replaceAll("&world", wrapReplacement(state.playerWorldName)).
+                replaceAll("&player", wrapReplacement(state.playerName)).
+                replaceAll("&string", wrapReplacement(state.message.getColoredString())).
+                replaceAll("&rawstring", wrapReplacement(state.getOriginalMessage().getColoredString())).
+                replaceAll("&event", wrapReplacement(state.getListenerName())).
+                replaceAll("&ruleid", (state.rule != null)?wrapReplacement(state.rule.getId()):"-").
+                replaceAll("&ruledescr", (state.rule !=null)?wrapReplacement(state.rule.getDescription()):"''");
         return line;
+    }
+
+    private static String wrapReplacement(String s) {
+        return (s != null)?Matcher.quoteReplacement(s):"-";
     }
 }
