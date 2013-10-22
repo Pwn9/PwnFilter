@@ -35,13 +35,13 @@ public class Patterns {
     }
 
     public static String replaceVars(String line, FilterState state) {
-        line = line.replaceAll("&world", wrapReplacement(state.playerWorldName)).
-                replaceAll("&player", wrapReplacement(state.playerName)).
-                replaceAll("&string", wrapReplacement(state.message.getColoredString())).
-                replaceAll("&rawstring", wrapReplacement(state.getOriginalMessage().getColoredString())).
-                replaceAll("&event", wrapReplacement(state.getListenerName())).
-                replaceAll("&ruleid", (state.rule != null)?wrapReplacement(state.rule.getId()):"-").
-                replaceAll("&ruledescr", (state.rule !=null)?wrapReplacement(state.rule.getDescription()):"''");
+        line = line.replaceAll("%world%", wrapReplacement(state.playerWorldName)).
+                replaceAll("%player%", wrapReplacement(state.playerName)).
+                replaceAll("%string%", wrapReplacement(state.message.getColoredString())).
+                replaceAll("%rawstring%", wrapReplacement(state.getOriginalMessage().getColoredString())).
+                replaceAll("%event%", wrapReplacement(state.getListenerName())).
+                replaceAll("%ruleid%", (state.rule != null)?wrapReplacement(state.rule.getId()):"-").
+                replaceAll("%ruledescr%", (state.rule !=null)?wrapReplacement(state.rule.getDescription()):"''");
         return line;
     }
 
