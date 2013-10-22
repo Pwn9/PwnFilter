@@ -1,10 +1,19 @@
 Proposed New Features for PwnFilter 3.2.0
 =========================================
 
-Rules file format / features
-+++++++++++++++++++++++++++++
+BACKWARDS INCOMPATIBLE CHANGES!!!!!
++++++++++++++++++++++++++++++++++++
 
 ***NOTE****
+
+Any occurances of:
+&world ,&player, &string, &rawstring, &event, &ruleid, &ruledescr
+
+will need to be replaced with:
+%world% ,%player%, %string%, %rawstring%, %event%, %ruleid%, %ruledescr%
+
+ALSO...
+
 A subtle, but important change has been made to the rules file format.  If a blank line is detected,
 this will cause the parser to finish a rule.  This used to be valid::
 
@@ -45,6 +54,11 @@ Comments do not count as blank line.  eg::
     then blah
 
 Got it? :)
+
+
+Rules file format / features
++++++++++++++++++++++++++++++
+
 
 Rules.txt format * COMPLETE *
 ------------------------------
