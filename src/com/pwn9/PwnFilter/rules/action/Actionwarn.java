@@ -2,6 +2,7 @@ package com.pwn9.PwnFilter.rules.action;
 
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.util.DefaultMessages;
+import com.pwn9.PwnFilter.util.Patterns;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -20,12 +21,12 @@ public class Actionwarn implements Action {
 
     public boolean execute(final FilterState state ) {
         if ( state.getPlayer() == null ) return false;
-
-        state.addLogMessage("Warned " + state.playerName + ": " + messageString);
+        final String message = Patterns.replaceVars(messageString,state);
+        state.addLogMessage("Warned " + state.playerName + ": " + message);
         Bukkit.getScheduler().runTask(state.plugin, new BukkitRunnable() {
             @Override
             public void run() {
-                state.getPlayer().sendMessage(messageString);
+                state.getPlayer().sendMessage(message);
             }
         });
 
