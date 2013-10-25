@@ -273,7 +273,7 @@ public class RuleChain implements ChainEntry {
                     continue;
                 }
                 if (conditionGroup != null) {
-                    conditionGroups.get(actionGroup).add(new String[]{command,lineData});
+                    conditionGroups.get(conditionGroup).add(new String[]{command,lineData});
                     continue;
                 }
 
