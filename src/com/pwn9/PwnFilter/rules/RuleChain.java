@@ -231,7 +231,7 @@ public class RuleChain implements ChainEntry {
                 String lineData;
 
                 // SKIP this line if it is a comment
-                if (line.matches("^#.*")) continue;
+                if (line.matches("^\\s*#.*")) continue;
 
                 if (line.isEmpty()) {
                     if (currentRule != null && currentRule.isValid()) {
@@ -313,7 +313,9 @@ public class RuleChain implements ChainEntry {
                             conditionGroups.putAll(includedChain.getConditionGroups());
                             count = count + includedChain.ruleCount();
                         } else {
-                            LogManager.logger.warning("Failed to include: " + lineData + " in rulechain: " + configName + ".");
+                            LogManager.logger.warning(
+                                    String.format("(%s:%d)Failed to include: %s.",configName,lineNo,lineData)
+                            );
                         }
                     } else {
                         // Now start on a new rule.  If the match string is invalid, we'll still get the new rule,
@@ -333,11 +335,11 @@ public class RuleChain implements ChainEntry {
                             if (conditions != null ) {
                                 for (String[] e : conditions) {
                                     if (!currentRule.addLine(e[0], e[1])) {
-                                        LogManager.logger.warning("Unable to add condition to rule: " + e[0] + " " + e[1]);
+                                        LogManager.logger.warning(String.format("(%s:%d)Unable to add condition to rule: %s %s.",configName,lineNo,e[0],e[1]));
                                     }
                                 }
                             } else {
-                                LogManager.logger.warning("Unable to add conditiongroup: " + lineData);
+                                LogManager.logger.warning(String.format("(%s:%d)Unable to add conditiongroup: %s",configName,lineNo,lineData));
                             }
                             continue;
                         }
@@ -347,12 +349,11 @@ public class RuleChain implements ChainEntry {
                             if (actions != null ) {
                                 for (String[] e : actions) {
                                     if (!currentRule.addLine(e[0], e[1])) {
-                                        LogManager.logger.warning("Unable to add action to rule: " + e[0] + " " + e[1]);
+                                        LogManager.logger.warning(String.format("(%s:%d)Unable to add action to rule: %s",configName,lineNo,lineData));
                                     }
                                 }
                             } else {
-                                LogManager.logger.warning("Unable to add actiongroup: " + lineData);
-                            }
+                                LogManager.logger.warning(String.format("(%s:%d)Unable to add actiongroup: %s",configName,lineNo,lineData));                            }
                             continue;
                         }
 
@@ -361,7 +362,7 @@ public class RuleChain implements ChainEntry {
                             if (data.length > 0) currentRule.setId(data[0]);
                             if (data.length > 1) currentRule.setDescription(data[1]);
                         } else if (!currentRule.addLine(command, lineData)) {
-                            LogManager.logger.warning("Unable to add action/condition to rule: " + command + " " + lineData);
+                            LogManager.logger.warning(String.format("(%s:%d)Unable to add action/condition: %s %s",configName,lineNo,command,lineData));
                         }
                     }
                 }
