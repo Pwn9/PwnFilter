@@ -1,6 +1,7 @@
 package com.pwn9.PwnFilter.listener;
 
 import com.pwn9.PwnFilter.PwnFilter;
+import com.pwn9.PwnFilter.api.FilterClient;
 import com.pwn9.PwnFilter.rules.RuleChain;
 import org.bukkit.event.HandlerList;
 
@@ -9,7 +10,7 @@ import org.bukkit.event.HandlerList;
  * Date: 13-10-02
  * Time: 2:04 PM
  */
-public abstract class BaseListener implements FilterListener {
+public abstract class BaseListener implements FilterClient {
     protected final PwnFilter plugin;
     protected boolean active;
     protected RuleChain ruleChain;

@@ -1,4 +1,4 @@
-package com.pwn9.PwnFilter.listener;
+package com.pwn9.PwnFilter.api;
 
 import com.pwn9.PwnFilter.rules.RuleChain;
 import org.bukkit.configuration.Configuration;
@@ -11,7 +11,7 @@ import org.bukkit.event.Listener;
  * Time: 12:15 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface FilterListener extends Listener {
+public interface FilterClient extends Listener {
 
     /**
      * A short name for this filter to be used in log messages and statistics.

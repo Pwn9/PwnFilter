@@ -37,6 +37,7 @@ public class DataCache {
     private ConcurrentHashMap<Player,HashSet<String>> playerPermissions;
     private ArrayList<Player> queuedPlayerList = new ArrayList<Player>();
     private Player[] onlinePlayers = {};
+    private HashMap<Player,Double> playerPoints = new HashMap<Player, Double>();
 
     //TODO: Add a "registration" system for interesting permissions, etc.
     // so that plugins can add/remove things they want cached.
@@ -108,6 +109,29 @@ public class DataCache {
     public String getPlayerName(Player p) {
         return playerName.get(p);
     }
+
+    public Double getPlayerPoints(Player p) {
+        return playerPoints.get(p);
+    }
+
+    public void setPlayerPoints(Player p, Double points) {
+        playerPoints.put(p,points);
+    }
+
+    public void addPlayerPoints(Player p, Double points) {
+        Double current = playerPoints.get(p);
+        if (current == null) current = 0.0;
+        current += points;
+        playerPoints.put(p,current);
+    }
+
+    public void subPlayerPoints(Player p, Double points) {
+        Double current = playerPoints.get(p);
+        if (current == null) current = 0.0;
+        current -= points;
+        playerPoints.put(p,(current < 0.0?0:current));
+    }
+
 
     private synchronized void updateCache() {
         /*

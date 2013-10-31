@@ -3,7 +3,7 @@ package com.pwn9.PwnFilter.rules;
 import com.pwn9.PwnFilter.DataCache;
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.PwnFilter;
-import com.pwn9.PwnFilter.listener.FilterListener;
+import com.pwn9.PwnFilter.api.FilterClient;
 import com.pwn9.PwnFilter.util.LogManager;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.Player;
@@ -49,7 +49,7 @@ public class RuleSetTest {
     @Test
     public void testApplyRules() {
         rs.loadConfigFile();
-        FilterState testState = new FilterState(mockPlugin,"This is a test", null, new FilterListener() {
+        FilterState testState = new FilterState(mockPlugin,"This is a test", null, new FilterClient() {
             @Override
             public String getShortName() {
                 return "TEST";  //To change body of implemented methods use File | Settings | File Templates.

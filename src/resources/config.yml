@@ -46,14 +46,14 @@ commandfilter: true
 commandspamfilter: false
 
 # Command White List: Commands to filter, if empty, will filter ALL (except blacklist)
-cmdlist: []
+# By default, only filter the /me and /nick commands.
+cmdlist:
+- me
+- nick
 
 # Command Black List: Commands to never filter
-cmdblist: 
-- tp
-- tpa
-- warp
-- help
+cmdblist: []
+
 
 # "then notify" actions will send a message to all users with this permission
 notifyperm: pwnfilter.admin

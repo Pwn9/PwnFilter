@@ -1,4 +1,4 @@
-package com.pwn9.PwnFilter.listener;
+package com.pwn9.PwnFilter.api;
 
 import com.pwn9.PwnFilter.PwnFilter;
 import org.bukkit.configuration.Configuration;
@@ -10,61 +10,61 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Handle Startup / Shutdown / Configuration of our listeners
+ * Handle Startup / Shutdown / Configuration of our PwnFilter Clients
  * User: ptoal
  * Date: 13-09-29
  * Time: 9:25 AM
  * To change this template use File | Settings | File Templates.
  */
-public class ListenerManager {
+public class ClientManager {
 
-    private static ListenerManager _instance;
+    private static ClientManager _instance;
 
-    private ConcurrentHashMap<FilterListener,Plugin> registeredListeners = new ConcurrentHashMap<FilterListener, Plugin>();
+    private ConcurrentHashMap<FilterClient,Plugin> registeredClients = new ConcurrentHashMap<FilterClient, Plugin>();
 
     private final PwnFilter plugin;
 
-    private ListenerManager(PwnFilter plugin) {
+    private ClientManager(PwnFilter plugin) {
         this.plugin = plugin;
     }
 
-    public static ListenerManager getInstance(PwnFilter p) {
+    public static ClientManager getInstance(PwnFilter p) {
         if (_instance == null ) {
-            _instance = new ListenerManager(p);
+            _instance = new ClientManager(p);
         }
         return _instance;
     }
 
-    public static ListenerManager getInstance() throws IllegalStateException {
+    public static ClientManager getInstance() throws IllegalStateException {
         if (_instance == null ) {
             throw new IllegalStateException("Listener Manager Not initialized!");
         }
         return _instance;
     }
 
-    public List<FilterListener> getActiveListeners() {
-        List<FilterListener> retVal = new ArrayList<FilterListener>();
-        for (FilterListener f : registeredListeners.keySet()) {
+    public List<FilterClient> getActiveClients() {
+        List<FilterClient> retVal = new ArrayList<FilterClient>();
+        for (FilterClient f : registeredClients.keySet()) {
             if (f.isActive()) retVal.add(f);
         }
         return retVal;
     }
 
-    public Map<FilterListener,Plugin> getRegisteredListeners() {
-        return registeredListeners;
+    public Map<FilterClient,Plugin> getRegisteredClients() {
+        return registeredClients;
     }
 
-    public void enableListeners() {
+    public void enableClients() {
         Configuration config = plugin.getConfig();
 
-        for (FilterListener f : registeredListeners.keySet()) {
+        for (FilterClient f : registeredClients.keySet()) {
             f.activate(config);
         }
 
     }
 
-    public void disableListeners() {
-        for (FilterListener f : getActiveListeners()) {
+    public void disableClients() {
+        for (FilterClient f : getActiveClients()) {
             f.shutdown();
         }
     }
@@ -82,11 +82,11 @@ public class ListenerManager {
      * @param p Plugin that the listener belongs to.
      * @return True if the listener was added, false if it was already registered.
      */
-    public boolean registerListener(FilterListener f, Plugin p) {
-        if (registeredListeners.containsKey(f)) {
+    public boolean registerClient(FilterClient f, Plugin p) {
+        if (registeredClients.containsKey(f)) {
             return false; // Already Registered
         }
-        registeredListeners.put(f,p);
+        registeredClients.put(f, p);
         plugin.updateMetrics();
         return true;
     }
@@ -102,9 +102,9 @@ public class ListenerManager {
      * @return true if the listener was previously registered and successfully
      * removed. False if it was not registered.
      */
-    public boolean unregisterListener(FilterListener f) {
-        if (registeredListeners.containsKey(f)) {
-            registeredListeners.remove(f);
+    public boolean unregisterClient(FilterClient f) {
+        if (registeredClients.containsKey(f)) {
+            registeredClients.remove(f);
             plugin.updateMetrics();
             return true;
         } else {
@@ -112,17 +112,17 @@ public class ListenerManager {
         }
     }
 
-    public void unregisterListeners() {
-        for (FilterListener f : registeredListeners.keySet() ) {
+    public void unregisterClients() {
+        for (FilterClient f : registeredClients.keySet() ) {
             f.shutdown();
-            registeredListeners.remove(f);
+            registeredClients.remove(f);
         }
     }
 
     @Override
     protected void finalize() throws Throwable {
         super.finalize();
-        disableListeners();
+        disableClients();
     }
 
 }

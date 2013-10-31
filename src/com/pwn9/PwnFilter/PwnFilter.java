@@ -1,5 +1,7 @@
 package com.pwn9.PwnFilter;
 
+import com.pwn9.PwnFilter.api.ClientManager;
+import com.pwn9.PwnFilter.api.FilterClient;
 import com.pwn9.PwnFilter.listener.*;
 import com.pwn9.PwnFilter.rules.RuleChain;
 import com.pwn9.PwnFilter.rules.RuleManager;
@@ -57,7 +59,7 @@ public class PwnFilter extends JavaPlugin {
         LogManager.getInstance(getLogger(),getDataFolder());
 
         // Initialize the manager for FilterListeners
-        ListenerManager.getInstance(this);
+        ClientManager.getInstance(this);
 
         // Initialize the ruleManager
         RuleManager.getInstance(this);
@@ -84,12 +86,12 @@ public class PwnFilter extends JavaPlugin {
         activateMetrics();
 
         //Load up our listeners
-        ListenerManager listenerManager = ListenerManager.getInstance();
-        listenerManager.registerListener(new PwnFilterCommandListener(this), this);
-        listenerManager.registerListener(new PwnFilterInvListener(this),this);
-        listenerManager.registerListener(new PwnFilterPlayerListener(this),this);
-        listenerManager.registerListener(new PwnFilterServerCommandListener(this),this);
-        listenerManager.registerListener(new PwnFilterSignListener(this),this);
+        ClientManager listenerManager = ClientManager.getInstance();
+        listenerManager.registerClient(new PwnFilterCommandListener(this), this);
+        listenerManager.registerClient(new PwnFilterInvListener(this), this);
+        listenerManager.registerClient(new PwnFilterPlayerListener(this), this);
+        listenerManager.registerClient(new PwnFilterServerCommandListener(this), this);
+        listenerManager.registerClient(new PwnFilterSignListener(this), this);
 
 
         // And the Entity Death handler, for custom death messages.
@@ -99,13 +101,13 @@ public class PwnFilter extends JavaPlugin {
         DataCache.getInstance().start();
 
         // Enable the listeners
-        listenerManager.enableListeners();
+        listenerManager.enableClients();
 
     }
 
     public void onDisable() {
 
-        ListenerManager.getInstance().unregisterListeners();
+        ClientManager.getInstance().unregisterClients();
 
         HandlerList.unregisterAll(this); // Unregister all remaining handlers.
 
@@ -142,7 +144,7 @@ public class PwnFilter extends JavaPlugin {
     public void updateMetrics() {
 
         ArrayList<String> activeListenerNames = new ArrayList<String>();
-        for (FilterListener f : ListenerManager.getInstance().getActiveListeners()) {
+        for (FilterClient f : ClientManager.getInstance().getActiveClients()) {
             activeListenerNames.add(f.getShortName());
         }
 
@@ -154,7 +156,7 @@ public class PwnFilter extends JavaPlugin {
         }
 
         // Add new plotters
-        for (final FilterListener f : ListenerManager.getInstance().getActiveListeners()) {
+        for (final FilterClient f : ClientManager.getInstance().getActiveClients()) {
             final String eventName = f.getShortName();
             eventGraph.addPlotter(new Metrics.Plotter(eventName) {
                 @Override
@@ -207,6 +209,26 @@ public class PwnFilter extends JavaPlugin {
 
         ShortCutManager.getInstance().setShortcutDir(ruleDir);
 
+        // Now, check to see if there's an old rules.txt in the PwnFilter directory, and if so, move it.
+        File oldRuleFile = new File(getDataFolder(),"rules.txt");
+        if (oldRuleFile.exists()) {
+            try {
+                LogManager.logger.info("Migrating your old rules.txt into the new rules directory: " + ruleDir.getAbsolutePath());
+                if (!oldRuleFile.renameTo(new File(ruleDir,"rules.txt"))) {
+                    LogManager.logger.severe("Unable to move old rules.txt file to new dir: " + ruleDir.getAbsolutePath());
+                    LogManager.logger.severe("Please look in your plugin directory: " + getDataFolder().getAbsolutePath() + " and manually migrate your rules.");
+                    getPluginLoader().disablePlugin(this);
+                    return;
+                }
+            } catch (Exception ex) {
+                LogManager.logger.severe("Unable to move old rules.txt file to new dir: " + ruleDir.getAbsolutePath());
+                LogManager.logger.severe("Please look in your plugin directory: " + getDataFolder().getAbsolutePath() + " and manually migrate your rules.");
+                LogManager.logger.severe("Disabling PwnFilter");
+                getPluginLoader().disablePlugin(this);
+                return;
+            }
+        }
+
         try {
             LogManager.ruleLogLevel = Level.parse(getConfig().getString("loglevel","info").toUpperCase());
         } catch (IllegalArgumentException e ) {
@@ -245,10 +267,10 @@ public class PwnFilter extends JavaPlugin {
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args ) {
 
         if (cmd.getName().equalsIgnoreCase("pfreload")) {
-            sender.sendMessage(ChatColor.RED + "Reloading config.yml and rules.txt");
+            sender.sendMessage(ChatColor.RED + "Reloading config.yml and rules/*.txt files.");
 
             LogManager.logger.info("Disabling all listeners");
-            ListenerManager.getInstance().disableListeners();
+            ClientManager.getInstance().disableClients();
 
             // Shut down the DataCache
             DataCache.getInstance().stop();
@@ -265,7 +287,7 @@ public class PwnFilter extends JavaPlugin {
             DataCache.getInstance().start();
 
             // Re-register our listeners
-            ListenerManager.getInstance().enableListeners();
+            ClientManager.getInstance().enableClients();
             LogManager.logger.info("All listeners re-enabled");
 
             return true;
