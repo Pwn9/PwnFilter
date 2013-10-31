@@ -37,8 +37,6 @@ spamfilter: false
 # Console Filter -- Filter commands entered on console (EXPERIMENTAL)
 consolefilter: false
 
-
-
 # Filter commands as well as chat true/false
 commandfilter: true
 
