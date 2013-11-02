@@ -49,14 +49,40 @@ cmdlist:
 - me
 - nick
 
-# Command Black List: Commands to never filter
+# Command Black List: Commands in this list will be ignored by PwnFilter
 cmdblist: []
 
 
 # "then notify" actions will send a message to all users with this permission
 notifyperm: pwnfilter.admin
 
+# If you want to specify an arbitrary directory on your server to store rules
+# you can specify it here. (Default is to use plugins/PwnFilter/rules)
 #ruledirectory: /path/to/rules
+
+
+# Points System
+points:
+  enabled: false
+  thresholds:
+    threshold1:
+      name: Warn
+      points: 10.0
+      actions:
+       - warn You have hit our warning threshold for bad language!
+    threshold2:
+      name: Kick
+      points: 20.0
+      actions:
+       - kick You need to tone down your language!
+       - notify %player% was kicked for hitting the kick threshold.
+    threshold3:
+      name: Tempban
+      points: 30.0
+      actions:
+       - console tempban %player% 15m Your language is not acceptable.  Take 15m to cool off!
+       - notify %player% was given a 15m tempban for bad language.
+
 
 #### ADVANCED #####
 # Note: You can also change the priority of event handlers with:

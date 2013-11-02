@@ -85,7 +85,7 @@ rules in chat messages they receive. (Will not apply to signs, anvil, books, etc
 Must take into consideration that some rules may not be 'bypassable'.
 
 
-Possible enhancements for 3.2 or 3.3
+Possible enhancements for 3.3
 ++++++++++++++++++++++++++++++++++++
 
 Web-based configuration. (Drag and drop with modals for config)
@@ -99,3 +99,5 @@ Name filter: apply rules to player names in onPlayerJoin event.  If player
 has offensive name, then take action.
 
 Auto-updater
+
+Revamp config file to be more organized / hierarchical.

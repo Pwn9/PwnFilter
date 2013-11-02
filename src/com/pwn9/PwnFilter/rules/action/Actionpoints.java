@@ -1,8 +1,8 @@
 package com.pwn9.PwnFilter.rules.action;
 
-import com.pwn9.PwnFilter.DataCache;
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.util.DefaultMessages;
+import com.pwn9.PwnFilter.util.PointManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -33,11 +33,14 @@ public class Actionpoints implements Action {
     public boolean execute(final FilterState state ) {
         Player p = state.getPlayer();
         if (p == null) return false;
-        DataCache dCache = DataCache.getInstance();
 
-        dCache.addPlayerPoints(state.getPlayer(), pointsAmount);
+        PointManager pm = PointManager.getInstance();
 
-        state.addLogMessage(String.format("Points Accumulated %s : %f. Total: %f",state.playerName,pointsAmount, dCache.getPlayerPoints(p)));
+        // TODO: Add more comprehensive messaging, as well as details about thresholds.
+
+        pm.addPlayerPoints(state.getPlayer(), pointsAmount);
+
+        state.addLogMessage(String.format("Points Accumulated %s : %f. Total: %f",state.playerName,pointsAmount, pm.getPlayerPoints(p)));
 
         Bukkit.getScheduler().runTask(state.plugin, new BukkitRunnable() {
             @Override

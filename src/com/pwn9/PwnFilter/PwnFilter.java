@@ -8,6 +8,7 @@ import com.pwn9.PwnFilter.rules.RuleManager;
 import com.pwn9.PwnFilter.rules.ShortCutManager;
 import com.pwn9.PwnFilter.util.DefaultMessages;
 import com.pwn9.PwnFilter.util.LogManager;
+import com.pwn9.PwnFilter.util.PointManager;
 import com.pwn9.PwnFilter.util.Tracker;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.ChatColor;
@@ -81,6 +82,9 @@ public class PwnFilter extends JavaPlugin {
 
         // Initialize the DataCache
         DataCache.getInstance(this);
+
+        // Initialize Points Manager if its enabled
+        PointManager.setup(this);
 
         // Activate Plugin Metrics
         activateMetrics();
@@ -173,7 +177,6 @@ public class PwnFilter extends JavaPlugin {
     }
 
     public void configurePlugin() {
-
 
         if (getConfig().getBoolean("logfile")) {
             LogManager.getInstance().start();
@@ -278,8 +281,10 @@ public class PwnFilter extends JavaPlugin {
             reloadConfig();
             configurePlugin();
 
+
             LogManager.logger.config("Reloaded config.yml as requested by " + sender.getName());
 
+            PointManager.setup(this);
             RuleManager.getInstance().reloadAllConfigs();
             LogManager.logger.config("All rules reloaded by " + sender.getName());
 
