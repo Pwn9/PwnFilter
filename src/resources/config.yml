@@ -54,9 +54,6 @@ cmdlist:
 cmdblist: []
 
 
-# "then notify" actions will send a message to all users with this permission
-notifyperm: pwnfilter.admin
-
 # If you want to specify an arbitrary directory on your server to store rules
 # you can specify it here. (Default is to use plugins/PwnFilter/rules)
 #ruledirectory: /path/to/rules

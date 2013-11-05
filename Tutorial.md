@@ -122,9 +122,10 @@ set to:
 
 By default, PwnFilter outputs basic startup information, eg: counts of how many
 rules, any errors while parsing them, as well as entries for each time the filter
-matches.  In the plugins/PwnFilter directory is a file called:
-pwnfilter.log, which is created on startup.  This file will, by default contain
-the history of matches, as well as other debugging info, if enabled.  Eg:
+matches.  Also, in the plugins/PwnFilter directory is a file called:
+pwnfilter.log, which is created if you have: *logfile*: true.  This file will,
+by default contain the history of matches, as well as other debugging info, if
+enabled.  Eg:
 
     [2013/09/30 23:54:49] [PwnFilter] |CHAT| MATCH <tremor77> fuck
     [2013/09/30 23:54:49] [PwnFilter] Warned tremor77: Swearing is not allowed.
@@ -132,7 +133,120 @@ the history of matches, as well as other debugging info, if enabled.  Eg:
     [2013/09/30 23:54:57] [PwnFilter] |CHAT| MATCH <tremor77> lol i swore and got blocked here
     [2013/09/30 23:54:57] [PwnFilter] |CHAT| SENT <tremor77> lol I swore and got blocked here
 
-If you set *loglevel*: fine
+If you set *loglevel*: fine, the MATCH/SENT messages will only be logged in
+the pwnfilter.log, if you set *loglevel*: info, they will be logged in the
+console as well.
+
+The "debug" option can be very useful when troubleshooting rules.  By default,
+debug is set to "off".  The options are:
+
+ * low : minor logging, not much here, really.
+
+ * medium : Detailed information about regex matches, and filter internals.
+
+ * high : Crazy amount of detail.  At least one log entry for every rule in
+          the config.  NOT recommended for production use!
+
+### Filter configuration
+
+    ruledirectory: /path/to/rules
+
+By default, all rules are stored in the server's plugins/PwnFilter/rules
+directory.  You may override that with the above option, to point to any
+location on your filesystem.  Also, all "include" directives will be relative
+to this path.
+
+#### Chat Filter
+
+By default, the chat filter is always enabled.  When PwnFilter starts up,
+it looks for a file called "chat.txt" in the Rule Directory. It then parses
+this file, and any included files.
+
+If you set:
+
+    spamfilter: true
+
+PwnFilter will prevent a player from sending the exact same message twice.
+NOTE: This spam filter can cause problems with plugins like BoosCooldowns,
+since Boos cancels the first attempt when using warmups, and then re-issues
+it after the warmup, thus looking like spam.  We recommend you do not use
+the built-in spam filter at this time.
+
+#### Command Filter
+
+PwnFilter can do more than just filter chat messages!  It can also filter
+the /me command, as well as create command aliases! Set:
+
+    commandfilter: true
+
+to enable the command filter.  Also, there is an option called:
+
+    commandspamfilter: true/false
+
+which works just like the spamfilter for chat. (Except it's for commands!) :)
+PwnFilter will look in the rules/command.txt file for rules that should be
+applied to commands.  If you want to have the same rules for commands as for
+chat, you can just point these both to the same file, eg:
+
+In command.txt:
+    include rules.txt
+
+In chat.txt:
+    include rules.txt
+
+In rules.txt:
+    match foo
+    then kick
+
+    match bar
+    then warn
+
+    ... etc
+
+In the next section, we'll show some examples of what you can do with the
+command filter.  For now though, there are two other options that you need to
+know about:
+
+    cmdlist:
+    - me
+    - nick
+
+    cmdblist: []
+
+These two options give a "whitelist" or a "blacklist" to the command handler.
+Basically, if you have a whitelist, then only those commands will be handled.
+Any other commands will be ignored by PwnFilter.  The cmdblist is the opposite.
+If you have any commands listed here, they will be ignored by PwnFilter.  So,
+for example, if you only wanted PwnFilter to handle the /me and /nick commands,
+you would use the example above.  On the other hand, if you wanted PwnFilter
+to handle all commands _except_ op and deop, you would do:
+
+   cmdlist: []
+   cmdblist:
+   - op
+   - deop
+
+In this case, the filter would be applied to all commands, except op and deop.
+
+#### Sign Filter
+
+PwnFilter can also check signs that players create.  To enable, use:
+
+    signfilter: true
+
+Filtering signs is tricky business, since the text can span all 4 lines of the
+sign.  In order to try to catch as much as possible, PwnFilter treats each
+of the 4 lines as a single line.
+
+### Miscellaneous Options
+
+    decolor: true / false
+
+This option will cause all messages to be stripped of color codes (eg: &5)
+
+
+
+
 
 ## Editing rules text files
 

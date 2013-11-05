@@ -14,6 +14,7 @@ import com.pwn9.PwnFilter.DataCache;
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.util.Patterns;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -32,7 +33,7 @@ public class Actionnotify implements Action {
             return;
         } else {
             permissionString = parts[0];
-            messageString = parts[1];
+            messageString = ChatColor.translateAlternateColorCodes('&',parts[1]);
         }
         DataCache.getInstance().addPermission(permissionString);
     }
