@@ -20,7 +20,7 @@
 # For more details visit http://dev.bukkit.org/server-mods/pwnfilter/
 # In "then command" statements, you can use &world, &player, &string, or &rawstring
 
-# EXAMPLES
+ # EXAMPLES
 
 # Replace F Bomb variants with fudge. Also catches ffffuuuccckkk
 match f+u+c+k+|f+u+k+|f+v+c+k+|f+u+q+

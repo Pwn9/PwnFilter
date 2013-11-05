@@ -1,7 +1,17 @@
+/*
+ * PwnFilter -- Regex-based User Filter Plugin for Bukkit-based Minecraft servers.
+ * Copyright (c) 2013 Pwn9.com. Tremor77 <admin@pwn9.com> & Sage905 <patrick@toal.ca>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 3
+ * of the License, or (at your option) any later version.
+ */
+
 package com.pwn9.PwnFilter.rules.action;
 
 import com.pwn9.PwnFilter.FilterState;
-import com.pwn9.PwnFilter.PwnFilter;
+import com.pwn9.PwnFilter.util.DefaultMessages;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -18,19 +28,23 @@ public class Actionburn implements Action {
 
     public void init(String s)
     {
-        messageString = PwnFilter.prepareMessage(s,"burnmsg");
+        messageString = DefaultMessages.prepareMessage(s, "burnmsg");
     }
 
     public boolean execute(final FilterState state ) {
-        Bukkit.getScheduler().runTask(state.plugin, new BukkitRunnable() {
-            @Override
-            public void run() {
-                state.player.setFireTicks(5000);
-                state.player.sendMessage(messageString);
-            }
-        });
+        if (state.getPlayer() != null ) {
+            Bukkit.getScheduler().runTask(state.plugin, new BukkitRunnable() {
+                @Override
+                public void run() {
+                    state.getPlayer().setFireTicks(5000);
+                    state.getPlayer().sendMessage(messageString);
+                }
+            });
 
-        state.addLogMessage("Burned " + state.playerName + ": " + messageString);
-        return true;
+            state.addLogMessage("Burned " + state.playerName + ": " + messageString);
+            return true;
+        }
+        return false;
+
     }
 }

@@ -1,7 +1,17 @@
+/*
+ * PwnFilter -- Regex-based User Filter Plugin for Bukkit-based Minecraft servers.
+ * Copyright (c) 2013 Pwn9.com. Tremor77 <admin@pwn9.com> & Sage905 <patrick@toal.ca>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 3
+ * of the License, or (at your option) any later version.
+ */
+
 package com.pwn9.PwnFilter.rules.action;
 
 import com.pwn9.PwnFilter.FilterState;
-import com.pwn9.PwnFilter.PwnFilter;
+import com.pwn9.PwnFilter.util.DefaultMessages;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -15,16 +25,18 @@ public class Actionkick implements Action {
 
     public void init(String s)
     {
-        messageString = PwnFilter.prepareMessage(s,"kickmsg");
+        messageString = DefaultMessages.prepareMessage(s, "kickmsg");
     }
 
     public boolean execute(final FilterState state ) {
+
+        if (state.getPlayer() == null ) return false;
 
         state.addLogMessage("Kicked " + state.playerName + ": " + messageString);
         Bukkit.getScheduler().runTask(state.plugin, new BukkitRunnable() {
             @Override
             public void run() {
-                state.player.kickPlayer(messageString);
+                state.getPlayer().kickPlayer(messageString);
             }
         });
 

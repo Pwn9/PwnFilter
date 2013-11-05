@@ -1,12 +1,11 @@
 package com.pwn9.PwnFilter;
 
-import com.pwn9.PwnFilter.rules.RuleSet;
 import com.pwn9.PwnFilter.util.ColoredString;
+import com.pwn9.PwnFilter.util.LogManager;
 import junit.framework.TestCase;
 import org.junit.runner.RunWith;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.io.InputStreamReader;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
@@ -26,20 +25,9 @@ public class FilterTest extends TestCase {
 
     public FilterTest() {
         logger = Logger.getLogger("Test");
-        PwnFilter.logger = logger;
+        LogManager.logger = logger;
     }
 
-    public void testLoadRules() {
-
-        PwnFilter p = new PwnFilter();
-
-
-        RuleSet rs = new RuleSet(p);
-        InputStreamReader ruleStream = new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("testrules.txt"));
-
-        assertTrue(rs.loadRules(ruleStream));
-
-    }
 
     public void testColoredString() {
         String testString = "§7This §9is§l the §1string§3 under test.";

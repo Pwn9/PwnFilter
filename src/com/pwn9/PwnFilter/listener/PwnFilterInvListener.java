@@ -1,11 +1,26 @@
+
+/*
+ * PwnFilter -- Regex-based User Filter Plugin for Bukkit-based Minecraft servers.
+ * Copyright (c) 2013 Pwn9.com. Tremor77 <admin@pwn9.com> & Sage905 <patrick@toal.ca>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 3
+ * of the License, or (at your option) any later version.
+ */
+
 package com.pwn9.PwnFilter.listener;
 
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.PwnFilter;
+import com.pwn9.PwnFilter.rules.RuleManager;
+import com.pwn9.PwnFilter.util.LogManager;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -19,22 +34,17 @@ import org.bukkit.plugin.PluginManager;
  * Listen for Sign Change events and apply the filter to the text.
  */
 
-public class PwnFilterInvListener implements Listener {
-    private final PwnFilter plugin;
+public class PwnFilterInvListener extends BaseListener {
+
     public PwnFilterInvListener(PwnFilter p) {
-        plugin = p;
-        PluginManager pm = Bukkit.getPluginManager();
-
-        // Now register the listener with the appropriate priority
-        pm.registerEvent(InventoryClickEvent.class, this, PwnFilter.invPriority,
-                new EventExecutor() {
-                    public void execute(Listener l, Event e) { onInventoryEvent((InventoryClickEvent) e); }
-                },
-                plugin);
-
-        PwnFilter.logger.info("Activated ItemListener with Priority Setting: " + PwnFilter.invPriority.toString());
-
+        super(p);
     }
+
+    @Override
+    public String getShortName() {
+        return "ITEM";
+    }
+
     // This is the handler
     public void onInventoryEvent(InventoryClickEvent event) {
         Player player;
@@ -60,9 +70,9 @@ public class PwnFilterInvListener implements Listener {
         if (itemMeta.hasDisplayName()) {
             message = itemMeta.getDisplayName();
 
-            FilterState state = new FilterState(plugin, message, player, PwnFilter.EventType.ITEM);
+            FilterState state = new FilterState(plugin, message, player, this);
 
-            PwnFilter.ruleset.runFilter(state);
+            ruleChain.execute(state);
             if (state.cancel) event.setCancelled(true);
 
             // Only update the message if it has been changed.
@@ -80,4 +90,39 @@ public class PwnFilterInvListener implements Listener {
 
     }
 
+
+    /**
+     * Activate this listener.  This method can be called either by the owning plugin
+     * or by PwnFilter.  PwnFilter will call the shutdown / activate methods when PwnFilter
+     * is enabled / disabled and whenever it is reloading its config / rules.
+     * <p/>
+     * These methods could either register / deregister the listener with Bukkit, or
+     * they could just enable / disable the use of the filter.
+     *
+     * @param config PwnFilter Configuration object, which the plugin can read for configuration
+     *               information. (eg: config.getString("ruledir")
+     */
+    @Override
+    public void activate(Configuration config) {
+        if (isActive()) return;
+
+        setRuleChain(RuleManager.getInstance().getRuleChain("item.txt"));
+
+        PluginManager pm = Bukkit.getPluginManager();
+        EventPriority priority = EventPriority.valueOf(config.getString("itempriority", "LOWEST").toUpperCase());
+
+        if (!active && config.getBoolean("itemfilter")) {
+            // Now register the listener with the appropriate priority
+            pm.registerEvent(InventoryClickEvent.class, this, priority,
+                    new EventExecutor() {
+                        public void execute(Listener l, Event e) { onInventoryEvent((InventoryClickEvent) e); }
+                    },
+                    plugin);
+            setActive();
+            LogManager.logger.info("Activated ItemListener with Priority Setting: " + priority.toString()
+                    + " Rule Count: " + getRuleChain().ruleCount() );
+
+        }
+    }
 }
+

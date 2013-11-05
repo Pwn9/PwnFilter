@@ -1,8 +1,19 @@
+/*
+ * PwnFilter -- Regex-based User Filter Plugin for Bukkit-based Minecraft servers.
+ * Copyright (c) 2013 Pwn9.com. Tremor77 <admin@pwn9.com> & Sage905 <patrick@toal.ca>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 3
+ * of the License, or (at your option) any later version.
+ */
+
 package com.pwn9.PwnFilter.util;
 
 import com.pwn9.PwnFilter.FilterState;
 
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
@@ -33,12 +44,33 @@ public class Patterns {
         return pattern;
     }
 
-    public static String replaceCommands(String cmd, FilterState state) {
-        cmd = cmd.replaceAll("&world", (state.playerWorldName != null)?state.playerWorldName:"NoWorld").
-                replaceAll("&player", (state.playerName != null)?state.playerName:"NoPlayer!").
-                replaceAll("&string", state.message.getColoredString()).
-                replaceAll("&rawstring", state.getOriginalMessage().getColoredString()).
-                replaceAll("&event", (state.eventType != null)?state.eventType.toString():"No Event!");
-        return cmd;
+    public static String replaceVars(String line, FilterState state) {
+        Pattern p = Pattern.compile("(&player|&string|&rawstring|&event|&ruleid|&ruledescr)");
+        Matcher m = p.matcher(line);
+
+        if (m.matches()) {
+            String group = m.group(1);
+            String replace = "%" + group.substring(1) + "%";
+            logger.warning("The use of " + m.group(1) + " is deprecated.  Please update your configuration to use " + replace + ".");
+            line = line.replaceAll("&world", wrapReplacement(state.playerWorldName)).
+                    replaceAll("&player", wrapReplacement(state.playerName)).
+                    replaceAll("&string", wrapReplacement(state.message.getColoredString())).
+                    replaceAll("&rawstring", wrapReplacement(state.getOriginalMessage().getColoredString())).
+                    replaceAll("&event", wrapReplacement(state.getListenerName())).
+                    replaceAll("&ruleid", (state.rule != null)?wrapReplacement(state.rule.getId()):"-").
+                    replaceAll("&ruledescr", (state.rule !=null)?wrapReplacement(state.rule.getDescription()):"''");
+        }
+        line = line.replaceAll("%world%", wrapReplacement(state.playerWorldName)).
+                replaceAll("%player%", wrapReplacement(state.playerName)).
+                replaceAll("%string%", wrapReplacement(state.message.getColoredString())).
+                replaceAll("%rawstring%", wrapReplacement(state.getOriginalMessage().getColoredString())).
+                replaceAll("%event%", wrapReplacement(state.getListenerName())).
+                replaceAll("%ruleid%", (state.rule != null)?wrapReplacement(state.rule.getId()):"-").
+                replaceAll("%ruledescr%", (state.rule !=null)?wrapReplacement(state.rule.getDescription()):"''");
+        return line;
+    }
+
+    private static String wrapReplacement(String s) {
+        return (s != null)?Matcher.quoteReplacement(s):"-";
     }
 }

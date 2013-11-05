@@ -1,3 +1,13 @@
+/*
+ * PwnFilter -- Regex-based User Filter Plugin for Bukkit-based Minecraft servers.
+ * Copyright (c) 2013 Pwn9.com. Tremor77 <admin@pwn9.com> & Sage905 <patrick@toal.ca>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 3
+ * of the License, or (at your option) any later version.
+ */
+
 package com.pwn9.PwnFilter;
 
 import org.bukkit.Bukkit;
@@ -5,48 +15,65 @@ import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.Plugin;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 /**
  * Handles keeping a cache of data that we need during Async event handling.
  * We can't get this data in our Async method, as Bukkit API calls are not threadsafe.
+ *
+ * Making this a singleton, since it will be needed for lookups across multiple threads
+ * and we don't want to have to pass around a reference to it.
+ *
+ * The DataCache runs in the main bukkit thread every second, pulling the required
+ * information.
  */
 
 public class DataCache {
 
     public final static int runEveryTicks = 20;
 
+    private static DataCache _instance = null;
+
     // Permissions we are interested in caching
-    protected ArrayList<String> permSet = new ArrayList<String>();
+    protected Set<String> permSet = new TreeSet<String>();
 
     //private
+    private final Plugin plugin;
     private int taskId;
     private ConcurrentHashMap<Player,String> playerName;
     private ConcurrentHashMap<Player,String> playerWorld;
     private ConcurrentHashMap<Player,HashSet<String>> playerPermissions;
     private ArrayList<Player> queuedPlayerList = new ArrayList<Player>();
+    private Player[] onlinePlayers = {};
 
-    public DataCache(Plugin plugin, ArrayList<String> perms) {
+    //TODO: Add a "registration" system for interesting permissions, etc.
+    // so that plugins can add/remove things they want cached.
+    private DataCache(Plugin plugin) {
         playerName = new ConcurrentHashMap<Player,String>();
         playerWorld = new ConcurrentHashMap<Player,String>();
         playerPermissions = new ConcurrentHashMap<Player,HashSet<String>>();
+        this.plugin = plugin;
+    }
 
-        for (Permission p : plugin.getDescription().getPermissions()) {
-            permSet.add(p.getName());
-        }
-        // Add any extra permissions of interest
-        permSet.addAll(perms);
+    // This method is for the owning plugin (PwnFilter) to initialize the cache.
+    public static DataCache getInstance(Plugin p) {
+        if ( _instance == null ) {
+            _instance = new DataCache(p);
+            return _instance;
+        } else return _instance;
+    }
 
-        taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
-            @Override
-            public void run() {
-                updateCache();
-            }
-        },0,DataCache.runEveryTicks);
+    // This method is for other classes to call to query the cache.
+    public static DataCache getInstance() throws IllegalStateException {
+        if ( _instance == null ) {
+            throw new IllegalStateException("DataCache accessed before initialized!");
+        } else return _instance;
+    }
+
+    public Player[] getOnlinePlayers() {
+        return onlinePlayers;
     }
 
     private void cachePlayerPermissions(Player p) {
@@ -59,6 +86,18 @@ public class DataCache {
         }
 
         playerPermissions.put(p,playerPerms);
+    }
+
+    public synchronized void addPermission(String permission) {
+        permSet.add(permission);
+    }
+
+    public synchronized void addPermissions(ArrayList<String> permissions) {
+        permSet.addAll(permissions);
+    }
+
+    public synchronized void addPermissions(Set<String> permissions) {
+        permSet.addAll(permissions);
     }
 
 
@@ -80,10 +119,6 @@ public class DataCache {
         return playerName.get(p);
     }
 
-    public void addCachedPermission(String perm) {
-        permSet.add(perm);
-    }
-
     private synchronized void updateCache() {
         /*
         I think I want to process an average of 1 player per tick.
@@ -92,7 +127,8 @@ public class DataCache {
           grab the list of online players, and add it to the list.
          */
         if (queuedPlayerList.size() < 1) {
-            Player[] onlinePlayers = Bukkit.getOnlinePlayers();
+            onlinePlayers = Bukkit.getOnlinePlayers();
+
             if (onlinePlayers.length > 0) {
                 queuedPlayerList.addAll(Arrays.asList(onlinePlayers));
             }
@@ -114,6 +150,16 @@ public class DataCache {
             cachePlayerPermissions(player);
 
         }
+    }
+
+
+    public void start() {
+        taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
+            @Override
+            public void run() {
+                updateCache();
+            }
+        },0,DataCache.runEveryTicks);
     }
 
     public void stop() {

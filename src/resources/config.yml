@@ -4,6 +4,7 @@ warnmsg: '&4[&6PwnFilter&4] &4Warned by PwnFilter!'
 kickmsg: '&4[&6PwnFilter&4] &4Kicked by PwnFilter!'
 burnmsg: '&4[&6PwnFilter&4] &4Burned by PwnFilter!'
 killmsg: '&4[&6PwnFilter&4] &4Killed by PwnFilter!'
+finemsg: '&4[&6PwnFilter&4] &4Fined by PwnFilter!'
 
 # Set the level for MATCH/SEND messages
 # Set to 'fine' if you don't want MATCH/SEND events in your main server log
@@ -18,14 +19,11 @@ logfile: true
 # Debug mode (high is VERY verbose) (Enable logfile above)
 # NOTE: Changed in 3.0.1.  Now options are:
 # off, low, medium, high
-debug: false
+debug: off
 
 
 # Strip color from chat. Permission to bypass pwnfilter.color or pwnfilter.bypass
 decolor: true
-
-# Filter commands as well as chat true/false
-commandfilter: true
 
 # Filter text applied to signs
 signfilter: false
@@ -36,18 +34,53 @@ itemfilter: false
 # Basic spam filter enabled (chat ONLY)
 spamfilter: false
 
+
+# Console Filter -- Filter commands entered on console (EXPERIMENTAL)
+consolefilter: false
+
+# Filter commands as well as chat true/false
+commandfilter: true
+
 # Basic spam filter enabled (commands ONLY)
 commandspamfilter: false
 
 # Command White List: Commands to filter, if empty, will filter ALL (except blacklist)
-cmdlist: []
+# By default, only filter the /me and /nick commands.
+cmdlist:
+- me
+- nick
 
-# Command Black List: Commands to never filter
-cmdblist: 
-- tp
-- tpa
-- warp
-- help
+# Command Black List: Commands in this list will be ignored by PwnFilter
+cmdblist: []
+
+
+# If you want to specify an arbitrary directory on your server to store rules
+# you can specify it here. (Default is to use plugins/PwnFilter/rules)
+#ruledirectory: /path/to/rules
+
+
+# Points System
+points:
+  enabled: false
+  thresholds:
+    threshold1:
+      name: Warn
+      points: 10.0
+      actions:
+       - warn You have hit our warning threshold for bad language!
+    threshold2:
+      name: Kick
+      points: 20.0
+      actions:
+       - kick You need to tone down your language!
+       - notify %player% was kicked for hitting the kick threshold.
+    threshold3:
+      name: Tempban
+      points: 30.0
+      actions:
+       - console tempban %player% 15m Your language is not acceptable.  Take 15m to cool off!
+       - notify %player% was given a 15m tempban for bad language.
+
 
 #### ADVANCED #####
 # Note: You can also change the priority of event handlers with:

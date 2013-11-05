@@ -1,12 +1,24 @@
+/*
+ * PwnFilter -- Regex-based User Filter Plugin for Bukkit-based Minecraft servers.
+ * Copyright (c) 2013 Pwn9.com. Tremor77 <admin@pwn9.com> & Sage905 <patrick@toal.ca>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 3
+ * of the License, or (at your option) any later version.
+ */
+
 package com.pwn9.PwnFilter.rules;
 
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.PwnFilter;
 import com.pwn9.PwnFilter.rules.action.Action;
 import com.pwn9.PwnFilter.rules.action.ActionFactory;
+import com.pwn9.PwnFilter.util.LimitedRegexCharSequence;
+import com.pwn9.PwnFilter.util.LogManager;
 import com.pwn9.PwnFilter.util.Patterns;
 
-import java.util.ArrayList;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,19 +28,63 @@ import java.util.regex.Pattern;
  * <P>Each Rule has a single match Pattern, an ArrayList of {@link Condition}'s and an ArrayList of {@link com.pwn9.PwnFilter.rules.action.Action}'s</P>
  * TODO: Finish docs
  */
-public class Rule {
-    final Pattern pattern;
+public class Rule implements ChainEntry {
+    private Pattern pattern;
+    private String description;
+    private String id;
 //    String name; // TODO: Give rules names for logs and troubleshooting
     ArrayList<Condition> conditions = new ArrayList<Condition>();
     ArrayList<Action> actions = new ArrayList<Action>();
-    ArrayList<PwnFilter.EventType> events = new ArrayList<PwnFilter.EventType>();
+    ArrayList<String> includeEvents = new ArrayList<String>();
+    ArrayList<String> excludeEvents = new ArrayList<String>();
 
         /* Constructors */
 
-    // All rules must have a matchStr, hence no parameter-less constructor.
     public Rule(String matchStr) {
         this.pattern = Patterns.compilePattern(matchStr);
-        events.addAll(PwnFilter.enabledEvents); // Add to all enabled events by default.
+        this.id = "";
+    }
+
+    public Rule(String id, String description) {
+        this.id = id;
+        this.description = description;
+    }
+
+    public Pattern getPattern() {
+        return pattern;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setPattern(String pattern) {
+        this.pattern = Patterns.compilePattern(pattern);
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    @Override
+    public Set<String> getPermissionList() {
+        TreeSet<String> permList = new TreeSet<String>();
+
+        for (Condition c : conditions) {
+            if (c.type == Condition.CondType.permission) {
+                Collections.addAll(permList, c.parameters.split("\\|"));
+            }
+        }
+
+        return permList;
     }
 
     /* Methods */
@@ -36,42 +92,59 @@ public class Rule {
     /**
      * apply this action to the current message / event.  May trigger other bukkit events.
      * @param state A FilterState object for this event.
-     * @return true if action was taken, false if not.
      */
-    public boolean apply(FilterState state) {
+    public void apply(FilterState state) {
 
         // Check if action matches the current state of the message
 
-        if (PwnFilter.debugMode.compareTo(PwnFilter.DebugModes.high) >= 0) {
-            PwnFilter.logger.info("Testing Pattern: " + pattern.toString() + " on string: " + state.message.getPlainString());
+        if (LogManager.debugMode.compareTo(LogManager.DebugModes.high) >= 0) {
+            LogManager.logger.info("Testing Pattern: " + pattern.toString() + " on string: " + state.message.getPlainString());
         }
-            final Matcher matcher = pattern.matcher(state.message.getPlainString());
 
+            LimitedRegexCharSequence limitedRegexCharSequence = new LimitedRegexCharSequence(state.message.getPlainString(),1000);
+            final Matcher matcher = pattern.matcher(limitedRegexCharSequence);
         // If we don't match, return immediately with the original message
-        if (!matcher.find()) return false;
+        try {
+            if (!matcher.find()) return;
+        } catch (RuntimeException ex) {
+            LogManager.logger.severe("Regex match timed out! Regex: " + pattern.toString());
+            LogManager.logger.severe("Failed string was: " + limitedRegexCharSequence);
+        }
+
         state.pattern = pattern;
+        state.rule = this;
 
         // If Match, log it and then check any conditions.
-        state.addLogMessage("|" + state.eventType.toString() +  "| MATCH <" +
+        state.addLogMessage("|" + state.listener.getShortName() +  "| MATCH " +
+                (id.isEmpty()?"":"("+id+")") +
+                " <" +
                 state.playerName + "> " + state.message.getPlainString());
+        LogManager.getInstance().debugLow("Match String: " + matcher.group());
 
-        PwnFilter.matchTracker.increment(); // Update Match Statistics
 
         for (Condition c : conditions) {
             // This checks that EVERY condition is met (conditions are AND)
             if (!c.check(state)) {
                 state.addLogMessage("CONDITION not met <"+ c.flag.toString()+
                         " " + c.type.toString()+" " + c.parameters + "> " + state.getOriginalMessage());
-                return false;
+                return;
             }
 
+        }
+
+        if(PwnFilter.matchTracker != null) {
+            PwnFilter.matchTracker.increment(); // Update Match Statistics
         }
 
         // If we get this far, execute the actions
         for (Action a : actions) {
             a.execute(state);
         }
-        return true;
+
+    }
+
+    public List<Condition> getConditions() {
+        return conditions;
     }
 
     /**
@@ -99,21 +172,15 @@ public class Rule {
         }
         else if (command.matches("events")) {
             String[] parts = parameterString.split("[\\s|,]");
-            try {
-                if (parts[0].matches("not")) {
-                    for (int i = 1; i < parts.length ; i++ ) {
-                        events.remove(PwnFilter.EventType.valueOf(parts[i].toUpperCase()));
-                    }
-                } else {
-                    events.clear();
-                    for (String event : parts ) {
-                        events.add(PwnFilter.EventType.valueOf(event.toUpperCase()));
-                    }
+
+            if (parts[0].matches("not")) {
+                for (int i = 1; i < parts.length ; i++ ) {
+                    excludeEvents.add(parts[i].toUpperCase());
                 }
-            } catch (IllegalArgumentException e ) {
-                return false;
-            } catch (NullPointerException e) {
-                return false;
+            } else {
+                for (String event : parts ) {
+                    includeEvents.add(event.toUpperCase());
+                }
             }
 
             return true;
@@ -138,4 +205,5 @@ public class Rule {
     public String toString() {
         return pattern.toString();
     }
+
 }

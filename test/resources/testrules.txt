@@ -58,7 +58,7 @@
 # 	information into the code to allow the script to run without errors.
 # ---------- End Read Me ----------
 #
-#
+include ExtraRules.txt
 #
 # Domain Advertising Filter
 match ((http)*(\w|\W|\d|_)*(www)*(\w|\W|\d|_)*[a-zA-Z0-9\.\-\*_\^\+\~\`\=\,\&*]{3,}(\W|\d|_|dot|\(dot\))+(com\b|org\b|net\b|edu\b|co\b|uk\b|de\b|cc\b|biz\b|mobi\b|xxx\b|tv\b))
@@ -98,10 +98,12 @@ then log
 
 # rewrite da with the
 match \bda\b
+rule GR1 Grammar repair
 then rewrite the
 
 # rewrite asap with as soon as possible
 match \basap\b
+rule AC1 Acronym Expansion
 then rewrite as soon as possible
 
 # rewrite bbl with be back later
@@ -1236,6 +1238,7 @@ then log
 match \b(r+(\W|\d|_)*e+(\W|\d|_)*d+(\W|\d|_)*n+(\W|\d|_)*e+(\W|\d|_)*c+(\W|\d|_)*k+\w*)
 then rewrite Northern
 then console say Blocked &player's Language: (M17)
+
 # O&bptional&bCommand1
 # O&bptional&bCommand2
 # O&bptional&bCommand3

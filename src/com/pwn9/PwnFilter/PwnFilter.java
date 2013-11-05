@@ -1,33 +1,41 @@
+/*
+ * PwnFilter -- Regex-based User Filter Plugin for Bukkit-based Minecraft servers.
+ * Copyright (c) 2013 Pwn9.com. Tremor77 <admin@pwn9.com> & Sage905 <patrick@toal.ca>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 3
+ * of the License, or (at your option) any later version.
+ */
+
 package com.pwn9.PwnFilter;
 
+import com.pwn9.PwnFilter.api.ClientManager;
+import com.pwn9.PwnFilter.api.FilterClient;
 import com.pwn9.PwnFilter.listener.*;
-import com.pwn9.PwnFilter.rules.RuleSet;
-import com.pwn9.PwnFilter.util.PwnFormatter;
+import com.pwn9.PwnFilter.rules.RuleChain;
+import com.pwn9.PwnFilter.rules.RuleManager;
+import com.pwn9.PwnFilter.rules.ShortCutManager;
+import com.pwn9.PwnFilter.util.DefaultMessages;
+import com.pwn9.PwnFilter.util.LogManager;
+import com.pwn9.PwnFilter.util.PointManager;
 import com.pwn9.PwnFilter.util.Tracker;
 import net.milkbowl.vault.economy.Economy;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.Metrics;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.EnumSet;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.FileHandler;
 import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 /**
  * A Regular Expression (REGEX) Chat Filter For Bukkit with many great features
@@ -37,53 +45,44 @@ import java.util.logging.SimpleFormatter;
 // TODO: Add support for Books
 // TODO: Enable configuration management /pfset /pfsave
 // TODO: It's powerful.  Now, make it easier.
-// TODO: Allow multiple config files so rules can be grouped.
 // TODO: Make 'base' files that users can pull in to get started quickly (eg: swearing.txt, hate.txt, etc.)
 // TODO: Multiverse-support? (Different configs for different worlds)
 
 public class PwnFilter extends JavaPlugin {
 
-    public static Boolean pwnMute = false;
-    public List<String> cmdlist;
-    public List<String> cmdblist;
-
-    public enum EventType {
-        CHAT,
-        SIGN,
-        COMMAND,
-        ITEM,
-    }
-    public enum DebugModes {
-        off, // Off
-        low, // Some debugging
-        medium, // More debugging
-        high, // You're crazy. :)
-    }
-
-    public static boolean decolor;
-    public static DebugModes debugMode;
-    public ConcurrentHashMap<Player, String> killedPlayers = new ConcurrentHashMap<Player,String>();
-    public static Logger logger;
-    public Level ruleLogLevel;
-    FileHandler logfileHandler;
-    public static EventPriority cmdPriority, chatPriority, signPriority, invPriority;
-    public static HashMap<Player, String> lastMessage = new HashMap<Player, String>();
-    public static EnumSet<EventType> enabledEvents = EnumSet.allOf(EventType.class); // The list of active Events
-    public static Economy economy = null;
+    // Metrics data
+    private Metrics metrics;
     public static Tracker matchTracker;
+    private Metrics.Graph eventGraph;
 
-    public static DataCache dataCache;
-    public static RuleSet ruleset;
+    public static ConcurrentHashMap<Player, String> killedPlayers = new ConcurrentHashMap<Player,String>();
 
+    // Filter switches
+    public static boolean decolor = false;
+    public static Boolean pwnMute = false;
+
+    public static HashMap<Player, String> lastMessage = new HashMap<Player, String>();
+    public static Economy economy = null;
+
+    @Override
+    public void onLoad() {
+
+        LogManager.getInstance(getLogger(),getDataFolder());
+
+        // Initialize the manager for FilterListeners
+        ClientManager.getInstance(this);
+
+        // Initialize the ruleManager
+        RuleManager.getInstance(this);
+
+    }
 
     public void onEnable() {
-        // Set up logging
-        if (logger == null) {
-            logger = this.getLogger();
-        }
 
-        // Initialize default configuration
-        saveDefaultConfig();
+        // Initialize Configuration
+        FileConfiguration config = getConfig();
+        config.options().copyDefaults(true);
+        saveConfig();
 
         // Now get our configuration
         configurePlugin();
@@ -91,164 +90,175 @@ public class PwnFilter extends JavaPlugin {
         // Set up a Vault economy for actions like "fine" (optional)
         setupEconomy();
 
-        // Create a new RuleSet object, loading in the rulesFile
-        ruleset = new RuleSet(this);
-        ruleset.init(getRulesFile());
+        // Initialize the DataCache
+        DataCache.getInstance(this);
 
-        // Start the dataCache
-        dataCache = new DataCache(this, ruleset.permList);
-
-        // Now activate our listeners
-        registerListeners();
+        // Initialize Points Manager if its enabled
+        PointManager.setup(this);
 
         // Activate Plugin Metrics
         activateMetrics();
+
+        //Load up our listeners
+        ClientManager listenerManager = ClientManager.getInstance();
+        listenerManager.registerClient(new PwnFilterCommandListener(this), this);
+        listenerManager.registerClient(new PwnFilterInvListener(this), this);
+        listenerManager.registerClient(new PwnFilterPlayerListener(this), this);
+        listenerManager.registerClient(new PwnFilterServerCommandListener(this), this);
+        listenerManager.registerClient(new PwnFilterSignListener(this), this);
+
+
+        // And the Entity Death handler, for custom death messages.
+        new PwnFilterEntityListener(this);
+
+        // Start the DataCache
+        DataCache.getInstance().start();
+
+        // Enable the listeners
+        listenerManager.enableClients();
+
+    }
+
+    public void onDisable() {
+
+        ClientManager.getInstance().unregisterClients();
+
+        HandlerList.unregisterAll(this); // Unregister all remaining handlers.
+
+        // Shutdown the DataCache
+        DataCache.getInstance().stop();
+
+        LogManager.getInstance().stop();
 
     }
 
     public void activateMetrics() {
         // Activate Plugin Metrics
         try {
-            Metrics metrics = new Metrics(this);
+            if (metrics == null) {
+                metrics = new Metrics(this);
 
-            Metrics.Graph graph = metrics.createGraph("Rules by Event");
+                eventGraph = metrics.createGraph("Rules by Event");
+                updateMetrics();
 
-            for (final EventType r : EventType.values()) {
-                graph.addPlotter(new Metrics.Plotter(r.toString()) {
-                    @Override
-                    public int getValue() {
-                        return ruleset.ruleCount(r); // Number of rules for this event type
-                    }
-                });
+                Metrics.Graph matchGraph = metrics.createGraph("Matches");
+                matchTracker = new Tracker("Matches");
+
+                matchGraph.addPlotter(matchTracker);
             }
-
-            Metrics.Graph matchGraph = metrics.createGraph("Matches");
-            matchTracker = new Tracker("Matches");
-
-            matchGraph.addPlotter(matchTracker);
-
             metrics.start();
 
+
         } catch (IOException e) {
-            logger.fine(e.getMessage());
+            LogManager.logger.fine(e.getMessage());
         }
 
     }
-    public void registerListeners() {
 
-        // Register Chat Handler (Always enabled)
-        new PwnFilterPlayerListener(this);
-        new PwnFilterEntityListener(this);
+    public void updateMetrics() {
 
-        // Register Configured Handlers
-        if (enabledEvents.contains(EventType.COMMAND)) new PwnFilterCommandListener(this);
-        if (enabledEvents.contains(EventType.SIGN)) new PwnFilterSignListener(this);
-        if (enabledEvents.contains(EventType.ITEM)) new PwnFilterInvListener(this);
+        ArrayList<String> activeListenerNames = new ArrayList<String>();
+        for (FilterClient f : ClientManager.getInstance().getActiveClients()) {
+            activeListenerNames.add(f.getShortName());
+        }
+
+        // Remove old plotters
+        for (Metrics.Plotter p : eventGraph.getPlotters()) {
+            if (!activeListenerNames.contains(p.getColumnName())) {
+                eventGraph.removePlotter(p);
+            }
+        }
+
+        // Add new plotters
+        for (final FilterClient f : ClientManager.getInstance().getActiveClients()) {
+            final String eventName = f.getShortName();
+            eventGraph.addPlotter(new Metrics.Plotter(eventName) {
+                @Override
+                public int getValue() {
+                    RuleChain r = f.getRuleChain();
+                    if (r != null) {
+                        return r.ruleCount(); // Number of rules for this event type
+                    } else
+                        return 0;
+                }
+            });
+        }
 
     }
 
     public void configurePlugin() {
 
         if (getConfig().getBoolean("logfile")) {
-            setupLogfile();
+            LogManager.getInstance().start();
         } else { // Needed during configuration reload to turn off logging if the option changes
-            if (logfileHandler != null) {
-                logfileHandler.close();
-                logger.removeHandler(logfileHandler);
-                logfileHandler = null;
+            LogManager.getInstance().stop();
+        }
+
+        File ruleDir;
+        String ruledirectory = getConfig().getString("ruledirectory");
+        if (ruledirectory != null ) {
+            ruleDir = new File(ruledirectory);
+        } else {
+            ruleDir = new File(getDataFolder(),"rules");
+        }
+
+        if (!ruleDir.exists()) {
+            try {
+                if (!ruleDir.mkdir()) {
+                    LogManager.logger.severe("Unable to create rule directory: " + ruleDir.getAbsolutePath());
+                    LogManager.logger.severe("Disabling PwnFilter");
+                    getPluginLoader().disablePlugin(this);
+                    return;
+                }
+            } catch (SecurityException ex) {
+                LogManager.logger.severe("Unable to create rule directory: " + ruleDir.getAbsolutePath());
+                LogManager.logger.severe("Exception: " + ex.getMessage());
+                LogManager.logger.severe("Disabling PwnFilter");
+                getPluginLoader().disablePlugin(this);
+                return;
+            }
+        }
+        RuleManager.getInstance().setRuleDir(ruleDir);
+
+        ShortCutManager.getInstance().setShortcutDir(ruleDir);
+
+        // Now, check to see if there's an old rules.txt in the PwnFilter directory, and if so, move it.
+        File oldRuleFile = new File(getDataFolder(),"rules.txt");
+        if (oldRuleFile.exists()) {
+            try {
+                LogManager.logger.info("Migrating your old rules.txt into the new rules directory: " + ruleDir.getAbsolutePath());
+                if (!oldRuleFile.renameTo(new File(ruleDir,"rules.txt"))) {
+                    LogManager.logger.severe("Unable to move old rules.txt file to new dir: " + ruleDir.getAbsolutePath());
+                    LogManager.logger.severe("Please look in your plugin directory: " + getDataFolder().getAbsolutePath() + " and manually migrate your rules.");
+                    getPluginLoader().disablePlugin(this);
+                    return;
+                }
+            } catch (Exception ex) {
+                LogManager.logger.severe("Unable to move old rules.txt file to new dir: " + ruleDir.getAbsolutePath());
+                LogManager.logger.severe("Please look in your plugin directory: " + getDataFolder().getAbsolutePath() + " and manually migrate your rules.");
+                LogManager.logger.severe("Disabling PwnFilter");
+                getPluginLoader().disablePlugin(this);
+                return;
             }
         }
 
         try {
-            ruleLogLevel = Level.parse(getConfig().getString("loglevel","info").toUpperCase());
+            LogManager.ruleLogLevel = Level.parse(getConfig().getString("loglevel","info").toUpperCase());
         } catch (IllegalArgumentException e ) {
-            ruleLogLevel = Level.INFO;
+            LogManager.ruleLogLevel = Level.INFO;
         }
 
         decolor = getConfig().getBoolean("decolor");
 
         try {
-            debugMode = DebugModes.valueOf(getConfig().getString("debug"));
+            LogManager.debugMode = LogManager.DebugModes.valueOf(getConfig().getString("debug"));
         } catch (IllegalArgumentException e) {
-            debugMode = DebugModes.off;
+            LogManager.debugMode = LogManager.DebugModes.off;
         }
 
-        cmdlist = getConfig().getStringList("cmdlist");
-        cmdblist = getConfig().getStringList("cmdblist");
+        DefaultMessages.setConfig(getConfig());
 
-        enabledEvents.clear(); // Reset the enabled event types.
-        for ( EventType e : EventType.values()) {
-            switch (e) {
-                case CHAT:
-                    chatPriority = EventPriority.valueOf(getConfig()
-                            .getString("chatpriority","LOWEST").toUpperCase());
-                    enabledEvents.add(EventType.CHAT);
-                    break;
 
-                case COMMAND:
-                    if (getConfig().getBoolean("commandfilter",false)) {
-                        cmdPriority = EventPriority.valueOf(getConfig()
-                                .getString("cmdpriority","LOWEST").toUpperCase());
-                        enabledEvents.add(EventType.COMMAND);
-                    }
-                    break;
-
-                case SIGN:
-                    if(getConfig().getBoolean("signfilter",false)) {
-                        signPriority = EventPriority.valueOf(getConfig()
-                                .getString("signpriority","LOWEST").toUpperCase());
-                        enabledEvents.add(EventType.SIGN);
-                    }
-                    break;
-
-                case ITEM:
-                    if(getConfig().getBoolean("itemfilter",false)) {
-                        invPriority = EventPriority.valueOf(getConfig()
-                                .getString("invpriority","LOWEST").toUpperCase());
-                        enabledEvents.add(EventType.ITEM);
-                    }
-                    break;
-            }
-
-        }
-
-    }
-
-    public void onDisable() {
-
-        ruleset = null;
-        if (logfileHandler != null) {
-            logfileHandler.close();
-            logger.removeHandler(logfileHandler);
-            logfileHandler = null;
-        }
-        // Remove all our listeners, first.
-        HandlerList.unregisterAll(this);
-
-        // Shutdown the DataCache
-        dataCache.stop();
-        dataCache = null;
-
-    }
-
-    private void setupLogfile() {
-        if (logfileHandler == null) {
-            try {
-                // For now, one logfile, like the old way.
-                String fileName =  new File(getDataFolder(), "pwnfilter.log").toString();
-                logfileHandler = new FileHandler(fileName, true);
-                SimpleFormatter f = new PwnFormatter();
-                logfileHandler.setFormatter(f);
-                logfileHandler.setLevel(Level.FINEST); // Catch all log messages
-                logger.addHandler(logfileHandler);
-                logger.info("Now logging to " + fileName );
-
-            } catch (IOException e) {
-                logger.warning("Unable to open logfile.");
-            } catch (SecurityException e) {
-                logger.warning("Security Exception while trying to add file Handler");
-            }
-        }
 
     }
 
@@ -258,11 +268,11 @@ public class PwnFilter extends JavaPlugin {
             RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
             if (rsp != null) {
                 economy = rsp.getProvider();
-                logger.info("Vault found. Enabling actions requiring Vault");
+                LogManager.logger.info("Vault found. Enabling actions requiring Vault");
                 return;
             }
         }
-        logger.info("Vault dependency not found.  Disabling actions requiring Vault");
+        LogManager.logger.info("Vault dependency not found.  Disabling actions requiring Vault");
 
     }
 
@@ -270,36 +280,37 @@ public class PwnFilter extends JavaPlugin {
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args ) {
 
         if (cmd.getName().equalsIgnoreCase("pfreload")) {
-            sender.sendMessage(ChatColor.RED + "Reloading config.yml and rules.txt");
+            sender.sendMessage(ChatColor.RED + "Reloading config.yml and rules/*.txt files.");
 
-            // Remove all our listeners, first.
-            HandlerList.unregisterAll(this);
+            LogManager.logger.info("Disabling all listeners");
+            ClientManager.getInstance().disableClients();
 
             // Shut down the DataCache
-            dataCache.stop();
+            DataCache.getInstance().stop();
 
             reloadConfig();
             configurePlugin();
 
-            ruleset = new RuleSet(this);
-            if (ruleset.init(getRulesFile())) {
-                logger.config("rules.txt and config.yml reloaded by " + sender.getName());
-            } else {
-                logger.warning("failed to reload rules.txt as requested by " + sender.getName());
-            }
+
+            LogManager.logger.config("Reloaded config.yml as requested by " + sender.getName());
+
+            PointManager.setup(this);
+            RuleManager.getInstance().reloadAllConfigs();
+            LogManager.logger.config("All rules reloaded by " + sender.getName());
 
             // Start the DataCache again
-            dataCache = new DataCache(this, ruleset.permList);
+            DataCache.getInstance().start();
 
             // Re-register our listeners
-            registerListeners();
+            ClientManager.getInstance().enableClients();
+            LogManager.logger.info("All listeners re-enabled");
 
             return true;
         }
 
         else if (cmd.getName().equalsIgnoreCase("pfcls")) {
             sender.sendMessage(ChatColor.RED + "Clearing chat screen");
-            logger.info("chat screen cleared by " + sender.getName());
+            LogManager.logger.info("chat screen cleared by " + sender.getName());
             int i = 0;
             while (i <= 120) {
                 getServer().broadcastMessage(" ");
@@ -310,64 +321,40 @@ public class PwnFilter extends JavaPlugin {
         else if (cmd.getName().equalsIgnoreCase("pfmute")) {
             if (pwnMute) {
                 getServer().broadcastMessage(ChatColor.RED + "Global mute cancelled by " + sender.getName());
-                logger.info("global mute cancelled by " + sender.getName());
+                LogManager.logger.info("global mute cancelled by " + sender.getName());
                 pwnMute = false;
             }
             else {
                 getServer().broadcastMessage(ChatColor.RED + "Global mute initiated by " + sender.getName());
-                logger.info("global mute initiated by " + sender.getName());
+                LogManager.logger.info("global mute initiated by " + sender.getName());
                 pwnMute = true;
             }
             return true;
         }  else if (cmd.getName().equalsIgnoreCase("pfdumpcache")) {
-            dataCache.dumpCache(logger);
+            DataCache.getInstance().dumpCache(LogManager.logger);
             sender.sendMessage(ChatColor.RED + "Dumped PwnFilter cache to log.");
-            logger.info("Dumped PwnFilter cache to log by " + sender.getName());
+            LogManager.logger.info("Dumped PwnFilter cache to log by " + sender.getName());
         }
         return false;
     }
 
-
-    /**
-     * Selects string from the first not null of: message, default from config.yml or null.
-     * Converts & to u00A7
-     * Used by Action.init() methods.
-     * @return String containing message to be used.
-     */
-    public static String prepareMessage(String message, String configName) {
-        String retVal;
-        if (message.isEmpty()) {
-            // TODO: Feels wrong...
-            String defmsg = Bukkit.getPluginManager().getPlugin("PwnFilter").getConfig().getString(configName);
-            retVal = (defmsg != null) ? defmsg : "";
-        } else {
-            retVal = message;
-        }
-        return retVal.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
+    //TODO: Handle this better
+    public static void addKilledPlayer(Player p, String message) {
+        killedPlayers.put(p, message);
     }
 
-    private File getRulesFile() {
 
-        File dataFolder = getDataFolder();
-        File rulesFile;
-        String fname = "rules.txt";
+    public boolean copyRuleTemplate(File rulesFile, String configName) {
+        try{
+            InputStream templateFile;
 
-        // Ensure that directory exists
-        if(!dataFolder.exists()) {
-            if (dataFolder.mkdirs()) {
-                logger.info("created directory '" + dataFolder.getName() + "'");
-            } else {
-                return null;
+            templateFile = getResource(configName);
+            if (templateFile == null) {
+                // Use the default rules.txt
+                templateFile = getResource("rules.txt");
             }
-        }
-
-        rulesFile = new File(dataFolder,fname);
-        // Check to see if rules file exists.  If not, create a basic file from template
-        if (!rulesFile.exists()) {
-            try{
-                //noinspection ResultOfMethodCallIgnored
-                rulesFile.createNewFile();
-                BufferedInputStream fin = new BufferedInputStream(this.getResource(fname));
+            if (rulesFile.createNewFile()) {
+                BufferedInputStream fin = new BufferedInputStream(templateFile);
                 FileOutputStream fout = new FileOutputStream(rulesFile);
                 byte[] data = new byte[1024];
                 int c;
@@ -375,12 +362,16 @@ public class PwnFilter extends JavaPlugin {
                     fout.write(data, 0, c);
                 fin.close();
                 fout.close();
-                logger.warning("created sample rules file '" + fname + "'");
-            }catch(Exception ex){
-                ex.printStackTrace();
+                getLogger().info("Created rules file from template: " + configName);
+                return true;
+            } else {
+                getLogger().warning("Failed to create rule file from template: " + configName);
+                return false;
             }
+        }catch(Exception ex){
+            ex.printStackTrace();
         }
-        return rulesFile;
+        return false;
     }
 
 }

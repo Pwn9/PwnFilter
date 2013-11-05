@@ -1,7 +1,20 @@
+/*
+ * PwnFilter -- Regex-based User Filter Plugin for Bukkit-based Minecraft servers.
+ * Copyright (c) 2013 Pwn9.com. Tremor77 <admin@pwn9.com> & Sage905 <patrick@toal.ca>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 3
+ * of the License, or (at your option) any later version.
+ */
+
 package com.pwn9.PwnFilter;
 
+import com.pwn9.PwnFilter.api.FilterClient;
+import com.pwn9.PwnFilter.rules.Rule;
 import com.pwn9.PwnFilter.util.ColoredString;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,18 +35,22 @@ import java.util.regex.Pattern;
  * cancel: If true, this event will be set Cancelled (if possible)
  *
  */
+
+//TODO: Make all this stuff private and create getters/setters
+
 public class FilterState {
     private final ColoredString originalMessage; // Original message
-    public final PwnFilter plugin; // Which plugin is this state attached to?
-    public final Player player; // Player that this event is connected to.
+    public final Plugin plugin; // Which plugin is this state attached to?
+    private final Player player; // Player that this event is connected to.
     public final String playerName,playerWorldName;
-    public final PwnFilter.EventType eventType;
+    public final FilterClient listener;
     public ColoredString message; // Modified message string
     final int messageLen; // New message can't be longer than original.
     private List<String> logMessages = new ArrayList<String>(); // Rules can add strings to this array.  They will be output to log if log=true
     public boolean log = false;  // If true, actions will be logged
     public boolean stop = false; // If set true by a rule, will stop further processing.
     public boolean cancel = false; // If set true, will cancel this event.
+    public Rule rule; // Rule we currently match
     public Pattern pattern; // Pattern that we currently matched.
 
     // NOTE: pattern should always match originalMessage, but may not match
@@ -46,15 +63,23 @@ public class FilterState {
      *
      * @param m The original text string to run rules against.
      */
-    public FilterState(PwnFilter pl, String m, Player p, PwnFilter.EventType et) {
+    public FilterState(Plugin pl, String m, Player p, FilterClient l) {
         originalMessage = new ColoredString(m);
         message = new ColoredString(m);
         messageLen = originalMessage.length();
         player = p;
-        playerName = PwnFilter.dataCache.getPlayerName(p);
-        playerWorldName = PwnFilter.dataCache.getPlayerWorld(p);
+        if (p != null) {
+            playerName = DataCache.getInstance().getPlayerName(p);
+        } else {
+            playerName = "*CONSOLE*";
+        }
+        if (p != null) {
+            playerWorldName = DataCache.getInstance().getPlayerWorld(p);
+        } else {
+            playerWorldName = "";
+        }
         plugin = pl;
-        eventType = et;
+        listener = l;
     }
 
     /**
@@ -78,7 +103,23 @@ public class FilterState {
     }
 
     public boolean playerHasPermission(String perm) {
-        return PwnFilter.dataCache.hasPermission(player,perm);
+        return player != null && DataCache.getInstance().hasPermission(player, perm);
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public boolean isCancelled() {
+        return cancel;
+    }
+
+    public void setCancelled(boolean cancel) {
+        this.cancel = cancel;
+    }
+
+    public String getListenerName() {
+        return listener.getShortName();
     }
     /**
      *

@@ -1,0 +1,2 @@
+match This is a test
+then replace This WAS a test
