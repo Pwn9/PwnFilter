@@ -12,6 +12,7 @@ package com.pwn9.PwnFilter.rules.action;
 
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.util.ColoredString;
+import org.bukkit.ChatColor;
 
 /**
  * Rewrite the string by replacing the matched text with the provided string.
@@ -23,7 +24,7 @@ public class Actionrewrite implements Action {
 
     public void init(String s)
     {
-        messageString = s.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
+        messageString = ChatColor.translateAlternateColorCodes('&',s);
     }
 
     public boolean execute(final FilterState state) {
