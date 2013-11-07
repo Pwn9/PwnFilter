@@ -279,9 +279,10 @@ public class RuleChain implements ChainEntry {
                 /* End Actiongroup / Conditiongroup sub-parser */
 
                 // Check if this is a toggle for shortcuts.
-                if (command.matches("shortcuts")) {
+                if (command.equalsIgnoreCase("shortcuts")) {
                     if (lineData.isEmpty()) {
                         shortcuts = null;
+                        continue;
                     } else {
                         shortcuts = ShortCutManager.getInstance().getShortcutMap(lineData);
                     }
