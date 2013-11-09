@@ -1,2 +1,7 @@
+shortcuts testcuts
+match Test<boo>
+then replace Hi
+shortcuts
+
 match This is a test
 then replace This WAS a test
