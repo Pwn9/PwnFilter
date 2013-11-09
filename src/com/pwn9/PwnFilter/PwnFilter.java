@@ -24,7 +24,6 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -80,10 +79,7 @@ public class PwnFilter extends JavaPlugin {
     public void onEnable() {
 
         // Initialize Configuration
-
-
-        FileConfiguration config = getConfig();
-        config.options().copyDefaults(true);
+        saveDefaultConfig();
 
         // Now get our configuration
         configurePlugin();
