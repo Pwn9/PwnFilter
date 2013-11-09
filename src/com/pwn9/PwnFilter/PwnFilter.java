@@ -80,11 +80,10 @@ public class PwnFilter extends JavaPlugin {
     public void onEnable() {
 
         // Initialize Configuration
-        saveDefaultConfig();
+
 
         FileConfiguration config = getConfig();
         config.options().copyDefaults(true);
-        saveConfig();
 
         // Now get our configuration
         configurePlugin();
