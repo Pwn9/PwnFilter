@@ -95,6 +95,8 @@ public class PwnFilter extends JavaPlugin {
         // Initialize the DataCache
         DataCache.getInstance(this);
 
+        DataCache.getInstance().addPermissions(getDescription().getPermissions());
+
         // Initialize Points Manager if its enabled
         PointManager.setup(this);
 

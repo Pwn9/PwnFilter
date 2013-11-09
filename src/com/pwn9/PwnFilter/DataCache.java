@@ -92,8 +92,10 @@ public class DataCache {
         permSet.add(permission);
     }
 
-    public synchronized void addPermissions(ArrayList<String> permissions) {
-        permSet.addAll(permissions);
+    public synchronized void addPermissions(List<Permission> permissions) {
+        for (Permission p : permissions ) {
+            permSet.add(p.getName());
+        }
     }
 
     public synchronized void addPermissions(Set<String> permissions) {
