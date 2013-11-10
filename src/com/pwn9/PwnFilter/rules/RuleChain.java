@@ -150,9 +150,9 @@ public class RuleChain implements ChainEntry {
 
         for (String s : state.getLogMessages()) {
             if (state.log) {
-                LogManager.logger.log(LogManager.getRuleLogLevel(),s);
+                LogManager.logger.info(s);
             } else {
-                logManager.debugLow(s);
+                LogManager.logger.log(LogManager.getRuleLogLevel(),s);
             }
         }
     }

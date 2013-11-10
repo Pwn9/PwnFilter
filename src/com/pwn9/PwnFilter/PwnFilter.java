@@ -99,12 +99,12 @@ public class PwnFilter extends JavaPlugin {
         activateMetrics();
 
         //Load up our listeners
-        ClientManager listenerManager = ClientManager.getInstance();
-        listenerManager.registerClient(new PwnFilterCommandListener(this), this);
-        listenerManager.registerClient(new PwnFilterInvListener(this), this);
-        listenerManager.registerClient(new PwnFilterPlayerListener(this), this);
-        listenerManager.registerClient(new PwnFilterServerCommandListener(this), this);
-        listenerManager.registerClient(new PwnFilterSignListener(this), this);
+        ClientManager clientManager = ClientManager.getInstance();
+        clientManager.registerClient(new PwnFilterCommandListener(this), this);
+        clientManager.registerClient(new PwnFilterInvListener(this), this);
+        clientManager.registerClient(new PwnFilterPlayerListener(this), this);
+        clientManager.registerClient(new PwnFilterServerCommandListener(this), this);
+        clientManager.registerClient(new PwnFilterSignListener(this), this);
 
 
         // And the Entity Death handler, for custom death messages.
@@ -114,7 +114,7 @@ public class PwnFilter extends JavaPlugin {
         DataCache.getInstance().start();
 
         // Enable the listeners
-        listenerManager.enableClients();
+        clientManager.enableClients();
 
     }
 

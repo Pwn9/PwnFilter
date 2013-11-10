@@ -1,39 +1,28 @@
-# Default message setups, can be overridden in rules.txt per match.
-# DO NOT remove quotes around messages!
-warnmsg: '&4[&6PwnFilter&4] &4Warned by PwnFilter!'
-kickmsg: '&4[&6PwnFilter&4] &4Kicked by PwnFilter!'
-burnmsg: '&4[&6PwnFilter&4] &4Burned by PwnFilter!'
-killmsg: '&4[&6PwnFilter&4] &4Killed by PwnFilter!'
-finemsg: '&4[&6PwnFilter&4] &4Fined by PwnFilter!'
+# PwnFilter ${pwnfilter.version} Default Configuration File
+# This file is now arranged so that the things that are most important to
+# configure are near the top.  You can, of course, re-arrange this how you
+# like.
 
-# Set the level for MATCH/SEND messages
-# Set to 'fine' if you don't want MATCH/SEND events in your main server log
-# NOTE: If you have the "then log" action set for a rule, it will log
-# at level INFO, regardless of the setting here.
-loglevel: info
+##########################
+## Basic Filter Options ##
+##########################
 
-# Create a PwnFilter.log file in the plugins/PwnFilter directory
-# This file will contain all PwnFilter log messages, regardless of level.
-logfile: true
+# Set to 'true' to strip color codes from chat.
+# Players with pwnfilter.color or pwnfilter.bypass permissions will still be
+# able to use colors.
+decolor: false
 
-# Debug mode (high is VERY verbose) (Enable logfile above)
-# NOTE: Changed in 3.0.1.  Now options are:
-# off, low, medium, high
-debug: off
+# The following options enable / disable filtering features
+# The "spamfilter" will enable/disable a basic filter that
+# prevents a player from entering the same line 2x in a row.
 
-
-# Strip color from chat. Permission to bypass pwnfilter.color or pwnfilter.bypass
-decolor: true
+# The 'chat' filter is always enabled.
 
 # Filter text applied to signs
 signfilter: false
 
-# Activate item filter (Naming items with Anvil)  **EXPERIMENTAL FEATURE**
+# Activate item filter (Naming items with Anvil)  (EXPERIMENTAL)
 itemfilter: false
-
-# Basic spam filter enabled (chat ONLY)
-spamfilter: false
-
 
 # Console Filter -- Filter commands entered on console (EXPERIMENTAL)
 consolefilter: false
@@ -41,27 +30,54 @@ consolefilter: false
 # Filter commands as well as chat true/false
 commandfilter: true
 
-# Basic spam filter enabled (commands ONLY)
-commandspamfilter: false
+spamfilter: false  # For chat messages
+commandspamfilter: false # For /commands
 
-# Command White List: Commands to filter, if empty, will filter ALL (except blacklist)
+
+# The Command Whitelist/Blacklist are used to prevent PwnFilter from
+# processing some /commands.  For example, you may want to make sure that
+# a player can't do /me says badword, but you don't want the filter to run
+# on a complex worldedit command like: //set 25%Stone,50%ironore,25%coalore
+# In this case, you could either add just the "me" command to the whitelist
+# or you could add /set to the blacklist. (Note, you don't include the first
+# '/'.
+
+# Command White List: Commands to filter, if empty, will filter
+# ALL (except blacklist)
 # By default, only filter the /me and /nick commands.
 cmdlist:
 - me
 - nick
 
-# Command Black List: Commands in this list will be ignored by PwnFilter
+# Command Black List: Commands in this list will not be processed by PwnFilter
 cmdblist: []
-
 
 # If you want to specify an arbitrary directory on your server to store rules
 # you can specify it here. (Default is to use plugins/PwnFilter/rules)
 #ruledirectory: /path/to/rules
 
+###################
+## Points System ##
+###################
 
-# Points System
+# The points system allows you to specify a "point value" for some rules.
+# Every time a player matches a rule with a points value, that player will
+# be given the number of points in "then points x".
+# If a player reaches one of the configured thresholds below, the actions
+# at that level will be taken.  In the example below, if a player accumulates
+# 10 points, they will be warned.  If they get 20 points, they will get kicked
+# and players with the pwnfilter.admin permission will be notified.  At 30
+# points, the player will be given a 15 minute tempban (you need another plugin
+# to administer the tempban), and admins will be notified.
+
+# The points are handled in a "leaky bucket" style.  Points "leak" out of the
+# bucket at the configured rate.  In the example below, a player who has points
+# in their bucket will have them drained at a rate of 1 point per 10s.
 points:
   enabled: false
+  leak:
+    points: 1.0
+    rate: 10 # seconds
   thresholds:
     threshold1:
       name: Warn
@@ -73,7 +89,7 @@ points:
       points: 20.0
       actions:
        - kick You need to tone down your language!
-       - notify %player% was kicked for hitting the kick threshold.
+       - notify pwnfilter.admins %player% was kicked for hitting the kick threshold.
     threshold3:
       name: Tempban
       points: 30.0
@@ -82,12 +98,59 @@ points:
        - notify %player% was given a 15m tempban for bad language.
 
 
+
+#######################
+## Default Messages ##
+######################
+
+# Default message setups, can be overridden in rules.txt per match.
+# DO NOT remove quotes around messages!
+warnmsg: '&4[&6PwnFilter&4] &4Warned by PwnFilter!'
+kickmsg: '&4[&6PwnFilter&4] &4Kicked by PwnFilter!'
+burnmsg: '&4[&6PwnFilter&4] &4Burned by PwnFilter!'
+killmsg: '&4[&6PwnFilter&4] &4Killed by PwnFilter!'
+finemsg: '&4[&6PwnFilter&4] &4Fined by PwnFilter!'
+
+
+#################################
+## LOGGING and TROUBLESHOOTING ##
+#################################
+
+# By default, minimal information is sent to the bukkit console, and
+# match information is written to the PwnFilter/pwnfilter.log file.  If you
+# want different behaviour, configure the options below.
+
+# Set the level for MATCH/SEND messages
+# Set to 'fine' if you don't want MATCH/SEND events in your main server log
+# NOTE: If you have the "then log" action set for a rule, it will log
+# at level INFO, regardless of the setting here.
+loglevel: fine
+
+# Create a PwnFilter.log file in the plugins/PwnFilter directory
+# This file will contain all PwnFilter log messages, regardless of level.
+logfile: true
+
+# Debug mode (high is VERY verbose) (Enable logfile above)
+# NOTE: Changed in 3.0.1.  Now options are:
+# off, low, medium, high
+# off = No debugging will be written to pwnfilter.log
+# low = Matches will be written
+# medium = low + detailed rule parsing info
+# high = medium + detailed debugging of the rule engine.
+
+debug: off
+
+###################
 #### ADVANCED #####
-# Note: You can also change the priority of event handlers with:
-# priority, cmdpriority and signpriority
+###################
+# You can also change the priority of event handlers with:
+# priority, cmdpriority, signpriority and itempriority
+
 # Changing priority can allow the event handlers to process messages before or after other
 # plugins.  This can sometimes help with plugin conflicts.  You really should know what you
-# are doing before you change these. :)
+# are doing before you change these.
+
+# By default, PwnFilters handlers try to run before all other plugins.
 
 # Change priority of PlayerListener (chat)
 # chatpriority: lowest #(default)
@@ -99,7 +162,7 @@ points:
 # signpriority: lowest #(default)
 
 # Change priority of ItemListener
-# itempriority: lowest
+# itempriority: lowest #(default)
 
 
 
