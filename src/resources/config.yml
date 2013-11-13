@@ -77,29 +77,39 @@ points:
   enabled: false
   leak:
     points: 1.0
-    rate: 10 # seconds
+    interval: 10 # seconds
   thresholds:
     threshold1:
       name: Warn
       points: 10.0
       actions:
-       - warn You have hit our warning threshold for bad language!
+        ascending:
+         - respond You have hit our warning threshold for bad language!
+        descending:
+         - respond You are now back in our good books.  Remember to keep it clean!
+
     threshold2:
       name: Kick
       points: 20.0
       actions:
-       - kick You need to tone down your language!
-       - notify pwnfilter.admins %player% was kicked for hitting the kick threshold.
+        ascending:
+         - kick You need to tone down your language!
+         - notify pwnfilter.admins %player% was kicked for hitting the kick threshold.
+
     threshold3:
       name: Tempban
       points: 30.0
       actions:
-       - console tempban %player% 15m Your language is not acceptable.  Take 15m to cool off!
-       - notify %player% was given a 15m tempban for bad language.
+        ascending:
+         - console ban %player% Your language is not acceptable.  Take 15m to cool off!
+         - notify pwnfilter.admins %player% was given a temporary ban for bad language.
+        descending:
+         - console unban %player%
+         - notify pwnfilter.admins %player% points have fallen below Tempban threshold. %player% was unbanned
 
 
 
-#######################
+######################
 ## Default Messages ##
 ######################
 
@@ -147,8 +157,8 @@ debug: off
 # priority, cmdpriority, signpriority and itempriority
 
 # Changing priority can allow the event handlers to process messages before or after other
-# plugins.  This can sometimes help with plugin conflicts.  You really should know what you
-# are doing before you change these.
+# plugins.  This can sometimes help with plugin conflicts.  You really should understand
+# how bukkit handler priority works before changing these.
 
 # By default, PwnFilters handlers try to run before all other plugins.
 

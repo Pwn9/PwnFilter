@@ -49,6 +49,8 @@ import java.util.logging.Level;
 
 public class PwnFilter extends JavaPlugin {
 
+    private static PwnFilter _instance;
+
     // Metrics data
     private Metrics metrics;
     public static Tracker matchTracker;
@@ -65,6 +67,8 @@ public class PwnFilter extends JavaPlugin {
 
     @Override
     public void onLoad() {
+
+        _instance = this;
 
         LogManager.getInstance(getLogger(),getDataFolder());
 
@@ -93,7 +97,7 @@ public class PwnFilter extends JavaPlugin {
         DataCache.getInstance().addPermissions(getDescription().getPermissions());
 
         // Initialize Points Manager if its enabled
-        PointManager.setup(this);
+        PointManager.setup();
 
         // Activate Plugin Metrics
         activateMetrics();
@@ -183,6 +187,14 @@ public class PwnFilter extends JavaPlugin {
             });
         }
 
+    }
+
+    public static PwnFilter getInstance() {
+        if (_instance == null) {
+            throw new IllegalStateException("PwnFilter not loaded!");
+        } else {
+            return _instance;
+        }
     }
 
     public void configurePlugin() {
@@ -293,7 +305,7 @@ public class PwnFilter extends JavaPlugin {
 
             LogManager.logger.config("Reloaded config.yml as requested by " + sender.getName());
 
-            PointManager.setup(this);
+            PointManager.setup();
             RuleManager.getInstance().reloadAllConfigs();
             LogManager.logger.config("All rules reloaded by " + sender.getName());
 
