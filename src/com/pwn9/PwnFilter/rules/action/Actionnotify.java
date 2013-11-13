@@ -43,17 +43,26 @@ public class Actionnotify implements Action {
         // Create the message to send
         final String sendString = Patterns.replaceVars(messageString,state);
 
-        // Get all logged in players who have the required permission and send them the message
-        Bukkit.getScheduler().runTask(state.plugin, new BukkitRunnable() {
-            @Override
-            public void run() {
-                for (Player p : DataCache.getInstance().getOnlinePlayers()) {
-                    if (DataCache.getInstance().hasPermission(p, permissionString)) {
-                        p.sendMessage(sendString);
+        if (permissionString.equalsIgnoreCase("console")) {
+            Bukkit.getScheduler().runTask(state.plugin, new BukkitRunnable() {
+                @Override
+                public void run() {
+                    Bukkit.getConsoleSender().sendMessage(sendString);
+                }
+            });
+        }  else {
+            // Get all logged in players who have the required permission and send them the message
+            Bukkit.getScheduler().runTask(state.plugin, new BukkitRunnable() {
+                @Override
+                public void run() {
+                    for (Player p : DataCache.getInstance().getOnlinePlayers()) {
+                        if (DataCache.getInstance().hasPermission(p, permissionString)) {
+                            p.sendMessage(sendString);
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
 
         return true;
     }

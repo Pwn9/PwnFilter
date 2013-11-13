@@ -12,6 +12,7 @@ package com.pwn9.PwnFilter.util;
 
 import com.pwn9.PwnFilter.FilterState;
 
+import java.text.DecimalFormat;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,6 +26,7 @@ public class Patterns {
      * Class Utility Methods
      */
     static Logger logger = Logger.getLogger("Minecraft.PwnFilter");
+    static final DecimalFormat df = new DecimalFormat("0.00##");
 
     public static java.util.regex.Pattern compilePattern(String re) {
         Pattern pattern = null;
@@ -48,6 +50,7 @@ public class Patterns {
         Pattern p = Pattern.compile("(&player|&string|&rawstring|&event|&ruleid|&ruledescr)");
         Matcher m = p.matcher(line);
 
+
         if (m.matches()) {
             String group = m.group(1);
             String replace = "%" + group.substring(1) + "%";
@@ -65,8 +68,9 @@ public class Patterns {
                 replaceAll("%string%", wrapReplacement(state.message.getColoredString())).
                 replaceAll("%rawstring%", wrapReplacement(state.getOriginalMessage().getColoredString())).
                 replaceAll("%event%", wrapReplacement(state.getListenerName())).
-                replaceAll("%ruleid%", (state.rule != null)?wrapReplacement(state.rule.getId()):"-").
-                replaceAll("%ruledescr%", (state.rule !=null)?wrapReplacement(state.rule.getDescription()):"''");
+                replaceAll("%points%",wrapReplacement(df.format(PointManager.getInstance().getPlayerPoints(state.playerName)))).
+                replaceAll("%ruleid%", (state.rule != null) ? wrapReplacement(state.rule.getId()) : "-").
+                replaceAll("%ruledescr%", (state.rule != null) ? wrapReplacement(state.rule.getDescription()) : "''");
         return line;
     }
 

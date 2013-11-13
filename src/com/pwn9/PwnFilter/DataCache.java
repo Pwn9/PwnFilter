@@ -77,7 +77,7 @@ public class DataCache {
     }
 
     public Player[] getOnlinePlayers() {
-        return (Player[])onlinePlayers.toArray();
+        return onlinePlayers.toArray(new Player[onlinePlayers.size()]);
     }
 
 

@@ -298,8 +298,11 @@ This is where the real magic happens in PwnFilter.  The rules are where the
 magic happens in PwnFilter.
 
 
- Actions
---------
+Reference
+---------
+
+Actions
+=======
 
 As of 3.2.0, the valid actions are:
 
@@ -371,10 +374,13 @@ As of 3.2.0, the valid actions are:
 
    This will cause the matched text to be converted to lowercase.
 
--  notify [permission][message]
+-  notify ["console"|permission] [message]
 
    This will send a message to all logged in players with [permission]
    Eg: notify pwnfilter.admins %player% just triggered %ruleid%.
+
+   If [permission] is "console", the notification will be sent as a message
+   to the console.
 
 -  rewrite [string]
 
@@ -398,6 +404,28 @@ As of 3.2.0, the valid actions are:
 
    Same as respond. This is a "legacy" command. Its behaviour may change
    in the future.
+
+Variables for Actions
+=====================
+
+The following are available to be used in "then command <string>":
+
+- %world%
+  The World the player is currently in
+- %player%
+  The name of the Player.
+- %string%
+  The current string (may have been modified by other rules).
+- %rawstring%
+  The original string, before any rule processing.
+- %event%
+  The name of the filter client that we're processing. (eg: CHAT, COMMAND, etc.)
+- %points%
+  The current points balance of the Player
+- %ruleid%
+  The <id> of the currently matched rule.
+- %ruledescr%
+  The <description> of the currently matched rule
 
 PwnFilter -- Regex-based User Filter Plugin for Bukkit-based Minecraft
 servers. Copyright (c) 2013 Pwn9.com. Tremor77 admin@pwn9.com & Sage905

@@ -13,6 +13,7 @@ package com.pwn9.PwnFilter;
 import com.pwn9.PwnFilter.api.FilterClient;
 import com.pwn9.PwnFilter.rules.Rule;
 import com.pwn9.PwnFilter.util.ColoredString;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -38,6 +39,7 @@ import java.util.regex.Pattern;
 
 //TODO: Make all this stuff private and create getters/setters
 
+@SuppressWarnings("UnusedDeclaration")
 public class FilterState {
     private final ColoredString originalMessage; // Original message
     public final Plugin plugin; // Which plugin is this state attached to?
@@ -80,6 +82,26 @@ public class FilterState {
         }
         plugin = pl;
         listener = l;
+    }
+
+    /**
+     * A FilterState object from a Player Name, instead of Player Object.  This
+     * can be used for offline players.
+     * @param pl PwnFilter plugin instance
+     * @param m String message to process
+     * @param pName Player name String
+     * @param w World object (optional. Can be null)
+     * @param l Listener that is calling.
+     */
+    public FilterState(Plugin pl, String m, String pName, World w, FilterClient l) {
+        originalMessage = new ColoredString(m);
+        message = new ColoredString(m);
+        messageLen = originalMessage.length();
+        playerName = pName;
+        playerWorldName = (w == null)?"":w.getName();
+        plugin = pl;
+        listener = l;
+        player = DataCache.getInstance().getPlayerForName(pName);
     }
 
     /**

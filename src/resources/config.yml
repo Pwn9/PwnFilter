@@ -2,6 +2,8 @@
 # This file is now arranged so that the things that are most important to
 # configure are near the top.  You can, of course, re-arrange this how you
 # like.
+## NOTE: If you have a text string that has a ':' in it, followed by a '%', you need
+## to put single quotes (') around the text, to prevent the parser from having a fit.
 
 ##########################
 ## Basic Filter Options ##
@@ -67,8 +69,9 @@ cmdblist: []
 # at that level will be taken.  In the example below, if a player accumulates
 # 10 points, they will be warned.  If they get 20 points, they will get kicked
 # and players with the pwnfilter.admin permission will be notified.  At 30
-# points, the player will be given a 15 minute tempban (you need another plugin
-# to administer the tempban), and admins will be notified.
+# points, the player will be given a ban, and admins will be notified.  After
+# the points have fallen back below each threshold, the descending actions will
+# be executed. (eg: unban).
 
 # The points are handled in a "leaky bucket" style.  Points "leak" out of the
 # bucket at the configured rate.  In the example below, a player who has points
@@ -77,7 +80,7 @@ points:
   enabled: false
   leak:
     points: 1.0
-    interval: 10 # seconds
+    interval: 30 # seconds
   thresholds:
     threshold1:
       name: Warn
@@ -103,9 +106,11 @@ points:
         ascending:
          - console ban %player% Your language is not acceptable.  Take 15m to cool off!
          - notify pwnfilter.admins %player% was given a temporary ban for bad language.
+         - 'notify console &4%player% was given a temporary ban for bad language. Points %points%'
         descending:
-         - console unban %player%
+         - console pardon %player%
          - notify pwnfilter.admins %player% points have fallen below Tempban threshold. %player% was unbanned
+         - notify console &4%player% points have fallen below Tempban threshold. %player% was unbanned
 
 
 

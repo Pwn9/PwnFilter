@@ -10,7 +10,6 @@
 
 package com.pwn9.PwnFilter.util;
 
-import com.pwn9.PwnFilter.DataCache;
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.PwnFilter;
 import com.pwn9.PwnFilter.api.FilterClient;
@@ -62,18 +61,12 @@ public class PointManager implements FilterClient {
             _instance = new PointManager(pwnFilter);
         }
 
-        Double leakPoints = pointsSection.getDouble("leak.points");
-        int leakInterval = pointsSection.getInt("leak.rate");
-
-        if (leakPoints > 0.0 && leakInterval > 0) {
-            _instance.leakPoints = leakPoints;
-            _instance.leakInterval = leakInterval;
-            _instance.startLeaking();
-        } else {
-            _instance.stopLeaking();
-        }
+        _instance.leakPoints = pointsSection.getDouble("leak.points",1);
+        _instance.leakInterval = pointsSection.getInt("leak.interval",30);
 
         _instance.parseThresholds(pointsSection.getConfigurationSection("thresholds"));
+
+        _instance.startLeaking();
 
         return _instance;
     }
@@ -147,8 +140,12 @@ public class PointManager implements FilterClient {
         return playerPoints.keySet();
     }
 
+    public Double getPlayerPoints(String p) {
+        return (playerPoints.containsKey(p))?playerPoints.get(p):0.0;
+    }
+
     public Double getPlayerPoints(Player p) {
-        return playerPoints.get(p.getName());
+        return (playerPoints.containsKey(p.getName()))?playerPoints.get(p.getName()):0.0;
     }
 
     public void setPlayerPoints(String playerName, Double points) {
@@ -215,16 +212,14 @@ public class PointManager implements FilterClient {
         }
 
         public void executeAscending(String playerName) {
-            Player player = DataCache.getInstance().getPlayerForName(playerName);
-            FilterState state = new FilterState(plugin, "", player, _instance );
+            FilterState state = new FilterState(plugin, "", playerName, null, _instance );
             for (Action a : actionsAscending ) {
                 a.execute(state);
             }
         }
 
         public void executeDescending(String playerName) {
-            Player player = DataCache.getInstance().getPlayerForName(playerName);
-            FilterState state = new FilterState(plugin, "", player, _instance );
+            FilterState state = new FilterState(plugin, "", playerName, null, _instance );
             for (Action a : actionsDescending ) {
                 a.execute(state);
             }
