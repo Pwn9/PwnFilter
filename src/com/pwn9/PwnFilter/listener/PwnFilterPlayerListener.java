@@ -22,7 +22,6 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.PluginManager;
 
@@ -38,13 +37,6 @@ public class PwnFilterPlayerListener extends BaseListener {
 
 	public PwnFilterPlayerListener(PwnFilter p) {
         super(p);
-    }
-
-    public void onPlayerQuit(PlayerQuitEvent event) {
-        // Cleanup player messages on quit
-        if (event.getPlayer() != null && PwnFilter.lastMessage.containsKey(event.getPlayer())) {
-            PwnFilter.lastMessage.remove(event.getPlayer());
-        }
     }
 
     public void onPlayerChat(AsyncPlayerChatEvent event) {
@@ -119,12 +111,6 @@ public class PwnFilterPlayerListener extends BaseListener {
         pm.registerEvent(AsyncPlayerChatEvent.class, this, priority,
                 new EventExecutor() {
                     public void execute(Listener l, Event e) { onPlayerChat((AsyncPlayerChatEvent)e); }
-                },
-                plugin);
-
-        pm.registerEvent(PlayerQuitEvent.class, this, priority,
-                new EventExecutor() {
-                    public void execute(Listener l, Event e) { onPlayerQuit((PlayerQuitEvent)e); }
                 },
                 plugin);
 

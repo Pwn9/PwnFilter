@@ -6,7 +6,6 @@ import com.pwn9.PwnFilter.PwnFilter;
 import com.pwn9.PwnFilter.api.FilterClient;
 import com.pwn9.PwnFilter.util.LogManager;
 import org.bukkit.configuration.Configuration;
-import org.bukkit.entity.Player;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,8 +27,7 @@ public class RuleSetTest {
 
     RuleManager ruleManager;
     RuleChain rs;
-    Player mockPlayer;
-    PwnFilter mockPlugin;
+    PwnFilter mockPlugin = new PwnFilter();
 
     @Before
     public void setUp() throws Exception {
@@ -40,7 +38,7 @@ public class RuleSetTest {
         ShortCutManager.getInstance().setShortcutDir(ruleDir);
         rs = ruleManager.getRuleChain("testrules.txt");
         LogManager.getInstance(Logger.getAnonymousLogger(),new File("/tmp/test"));
-        DataCache.getInstance(mockPlugin);
+        DataCache.getInstance();
     }
 
     @Test
@@ -64,17 +62,15 @@ public class RuleSetTest {
 
             @Override
             public boolean isActive() {
-                return false;  //To change body of implemented methods use File | Settings | File Templates.
+                return false;
             }
 
             @Override
             public void activate(Configuration config) {
-                //To change body of implemented methods use File | Settings | File Templates.
             }
 
             @Override
             public void shutdown() {
-                //To change body of implemented methods use File | Settings | File Templates.
             }
         });
         rs.apply(testState);

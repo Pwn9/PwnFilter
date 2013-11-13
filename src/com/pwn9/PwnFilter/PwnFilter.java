@@ -65,10 +65,12 @@ public class PwnFilter extends JavaPlugin {
     public static HashMap<Player, String> lastMessage = new HashMap<Player, String>();
     public static Economy economy = null;
 
+    public PwnFilter() {
+        _instance = this;
+    }
+
     @Override
     public void onLoad() {
-
-        _instance = this;
 
         LogManager.getInstance(getLogger(),getDataFolder());
 
@@ -92,7 +94,7 @@ public class PwnFilter extends JavaPlugin {
         setupEconomy();
 
         // Initialize the DataCache
-        DataCache.getInstance(this);
+        DataCache.getInstance();
 
         DataCache.getInstance().addPermissions(getDescription().getPermissions());
 
@@ -111,8 +113,10 @@ public class PwnFilter extends JavaPlugin {
         clientManager.registerClient(new PwnFilterSignListener(this), this);
 
 
-        // And the Entity Death handler, for custom death messages.
-        new PwnFilterEntityListener(this);
+        // The Entity Death handler, for custom death messages.
+        getServer().getPluginManager().registerEvents(new PwnFilterEntityListener(),this);
+        // The DataCache handler, for async-safe player info (name/world/permissions)
+        getServer().getPluginManager().registerEvents(new PlayerCacheListener(), this);
 
         // Start the DataCache
         DataCache.getInstance().start();
@@ -190,11 +194,7 @@ public class PwnFilter extends JavaPlugin {
     }
 
     public static PwnFilter getInstance() {
-        if (_instance == null) {
-            throw new IllegalStateException("PwnFilter not loaded!");
-        } else {
-            return _instance;
-        }
+        return _instance;
     }
 
     public void configurePlugin() {

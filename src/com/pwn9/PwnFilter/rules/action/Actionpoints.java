@@ -12,6 +12,7 @@ package com.pwn9.PwnFilter.rules.action;
 
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.util.DefaultMessages;
+import com.pwn9.PwnFilter.util.LogManager;
 import com.pwn9.PwnFilter.util.PointManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -36,19 +37,26 @@ public class Actionpoints implements Action {
             pointsAmount = 1.00;
         }
 
+
         String message = (parts.length > 1)?parts[1]:"";
-        messageString = DefaultMessages.prepareMessage(parts[1], "pointsmsg");
+        messageString = DefaultMessages.prepareMessage(message, "pointsmsg");
     }
 
     public boolean execute(final FilterState state ) {
         Player p = state.getPlayer();
+
         if (p == null) return false;
 
         PointManager pm = PointManager.getInstance();
 
+        if (pm == null) {
+            LogManager.getInstance().debugLow(String.format("Rule: %s has 'then points', but PointManager is disabled in config.yml",state.rule.getId()));
+            return false;
+        }
+
         // TODO: Add more comprehensive messaging, as well as details about thresholds.
 
-        pm.addPlayerPoints(state.getPlayer(), pointsAmount);
+        pm.addPlayerPoints(p.getName(), pointsAmount);
 
         state.addLogMessage(String.format("Points Accumulated %s : %f. Total: %f",state.playerName,pointsAmount, pm.getPlayerPoints(p)));
 

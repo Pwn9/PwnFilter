@@ -10,6 +10,7 @@
 
 package com.pwn9.PwnFilter;
 
+import com.pwn9.PwnFilter.util.LogManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
@@ -28,11 +29,16 @@ import java.util.logging.Logger;
  *
  * The DataCache runs in the main bukkit thread every second, pulling the required
  * information.
+ *
+ * This implementation is probably not the optimal way of doing things, but it
+ * is the best I could come up with. - Sage
  */
 
+@SuppressWarnings("UnusedDeclaration")
 public class DataCache {
 
-    public final static int runEveryTicks = 20;
+    public final static int runEveryTicks = 20; // Once per second
+    public final static int playersPerRun = 50;
 
     private static DataCache _instance = null;
 
@@ -43,63 +49,35 @@ public class DataCache {
     private final Plugin plugin;
     private int taskId;
     private ConcurrentHashMap<Player,String> playerName;
+    private ConcurrentHashMap<String, Player> playerForName;
+    private ConcurrentHashMap<UUID, Player> playerForUUID;
     private ConcurrentHashMap<Player,String> playerWorld;
     private ConcurrentHashMap<Player,HashSet<String>> playerPermissions;
     private ArrayList<Player> queuedPlayerList = new ArrayList<Player>();
-    private Player[] onlinePlayers = {};
+    private Set<Player> onlinePlayers = new HashSet<Player>();
 
     //TODO: Add a "registration" system for interesting permissions, etc.
     // so that plugins can add/remove things they want cached.
     private DataCache(Plugin plugin) {
+        if (plugin == null) throw new IllegalStateException("Could not get PwnFilter instance!");
         playerName = new ConcurrentHashMap<Player,String>();
+        playerForName = new ConcurrentHashMap<String, Player>();
+        playerForUUID = new ConcurrentHashMap<UUID, Player>();
         playerWorld = new ConcurrentHashMap<Player,String>();
         playerPermissions = new ConcurrentHashMap<Player,HashSet<String>>();
         this.plugin = plugin;
     }
 
-    // This method is for the owning plugin (PwnFilter) to initialize the cache.
-    public static DataCache getInstance(Plugin p) {
-        if ( _instance == null ) {
-            _instance = new DataCache(p);
-            return _instance;
-        } else return _instance;
-    }
-
     // This method is for other classes to call to query the cache.
     public static DataCache getInstance() throws IllegalStateException {
         if ( _instance == null ) {
-            throw new IllegalStateException("DataCache accessed before initialized!");
-        } else return _instance;
+            _instance = new DataCache(PwnFilter.getInstance());
+        }
+        return _instance;
     }
 
     public Player[] getOnlinePlayers() {
-        return onlinePlayers;
-    }
-
-    private void cachePlayerPermissions(Player p) {
-        HashSet<String> playerPerms = new HashSet<String>();
-
-        for (String perm : permSet) {
-            if (p.hasPermission(perm)) {
-                playerPerms.add(perm);
-            }
-        }
-
-        playerPermissions.put(p,playerPerms);
-    }
-
-    public synchronized void addPermission(String permission) {
-        permSet.add(permission);
-    }
-
-    public synchronized void addPermissions(List<Permission> permissions) {
-        for (Permission p : permissions ) {
-            permSet.add(p.getName());
-        }
-    }
-
-    public synchronized void addPermissions(Set<String> permissions) {
-        permSet.addAll(permissions);
+        return (Player[])onlinePlayers.toArray();
     }
 
 
@@ -114,48 +92,29 @@ public class DataCache {
     }
 
     public String getPlayerWorld(Player p) {
-        return playerWorld.get(p);
+        if (p.isOnline())
+            return playerWorld.get(p);
+        else
+            return null;
     }
 
     public String getPlayerName(Player p) {
         return playerName.get(p);
     }
 
-    private synchronized void updateCache() {
-        /*
-        I think I want to process an average of 1 player per tick.
-          Every time this method is called, it will check to see if there are players on the
-          onlinePlayerList[].  If so, it will process them.  If not, it will
-          grab the list of online players, and add it to the list.
-         */
-        if (queuedPlayerList.size() < 1) {
-            onlinePlayers = Bukkit.getOnlinePlayers();
-
-            if (onlinePlayers.length > 0) {
-                queuedPlayerList.addAll(Arrays.asList(onlinePlayers));
-            }
-            // Clear out stale data
-            for (Player p : playerName.keySet() ) {
-                if (!Arrays.asList(onlinePlayers).contains(p)) {
-                    playerName.remove(p);
-                    playerWorld.remove(p);
-                    playerPermissions.remove(p);
-                }
-            }
-        }
-        // Update the cache
-        for (int i= 0 ; i < runEveryTicks ; i++) {
-            if (queuedPlayerList.size() < 1) break;
-            Player player = queuedPlayerList.remove(0);
-            playerName.put(player,player.getName());
-            playerWorld.put(player,player.getWorld().getName());
-            cachePlayerPermissions(player);
-
-        }
+    public Player getPlayerForName(String name) {
+        return playerForName.get(name);
+    }
+    public Player getPlayerForUUID(UUID id) {
+        return playerForUUID.get(id);
     }
 
-
     public void start() {
+        // Initialize with current online players
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            addPlayer(p);
+        }
+
         taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             @Override
             public void run() {
@@ -166,6 +125,9 @@ public class DataCache {
 
     public void stop() {
         Bukkit.getScheduler().cancelTask(taskId);
+        for (Player p : playerName.keySet()) {
+            removePlayer(p);
+        }
         taskId = 0;
     }
 
@@ -189,7 +151,7 @@ public class DataCache {
         l.finest(sb.toString());
         l.finest("-----PlayerCache ------");
         for (Player p : playerName.keySet()) {
-            l.finest("Player ID: " + p + " Name: " + playerName.get(p) + " World: " + playerWorld.get(p));
+            l.finest("Player ID: " + p.getUniqueId() + " Name: " + playerName.get(p) + " World: " + playerWorld.get(p));
             StringBuilder s = new StringBuilder();
             sb.append("PermissionsSet : ");
             HashSet<String> perms = playerPermissions.get(p);
@@ -200,5 +162,96 @@ public class DataCache {
             l.finest(s.toString());
         }
     }
+
+
+    /* NOTE: All of the following methods are synchronized.  They must only
+             ever be called from the Bukkit main thread task.  ALL writes to
+             the DataCache MUST happen in a thread-safe way!
+    */
+    public synchronized void addPlayer(Player p) {
+        onlinePlayers.add(p);
+        playerName.put(p, p.getName());
+        playerForName.put(p.getName(), p);
+        playerForUUID.put(p.getUniqueId(),p);
+        playerWorld.put(p, p.getWorld().getName());
+    }
+
+    public synchronized void updatePlayerWorld(Player p) {
+        playerWorld.put(p,p.getWorld().getName());
+    }
+
+    public synchronized void removePlayer(Player p) {
+        onlinePlayers.remove(p);
+        playerForName.remove(p.getName());
+        playerName.remove(p);
+        playerWorld.remove(p);
+        playerForUUID.remove(p.getUniqueId());
+        playerPermissions.remove(p);
+    }
+
+    private synchronized void updateCache() {
+        /*
+          Every time this method is called, it will check to see if there are players on the
+          queuedPlayerList[].  If so, it will process them.  If not, it will
+          grab the list of online players, and add it to the list.
+         */
+        if (queuedPlayerList.size() < 1) {
+
+            // A quick "Sanity Check" that our internal list of online players matches
+            // The actual list of online players...
+            if (!onlinePlayers.containsAll(Arrays.asList(Bukkit.getOnlinePlayers()))) {
+                LogManager.logger.warning("Cached Player List is not equal to actual online player list!");
+            }
+
+            if (onlinePlayers.size() > 0) {
+                queuedPlayerList.addAll(onlinePlayers);
+            }
+            // Clear out stale data
+            for (Player p : playerName.keySet() ) {
+                if (!onlinePlayers.contains(p)) {
+                    LogManager.logger.warning("Removing cached, but offline player: " + p.getName());
+                    removePlayer(p);
+                }
+            }
+        }
+        // Update the cache
+        for (int i= 0 ; i < playersPerRun ; i++) {
+            if (queuedPlayerList.size() < 1) break;
+            Player player = queuedPlayerList.remove(0);
+            cachePlayerPermissions(player);
+
+        }
+    }
+
+    public synchronized void addPermission(String permission) {
+        permSet.add(permission);
+    }
+
+    public synchronized void addPermissions(List<Permission> permissions) {
+        for (Permission p : permissions ) {
+            permSet.add(p.getName());
+        }
+    }
+
+    public synchronized void addPermissions(Set<String> permissions) {
+        permSet.addAll(permissions);
+    }
+
+    // NOTE: This is not synchronized, but it is private, so that only the
+    // synchronized methods can call it.
+
+    private void cachePlayerPermissions(Player p) {
+        HashSet<String> playerPerms = new HashSet<String>();
+
+        for (String perm : permSet) {
+            if (p.hasPermission(perm)) {
+                playerPerms.add(perm);
+            }
+        }
+
+        playerPermissions.put(p, playerPerms);
+    }
+
+
 
 }

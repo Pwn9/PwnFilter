@@ -12,36 +12,20 @@
 package com.pwn9.PwnFilter.listener;
 
 import com.pwn9.PwnFilter.PwnFilter;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.plugin.EventExecutor;
-import org.bukkit.plugin.PluginManager;
 
 /**
 * Catch Death events to rewrite them with a custom message.
 */
 
 public class PwnFilterEntityListener implements Listener {
-    PwnFilter plugin;
 
-    public PwnFilterEntityListener(PwnFilter p) {
-        plugin = p;
-        PluginManager pm = Bukkit.getServer().getPluginManager();
-        EventPriority priority = EventPriority.valueOf(p.getConfig().getString("chatpriority", "LOWEST").toUpperCase());
-
-        /* Hook up the Listener for EntityDeath events */
-        pm.registerEvent(EntityDeathEvent.class, this, priority,
-                new EventExecutor() {
-                    public void execute(Listener l, Event e) { onEntityDeath((EntityDeathEvent) e); }
-                },
-                plugin);
-    }
-
+    @EventHandler(priority=EventPriority.LOWEST)
     public void onEntityDeath(EntityDeathEvent event) {
         if (!(event instanceof PlayerDeathEvent)) return;
 

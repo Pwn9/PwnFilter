@@ -10,6 +10,7 @@
 
 package com.pwn9.PwnFilter.util;
 
+import com.pwn9.PwnFilter.DataCache;
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.PwnFilter;
 import com.pwn9.PwnFilter.api.FilterClient;
@@ -32,12 +33,13 @@ import java.util.concurrent.ConcurrentHashMap;
  * Date: 13-10-31
  * Time: 3:49 PM
  */
+@SuppressWarnings("UnusedDeclaration")
 public class PointManager implements FilterClient {
 
     private static PointManager _instance;
     private final PwnFilter plugin;
 
-    private ConcurrentHashMap<Player,Double> playerPoints = new ConcurrentHashMap<Player, Double>();
+    private ConcurrentHashMap<String,Double> playerPoints = new ConcurrentHashMap<String, Double>();
     private TreeMap<Double, Threshold> thresholds = new TreeMap<Double,Threshold>();
 
     private int leakInterval;
@@ -51,9 +53,11 @@ public class PointManager implements FilterClient {
     public static PointManager setup() {
         PwnFilter pwnFilter = PwnFilter.getInstance();
         ConfigurationSection pointsSection = pwnFilter.getConfig().getConfigurationSection("points");
-        if (!pointsSection.getBoolean("enabled"))
+        if (!pointsSection.getBoolean("enabled")) {
+            if (_instance != null) _instance.stopLeaking();
+            _instance = null;
             return null;
-
+        }
         if (_instance == null ) {
             _instance = new PointManager(pwnFilter);
         }
@@ -82,9 +86,8 @@ public class PointManager implements FilterClient {
                 public void run() {
                     //Every interval, check point balances, and if they are > 0, subtract leakPoints
                     // from the players balance.  If they reach 0, remove them from the list.
-                    Set<Player> players = pointManager.getPlayersWithPoints();
-                    for (Player p : players) {
-                        pointManager.subPlayerPoints(p,leakPoints);
+                    for (String playerName : pointManager.getPlayersWithPoints()) {
+                        pointManager.subPlayerPoints(playerName,leakPoints);
                     }
                 }
             }, 20, 20*leakInterval);
@@ -140,32 +143,32 @@ public class PointManager implements FilterClient {
         return _instance;
     }
 
-    public Set<Player> getPlayersWithPoints() {
+    public Set<String> getPlayersWithPoints() {
         return playerPoints.keySet();
     }
 
     public Double getPlayerPoints(Player p) {
-        return playerPoints.get(p);
+        return playerPoints.get(p.getName());
     }
 
-    public void setPlayerPoints(Player p, Double points) {
-        Double old = playerPoints.get(p);
-        playerPoints.put(p,points);
-        executeActions(old, points,p);
+    public void setPlayerPoints(String playerName, Double points) {
+        Double old = playerPoints.get(playerName);
+        playerPoints.put(playerName,points);
+        executeActions(old, points,playerName);
     }
 
-    public void addPlayerPoints(Player p, Double points) {
-        Double current = playerPoints.get(p);
+    public void addPlayerPoints(String playerName, Double points) {
+        Double current = playerPoints.get(playerName);
         if (current == null) current = 0.0;
         Double updated = current + points;
 
-        playerPoints.put(p,updated);
+        playerPoints.put(playerName,updated);
 
-        executeActions(current, updated, p);
+        executeActions(current, updated, playerName);
 
     }
 
-    private void executeActions(Double fromValue, Double toValue, Player p) {
+    private void executeActions(Double fromValue, Double toValue, String playerName) {
         Double oldKey = thresholds.floorKey(fromValue);
         Double newKey = thresholds.floorKey(toValue);
 
@@ -177,26 +180,26 @@ public class PointManager implements FilterClient {
             // execute the actions for that crossing.
 
             for (Map.Entry<Double,Threshold> entry : thresholds.subMap(oldKey, false, newKey, true).entrySet())
-                entry.getValue().executeAscending(p);
+                entry.getValue().executeAscending(playerName);
         } else {
             for (Map.Entry<Double, Threshold> entry : thresholds.subMap(newKey, false, oldKey, true).descendingMap().entrySet())
-                entry.getValue().executeDescending(p);
+                entry.getValue().executeDescending(playerName);
         }
 
     }
 
-    public void subPlayerPoints(Player p, Double points) {
+    public void subPlayerPoints(String playerName, Double points) {
         Double updated;
-        Double current = playerPoints.get(p);
+        Double current = playerPoints.get(playerName);
         if (current == null) current = 0.0;
         updated = current - points;
         if ( updated <=0 ) {
-            playerPoints.remove(p);
+            playerPoints.remove(playerName);
             updated = 0.0;
         }
-        playerPoints.put(p,updated);
+        playerPoints.put(playerName,updated);
 
-        executeActions(current, updated, p);
+        executeActions(current, updated, playerName);
 
     }
 
@@ -211,14 +214,16 @@ public class PointManager implements FilterClient {
             return Double.compare(this.points, o.points);
         }
 
-        public void executeAscending(Player player) {
+        public void executeAscending(String playerName) {
+            Player player = DataCache.getInstance().getPlayerForName(playerName);
             FilterState state = new FilterState(plugin, "", player, _instance );
             for (Action a : actionsAscending ) {
                 a.execute(state);
             }
         }
 
-        public void executeDescending(Player player) {
+        public void executeDescending(String playerName) {
+            Player player = DataCache.getInstance().getPlayerForName(playerName);
             FilterState state = new FilterState(plugin, "", player, _instance );
             for (Action a : actionsDescending ) {
                 a.execute(state);
