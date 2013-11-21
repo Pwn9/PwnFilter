@@ -1,0 +1,242 @@
+# EpicATrain's Language Filter
+# Utilities List
+# Version 10.0.1
+# Built 10-25-2013 5:25 PM
+#
+# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+# This Is The NEW Version Of EpicATrain's Language Filter! Yay! This Version
+# Hopes To Make Bad Language The Thing Of The Past! It Filters Everything!
+# This Is The Utilities Version Of My Filter And Is Part Of A Package Of Other
+# Filters.  Please Make Sure You Download And Use The Other Parts As Well!
+# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+#
+#
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# This Language Filter Requires Version 3.2 Or Greater Of Pwnfilter And WILL
+# NOT Work With Older Versions! If You Try, You Will Crash Your Server! You
+# Have Been Warned!
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+#
+#
+# Thank you for supporting my work.  Please consider donating to help
+#	further support family safe gaming!
+#		http://fnd.us/c/0QtL4
+# All donations will go towards the support and continuation of this
+#	language filter and the advancement of server & client side
+#	family safe game development.
+#
+# > > > > > Please Do NOT Remove or Edit Any Donation Lines < < < < <
+# > > > > > If you wish to remove these, please donate. Thanks! < < < < <
+#
+# ---------- Important Information ----------
+# This scripting code has no warranty or remedies, whether expressed or
+#	 implied, and is provided "as is".
+# The following scripting code is designed for the following servers:
+#	Minecraft -> Bukkit -> Pwnfilter Plugin
+# There is a goal to make this code universal for cross-platforms
+# 	on many other game servers. Support for other games is currently
+#	in development.  If you wish to participate and help develop this
+#	code, please contact EpicATrain at the email below.
+# THIS WORK IS COPYRIGHTED WITH THE UNITED STATES LIBRARY OF CONGRESS.
+#   YOU MUST CONTACT ADDAM 'EPICATRAIN' WAITKUS FOR COPYRIGHT PERMISSION.
+#   YOU MAY CONTACT ADDAM 'EPICATRAIN' WAITKUS AT ATRAINONLINE (AT) GMAIL
+#   (DOT.) COM
+# This work may be distributed in current format free of charge as
+# 	long as this work remains free of charge and used only on the
+#	game servers listed above.
+# Server administrators may modify this work to their preference for
+#	their server only, if so desired, as long as such work remains property
+# 	of Addam Waitkus with approperiate asknowledgements and remains
+#   distributed freely of charge.
+# Addam Waitkus: atrain(nothinghere)online [at] gmail (dot) com
+# ---------- End Important Information ----------
+#
+# ---------- Read Me ----------
+# This entire script is written so that any admin can edit out most
+# 	parts of this filter to his or her liking.  To stop a word from
+# 	being filtered, simply put a pound sign (#) next to the lines of
+# 	code you want to turn off.
+# It's highly NOT recommended to delete lines of code in case you
+# 	want to turn it back on at a later date.
+#
+# If you wish to exclude certain players from being filtered from certain
+#   parts of the language filter, then please add their names to the ignore
+#   Admins section below of the conditiongroup ignoreAdmins. This is an
+#   easier way for admins to exclude certain players from being filtered
+#   from non-esssential filters such as the advertising filters, Big Bertha,
+#   The Fat Fury, and Fat Albert.
+#
+# If you also so desire, you can put your website in the section below
+#   listed website so when players type !website, your website can be
+#   displayed on your server.  This can be a very handy tool.
+#
+# One last cool thing to mention, in the previous version of my language filter,
+#   it was difficult to understand where to put your server information
+#   to ensure that you got the best results when using my advertising filters.
+#   I've since completely rewritten everything and with the help of Sage905
+#   and tremor77, we have brought to you a new design to ignore servers in
+#   the advertising filters.  Simply add your server to the list of ignored
+#   servers in the conditiongroup ignoreServers. You can add as many as you
+#   like or as few as you like, or none at all! It couldn't be any simplier.
+# ---------- End Read Me ---------- 
+
+shortcuts letters.vars
+
+actiongroup Website
+then rewrite &aWebsite: facebook.com/myncraft (!website)
+# -- End of Action Group Website
+
+conditiongroup ignoreAdmins
+ignore user Sage905
+ignore user tremor77
+ignore user DreamPhreak
+ignore user EpicATrain
+ignore user CooperDonald
+# -- End of Condition Group Ignore Admins
+
+conditiongroup ignoreServers
+ignore string youtube.com
+ignore string google.com
+ignore string biblegateway.com
+ignore string 70.34.194.98:25565
+ignore string 70.34.194.98
+ignore string Myncraft.no-ip.org
+ignore string minecraft.net
+ignore string minecraftwiki.com
+ignore string pwn9.com
+ignore string facebook.com/myncraft
+# -- End of Condition Group Ignore Servers
+
+# Block all other characters that are NOT alphanumeric or punctuation
+match .*[^\x20-\x7F].*
+rule Alphanumeric [Alphanumeric]
+then deny
+then warn &6 I'm Sorry, But &4&l&n Only &6 American English ASCII Characters Are Allowed
+
+match (?<!'|\w)(?:(?:(?:.*www.*|.*http.*|[a-zA-Z0-9-]|\s*dash\s*){1,63}(@|_|\s*\++\s*|\.|\(|\)|\\+|\s*\(dot\)\s*|\s*point\s*|\s*\(point\)\s*|\s*dot\s*|\*|\s*period\s*|\s*\(period\)\s*)){1,2}(?<!'|\w)(a+(\W|_)*c+|a+(\W|_)*d+|a+(\W|_)*e+|a+(\W|_)*f+|a+(\W|_)*g+|a+(\W|_)*i+|a+(\W|_)*l+|(?<!\s+dot\s+|\s+period\s+)a+(\W|_)*m+|(?<!\s+dot\s+|\s+period\s+)a+(\W|_)*n+|a+(\W|_)*o+|a+(\W|_)*q+|(?<!\s+dot\s+|\s+period\s+)a+(\W|_)*r+|a+(\W|_)*r+(\W|_)*p+(\W|_)*a+|(?<!\s+dot\s+|\s+period\s+)a+(\W|_)*s+|(?<!\s+dot\s+|\s+period\s+)a+(\W|_)*t+|a+(\W|_)*u+|(?<!\s+dot\s+|\s+period\s+)a+(\W|_)*w+|a+(\W|_)*x+|a+(\W|_)*z+|b+(\W|_)*a+|b+(\W|_)*b+|b+(\W|_)*d+|b+(\W|_)*e+|b+(\W|_)*f+|b+(\W|_)*g+|b+(\W|_)*h+|b+(\W|_)*i+|b+(\W|_)*i+(\W|_)*z+|b+(\W|_)*j+|b+(\W|_)*m+|b+(\W|_)*n+|b+(\W|_)*o+|b+(\W|_)*r+|b+(\W|_)*s+|b+(\W|_)*t+|b+(\W|_)*v+|b+(\W|_)*w+|(?<!\s+dot\s+|\s+period\s+)b+(\W|_)*y+|b+(\W|_)*z+|c+(\W|_)*a+|(?<!\s+dot\s+|\s+period\s+)c+(\W|_)*a+(\W|_)*t+|c+(\W|_)*c+|c+(\W|_)*d+|c+(\W|_)*f+|c+(\W|_)*g+|c+(\W|_)*h+|c+(\W|_)*i+|c+(\W|_)*k+|c+(\W|_)*l+|c+(\W|_)*m+|c+(\W|_)*n+|c+(\W|_)*o+|c+(\W|_)*o+(\W|_)*m+|c+(\W|_)*o+(\W|_)*o+(\W|_)*p+|c+(\W|_)*r+|c+(\W|_)*u+|c+(\W|_)*v+|c+(\W|_)*w+|c+(\W|_)*x+|c+(\W|_)*y+|c+(\W|_)*z+|d+(\W|_)*e+(?!-)|d+(\W|_)*j+|d+(\W|_)*k+|d+(\W|_)*m+|(?<!\s+dot\s+|\s+period\s+)d+(\W|_)*o+|d+(\W|_)*z+|e+(\W|_)*c+|e+(\W|_)*d+(\W|_)*u+|e+(\W|_)*e+|e+(\W|_)*g+|e+(\W|_)*r+|e+(\W|_)*s+|e+(\W|_)*t+|e+(\W|_)*u+|f+(\W|_)*i+|f+(\W|_)*j+|f+(\W|_)*k+|f+(\W|_)*m+|f+(\W|_)*o+|f+(\W|_)*r+|g+(\W|_)*a+|g+(\W|_)*b+|g+(\W|_)*d+|g+(\W|_)*e+|g+(\W|_)*f+|g+(\W|_)*g+|g+(\W|_)*h+|g+(\W|_)*i+|g+(\W|_)*l+|g+(\W|_)*m+|g+(\W|_)*n+|g+(\W|_)*o+(\W|_)*v+|g+(\W|_)*p+|g+(\W|_)*q+|g+(\W|_)*r+|g+(\W|_)*s+|g+(\W|_)*t+|g+(\W|_)*u+|g+(\W|_)*w+|g+(\W|_)*y+|h+(\W|_)*k+|h+(\W|_)*m+|h+(\W|_)*n+|h+(\W|_)*r+|h+(\W|_)*t+|h+(\W|_)*u+|i+(\W|_)*d+|i+(\W|_)*e+|i+(\W|_)*l+|(?<!\s+dot\s+|\s+period\s+)i+(\W|_)*m+|(?<!\s+dot\s+|\s+period\s+)i+(\W|_)*n+|i+(\W|_)*n+(\W|_)*f+(\W|_)*o+|i+(\W|_)*n+(\W|_)*t+|i+(\W|_)*o+|i+(\W|_)*q+|i+(\W|_)*r+|(?<!\s+dot\s+|\s+period\s+)i+(\W|_)*s+|(?<!\s+dot\s+|\s+period\s+)i+(\W|_)*t+|j+(\W|_)*e+|j+(\W|_)*m+|j+(\W|_)*o+|j+(\W|_)*p+|k+(\W|_)*e+|k+(\W|_)*g+|k+(\W|_)*h+|k+(\W|_)*i+|k+(\W|_)*m+|k+(\W|_)*n+|k+(\W|_)*p+|k+(\W|_)*r+|k+(\W|_)*w+|k+(\W|_)*y+|k+(\W|_)*z+|l+(\W|_)*a+|l+(\W|_)*b+|l+(\W|_)*c+|l+(\W|_)*i+|l+(\W|_)*k+|l+(\W|_)*r+|l+(\W|_)*s+|l+(\W|_)*t+|l+(\W|_)*u+|l+(\W|_)*v+|l+(\W|_)*y+|m+(\W|_)*a+|m+(\W|_)*c+|m+(\W|_)*d+|m+(\W|_)*e+|m+(\W|_)*g+|m+(\W|_)*h+|m+(\W|_)*i+(\W|_)*l+|m+(\W|_)*k+|m+(\W|_)*l+|m+(\W|_)*m+|m+(\W|_)*n+|m+(\W|_)*o+|m+(\W|_)*o+(\W|_)*b+(\W|_)*i+|m+(\W|_)*p+|m+(\W|_)*q+|m+(\W|_)*r+|m+(\W|_)*s+|m+(\W|_)*t+|m+(\W|_)*u+|m+(\W|_)*v+|m+(\W|_)*w+|m+(\W|_)*x+|(?<!\s+dot\s+|\s+period\s+)m+(\W|_)*y+|m+(\W|_)*z+|n+(\W|_)*a+|n+(\W|_)*c+|n+(\W|_)*e+|n+(\W|_)*e+(\W|_)*t+|n+(\W|_)*f+|n+(\W|_)*g+|n+(\W|_)*i+|n+(\W|_)*l+|(?<!\s+dot\s+|\s+period\s+)n+(\W|_)*o+|(?<!\s+dot\s+|\s+period\s+)n+(\W|_)*p+|n+(\W|_)*r+|n+(\W|_)*u+|n+(\W|_)*z+|o+(\W|_)*m+|o+(\W|_)*r+(\W|_)*g+|p+(\W|_)*a+|p+(\W|_)*e+|p+(\W|_)*f+|p+(\W|_)*g+|p+(\W|_)*h+|p+(\W|_)*k+|p+(\W|_)*l+|p+(\W|_)*m+|p+(\W|_)*n+|p+(\W|_)*r+|(?<!\s+dot\s+|\s+period\s+)p+(\W|_)*r+(\W|_)*o+|p+(\W|_)*s+|p+(\W|_)*t+|p+(\W|_)*w+|p+(\W|_)*y+|q+(\W|_)*a+|r+(\W|_)*e+|r+(\W|_)*o+|r+(\W|_)*s+|r+(\W|_)*u+|r+(\W|_)*w+|s+(\W|_)*a+|s+(\W|_)*b+|s+(\W|_)*c+|s+(\W|_)*d+|s+(\W|_)*e+|s+(\W|_)*g+|s+(\W|_)*h+|s+(\W|_)*i+|s+(\W|_)*j+|s+(\W|_)*k+|s+(\W|_)*l+|s+(\W|_)*m+|s+(\W|_)*n+|s+(\W|_)*o+|s+(\W|_)*r+|s+(\W|_)*t+|s+(\W|_)*u+|s+(\W|_)*v+|s+(\W|_)*x+|s+(\W|_)*y+|s+(\W|_)*z+|t+(\W|_)*c+|t+(\W|_)*d+|t+(\W|_)*e+(\W|_)*l+|t+(\W|_)*f+|t+(\W|_)*g+|t+(\W|_)*h+|t+(\W|_)*j+|t+(\W|_)*k+|t+(\W|_)*l+|t+(\W|_)*m+|t+(\W|_)*n+|(?<!\s+dot\s+|\s+period\s+)t+(\W|_)*o+|t+(\W|_)*p+|t+(\W|_)*r+|t+(\W|_)*t+|(?<!\s+dot\s+|\s+period\s+)t+(\W|_)*v+|t+(\W|_)*w+|t+(\W|_)*z+|u+(\W|_)*a+|u+(\W|_)*g+|u+(\W|_)*k+|(?<!\s+dot\s+|\s+period\s+)u+(\W|_)*s+|u+(\W|_)*y+|u+(\W|_)*z+|v+(\W|_)*a+|v+(\W|_)*c+|v+(\W|_)*e+|v+(\W|_)*g+|v+(\W|_)*i+|v+(\W|_)*n+|v+(\W|_)*u+|w+(\W|_)*f+|w+(\W|_)*s+|x+(\W|_)*n+|x+(\W|_)*x+(\W|_)*x+|y+(\W|_)*e+|y+(\W|_)*t+|z+(\W|_)*a+|z+(\W|_)*m+|z+(\W|_)*w+):*\d*(?!\w)(?!\w|')(?!\w|,|')/*.*)
+rule BigBertha [Big Bertha]
+conditions ignoreAdmins
+conditions ignoreServers
+then replace
+then warn Sorry, But Big Bertha Doesn't Like You Advertising On This Server.
+then log
+
+match (?<!'|\w)(?:(?:(?:(?!\w)www.*|.*http.*|[a-zA-Z0-9]|\s*dash\s*){1,63}){1,2}(?<!'|\w)(a+(\W|_)*c+|a+(\W|_)*d+|a+(\W|_)*e+|a+(\W|_)*f+|a+(\W|_)*g+|a+(\W|_)*i+|a+(\W|_)*l+|a+(\W|_)*m+|a+(\W|_)*n+|a+(\W|_)*o+|a+(\W|_)*q+|a+(\W|_)*r+|a+(\W|_)*r+(\W|_)*p+(\W|_)*a+|a+(\W|_)*s+|a+(\W|_)*t+|a+(\W|_)*u+|a+(\W|_)*w+|a+(\W|_)*x+|a+(\W|_)*z+|b+(\W|_)*a+|b+(\W|_)*b+|b+(\W|_)*d+|b+(\W|_)*e+|b+(\W|_)*f+|b+(\W|_)*g+|b+(\W|_)*h+|b+(\W|_)*i+|b+(\W|_)*i+(\W|_)*z+|b+(\W|_)*j+|b+(\W|_)*m+|b+(\W|_)*n+|b+(\W|_)*o+|b+(\W|_)*r+|b+(\W|_)*s+|b+(\W|_)*t+|b+(\W|_)*v+|b+(\W|_)*w+|b+(\W|_)*y+|b+(\W|_)*z+|c+(\W|_)*a+|c+(\W|_)*a+(\W|_)*t+|c+(\W|_)*c+|c+(\W|_)*d+|c+(\W|_)*f+|c+(\W|_)*g+|c+(\W|_)*h+|c+(\W|_)*i+|c+(\W|_)*k+|c+(\W|_)*l+|c+(\W|_)*m+|c+(\W|_)*n+|c+(\W|_)*o+|c+(\W|_)*o+(\W|_)*m+|c+(\W|_)*o+(\W|_)*o+(\W|_)*p+|c+(\W|_)*r+|c+(\W|_)*u+|c+(\W|_)*v+|c+(\W|_)*w+|c+(\W|_)*x+|c+(\W|_)*y+|c+(\W|_)*z+|d+(\W|_)*e+(?!-)|d+(\W|_)*j+|d+(\W|_)*k+|d+(\W|_)*m+|d+(\W|_)*o+|d+(\W|_)*z+|e+(\W|_)*c+|e+(\W|_)*d+(\W|_)*u+|e+(\W|_)*e+|e+(\W|_)*g+|e+(\W|_)*r+|e+(\W|_)*s+|e+(\W|_)*t+|e+(\W|_)*u+|f+(\W|_)*i+|f+(\W|_)*j+|f+(\W|_)*k+|f+(\W|_)*m+|f+(\W|_)*o+|f+(\W|_)*r+|g+(\W|_)*a+|g+(\W|_)*b+|g+(\W|_)*d+|g+(\W|_)*e+|g+(\W|_)*f+|g+(\W|_)*g+|g+(\W|_)*h+|g+(\W|_)*i+|g+(\W|_)*l+|g+(\W|_)*m+|g+(\W|_)*n+|g+(\W|_)*o+(\W|_)*v+|g+(\W|_)*p+|g+(\W|_)*q+|g+(\W|_)*r+|g+(\W|_)*s+|g+(\W|_)*t+|g+(\W|_)*u+|g+(\W|_)*w+|g+(\W|_)*y+|h+(\W|_)*k+|h+(\W|_)*m+|h+(\W|_)*n+|h+(\W|_)*r+|h+(\W|_)*t+|h+(\W|_)*u+|i+(\W|_)*d+|i+(\W|_)*e+|i+(\W|_)*l+|i+(\W|_)*m+|i+(\W|_)*n+|i+(\W|_)*n+(\W|_)*f+(\W|_)*o+|i+(\W|_)*n+(\W|_)*t+|i+(\W|_)*o+|i+(\W|_)*q+|i+(\W|_)*r+|i+(\W|_)*s+|i+(\W|_)*t+|j+(\W|_)*e+|j+(\W|_)*m+|j+(\W|_)*o+|j+(\W|_)*p+|k+(\W|_)*e+|k+(\W|_)*g+|k+(\W|_)*h+|k+(\W|_)*i+|k+(\W|_)*m+|k+(\W|_)*n+|k+(\W|_)*p+|k+(\W|_)*r+|k+(\W|_)*w+|k+(\W|_)*y+|k+(\W|_)*z+|l+(\W|_)*a+|l+(\W|_)*b+|l+(\W|_)*c+|l+(\W|_)*i+|l+(\W|_)*k+|l+(\W|_)*r+|l+(\W|_)*s+|l+(\W|_)*t+|l+(\W|_)*u+|l+(\W|_)*v+|l+(\W|_)*y+|m+(\W|_)*a+|m+(\W|_)*c+|m+(\W|_)*d+|m+(\W|_)*e+|m+(\W|_)*g+|m+(\W|_)*h+|m+(\W|_)*i+(\W|_)*l+|m+(\W|_)*k+|m+(\W|_)*l+|m+(\W|_)*m+|m+(\W|_)*n+|m+(\W|_)*o+|m+(\W|_)*o+(\W|_)*b+(\W|_)*i+|m+(\W|_)*p+|m+(\W|_)*q+|m+(\W|_)*r+|m+(\W|_)*s+|m+(\W|_)*t+|m+(\W|_)*u+|m+(\W|_)*v+|m+(\W|_)*w+|m+(\W|_)*x+|m+(\W|_)*y+|m+(\W|_)*z+|n+(\W|_)*a+|n+(\W|_)*c+|n+(\W|_)*e+|n+(\W|_)*e+(\W|_)*t+|n+(\W|_)*f+|n+(\W|_)*g+|n+(\W|_)*i+|n+(\W|_)*l+|n+(\W|_)*o+|n+(\W|_)*p+|n+(\W|_)*r+|n+(\W|_)*u+|n+(\W|_)*z+|o+(\W|_)*m+|o+(\W|_)*r+(\W|_)*g+|p+(\W|_)*a+|p+(\W|_)*e+|p+(\W|_)*f+|p+(\W|_)*g+|p+(\W|_)*h+|p+(\W|_)*k+|p+(\W|_)*l+|p+(\W|_)*m+|p+(\W|_)*n+|p+(\W|_)*r+|p+(\W|_)*r+(\W|_)*o+|p+(\W|_)*s+|p+(\W|_)*t+|p+(\W|_)*w+|p+(\W|_)*y+|q+(\W|_)*a+|r+(\W|_)*e+|r+(\W|_)*o+|r+(\W|_)*s+|r+(\W|_)*u+|r+(\W|_)*w+|s+(\W|_)*a+|s+(\W|_)*b+|s+(\W|_)*c+|s+(\W|_)*d+|s+(\W|_)*e+|s+(\W|_)*g+|s+(\W|_)*h+|s+(\W|_)*i+|s+(\W|_)*j+|s+(\W|_)*k+|s+(\W|_)*l+|s+(\W|_)*m+|s+(\W|_)*n+|s+(\W|_)*o+|s+(\W|_)*r+|s+(\W|_)*t+|s+(\W|_)*u+|s+(\W|_)*v+|s+(\W|_)*x+|s+(\W|_)*y+|s+(\W|_)*z+|t+(\W|_)*c+|t+(\W|_)*d+|t+(\W|_)*e+(\W|_)*l+|t+(\W|_)*f+|t+(\W|_)*g+|t+(\W|_)*h+|t+(\W|_)*j+|t+(\W|_)*k+|t+(\W|_)*l+|t+(\W|_)*m+|t+(\W|_)*n+|t+(\W|_)*o+|t+(\W|_)*p+|t+(\W|_)*r+|t+(\W|_)*t+|t+(\W|_)*v+|t+(\W|_)*w+|t+(\W|_)*z+|u+(\W|_)*a+|u+(\W|_)*g+|u+(\W|_)*k+|u+(\W|_)*s+|u+(\W|_)*y+|u+(\W|_)*z+|v+(\W|_)*a+|v+(\W|_)*c+|v+(\W|_)*e+|v+(\W|_)*g+|v+(\W|_)*i+|v+(\W|_)*n+|v+(\W|_)*u+|w+(\W|_)*f+|w+(\W|_)*s+|x+(\W|_)*n+|x+(\W|_)*x+(\W|_)*x+|y+(\W|_)*e+|y+(\W|_)*t+|z+(\W|_)*a+|z+(\W|_)*m+|z+(\W|_)*w+):*\d*(?!\w)(?!\w|')(?!\w|,|')/*.*)
+rule TheFatFury [The Fat Fury]
+conditions ignoreAdmins
+conditions ignoreServers
+then replace
+then warn Sorry, But The Fat Fury Doesn't Like You Advertising On This Server.
+then log
+
+match (?<!'|\w)(?:(?:(?:25[o0-5]|2[o0-4][o0-9]|[o01]?[o0-9][o0-9]?)(\.+|\.+\s+|\s+\.+\s+|\s+\.+|\++|,+|\s*\(dot\)\s*|\s*dot\s*|\s*\*+\s*|\s*point\s*)){3}?(?:25[o0-5]|2[o0-4][o0-9]|[o01]?[o0-9][o0-9]?)(\s*:\s*\d*|(?!\w)))(?![\x22-\x27]|[\x2A-\x2C]\S+|[\x30-\x39]|[\x40-\x5E]|[\x60-\x7E])
+rule FatAlbert [Fat Albert]
+conditions ignoreAdmins
+conditions ignoreServers
+then replace
+then warn Sorry, But Fat Albert Doesn't Like You Advertising On This Server.
+then log
+
+#match (?<!'|\w)(?:(?:(?:25[o0-5]|2[o0-4][o0-9]|[o01]?[o0-9][o0-9]?)(\s+)){3}?(?:25[o0-5]|2[o0-4][o0-9]|[o01]?[o0-9][o0-9]?)(\s|:|(?!\w)))(?![\x22-\x27]|[\x2A-\x2C]\S+|[\x30-\x39]|[\x40-\x5E]|[\x60-\x7E])
+#rule TinyTim [Tiny Tim]
+#conditions ignoreAdmins
+#conditions ignoreServers
+#then replace
+#then warn Sorry, But Tiny Tim Doesn't Like You Advertising On This Server.
+#then log
+
+match (?<!'|\w)(he'll)(?!\w)
+rule U1 [he'll]
+then rewrite he will
+
+match ^(\!lag)$
+rule U2 [lag]
+then rewrite 
+then warn &9> > > Here are a few ways to fix lag: 1) reset your client 2) re-boot 3) update Java 4) change in-game settings to fast graphics, render tiny, etc.
+
+match (\p{Lu}|\s){15,200}
+rule U3 [Caps Lock Detection]
+then lower
+
+match (?<!'|\w)(^[a-z]$)(?!\w)
+rule U4 [Single Letter Spamming]
+then deny
+
+match (?<!'|\w)(?:f)(?!\w)
+rule U5 [Stop F Bomb Swearing]
+ignore string /f
+then replace
+
+match ((?:[a-zA-Z])+\*+(?:[a-zA-Z])+)
+rule U6 [Look For * In The Middle Of A Word]
+then replace 
+then log
+
+match (\*){3,}
+rule U7 [Censor Spamming]
+then replace 
+then log
+
+# (U27) Match: Stop those annoying scams with Planet Minecraft Reviewers
+match .*((Planet(\w|\W|\d|_)*Minecraft|PMC)(\w|\W|\d|_)*(interview|review|reveiw|reviewer|reveiwer)).*|.*((interview|review|reveiw|reviewer|reveiwer)(\w|\W|\d|_)*(Planet(\w|\W|\d|_)*Minecraft|PMC)).*|.*((I|I'm|I am)(\w|\W|\d|_)*(from|with|belong|affiliat|relationship|admin|mod|member)(\w|\W|\d|_)*(Planet(\w|\W|\d|_)*Minecraft|PMC)).*
+rule U8 [Planet Minecraft Reviewer]
+conditions ignoreAdmins
+then warn &6Planet Minecraft Reviewers Are Not Welcome On This Server
+then deny
+then log
+
+match ^(\!website).*
+rule U9 [Type !website To Display Your Server's Website!]
+actions Website
+
+match .*((how did|can I have|can I get|How Do|How To Be|May I Be|Can I be|Could I Be|culd I|Could I have|make me|I wsh I|I could have|I could be|I would be|I would make|How Can I|How To|May I Be|gimme|I really Want|I wish I|I want to be|can you make|can I has|give me|can has|can I be|Can You)(\w|\W|\d|_)*(o+(\W|_)*p+|operator|a+(\W|_)*d+(\W|_)*m+(\W|_)*[ei]+(\W|_)*n+|administrator|m+(\W|_)*o+(\W|_)*d+|moderator|watchman|watchmen|s+(\W|_)*t+(\W|_)*a+(\W|_)*f+(\W|_)*f+|o+(\W|_)*p+(\W|_)*e*(\W|_)*d|V+(\W|_)*I+(\W|_)*P+)).*
+rule U10 [Stop annoying players from asking for staff.]
+conditions ignoreAdmins
+then deny
+then warn &6STOP ASKING! You Will Be Kicked! Staff Is By Invite &4&l&o&nONLY!
+then log
+
+match .*((?!\w)stupid|(?!\w)gay|(?!\w)lame|(?!\w)hate|h8)(\w|\W|\d|_)*(server).*|.*((server)(\w|\W|\d|_)*((?!\w)suck|(?!\w)gay|(?!\w)blow|(?!\w)lame|(?!\w)stupid)).*
+rule U11 [Stop Players Who Talk Bad About The Server]
+conditions ignoreAdmins
+then replace I Love This Server!
+then warn &cDon't talk bad about the server.
+then log
+
+match (.+)(?=\1\1\1+)
+rule U12 [Letter And Word Spam Filter]
+then rewrite
+then warn &c> > > Spam Detection Engaged < < <
+
+match .*(herobrine(\w|\W|\d|_)*mod).*|.*(Platinum Client).*
+rule U13 [Remove Automatic Advertising - Hacking]
+then deny
+then warn &4> > > Message Denied < < <
+then log
+
+# Donations Link (Please do NOT remove unless you've donated)
+# If you have donated, Please Contact EpicATrain For Information On How To Disable
+# The Embeded Donation Links.  Thank You For Donating!
+match (donations|donating|donate)
+rule U14 [Donations]
+then warn &bPlease Consider Supporting EpicATrain's Language Filter: http://fnd.us/c/0QtL4
+
+match .*((do not like|don't like|hate|dislike|not a fan|stupid|gay|lame|flame)(\w|\W|\d|_)*(filter|censor|sensor)).*|.*((filter|censor|sensor)(\w|\W|\d|_)*(suck|gay|blow|lame|stupid)).*
+rule U15 [Players Who Hate This Filter]
+then replace I'm in love with this filter
+then log
+
+match ((like|Love|best)(\w|\W|\d|_)*(filter|censor|sensor))|((filter|censor|sensor)(\w|\W|\d|_)*(awesome|amazing|cool|neat|best))
+rule U16 [Players Who Love Filter]
+then warn <EpicATrain> &aThanks for the compliment! I try to work hard to keep the language clean!
+
+# EpicATrain is the author of this language filter.
+# Feel free to contact me at atrain nospacehere online [at] gmail (dot) com
+match ^(\!author)$
+then rewrite (!author) &aEpicATrain is the Author of This Epic Language Filter!
+then console say EpicATrain is the Author of This Epic Language Filter!
+
+# If you have any suggestions, please let me know!   Thank you!
+# Please add EpicATrain to your VIP list on your server!
+# Utilities Compiled and Written By Addam 'EpicATrain' Waitkus.
+# ©2012-2013 Addam 'EpicATrain' Waitkus. All rights reserved.

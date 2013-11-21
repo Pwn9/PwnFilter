@@ -1,0 +1,1116 @@
+# EpicATrain's Language Filter
+# Racial Word List
+# Version 10.0.1
+# Built 10-19-2013 6:08 PM
+#
+# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+# This Is The NEW Version Of EpicATrain's Language Filter! Yay! This Version
+# Hopes To Make Bad Language The Thing Of The Past! It Filters Everything!
+# This Is The Racial Version Of My Filter And Is Part Of A Package Of Other
+# Filters.  Please Make Sure You Download And Use The Other Parts As Well!
+# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+#
+#
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# This Language Filter Requires Version 3.2 Or Greater Of Pwnfilter And WILL
+# NOT Work With Older Versions! If You Try, You Will Crash Your Server! You
+# Have Been Warned!
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+#
+#
+# Thank you for supporting my work.  Please consider donating to help
+#	further support family safe gaming!
+#		http://fnd.us/c/0QtL4
+# All donations will go towards the support and continuation of this
+#	language filter and the advancement of server & client side
+#	family safe game development.
+#
+# > > > > > Please Do NOT Remove or Edit Any Donation Lines < < < < <
+# > > > > > If you wish to remove these, please donate. Thanks! < < < < <
+#
+# ---------- Important Information ----------
+# This scripting code has no warranty or remedies, whether expressed or
+#	 implied, and is provided "as is".
+# The following scripting code is designed for the following servers:
+#	Minecraft -> Bukkit -> Pwnfilter Plugin
+# There is a goal to make this code universal for cross-platforms
+# 	on many other game servers. Support for other games is currently
+#	in development.  If you wish to participate and help develop this
+#	code, please contact EpicATrain at the email below.
+# THIS WORK IS COPYRIGHTED WITH THE UNITED STATES LIBRARY OF CONGRESS.
+#   YOU MUST CONTACT ADDAM 'EPICATRAIN' WAITKUS FOR COPYRIGHT PERMISSION.
+#   YOU MAY CONTACT ADDAM 'EPICATRAIN' WAITKUS AT ATRAINONLINE (AT) GMAIL
+#   (DOT.) COM
+# This work may be distributed in current format free of charge as
+# 	long as this work remains free of charge and used only on the
+#	game servers listed above.
+# Server administrators may modify this work to their preference for
+#	their server only, if so desired, as long as such work remains property
+# 	of Addam Waitkus with approperiate asknowledgements and remains
+#   distributed freely of charge.
+# Addam Waitkus: atrain(nothinghere)online [at] gmail (dot) com
+# ---------- End Important Information ----------
+#
+# ---------- Read Me ----------
+# This entire script is written so that any admin can edit out most
+# 	parts of this filter to his or her liking.  To stop a word from
+# 	being filtered, simply put a pound sign (#) next to the lines of
+# 	code you want to turn off.
+# It's highly NOT recommended to delete lines of code in case you
+# 	want to turn it back on at a later date.
+#
+# ---------- End Read Me ---------- 
+
+shortcuts letters.vars
+
+actiongroup racialactions
+then replace
+then warn &a%player%, &cYou Have Violate Rule: &a%ruleid%
+then notify pwnfilter.notify %player% just said %rawstring%
+#then points 5
+then log
+
+match (?<!'|\w)<A>+<_>*<b>+<_>*<o>(?!\w)
+rule R1 [Abo]
+actions racialactions
+
+match (?<!'|\w)<A>+<_>*<l>+<_>*<l>+<_>*<i>+<_>*<g>+<_>*<a>+<_>*<t>(?!\w)
+rule R2 [Alligat]
+actions racialactions
+
+match (?<!'|\w)<A>+<_>*<r>+<_>*<a>+<_>*<b>+<_>*<u>+<_>*<s>+<_>*<h>(?!\w)
+rule R3 [Arabush]
+actions racialactions
+
+match (?<!'|\w)<A>+<_>*<u>+<_>*<n>+<_>*<t>+<_>*<J>+<_>*<a>+<_>*<n>+<_>*<e>(?!\w)
+rule R4 [Aunt Jane]
+actions racialactions
+
+match (?<!'|\w)<A>+<_>*<u>+<_>*<n>+<_>*<t>+<_>*<J>+<_>*<e>+<_>*<m>+<_>*<i>+<_>*<m>+<_>*<a>(?!\w)
+rule R5 [Aunt Jemima]
+actions racialactions
+
+match (?<!'|\w)<A>+<_>*<u>+<_>*<n>+<_>*<t>+<_>*<M>+<_>*<a>+<_>*<r>+<_>*<y>(?!\w)
+rule R6 [Aunt Mary]
+actions racialactions
+
+match (?<!'|\w)<A>+<_>*<u>+<_>*<n>+<_>*<t>+<_>*<S>+<_>*<a>+<_>*<l>+<_>*<l>+<_>*<y>(?!\w)
+rule R7 [Aunt Sally]
+actions racialactions
+
+match (?<!'|\w)<B>+<_>*<a>+<_>*<i>+<_>*<t>(?!\w)
+rule R8 [Bait]
+actions racialactions
+
+match (?<!'|\w)<B>+<_>*<e>+<_>*<a>+<_>*<n>+<_>*<e>+<_>*<r>(?!\w)
+rule R9 [Beaner]
+actions racialactions
+
+match (?<!'|\w)<B>+<_>*<e>+<_>*<a>+<_>*<n>+<_>*<e>+<_>*<y>(?!\w)
+rule R10 [Beaney]
+actions racialactions
+
+match (?<!'|\w)<B>+<_>*<l>+<_>*<u>+<_>*<e>+<_>*<g>+<_>*<u>+<_>*<m>(?!\w)
+rule R11 [Bluegum]
+actions racialactions
+
+match (?<!'|\w)<B>+<_>*<o>+<_>*<c>+<_>*<h>+<_>*<e>(?!\w)
+rule R12 [Boche]
+actions racialactions
+
+match (?<!'|\w)<B>+<_>*<o>+<_>*<g>+<_>*<I>+<_>*<r>+<_>*<i>+<_>*<s>+<_>*<h>(?!\w)
+rule R13 [Bog Irish]
+actions racialactions
+
+match (?<!'|\w)<B>+<_>*<o>+<_>*<h>+<_>*<u>+<_>*<n>+<_>*<k>(?!\w)
+rule R14 [Bohunk]
+actions racialactions
+
+match (?<!'|\w)<b>+<_>*<o>+<_>*<n>+<_>*<g>(?!\w)
+rule R15 [bong]
+actions racialactions
+
+match (?<!'|\w)<b>+<_>*<o>+<_>*<o>+<_>*<n>+<_>*<g>(?!\w)
+rule R16 [boong]
+actions racialactions
+
+match (?<!'|\w)<B>+<_>*<o>+<_>*<o>+<_>*<n>+<_>*<g>+<_>*<a>(?!\w)
+rule R17 [Boonga]
+actions racialactions
+
+match (?<!'|\w)<b>+<_>*<o>+<_>*<o>+<_>*<n>+<_>*<i>+<_>*<e>(?!\w)
+rule R18 [boonie]
+actions racialactions
+
+match (?<!'|\w)<b>+<_>*<o>+<_>*<s>+<_>*<c>+<_>*<h>(?!\w)
+rule R19 [bosch]
+actions racialactions
+
+match (?<!'|\w)<b>+<_>*<o>+<_>*<s>+<_>*<c>+<_>*<h>+<_>*<e>(?!\w)
+rule R20 [bosche]
+actions racialactions
+
+match (?<!'|\w)<B>+<_>*<u>+<_>*<d>+<_>*<d>+<_>*<h>+<_>*<a>+<_>*<h>+<_>*<e>+<_>*<a>+<_>*<d>(?!\w)
+rule R21 [Buddhahead]
+actions racialactions
+
+match (?<!'|\w)<B>+<_>*<u>+<_>*<f>+<_>*<f>+<_>*<i>+<_>*<e>(?!\w)
+rule R22 [Buffie]
+actions racialactions
+
+match (?<!'|\w)<B>+<_>*<u>+<_>*<l>+<_>*<e>(?!\w)
+rule R23 [Bule]
+actions racialactions
+
+match (?<!'|\w)<b>+<_>*<u>+<_>*<n>+<_>*<g>(?!\w)
+rule R24 [bung]
+actions racialactions
+
+match (?<!'|\w)<b>+<_>*<u>+<_>*<n>+<_>*<g>+<_>*<a>(?!\w)
+rule R25 [bunga]
+actions racialactions
+
+match (?<!'|\w)<B>+<_>*<u>+<_>*<r>+<_>*<r>+<_>*<h>+<_>*<e>+<_>*<a>+<_>*<d>(?!\w)
+rule R26 [Burrhead]
+actions racialactions
+
+match (?<!'|\w)<C>+<_>*<a>+<_>*<m>+<_>*<e>+<_>*<l>+<_>*<J>+<_>*<o>+<_>*<c>+<_>*<k>+<_>*<e>+<_>*<y>(?!\w)
+rule R27 [Camel Jockey]
+actions racialactions
+
+match (?<!'|\w)<C>+<_>*<h>+<_>*<a>+<_>*<r>+<_>*<n>+<_>*<e>+<_>*<g>+<_>*<o>(?!\w)
+rule R28 [Charnego]
+actions racialactions
+
+match (?<!'|\w)<C>+<_>*<h>+<_>*<e>+<_>*<e>+<_>*<c>+<_>*<h>+<_>*<e>+<_>*<e>(?!\w)
+rule R29 [Chee chee]
+actions racialactions
+
+match (?<!'|\w)<C>+<_>*<h>+<_>*<e>+<_>*<e>+<_>*<s>+<_>*<e>+<_>*<h>+<_>*<e>+<_>*<a>+<_>*<d>(?!\w)
+rule R30 [Cheesehead]
+actions racialactions
+
+match (?<!'|\w)<C>+<_>*<h>+<_>*<i>+<_>*<c>+<_>*<h>+<_>*<i>(?!\w)
+rule R31 [Chi chi]
+actions racialactions
+
+match (?<!'|\w)<C>+<_>*<h>+<_>*<i>+<_>*<n>+<_>*<a>+<_>*<m>+<_>*<a>+<_>*<n>(?!\w)
+rule R32 [Chinaman]
+actions racialactions
+
+match (?<!'|\w)<C>+<_>*<h>+<_>*<i>+<_>*<n>+<_>*<g>+<_>*<C>+<_>*<h>+<_>*<o>+<_>*<n>+<_>*<g>(?!\w)
+rule R33 [Ching Chong]
+actions racialactions
+
+match (?<!'|\w)<c>+<_>*<h>+<_>*<i>+<_>*<n>+<_>*<k>(?!\w)
+rule R34 [chink]
+actions racialactions
+
+match (?<!'|\w)<C>+<_>*<h>+<_>*<o>+<_>*<l>+<_>*<o>(?!\w)
+rule R35 [Cholo]
+actions racialactions
+
+match (?<!'|\w)<C>+<_>*<h>+<_>*<o>+<_>*<n>+<_>*<k>+<_>*<y>(?!\w)
+rule R36 [Chonky]
+actions racialactions
+
+match (?<!'|\w)<C>+<_>*<h>+<_>*<r>+<_>*<i>+<_>*<s>+<_>*<t>+<_>*<k>+<_>*<i>+<_>*<l>+<_>*<l>+<_>*<e>+<_>*<r>(?!\w)
+rule R37 [Christ killer]
+actions racialactions
+
+match (?<!'|\w)<C>+<_>*<h>+<_>*<u>+<_>*<g>(?!\w)
+rule R38 [Chug]
+actions racialactions
+
+match (?<!'|\w)<C>+<_>*<h>+<_>*<u>+<_>*<n>+<_>*<k>+<_>*<y>(?!\w)
+rule R39 [Chunky]
+actions racialactions
+
+match (?<!'|\w)<C>+<_>*<o>+<_>*<o>+<_>*<l>+<_>*<i>+<_>*<e>(?!\w)
+rule R40 [Coolie]
+actions racialactions
+
+match (?<!'|\w)<c>+<_>*<o>+<_>*<o>+<_>*<n>(?!\w)
+rule R41 [coon]
+actions racialactions
+
+match (?<!'|\w)<C>+<_>*<o>+<_>*<o>+<_>*<n>+<_>*<a>+<_>*<s>+<_>*<s>(?!\w)
+rule R42 [Coonass]
+actions racialactions
+
+match (?<!'|\w)<C>+<_>*<r>+<_>*<o>+<_>*<w>(?!\w)
+rule R43 [Crow]
+actions racialactions
+
+match (?<!'|\w)<C>+<_>*<u>+<_>*<r>+<_>*<r>+<_>*<y>+<_>*<m>+<_>*<u>+<_>*<n>+<_>*<c>+<_>*<h>+<_>*<e>+<_>*<r>(?!\w)
+rule R44 [Curry muncher]
+actions racialactions
+
+match (?<!'|\w)<C>+<_>*<u>+<_>*<s>+<_>*<h>+<_>*<i>(?!\w)
+rule R45 [Cushi]
+actions racialactions
+
+match (?<!'|\w)<D>+<_>*<a>+<_>*<g>+<_>*<o>(?!\w)
+rule R46 [Dago]
+actions racialactions
+
+match (?<!'|\w)<D>+<_>*<e>+<_>*<g>+<_>*<o>(?!\w)
+rule R47 [Dego]
+actions racialactions
+
+match (?<!'|\w)<D>+<_>*<i>+<_>*<n>+<_>*<k>(?!\w)
+rule R48 [Dink]
+actions racialactions
+
+match (?<!'|\w)<D>+<_>*<o>+<_>*<g>+<_>*<a>+<_>*<n>(?!\w)
+rule R49 [Dogan]
+actions racialactions
+
+match (?<!'|\w)<d>+<_>*<o>+<_>*<g>+<_>*<u>+<_>*<n>(?!\w)
+rule R50 [dogun]
+actions racialactions
+
+match (?<!'|\w)<D>+<_>*<o>+<_>*<t>+<_>*<h>+<_>*<e>+<_>*<a>+<_>*<d>(?!\w)
+rule R51 [Dothead]
+actions racialactions
+
+match (?<!'|\w)<D>+<_>*<u>+<_>*<n>+<_>*<e>+<_>*<c>+<_>*<o>+<_>*<o>+<_>*<n>(?!\w)
+rule R52 [Dunecoon]
+actions racialactions
+
+match (?<!'|\w)<E>+<_>*<y>+<_>*<e>+<_>*<t>+<_>*<i>+<_>*<e>(?!\w)
+rule R53 [Eyetie]
+actions racialactions
+
+match (?<!'|\w)<F>+<_>*<r>+<_>*<i>+<_>*<t>+<_>*<z>(?!\w)
+rule R54 [Fritz]
+actions racialactions
+
+match (?<!'|\w)<G>+<_>*<a>+<_>*<i>+<_>*<j>+<_>*<i>+<_>*<n>(?!\w)
+rule R55 [Gaijin]
+actions racialactions
+
+match (?<!'|\w)<G>+<_>*<a>+<_>*<t>(?!\w)
+rule R56 [Gat]
+actions racialactions
+
+match (?<!'|\w)<G>+<_>*<i>+<_>*<n>(?!\w)
+rule R57 [Gin]
+actions racialactions
+
+match (?<!'|\w)<G>+<_>*<i>+<_>*<n>+<_>*<j>+<_>*<o>+<_>*<c>+<_>*<k>+<_>*<e>+<_>*<y>(?!\w)
+rule R58 [Gin jockey]
+actions racialactions
+
+match (?<!'|\w)<G>+<_>*<i>+<_>*<n>+<_>*<z>+<_>*<o>(?!\w)
+rule R59 [Ginzo]
+actions racialactions
+
+match (?<!'|\w)<g>+<_>*<i>+<_>*<p>+<_>*<p>(?!\w)
+rule R60 [gipp]
+actions racialactions
+
+match (?<!'|\w)<g>+<_>*<i>+<_>*<p>+<_>*<p>+<_>*<o>(?!\w)
+rule R61 [gippo]
+actions racialactions
+
+match (?<!'|\w)<G>+<_>*<o>+<_>*<l>+<_>*<l>+<_>*<i>+<_>*<w>+<_>*<o>+<_>*<g>(?!\w)
+rule R62 [Golliwog]
+actions racialactions
+
+match (?<!'|\w)<G>+<_>*<o>+<_>*<o>+<_>*<k>(?!\w)
+rule R63 [Gook]
+actions racialactions
+
+match (?<!'|\w)<G>+<_>*<o>+<_>*<o>+<_>*<k>+<_>*<e>+<_>*<y>+<_>*<e>(?!\w)
+rule R64 [Gook eye]
+actions racialactions
+
+match (?<!'|\w)<G>+<_>*<o>+<_>*<o>+<_>*<k>+<_>*<y>(?!\w)
+rule R65 [Gooky]
+actions racialactions
+
+match (?<!'|\w)<G>+<_>*<r>+<_>*<e>+<_>*<a>+<_>*<s>+<_>*<e>+<_>*<b>+<_>*<a>+<_>*<l>+<_>*<l>(?!\w)
+rule R66 [Greaseball]
+actions racialactions
+
+match (?<!'|\w)<G>+<_>*<r>+<_>*<e>+<_>*<a>+<_>*<s>+<_>*<e>+<_>*<r>(?!\w)
+rule R67 [Greaser]
+actions racialactions
+
+match (?<!'|\w)<G>+<_>*<r>+<_>*<i>+<_>*<n>+<_>*<g>+<_>*<o>(?!\w)
+rule R68 [Gringo]
+actions racialactions
+
+match (?<!'|\w)<G>+<_>*<r>+<_>*<o>+<_>*<i>+<_>*<d>(?!\w)
+rule R69 [Groid]
+actions racialactions
+
+match (?<!'|\w)<G>+<_>*<u>+<_>*<b>(?!\w)
+rule R70 [Gub]
+actions racialactions
+
+match (?<!'|\w)<G>+<_>*<u>+<_>*<b>+<_>*<b>+<_>*<a>(?!\w)
+rule R71 [Gubba]
+actions racialactions
+
+match (?<!'|\w)<G>+<_>*<u>+<_>*<i>+<_>*<d>+<_>*<o>(?!\w)
+rule R72 [Guido]
+actions racialactions
+
+match (?<!'|\w)<G>+<_>*<u>+<_>*<i>+<_>*<n>+<_>*<e>+<_>*<a>(?!\w)
+rule R73 [Guinea]
+actions racialactions
+
+match (?<!'|\w)<G>+<_>*<u>+<_>*<i>+<_>*<z>+<_>*<i>(?!\w)
+rule R74 [Guizi]
+actions racialactions
+
+match (?<!'|\w)<g>+<_>*<w>+<_>*<a>+<_>*<i>+<_>*<l>+<_>*<o>(?!\w)
+rule R75 [gwailo]
+actions racialactions
+
+match (?<!'|\w)<G>+<_>*<w>+<_>*<e>+<_>*<i>+<_>*<l>+<_>*<o>(?!\w)
+rule R76 [Gweilo]
+actions racialactions
+
+match (?<!'|\w)<g>+<_>*<y>+<_>*<p>+<_>*<o>(?!\w)
+rule R77 [gypo]
+actions racialactions
+
+match (?<!'|\w)<g>+<_>*<y>+<_>*<p>+<_>*<p>+<_>*<i>+<_>*<e>(?!\w)
+rule R78 [gyppie]
+actions racialactions
+
+match (?<!'|\w)<G>+<_>*<y>+<_>*<p>+<_>*<p>+<_>*<o>(?!\w)
+rule R79 [Gyppo]
+actions racialactions
+
+match (?<!'|\w)<g>+<_>*<y>+<_>*<p>+<_>*<p>+<_>*<y>(?!\w)
+rule R80 [gyppy]
+actions racialactions
+
+match (?<!'|\w)<H>+<_>*<a>+<_>*<d>+<_>*<j>+<_>*<i>(?!\w)
+rule R81 [Hadji]
+actions racialactions
+
+match (?<!'|\w)<H>+<_>*<a>+<_>*<j>+<_>*<i>(?!\w)
+rule R82 [Haji]
+actions racialactions
+
+match (?<!'|\w)<H>+<_>*<a>+<_>*<j>+<_>*<j>+<_>*<i>(?!\w)
+rule R83 [Hajji]
+actions racialactions
+
+match (?<!'|\w)<H>+<_>*<a>+<_>*<l>+<_>*<f>+<_>*<b>+<_>*<r>+<_>*<e>+<_>*<e>+<_>*<d>(?!\w)
+rule R84 [Half breed]
+actions racialactions
+
+match (?<!'|\w)<H>+<_>*<a>+<_>*<o>+<_>*<l>+<_>*<e>(?!\w)
+rule R85 [Haole]
+actions racialactions
+
+match (?<!'|\w)<H>+<_>*<e>+<_>*<b>+<_>*<e>(?!\w)
+rule R86 [Hebe]
+actions racialactions
+
+match (?<!'|\w)<H>+<_>*<e>+<_>*<e>+<_>*<b>(?!\w)
+rule R87 [Heeb]
+actions racialactions
+
+match (?<!'|\w)<H>+<_>*<i>+<_>*<l>+<_>*<l>+<_>*<b>+<_>*<i>+<_>*<l>+<_>*<l>+<_>*<y>(?!\w)
+rule R88 [Hillbilly]
+actions racialactions
+
+match (?<!'|\w)<h>+<_>*<o>+<_>*<n>+<_>*<k>+<_>*<e>+<_>*<y>(?!\w)
+rule R89 [honkey]
+actions racialactions
+
+match (?<!'|\w)<h>+<_>*<o>+<_>*<n>+<_>*<k>+<_>*<i>+<_>*<e>(?!\w)
+rule R90 [honkie]
+actions racialactions
+
+match (?<!'|\w)<H>+<_>*<o>+<_>*<n>+<_>*<k>+<_>*<y>(?!\w)
+rule R91 [Honky]
+actions racialactions
+
+match (?<!'|\w)<h>+<_>*<y>+<_>*<m>+<_>*<e>+<_>*<n>(?!\w)
+rule R92 [hymen]
+actions racialactions
+
+match (?<!'|\w)<H>+<_>*<y>+<_>*<m>+<_>*<i>+<_>*<e>(?!\w)
+rule R93 [Hymie]
+actions racialactions
+
+match (?<!'|\w)<I>+<_>*<k>+<_>*<e>+<_>*<y>(?!\w)
+rule R94 [Ikey]
+actions racialactions
+
+match (?<!'|\w)<I>+<_>*<k>+<_>*<e>+<_>*<y>+<_>*<m>+<_>*<o>(?!\w)
+rule R95 [Ikey mo]
+actions racialactions
+
+match (?<!'|\w)<i>+<_>*<k>+<_>*<e>+<_>*<y>+<_>*<m>+<_>*<o>(?!\w)
+rule R96 [ikeymo]
+actions racialactions
+
+match (?<!'|\w)<i>+<_>*<k>+<_>*<y>(?!\w)
+rule R97 [iky]
+actions racialactions
+
+match (?<!'|\w)<I>+<_>*<n>+<_>*<d>+<_>*<o>+<_>*<n>(?!\w)
+rule R98 [Indon]
+actions racialactions
+
+match (?<!'|\w)<I>+<_>*<n>+<_>*<j>+<_>*<u>+<_>*<n>(?!\w)
+rule R99 [Injun]
+actions racialactions
+
+match (?<!'|\w)<j>+<_>*<i>+<_>*<g>(?!\w)
+rule R100 [jig]
+actions racialactions
+
+match (?<!'|\w)<J>+<_>*<i>+<_>*<g>+<_>*<a>+<_>*<b>+<_>*<o>+<_>*<o>(?!\w)
+rule R101 [Jigaboo]
+actions racialactions
+
+match (?<!'|\w)<j>+<_>*<i>+<_>*<g>+<_>*<a>+<_>*<l>+<_>*<o>+<_>*<o>(?!\w)
+rule R102 [jigaloo]
+actions racialactions
+
+match (?<!'|\w)<j>+<_>*<i>+<_>*<g>+<_>*<a>+<_>*<r>+<_>*<o>+<_>*<o>+<_>*<n>+<_>*<i>(?!\w)
+rule R103 [jigarooni]
+actions racialactions
+
+match (?<!'|\w)<j>+<_>*<i>+<_>*<g>+<_>*<g>(?!\w)
+rule R104 [jigg]
+actions racialactions
+
+match (?<!'|\w)<j>+<_>*<i>+<_>*<g>+<_>*<g>+<_>*<a>(?!\w)
+rule R105 [jigga]
+actions racialactions
+
+match (?<!'|\w)<j>+<_>*<i>+<_>*<g>+<_>*<g>+<_>*<a>+<_>*<b>+<_>*<o>(?!\w)
+rule R106 [jiggabo]
+actions racialactions
+
+match (?<!'|\w)<j>+<_>*<i>+<_>*<g>+<_>*<g>+<_>*<e>+<_>*<r>(?!\w)
+rule R107 [jigger]
+actions racialactions
+
+match (?<!'|\w)<j>+<_>*<i>+<_>*<j>+<_>*<j>+<_>*<i>+<_>*<b>+<_>*<o>+<_>*<o>(?!\w)
+rule R108 [jijjiboo]
+actions racialactions
+
+match (?<!'|\w)<J>+<_>*<u>+<_>*<n>+<_>*<g>+<_>*<l>+<_>*<e>+<_>*<b>+<_>*<u>+<_>*<n>+<_>*<n>+<_>*<y>(?!\w)
+rule R109 [Jungle bunny]
+actions racialactions
+
+match (?<!'|\w)<k>+<_>*<a>+<_>*<f>+<_>*<f>+<_>*<e>+<_>*<r>(?!\w)
+rule R110 [kaffer]
+actions racialactions
+
+match (?<!'|\w)<k>+<_>*<a>+<_>*<f>+<_>*<f>+<_>*<i>+<_>*<r>(?!\w)
+rule R111 [kaffir]
+actions racialactions
+
+match (?<!'|\w)<k>+<_>*<a>+<_>*<f>+<_>*<f>+<_>*<r>+<_>*<e>(?!\w)
+rule R112 [kaffre]
+actions racialactions
+
+match (?<!'|\w)<k>+<_>*<a>+<_>*<f>+<_>*<i>+<_>*<r>(?!\w)
+rule R113 [kafir]
+actions racialactions
+
+match (?<!'|\w)<K>+<_>*<i>+<_>*<k>+<_>*<e>(?!\w)
+rule R114 [Kike]
+actions racialactions
+
+match (?<!'|\w)<k>+<_>*<u>+<_>*<f>+<_>*<f>+<_>*<a>+<_>*<r>(?!\w)
+rule R115 [kuffar]
+actions racialactions
+
+match (?<!'|\w)<K>+<_>*<u>+<_>*<s>+<_>*<h>+<_>*<i>(?!\w)
+rule R116 [Kushi]
+actions racialactions
+
+match (?<!'|\w)<k>+<_>*<w>+<_>*<a>+<_>*<i>+<_>*<l>+<_>*<o>(?!\w)
+rule R117 [kwai lo]
+actions racialactions
+
+match (?<!'|\w)<k>+<_>*<y>+<_>*<k>+<_>*<e>(?!\w)
+rule R118 [kyke]
+actions racialactions
+
+match (?<!'|\w)<L>+<_>*<i>+<_>*<m>+<_>*<e>+<_>*<y>(?!\w)
+rule R119 [Limey]
+actions racialactions
+
+match (?<!'|\w)<L>+<_>*<u>+<_>*<b>+<_>*<r>+<_>*<a>(?!\w)
+rule R120 [Lubra]
+actions racialactions
+
+match (?<!'|\w)<L>+<_>*<u>+<_>*<g>+<_>*<a>+<_>*<n>(?!\w)
+rule R121 [Lugan]
+actions racialactions
+
+match (?<!'|\w)<M>+<_>*<a>+<_>*<c>+<_>*<a>+<_>*<c>+<_>*<a>(?!\w)
+rule R122 [Macaca]
+actions racialactions
+
+match (?<!'|\w)<M>+<_>*<a>+<_>*<l>+<_>*<a>+<_>*<u>+<_>*<n>(?!\w)
+rule R123 [Malaun]
+actions racialactions
+
+match (?<!'|\w)<M>+<_>*<u>+<_>*<s>+<_>*<t>+<_>*<a>+<_>*<l>+<_>*<a>+<_>*<i>+<_>*<n>+<_>*<e>+<_>*<n>(?!\w)
+rule R124 [Mustalainen]
+actions racialactions
+
+match (?<!'|\w)<M>+<_>*<u>+<_>*<s>+<_>*<t>+<_>*<a>+<_>*<l>+<_>*<a>+<_>*<i>+<_>*<s>+<_>*<e>+<_>*<t>(?!\w)
+rule R125 [Mustalaiset]
+actions racialactions
+
+match (?<!'|\w)<n>+<_>*<a>+<_>*<g>+<_>*<r>(?!\w)
+rule R126 [nagr]
+actions racialactions
+
+match (?<!'|\w)<n>+<_>*<e>+<_>*<c>+<_>*<h>+<_>*<e>(?!\w)
+rule R127 [neche]
+actions racialactions
+
+match (?<!'|\w)<n>+<_>*<e>+<_>*<e>+<_>*<c>+<_>*<h>+<_>*<e>+<_>*<e>(?!\w)
+rule R128 [neechee]
+actions racialactions
+
+match (?<!'|\w)<n>+<_>*<e>+<_>*<e>+<_>*<j>+<_>*<e>+<_>*<e>(?!\w)
+rule R129 [neejee]
+actions racialactions
+
+match (?<!'|\w)<n>+<_>*<e>+<_>*<g>+<_>*<a>(?!\w)
+rule R130 [nega]
+actions racialactions
+
+match (?<!'|\w)<n>+<_>*<e>+<_>*<g>+<_>*<e>+<_>*<r>(?!\w)
+rule R131 [neger]
+actions racialactions
+
+match (?<!'|\w)<n>+<_>*<e>+<_>*<g>+<_>*<r>(?!\w)
+rule R132 [negr]
+actions racialactions
+
+match (?<!'|\w)<n>+<_>*<i>+<_>*<c>+<_>*<h>+<_>*<i>(?!\w)
+rule R133 [nichi]
+actions racialactions
+
+match (?<!'|\w)<n>+<_>*<i>+<_>*<c>+<_>*<h>+<_>*<i>+<_>*<w>+<_>*<a>(?!\w)
+rule R134 [nichiwa]
+actions racialactions
+
+match (?<!'|\w)<n>+<_>*<i>+<_>*<d>+<_>*<g>+<_>*<e>(?!\w)
+rule R135 [nidge]
+actions racialactions
+
+match (?<!'|\w)<n>+<_>*<i>+<_>*<g>(?!\w)
+rule R136 [nig]
+actions racialactions
+
+match (?<!'|\w)<N>+<_>*<i>+<_>*<g>+<_>*<n>+<_>*<o>+<_>*<g>(?!\w)
+rule R137 [Nig nog]
+actions racialactions
+
+match (?<!'|\w)<n>+<_>*<i>+<_>*<g>+<_>*<a>(?!\w)
+rule R138 [niga]
+actions racialactions
+
+match (?<!'|\w)<n>+<_>*<i>+<_>*<g>+<_>*<a>+<_>*<r>(?!\w)
+rule R139 [nigar]
+actions racialactions
+
+match (?<!'|\w)<n>+<_>*<i>+<_>*<g>+<_>*<e>+<_>*<r>(?!\w)
+rule R140 [niger]
+actions racialactions
+
+match (?<!'|\w)<N>+<_>*<i>+<_>*<g>+<_>*<e>+<_>*<r>(?!\w)
+rule R141 [Niger]
+actions racialactions
+
+match (?<!'|\w)<n>+<_>*<i>+<_>*<g>+<_>*<e>+<_>*<t>+<_>*<t>+<_>*<e>(?!\w)
+rule R142 [nigette]
+actions racialactions
+
+match (?<!'|\w)<n>+<_>*<i>+<_>*<g>+<_>*<g>+<_>*<a>(?!\w)
+rule R143 [nigga]
+actions racialactions
+
+match (?<!'|\w)<n>+<_>*<i>+<_>*<g>+<_>*<g>+<_>*<a>+<_>*<h>(?!\w)
+rule R144 [niggah]
+actions racialactions
+
+match (?<!'|\w)<n>+<_>*<i>+<_>*<g>+<_>*<g>+<_>*<a>+<_>*<r>(?!\w)
+rule R145 [niggar]
+actions racialactions
+
+match (?<!'|\w)<N>+<_>*<i>+<_>*<g>+<_>*<e>+<_>*<r>\w*
+rule R146 [Nigger]
+actions racialactions
+
+match (?<!'|\w)<n>+<_>*<i>+<_>*<g>+<_>*<g>+<_>*<o>+<_>*<r>(?!\w)
+rule R147 [niggor]
+actions racialactions
+
+match (?<!'|\w)<n>+<_>*<i>+<_>*<g>+<_>*<g>+<_>*<r>+<_>*<e>+<_>*<s>+<_>*<s>(?!\w)
+rule R148 [niggress]
+actions racialactions
+
+match (?<!'|\w)<n>+<_>*<i>+<_>*<g>+<_>*<g>+<_>*<u>+<_>*<h>(?!\w)
+rule R149 [nigguh]
+actions racialactions
+
+match (?<!'|\w)<n>+<_>*<i>+<_>*<g>+<_>*<g>+<_>*<u>+<_>*<r>(?!\w)
+rule R150 [niggur]
+actions racialactions
+
+match (?<!'|\w)<N>+<_>*<i>+<_>*<g>+<_>*<l>+<_>*<e>+<_>*<t>(?!\w)
+rule R151 [Niglet]
+actions racialactions
+
+match (?<!'|\w)<n>+<_>*<i>+<_>*<g>+<_>*<o>+<_>*<r>(?!\w)
+rule R152 [nigor]
+actions racialactions
+
+match (?<!'|\w)<n>+<_>*<i>+<_>*<g>+<_>*<r>(?!\w)
+rule R153 [nigr]
+actions racialactions
+
+match (?<!'|\w)<n>+<_>*<i>+<_>*<g>+<_>*<r>+<_>*<a>(?!\w)
+rule R154 [nigra]
+actions racialactions
+
+match (?<!'|\w)<n>+<_>*<i>+<_>*<g>+<_>*<r>+<_>*<e>(?!\w)
+rule R155 [nigre]
+actions racialactions
+
+match (?<!'|\w)<N>+<_>*<i>+<_>*<p>(?!\w)
+rule R156 [Nip]
+actions racialactions
+
+match (?<!'|\w)<n>+<_>*<i>+<_>*<t>+<_>*<c>+<_>*<h>+<_>*<e>+<_>*<e>(?!\w)
+rule R157 [nitchee]
+actions racialactions
+
+match (?<!'|\w)<N>+<_>*<i>+<_>*<t>+<_>*<c>+<_>*<h>+<_>*<i>+<_>*<e>(?!\w)
+rule R158 [Nitchie]
+actions racialactions
+
+match (?<!'|\w)<n>+<_>*<i>+<_>*<t>+<_>*<c>+<_>*<h>+<_>*<y>(?!\w)
+rule R159 [nitchy]
+actions racialactions
+
+match (?<!'|\w)<N>+<_>*<o>+<_>*<r>+<_>*<t>+<_>*<h>+<_>*<e>+<_>*<r>+<_>*<n>+<_>*<M>+<_>*<o>+<_>*<n>+<_>*<k>+<_>*<e>+<_>*<y>(?!\w)
+rule R160 [Northern Monkey]
+actions racialactions
+
+match (?<!'|\w)<O>+<_>*<c>+<_>*<k>+<_>*<e>+<_>*<r>(?!\w)
+rule R161 [Ocker]
+actions racialactions
+
+match (?<!'|\w)<p>+<_>*<a>+<_>*<c>+<_>*<k>+<_>*<i>(?!\w)
+rule R162 [packi]
+actions racialactions
+
+match (?<!'|\w)<p>+<_>*<a>+<_>*<c>+<_>*<k>+<_>*<i>+<_>*<e>(?!\w)
+rule R163 [packie]
+actions racialactions
+
+match (?<!'|\w)<p>+<_>*<a>+<_>*<c>+<_>*<k>+<_>*<y>(?!\w)
+rule R164 [packy]
+actions racialactions
+
+match (?<!'|\w)<P>+<_>*<a>+<_>*<d>+<_>*<d>+<_>*<y>(?!\w)
+rule R165 [Paddy]
+actions racialactions
+
+match (?<!'|\w)<P>+<_>*<a>+<_>*<k>+<_>*<i>(?!\w)
+rule R166 [Paki]
+actions racialactions
+
+match (?<!'|\w)<p>+<_>*<a>+<_>*<k>+<_>*<y>(?!\w)
+rule R167 [paky]
+actions racialactions
+
+match (?<!'|\w)<P>+<_>*<a>+<_>*<n>+<_>*<c>+<_>*<a>+<_>*<k>+<_>*<e>+<_>*<F>+<_>*<a>+<_>*<c>+<_>*<e>(?!\w)
+rule R168 [Pancake Face]
+actions racialactions
+
+match (?<!'|\w)<P>+<_>*<e>+<_>*<c>+<_>*<k>+<_>*<e>+<_>*<r>+<_>*<w>+<_>*<o>+<_>*<o>+<_>*<d>(?!\w)
+rule R169 [Peckerwood]
+actions racialactions
+
+match (?<!'|\w)<P>+<_>*<i>+<_>*<c>+<_>*<k>+<_>*<a>+<_>*<n>+<_>*<i>+<_>*<n>+<_>*<n>+<_>*<y>(?!\w)
+rule R170 [Pickaninny]
+actions racialactions
+
+match (?<!'|\w)<p>+<_>*<i>+<_>*<k>+<_>*<e>+<_>*<r>(?!\w)
+rule R171 [piker]
+actions racialactions
+
+match (?<!'|\w)<P>+<_>*<i>+<_>*<k>+<_>*<e>+<_>*<y>(?!\w)
+rule R172 [Pikey]
+actions racialactions
+
+match (?<!'|\w)<p>+<_>*<i>+<_>*<k>+<_>*<y>(?!\w)
+rule R173 [piky]
+actions racialactions
+
+match (?<!'|\w)<P>+<_>*<i>+<_>*<n>+<_>*<d>+<_>*<o>+<_>*<s>(?!\w)
+rule R174 [Pindos]
+actions racialactions
+
+match (?<!'|\w)<P>+<_>*<l>+<_>*<a>+<_>*<s>+<_>*<t>+<_>*<i>+<_>*<c>+<_>*<P>+<_>*<a>+<_>*<d>+<_>*<d>+<_>*<y>(?!\w)
+rule R175 [Plastic Paddy]
+actions racialactions
+
+match (?<!'|\w)<p>+<_>*<o>+<_>*<c>+<_>*<h>+<_>*<a>(?!\w)
+rule R176 [pocha]
+actions racialactions
+
+match (?<!'|\w)<P>+<_>*<o>+<_>*<c>+<_>*<h>+<_>*<o>(?!\w)
+rule R177 [Pocho]
+actions racialactions
+
+match (?<!'|\w)<P>+<_>*<o>+<_>*<h>+<_>*<m>(?!\w)
+rule R178 [Pohm]
+actions racialactions
+
+match (?<!'|\w)<p>+<_>*<o>+<_>*<l>+<_>*<a>+<_>*<c>+<_>*<k>(?!\w)
+rule R179 [polack]
+actions racialactions
+
+match (?<!'|\w)<P>+<_>*<o>+<_>*<l>+<_>*<a>+<_>*<c>+<_>*<o>(?!\w)
+rule R180 [Polaco]
+actions racialactions
+
+match (?<!'|\w)<p>+<_>*<o>+<_>*<l>+<_>*<a>+<_>*<k>(?!\w)
+rule R181 [polak]
+actions racialactions
+
+match (?<!'|\w)<P>+<_>*<o>+<_>*<m>(?!\w)
+rule R182 [Pom]
+actions racialactions
+
+match (?<!'|\w)<P>+<_>*<o>+<_>*<m>+<_>*<m>+<_>*<i>+<_>*<e>(?!\w)
+rule R183 [Pommie]
+actions racialactions
+
+match (?<!'|\w)<P>+<_>*<o>+<_>*<m>+<_>*<m>+<_>*<i>+<_>*<e>+<_>*<G>+<_>*<r>+<_>*<a>+<_>*<n>+<_>*<t>(?!\w)
+rule R184 [Pommie Grant]
+actions racialactions
+
+match (?<!'|\w)<P>+<_>*<o>+<_>*<m>+<_>*<m>+<_>*<y>(?!\w)
+rule R185 [Pommy]
+actions racialactions
+
+match (?<!'|\w)<P>+<_>*<o>+<_>*<r>+<_>*<c>+<_>*<h>+<_>*<m>+<_>*<o>+<_>*<n>+<_>*<k>+<_>*<e>+<_>*<y>(?!\w)
+rule R186 [Porch monkey]
+actions racialactions
+
+match (?<!'|\w)<P>+<_>*<r>+<_>*<a>+<_>*<i>+<_>*<r>+<_>*<i>+<_>*<e>+<_>*<n>+<_>*<i>+<_>*<g>+<_>*<g>+<_>*<e>+<_>*<r>(?!\w)
+rule R187 [Prairie nigger]
+actions racialactions
+
+match (?<!'|\w)<Q>+<_>*<u>+<_>*<a>+<_>*<s>+<_>*<h>+<_>*<i>+<_>*<e>(?!\w)
+rule R188 [Quashie]
+actions racialactions
+
+match (?<!'|\w)<R>+<_>*<a>+<_>*<g>+<_>*<h>+<_>*<e>+<_>*<a>+<_>*<d>(?!\w)
+rule R189 [Raghead]
+actions racialactions
+
+match (?<!'|\w)<R>+<_>*<a>+<_>*<s>+<_>*<t>+<_>*<u>+<_>*<s>(?!\w)
+rule R190 [Rastus]
+actions racialactions
+
+match (?<!'|\w)<R>+<_>*<a>+<_>*<z>+<_>*<a>+<_>*<k>+<_>*<a>+<_>*<r>+<_>*<s>(?!\w)
+rule R191 [Razakars]
+actions racialactions
+
+match (?<!'|\w)<R>+<_>*<e>+<_>*<d>+<_>*<l>+<_>*<e>+<_>*<g>+<_>*<s>(?!\w)
+rule R192 [Redlegs]
+actions racialactions
+
+match (?<!'|\w)<R>+<_>*<e>+<_>*<d>+<_>*<n>+<_>*<e>+<_>*<c>+<_>*<k>(?!\w)
+rule R193 [Redneck]
+actions racialactions
+
+match (?<!'|\w)<R>+<_>*<o>+<_>*<u>+<_>*<n>+<_>*<d>+<_>*<e>+<_>*<y>+<_>*<e>(?!\w)
+rule R194 [Roundeye]
+actions racialactions
+
+match (?<!'|\w)<S>+<_>*<a>+<_>*<m>+<_>*<b>+<_>*<o>(?!\w)
+rule R195 [Sambo]
+actions racialactions
+
+match (?<!'|\w)<s>+<_>*<a>+<_>*<n>+<_>*<d>+<_>*<m>+<_>*<o>+<_>*<n>+<_>*<k>+<_>*<e>+<_>*<y>(?!\w)
+rule R196 [sand monkey]
+actions racialactions
+
+match (?<!'|\w)<S>+<_>*<a>+<_>*<n>+<_>*<d>+<_>*<n>+<_>*<i>+<_>*<g>+<_>*<g>+<_>*<e>+<_>*<r>(?!\w)
+rule R197 [Sand nigger]
+actions racialactions
+
+match (?<!'|\w)<S>+<_>*<a>+<_>*<w>+<_>*<n>+<_>*<e>+<_>*<y>(?!\w)
+rule R198 [Sawney]
+actions racialactions
+
+match (?<!'|\w)<S>+<_>*<c>+<_>*<a>+<_>*<n>+<_>*<d>+<_>*<i>+<_>*<h>+<_>*<o>+<_>*<o>+<_>*<v>+<_>*<i>+<_>*<a>+<_>*<n>(?!\w)
+rule R199 [Scandihoovian]
+actions racialactions
+
+match (?<!'|\w)<S>+<_>*<c>+<_>*<h>+<_>*<v>+<_>*<a>+<_>*<r>+<_>*<t>+<_>*<s>+<_>*<e>(?!\w)
+rule R200 [Schvartse]
+actions racialactions
+
+match (?<!'|\w)<S>+<_>*<c>+<_>*<h>+<_>*<w>+<_>*<a>+<_>*<r>+<_>*<t>+<_>*<z>+<_>*<e>(?!\w)
+rule R201 [Schwartze]
+actions racialactions
+
+match (?<!'|\w)<S>+<_>*<e>+<_>*<p>+<_>*<p>+<_>*<o>(?!\w)
+rule R202 [Seppo]
+actions racialactions
+
+match (?<!'|\w)<S>+<_>*<h>+<_>*<e>+<_>*<e>+<_>*<n>+<_>*<y>(?!\w)
+rule R203 [Sheeny]
+actions racialactions
+
+match (?<!'|\w)<S>+<_>*<h>+<_>*<e>+<_>*<l>+<_>*<t>+<_>*<a>(?!\w)
+rule R204 [Shelta]
+actions racialactions
+
+match (?<!'|\w)<S>+<_>*<h>+<_>*<i>+<_>*<k>+<_>*<s>+<_>*<a>(?!\w)
+rule R205 [Shiksa]
+actions racialactions
+
+match (?<!'|\w)<S>+<_>*<h>+<_>*<k>+<_>*<u>+<_>*<t>+<_>*<z>+<_>*<i>+<_>*<m>(?!\w)
+rule R206 [Shkutzim]
+actions racialactions
+
+match (?<!'|\w)<s>+<_>*<h>+<_>*<o>+<_>*<r>+<_>*<t>+<_>*<e>+<_>*<y>+<_>*<e>+<_>*<s>(?!\w)
+rule R207 [short eyes]
+actions racialactions
+
+match (?<!'|\w)<S>+<_>*<i>+<_>*<d>+<_>*<e>+<_>*<w>+<_>*<a>+<_>*<y>+<_>*<s>+<_>*<c>+<_>*<o>+<_>*<o>+<_>*<t>+<_>*<e>+<_>*<r>(?!\w)
+rule R208 [Sideways cooter]
+actions racialactions
+
+match (?<!'|\w)<S>+<_>*<l>+<_>*<a>+<_>*<n>+<_>*<t>+<_>*<e>+<_>*<y>+<_>*<e>(?!\w)
+rule R209 [Slant eye]
+actions racialactions
+
+match (?<!'|\w)<s>+<_>*<l>+<_>*<o>+<_>*<p>+<_>*<e>+<_>*<h>+<_>*<e>+<_>*<a>+<_>*<d>(?!\w)
+rule R210 [slopehead]
+actions racialactions
+
+match (?<!'|\w)<s>+<_>*<l>+<_>*<o>+<_>*<p>+<_>*<e>+<_>*<r>(?!\w)
+rule R211 [sloper]
+actions racialactions
+
+match (?<!'|\w)<s>+<_>*<l>+<_>*<o>+<_>*<p>+<_>*<e>+<_>*<y>(?!\w)
+rule R212 [slopey]
+actions racialactions
+
+match (?<!'|\w)<s>+<_>*<l>+<_>*<o>+<_>*<p>+<_>*<y>(?!\w)
+rule R213 [slopy]
+actions racialactions
+
+match (?<!'|\w)<S>+<_>*<m>+<_>*<o>+<_>*<k>+<_>*<e>+<_>*<d>+<_>*<I>+<_>*<r>+<_>*<i>+<_>*<s>+<_>*<h>(?!\w)
+rule R214 [Smoked Irish]
+actions racialactions
+
+match (?<!'|\w)<s>+<_>*<m>+<_>*<o>+<_>*<k>+<_>*<e>+<_>*<d>+<_>*<I>+<_>*<r>+<_>*<i>+<_>*<s>+<_>*<h>+<_>*<m>+<_>*<a>+<_>*<n>(?!\w)
+rule R215 [smoked Irishman]
+actions racialactions
+
+match (?<!'|\w)<S>+<_>*<o>+<_>*<o>+<_>*<t>+<_>*<y>(?!\w)
+rule R216 [Sooty]
+actions racialactions
+
+match (?<!'|\w)<S>+<_>*<p>+<_>*<e>+<_>*<a>+<_>*<r>+<_>*<c>+<_>*<h>+<_>*<u>+<_>*<c>+<_>*<k>+<_>*<e>+<_>*<r>(?!\w)
+rule R217 [Spearchucker]
+actions racialactions
+
+match (?<!'|\w)<S>+<_>*<p>+<_>*<i>+<_>*<c>(?!\w)
+rule R218 [Spic]
+actions racialactions
+
+match (?<!'|\w)<s>+<_>*<p>+<_>*<i>+<_>*<c>+<_>*<k>(?!\w)
+rule R219 [spick]
+actions racialactions
+
+match (?<!'|\w)<s>+<_>*<p>+<_>*<i>+<_>*<g>(?!\w)
+rule R220 [spig]
+actions racialactions
+
+match (?<!'|\w)<s>+<_>*<p>+<_>*<i>+<_>*<g>+<_>*<o>+<_>*<t>+<_>*<t>+<_>*<y>(?!\w)
+rule R221 [spigotty]
+actions racialactions
+
+match (?<!'|\w)<s>+<_>*<p>+<_>*<i>+<_>*<k>(?!\w)
+rule R222 [spik]
+actions racialactions
+
+match (?<!'|\w)<S>+<_>*<p>+<_>*<o>+<_>*<o>+<_>*<k>(?!\w)
+rule R223 [Spook]
+actions racialactions
+
+match (?<!'|\w)<S>+<_>*<q>+<_>*<u>+<_>*<a>+<_>*<r>+<_>*<e>+<_>*<h>+<_>*<e>+<_>*<a>+<_>*<d>(?!\w)
+rule R224 [Squarehead]
+actions racialactions
+
+match (?<!'|\w)<S>+<_>*<q>+<_>*<u>+<_>*<a>+<_>*<w>(?!\w)
+rule R225 [Squaw]
+actions racialactions
+
+match (?<!'|\w)<S>+<_>*<q>+<_>*<u>+<_>*<i>+<_>*<n>+<_>*<t>+<_>*<y>(?!\w)
+rule R226 [Squinty]
+actions racialactions
+
+match (?<!'|\w)<S>+<_>*<u>+<_>*<c>+<_>*<k>+<_>*<e>+<_>*<r>+<_>*<f>+<_>*<i>+<_>*<s>+<_>*<h>(?!\w)
+rule R227 [Sucker fish]
+actions racialactions
+
+match (?<!'|\w)<T>+<_>*<a>+<_>*<f>+<_>*<f>(?!\w)
+rule R228 [Taff]
+actions racialactions
+
+match (?<!'|\w)<T>+<_>*<a>+<_>*<i>+<_>*<g>(?!\w)
+rule R229 [Taig]
+actions racialactions
+
+match (?<!'|\w)<T>+<_>*<a>+<_>*<r>+<_>*<B>+<_>*<a>+<_>*<b>+<_>*<y>(?!\w)
+rule R230 [Tar Baby]
+actions racialactions
+
+match (?<!'|\w)<T>+<_>*<e>+<_>*<a>+<_>*<g>+<_>*<u>+<_>*<e>(?!\w)
+rule R231 [Teague]
+actions racialactions
+
+match (?<!'|\w)<T>+<_>*<e>+<_>*<g>(?!\w)
+rule R232 [Teg]
+actions racialactions
+
+match (?<!'|\w)<T>+<_>*<e>+<_>*<i>+<_>*<g>(?!\w)
+rule R233 [Teig]
+actions racialactions
+
+match (?<!'|\w)<t>+<_>*<e>+<_>*<n>+<_>*<k>+<_>*<e>+<_>*<r>(?!\w)
+rule R234 [tenker]
+actions racialactions
+
+match (?<!'|\w)<T>+<_>*<e>+<_>*<u>+<_>*<c>+<_>*<h>+<_>*<t>+<_>*<e>+<_>*<r>(?!\w)
+rule R235 [Teuchter]
+actions racialactions
+
+match (?<!'|\w)<T>+<_>*<h>+<_>*<i>+<_>*<c>+<_>*<k>+<_>*<l>+<_>*<i>+<_>*<p>+<_>*<s>(?!\w)
+rule R236 [Thicklips]
+actions racialactions
+
+match (?<!'|\w)<T>+<_>*<i>+<_>*<m>+<_>*<b>+<_>*<e>+<_>*<r>+<_>*<n>+<_>*<i>+<_>*<g>+<_>*<g>+<_>*<e>+<_>*<r>(?!\w)
+rule R237 [Timber nigger]
+actions racialactions
+
+match (?<!'|\w)<t>+<_>*<i>+<_>*<n>+<_>*<c>+<_>*<k>+<_>*<e>+<_>*<r>(?!\w)
+rule R238 [tincker]
+actions racialactions
+
+match (?<!'|\w)<t>+<_>*<i>+<_>*<n>+<_>*<k>+<_>*<a>+<_>*<r>(?!\w)
+rule R239 [tinkar]
+actions racialactions
+
+match (?<!'|\w)<t>+<_>*<i>+<_>*<n>+<_>*<k>+<_>*<a>+<_>*<r>+<_>*<d>(?!\w)
+rule R240 [tinkard]
+actions racialactions
+
+match (?<!'|\w)<T>+<_>*<i>+<_>*<n>+<_>*<k>+<_>*<e>+<_>*<r>(?!\w)
+rule R241 [Tinker]
+actions racialactions
+
+match (?<!'|\w)<t>+<_>*<i>+<_>*<n>+<_>*<k>+<_>*<e>+<_>*<r>+<_>*<e>(?!\w)
+rule R242 [tinkere]
+actions racialactions
+
+match (?<!'|\w)<T>+<_>*<o>+<_>*<u>+<_>*<c>+<_>*<h>+<_>*<o>+<_>*<f>+<_>*<t>+<_>*<h>+<_>*<e>+<_>*<t>+<_>*<a>+<_>*<r>+<_>*<b>+<_>*<r>+<_>*<u>+<_>*<s>+<_>*<h>(?!\w)
+rule R243 [Touch of the tar brush]
+actions racialactions
+
+match (?<!'|\w)<T>+<_>*<o>+<_>*<w>+<_>*<e>+<_>*<l>+<_>*<h>+<_>*<e>+<_>*<a>+<_>*<d>(?!\w)
+rule R244 [Towel head]
+actions racialactions
+
+match (?<!'|\w)<t>+<_>*<y>+<_>*<n>+<_>*<c>+<_>*<a>+<_>*<r>(?!\w)
+rule R245 [tyncar]
+actions racialactions
+
+match (?<!'|\w)<t>+<_>*<y>+<_>*<n>+<_>*<e>+<_>*<k>+<_>*<e>+<_>*<r>+<_>*<e>(?!\w)
+rule R246 [tynekere]
+actions racialactions
+
+match (?<!'|\w)<t>+<_>*<y>+<_>*<n>+<_>*<k>+<_>*<a>+<_>*<r>+<_>*<d>(?!\w)
+rule R247 [tynkard]
+actions racialactions
+
+match (?<!'|\w)<t>+<_>*<y>+<_>*<n>+<_>*<k>+<_>*<e>+<_>*<r>(?!\w)
+rule R248 [tynker]
+actions racialactions
+
+match (?<!'|\w)<t>+<_>*<y>+<_>*<n>+<_>*<k>+<_>*<e>+<_>*<r>+<_>*<e>(?!\w)
+rule R249 [tynkere]
+actions racialactions
+
+match (?<!'|\w)<U>+<_>*<n>+<_>*<c>+<_>*<l>+<_>*<e>+<_>*<T>+<_>*<o>+<_>*<m>(?!\w)
+rule R250 [Uncle Tom]
+actions racialactions
+
+match (?<!'|\w)<W>+<_>*<e>+<_>*<t>+<_>*<b>+<_>*<a>+<_>*<c>+<_>*<k>(?!\w)
+rule R251 [Wetback]
+actions racialactions
+
+match (?<!'|\w)<W>+<_>*<h>+<_>*<i>+<_>*<g>+<_>*<g>+<_>*<e>+<_>*<r>(?!\w)
+rule R252 [Whigger]
+actions racialactions
+
+match (?<!'|\w)<W>+<_>*<h>+<_>*<i>+<_>*<t>+<_>*<e>+<_>*<N>+<_>*<i>+<_>*<g>+<_>*<g>+<_>*<e>+<_>*<r>(?!\w)
+rule R253 [White Nigger]
+actions racialactions
+
+match (?<!'|\w)<W>+<_>*<h>+<_>*<i>+<_>*<t>+<_>*<e>+<_>*<y>(?!\w)
+rule R254 [Whitey]
+actions racialactions
+
+match (?<!'|\w)<W>+<_>*<i>+<_>*<g>+<_>*<g>+<_>*<a>(?!\w)
+rule R255 [Wigga]
+actions racialactions
+
+match (?<!'|\w)<W>+<_>*<i>+<_>*<g>+<_>*<g>+<_>*<e>+<_>*<r>(?!\w)
+rule R256 [Wigger]
+actions racialactions
+
+match (?<!'|\w)<W>+<_>*<o>+<_>*<g>(?!\w)
+rule R257 [Wog]
+actions racialactions
+
+match (?<!'|\w)<W>+<_>*<o>+<_>*<p>(?!\w)
+rule R258 [Wop]
+actions racialactions
+
+match (?<!'|\w)<z>+<_>*<i>+<_>*<g>+<_>*<a>+<_>*<b>+<_>*<o>(?!\w)
+rule R259 [zigabo]
+actions racialactions
+
+match (?<!'|\w)<Z>+<_>*<i>+<_>*<p>+<_>*<p>+<_>*<e>+<_>*<r>+<_>*<h>+<_>*<e>+<_>*<a>+<_>*<d>(?!\w)
+rule R260 [Zipperhead]
+actions racialactions
+
+# If you have any suggestions, please let me know!   Thank you!
+# Please add EpicATrain to your VIP list on your server!
+# Racial Words Compiled and Written By Addam 'EpicATrain' Waitkus.
+# ©2012-2013 Addam 'EpicATrain' Waitkus. All rights reserved.
