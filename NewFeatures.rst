@@ -11,20 +11,6 @@ matched.  This will allow a match group to be referenced in actions.  Eg::
 
 Would match 'derpitydah' and output 'derp dah'
 
-Respond Multiline
------------------
-Add a "then respond EOF" action, which permits a multi-line response. Terminate
-the response with a single line that has only 'EOF' (no quotes).  Eg:
-
-match ^/grue$
-then respond EOF
-The grue is a sinister, lurking presence in the dark places of the earth. Its
-favorite diet is adventurers, but its insatiable appetite is tempered by its
-fear of light. No grue has ever been seen by the light of day, and few have
-survived its fearsome jaws to tell the tale.
-EOF
-
-
 
 Respond with File
 -----------------
