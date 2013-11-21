@@ -1,0 +1,7 @@
+# Used in ParserTest.testActionGroupParser()
+actiongroup aGroupTest
+then deny
+then respond test
+
+match aGroup
+actions aGroupTest

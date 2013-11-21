@@ -22,14 +22,13 @@ public final class ActionFactory {
     {
         String[] parts = s.split("\\s",2);
         String actionName = parts[0];
-        String actionData = "";
-        if (parts.length > 1) {
-            actionData = parts[1];
-        }
+        String actionData;
+        actionData = ((parts.length > 1) ? parts[1]:"");
+
         return getAction(actionName, actionData);
     }
 
-    public static Action getAction (final String actionName, final String actionData)
+    public static Action getAction(final String actionName, final String actionData)
     {
         // Return a subclass instance based on actionName.
         try {

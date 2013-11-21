@@ -12,13 +12,14 @@ package com.pwn9.PwnFilter.rules;
 
 import com.pwn9.PwnFilter.DataCache;
 import com.pwn9.PwnFilter.FilterState;
+import com.pwn9.PwnFilter.rules.action.Action;
+import com.pwn9.PwnFilter.rules.parser.FileParser;
 import com.pwn9.PwnFilter.util.LogManager;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Set;
+import java.util.TreeSet;
 
 
 /**
@@ -39,51 +40,47 @@ import java.util.*;
  * Time: 12:38 PM
  */
 
-public class RuleChain implements ChainEntry {
+public class RuleChain implements Chain,ChainEntry {
     enum ChainState {
         INIT,  // Chain was reset and needs to be reloaded before use.
         PARTIAL, // Chain is in the process of loading
         READY // Chain is fully loaded and ready to use.
     }
 
-    private final RuleManager manager;
     private ChainState chainState;
     private ArrayList<ChainEntry> chain = new ArrayList<ChainEntry>();
-    private HashMap<String, ArrayList<String[]>> actionGroups = new HashMap<String, ArrayList<String[]>>();
-    private HashMap<String, ArrayList<String[]>> conditionGroups = new HashMap<String, ArrayList<String[]>>();
+    private HashMap<String, ArrayList<Action>> actionGroups = new HashMap<String, ArrayList<Action>>();
+    private HashMap<String, ArrayList<Condition>> conditionGroups = new HashMap<String, ArrayList<Condition>>();
 
     private final String configName;
 
 
-    public RuleChain(RuleManager manager, String configName) {
+    public RuleChain(String configName) {
         this.configName = configName;
-        this.manager = manager;
         chainState = ChainState.INIT;
     }
 
     /**
      * (Re)load this rulechain's config from its file.
-     * NOTE: If it has included rulechains, this will trigger a reload
-     * of them as well.  The ChainState attribute should prevent infinite
-     * recursion, even in the case where rules have been misconfigured.
      *
      * @return Success or failure
      */
     public boolean loadConfigFile() {
-        chain = new ArrayList<ChainEntry>();
-        File ruleFile = manager.getFile(configName);
-        if (ruleFile != null) {
-            try {
-                if (parseRules(new FileReader(ruleFile))) {
-                    DataCache.getInstance().addPermissions(getPermissionList());
-                    return true;
-                } else {
-                    return false;
-                }
-            } catch (FileNotFoundException e) {
-                return false;
-            }
-        } else return false;
+
+        resetChain();
+
+        // While loading, we are in a PARTIAL state.
+        chainState = ChainState.PARTIAL;
+
+        FileParser parser = new FileParser(configName);
+
+        if (parser.parseRules(this)) {
+            chainState = ChainState.READY;
+            DataCache.getInstance().addPermissions(getPermissionList());
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public String getConfigName() { return configName;}
@@ -164,7 +161,13 @@ public class RuleChain implements ChainEntry {
         } else return false;
     }
 
+    public ArrayList<ChainEntry> getChain() {
+        return chain;
+    }
 
+    public boolean isEmpty() {
+        return chain.isEmpty();
+    }
 
     public boolean isValid() {
         return chainState == ChainState.READY;
@@ -187,11 +190,11 @@ public class RuleChain implements ChainEntry {
         return permList;
     }
 
-    public HashMap<String,ArrayList<String[]>> getActionGroups() {
+    public HashMap<String,ArrayList<Action>> getActionGroups() {
         return actionGroups;
     }
 
-    public HashMap<String,ArrayList<String[]>> getConditionGroups() {
+    public HashMap<String,ArrayList<Condition>> getConditionGroups() {
         return conditionGroups;
     }
     /**
@@ -199,188 +202,27 @@ public class RuleChain implements ChainEntry {
      */
     public void resetChain() {
         chain = new ArrayList<ChainEntry>();
+        conditionGroups = new HashMap<String, ArrayList<Condition>>();
+        actionGroups = new HashMap<String, ArrayList<Action>>();
         chainState = ChainState.INIT;
     }
 
-    /**
-     * Load rules from a Reader stream.
-     *
-     * @return success or failure
-     */
-    public boolean parseRules(java.io.Reader rulesStream) {
-        chainState = ChainState.PARTIAL;
-        // TODO: Needs a serious logic cleanup.
-        // Now read in the rules.txt file
-
-        String actionGroup = null;
-        String conditionGroup = null;
-        HashMap<String,String> shortcuts = null;
-        Rule currentRule = null;
-        Integer count = 0;
-        Integer lineNo = 0;
-
-        try {
-            BufferedReader input = new BufferedReader(rulesStream);
-            String line;
-
-            while ((line = input.readLine()) != null) {
-                lineNo++;
-                line = line.trim();
-                String command;
-                String lineData;
-
-                // SKIP this line if it is a comment
-                if (line.matches("^\\s*#.*")) continue;
-
-                if (line.isEmpty()) {
-                    if (currentRule != null && currentRule.isValid()) {
-                        append(currentRule);
-                        count++;
-                    }
-                    currentRule = null;
-                    actionGroup = null;
-                    conditionGroup = null;
-                    continue;
-                }
-
-
-                // SPLIT the line into the token and remainder.
-                String[] parts = line.split("\\s", 2);
-                command = parts[0];
-                if (parts.length > 1 ) {
-                    lineData = parts[1];
-                } else {
-                    lineData = "";
-                }
-
-                /* Actiongroup / Condition group sub-parser */
-
-                // Check if this is the start of an actiongroup or conditiongroup.
-                if (command.equalsIgnoreCase("actiongroup")) {
-                    actionGroup = lineData;
-                    actionGroups.put(actionGroup,new ArrayList<String[]>());
-                    continue;
-                }
-                if (command.equalsIgnoreCase("conditiongroup")) {
-                    conditionGroup = lineData;
-                    conditionGroups.put(conditionGroup,new ArrayList<String[]>());
-                    continue;
-                }
-
-                if (actionGroup != null) {
-                    actionGroups.get(actionGroup).add(new String[]{command,lineData});
-                    continue;
-                }
-                if (conditionGroup != null) {
-                    conditionGroups.get(conditionGroup).add(new String[]{command,lineData});
-                    continue;
-                }
-
-                /* End Actiongroup / Conditiongroup sub-parser */
-
-                // Check if this is a toggle for shortcuts.
-                if (command.equalsIgnoreCase("shortcuts")) {
-                    if (lineData.isEmpty()) {
-                        shortcuts = null;
-                        continue;
-                    } else {
-                        shortcuts = ShortCutManager.getInstance().getShortcutMap(lineData);
-                    }
-                }
-                // Statements which will terminate a rule
-                if (command.matches("match|catch|replace|rewrite|include")) {
-
-                    // This terminates the last rule.
-                    // If we currently have a valid rule, add it to the set.
-                    if (currentRule != null && currentRule.isValid()) {
-                        append(currentRule);
-                        count++;
-                    }
-                    if (command.equalsIgnoreCase("include")) {
-                        // We need to find and parse the dependant file.  It may be valid
-                        // currently, but we are going to force it to reload, to ensure
-                        // no recursion loops.
-                        LogManager.getInstance().debugMedium("Including chain: " + lineData + " in: " + getConfigName());
-                        RuleChain includedChain = manager.getRuleChain(lineData);
-                        if (includedChain.chainState == ChainState.PARTIAL) {
-                            LogManager.logger.warning("Recursion loop detected in: " + getConfigName() +
-                            "at line #:" + lineNo);
-                            continue;
-                        }
-                        if (includedChain.loadConfigFile()) {
-                            append(includedChain);
-                            actionGroups.putAll(includedChain.getActionGroups());
-                            conditionGroups.putAll(includedChain.getConditionGroups());
-                            count = count + includedChain.ruleCount();
-                        } else {
-                            LogManager.logger.warning(
-                                    String.format("(%s:%d)Failed to include: %s.",configName,lineNo,lineData)
-                            );
-                        }
-                    } else {
-                        // Now start on a new rule.  If the match string is invalid, we'll still get the new rule,
-                        // and we'll still collect statements until the next match, but we'll throw it all away,
-                        // because it won't be valid.
-                        if (shortcuts != null ) {
-                            lineData = ShortCutManager.replace(shortcuts, lineData);
-                        }
-                        currentRule = new Rule(lineData);
-                    }
-
-                } else {
-                    // Not a rule/match/include statement, so much be part of a rule.
-                    if (currentRule != null) {
-                        if (command.equalsIgnoreCase("conditions")) {
-                            List<String[]> conditions = conditionGroups.get(lineData);
-                            if (conditions != null ) {
-                                for (String[] e : conditions) {
-                                    if (!currentRule.addLine(e[0], e[1])) {
-                                        LogManager.logger.warning(String.format("(%s:%d)Unable to add condition to rule: %s %s.",configName,lineNo,e[0],e[1]));
-                                    }
-                                }
-                            } else {
-                                LogManager.logger.warning(String.format("(%s:%d)Unable to add conditiongroup: %s",configName,lineNo,lineData));
-                            }
-                            continue;
-                        }
-
-                        if (command.equalsIgnoreCase("actions")) {
-                            List<String[]> actions = actionGroups.get(lineData);
-                            if (actions != null ) {
-                                for (String[] e : actions) {
-                                    if (!currentRule.addLine(e[0], e[1])) {
-                                        LogManager.logger.warning(String.format("(%s:%d)Unable to add action to rule: %s",configName,lineNo,lineData));
-                                    }
-                                }
-                            } else {
-                                LogManager.logger.warning(String.format("(%s:%d)Unable to add actiongroup: %s",configName,lineNo,lineData));                            }
-                            continue;
-                        }
-
-                        if (command.equalsIgnoreCase("rule")) {
-                            String[] data = lineData.split("\\s",2);
-                            if (data.length > 0) currentRule.setId(data[0]);
-                            if (data.length > 1) currentRule.setDescription(data[1]);
-                        } else if (!currentRule.addLine(command, lineData)) {
-                            LogManager.logger.warning(String.format("(%s:%d)Unable to add action/condition: %s %s",configName,lineNo,command,lineData));
-                        }
-                    }
-                }
+    public void addConditionGroup(String name, ArrayList<Condition> cGroup) {
+        if (name != null && cGroup != null)
+            if(!conditionGroups.containsKey(name)) {
+                conditionGroups.put(name,cGroup);
+            } else {
+                LogManager.getInstance().debugLow("Condition Group named '"+name+"' already exists in chain: " + getConfigName());
             }
+    }
 
-            // Make sure we add the last action
-            if (currentRule != null && currentRule.isValid()) append(currentRule);
-
-            input.close();
-
-            LogManager.logger.config("Read " + count.toString() + " rules from file: " + getConfigName() + ".");
-            chainState = ChainState.READY;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return !chain.isEmpty();
+    public void addActionGroup(String name, ArrayList<Action> aGroup) {
+        if (name != null && aGroup != null)
+            if(!actionGroups.containsKey(name)) {
+                actionGroups.put(name,aGroup);
+            } else {
+                LogManager.getInstance().debugLow("Action Group named '"+name+"' already exists in chain: " + getConfigName());
+            }
     }
 
 }

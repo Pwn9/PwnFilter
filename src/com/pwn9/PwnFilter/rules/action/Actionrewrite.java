@@ -20,7 +20,7 @@ import org.bukkit.ChatColor;
 @SuppressWarnings("UnusedDeclaration")
 public class Actionrewrite implements Action {
     // messageString is what we will use to replace any matched text.
-    String messageString;
+    String messageString = "";
 
     public void init(String s)
     {

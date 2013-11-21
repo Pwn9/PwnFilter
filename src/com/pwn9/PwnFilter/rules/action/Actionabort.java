@@ -18,9 +18,8 @@ import com.pwn9.PwnFilter.FilterState;
 @SuppressWarnings("UnusedDeclaration")
 public class Actionabort implements Action {
 
-    public void init(String s)
-    {
-        // Do nothing with a string, if one is provided.
+    public void init(String s) {
+        // This action doesn't require any initialization.
     }
 
     public boolean execute(final FilterState state ) {

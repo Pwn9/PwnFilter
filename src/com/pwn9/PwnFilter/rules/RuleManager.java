@@ -14,6 +14,7 @@ import com.pwn9.PwnFilter.PwnFilter;
 import com.pwn9.PwnFilter.util.LogManager;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -64,21 +65,27 @@ public class RuleManager {
      * Get a File object pointing to the named configuration in the configured
      * Rule Directory.
      *
+     *
      * @param fileName Name of configuration File to load
+     * @param createFile Create the file if it doesn't exist.
      * @return File object for requested config, or null if not found.
      */
-    public File getFile(String fileName) {
-        if (ruleDir.exists()) {
-            File ruleFile = new File(ruleDir,fileName);
-            if (ruleFile.exists()) {
-                return ruleFile;
-            } else {
-                if (plugin.copyRuleTemplate(ruleFile, fileName)) {
+    public File getFile(String fileName, boolean createFile) {
+        try {
+            if (ruleDir.exists()) {
+                File ruleFile = new File(ruleDir,fileName);
+                if (ruleFile.exists()) {
                     return ruleFile;
                 } else {
-                    return null;
+                    if (createFile && plugin.copyRuleTemplate(ruleFile, fileName)) {
+                        return ruleFile;
+                    } else {
+                        return null;
+                    }
                 }
             }
+        } catch (IOException ex) {
+            // Log the error below.
         }
         LogManager.logger.warning("Unable to find or create rule file:" + fileName);
         return null;
@@ -91,7 +98,7 @@ public class RuleManager {
         if (ruleChains.containsKey(configName)) {
             return ruleChains.get(configName);
         } else {
-            RuleChain newRuleChain = new RuleChain(this, configName);
+            RuleChain newRuleChain = new RuleChain(configName);
             ruleChains.put(configName,newRuleChain);
             return newRuleChain;
         }

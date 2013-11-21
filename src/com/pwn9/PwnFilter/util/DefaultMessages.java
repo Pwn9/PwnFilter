@@ -10,6 +10,7 @@
 
 package com.pwn9.PwnFilter.util;
 
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.Configuration;
 
 /**
@@ -30,14 +31,14 @@ public class DefaultMessages {
      * @return String containing message to be used.
      */
     public static String prepareMessage(String message, String configName) {
-        String retVal;
-        if (message.isEmpty()) {
+        String result;
+        if ( message == null || message.isEmpty()) {
             String defmsg = config.getString(configName);
-            retVal = (defmsg != null) ? defmsg : "";
+            result = (defmsg != null) ? defmsg : "";
         } else {
-            retVal = message;
+            result = message;
         }
-        return retVal.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
+        return ChatColor.translateAlternateColorCodes('&',result);
     }
 
     public static void setConfig(Configuration c) {

@@ -31,5 +31,4 @@ public interface ChainEntry {
 
     public Set<String> getPermissionList();
 
-
 }

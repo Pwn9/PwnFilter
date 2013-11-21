@@ -13,7 +13,6 @@ package com.pwn9.PwnFilter.rules.action;
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.PwnFilter;
 import com.pwn9.PwnFilter.util.DefaultMessages;
-import com.pwn9.PwnFilter.util.LogManager;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -29,21 +28,21 @@ public class Actionfine implements Action {
 
     public void init(String s)
     {
-        String[] parts = s.split("\\s",2);
-
-        try {
-            fineAmount = Double.parseDouble(parts[0]);
-        } catch (NumberFormatException e ) {
-            fineAmount = 0.00;
-        }
-
-        String message = (parts.length > 1)?parts[1]:"";
-        messageString = DefaultMessages.prepareMessage(parts[1], "finemsg");
         if (PwnFilter.economy == null) {
-            LogManager.logger.warning("Parsed rule requiring an Economy, but one was not detected. " +
+            throw new IllegalArgumentException("Parsed rule requiring an Economy, but one was not detected. " +
                     "Check Vault configuration, or remove 'then fine' rules.");
         }
 
+        String[] parts;
+
+        parts = s.split("\\s",2);
+        try {
+            fineAmount = Double.parseDouble(parts[0]);
+        } catch (NumberFormatException e ) {
+            throw new IllegalArgumentException("'fine' action did not have a valid amount.");
+        }
+
+        messageString = DefaultMessages.prepareMessage((parts.length > 1)?parts[1]:"", "finemsg");
     }
 
     public boolean execute(final FilterState state ) {

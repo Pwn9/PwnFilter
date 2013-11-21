@@ -13,7 +13,6 @@ package com.pwn9.PwnFilter.rules;
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.PwnFilter;
 import com.pwn9.PwnFilter.rules.action.Action;
-import com.pwn9.PwnFilter.rules.action.ActionFactory;
 import com.pwn9.PwnFilter.util.LimitedRegexCharSequence;
 import com.pwn9.PwnFilter.util.LogManager;
 import com.pwn9.PwnFilter.util.Patterns;
@@ -28,21 +27,23 @@ import java.util.regex.Pattern;
  * <P>Each Rule has a single match Pattern, an ArrayList of {@link Condition}'s and an ArrayList of {@link com.pwn9.PwnFilter.rules.action.Action}'s</P>
  * TODO: Finish docs
  */
+@SuppressWarnings("UnusedDeclaration")
 public class Rule implements ChainEntry {
     private Pattern pattern;
-    private String description;
-    private String id;
-//    String name; // TODO: Give rules names for logs and troubleshooting
+    private String description = "";
+    private String id = "";
+
     ArrayList<Condition> conditions = new ArrayList<Condition>();
     ArrayList<Action> actions = new ArrayList<Action>();
-    ArrayList<String> includeEvents = new ArrayList<String>();
-    ArrayList<String> excludeEvents = new ArrayList<String>();
+    public ArrayList<String> includeEvents = new ArrayList<String>();
+    public ArrayList<String> excludeEvents = new ArrayList<String>();
 
         /* Constructors */
 
+    public Rule() {}
+
     public Rule(String matchStr) {
         this.pattern = Patterns.compilePattern(matchStr);
-        this.id = "";
     }
 
     public Rule(String id, String description) {
@@ -98,7 +99,7 @@ public class Rule implements ChainEntry {
         // Check if action matches the current state of the message
 
         if (LogManager.debugMode.compareTo(LogManager.DebugModes.high) >= 0) {
-            LogManager.logger.info("Testing Pattern: " + pattern.toString() + " on string: " + state.message.getPlainString());
+            LogManager.logger.info("Testing Pattern: '" + pattern.toString() + "' on string: '" + state.message.getPlainString()+"'");
         }
 
             LimitedRegexCharSequence limitedRegexCharSequence = new LimitedRegexCharSequence(state.message.getPlainString(),1000);
@@ -109,6 +110,7 @@ public class Rule implements ChainEntry {
         } catch (RuntimeException ex) {
             LogManager.logger.severe("Regex match timed out! Regex: " + pattern.toString());
             LogManager.logger.severe("Failed string was: " + limitedRegexCharSequence);
+            return;
         }
 
         state.pattern = pattern;
@@ -143,60 +145,6 @@ public class Rule implements ChainEntry {
 
     }
 
-    public List<Condition> getConditions() {
-        return conditions;
-    }
-
-    /**
-     * When we are building a new rule chain (eg, by reloading a file), this routine parses
-     * out a line (eg: "then replace") and adds it to this rule.
-     * @param command the first part of the line, eg: "then" or "ignore"
-     * @param parameterString the remainder of the line eg: "kick" or "user tremor77"
-     * @return true on success, false on failure
-     */
-    public boolean addLine(String command, final String parameterString) {
-
-        command = command.toLowerCase();
-
-        if (command.matches("then")) {
-            // This is an action.  Try to add a new action with its parameters.
-
-            Action newAction = ActionFactory.getActionFromString(parameterString);
-            if (newAction != null) {
-                actions.add(newAction);
-                return true;
-            } else {
-                return false;
-            }
-
-        }
-        else if (command.matches("events")) {
-            String[] parts = parameterString.split("[\\s|,]");
-
-            if (parts[0].matches("not")) {
-                for (int i = 1; i < parts.length ; i++ ) {
-                    excludeEvents.add(parts[i].toUpperCase());
-                }
-            } else {
-                for (String event : parts ) {
-                    includeEvents.add(event.toUpperCase());
-                }
-            }
-
-            return true;
-        }
-
-        else if ( Condition.isCondition(command) )  {
-            // This is a condition.  Add a new condition to this rule.
-            Condition newCondition = Condition.newCondition(command,parameterString);
-            return newCondition != null && conditions.add(newCondition);
-        }
-
-        // This line isn't a condition or an action...
-        return false;
-    }
-
-
     public boolean isValid() {
         // Check that we have a valid pattern and at least one action
         return this.pattern != null && this.actions != null;
@@ -204,6 +152,29 @@ public class Rule implements ChainEntry {
 
     public String toString() {
         return pattern.toString();
+    }
+
+    public boolean addCondition(Condition c) {
+        return c != null && conditions.add(c);
+    }
+    public boolean addConditions(List<Condition> conditionList) {
+        return conditionList != null && conditions.addAll(conditionList);
+    }
+
+    public List<Condition> getConditions() {
+        return conditions;
+    }
+
+    public boolean addAction(Action a) {
+        return a != null && actions.add(a);
+    }
+
+    public boolean addActions(List<Action> actionList) {
+        return actionList != null && actions.addAll(actionList);
+    }
+
+    public List<Action> getActions() {
+        return actions;
     }
 
 }

@@ -24,7 +24,8 @@ public class Actionconsole implements Action {
 
     public void init(String s)
     {
-        command = s;
+        if ((command = s).isEmpty()) throw new IllegalArgumentException("No command was provided to 'console'");
+
     }
 
     public boolean execute(final FilterState state ) {

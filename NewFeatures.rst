@@ -13,52 +13,22 @@ Would match 'derpitydah' and output 'derp dah'
 
 Respond Multiline
 -----------------
-Add a "then respond" action, which allows \\n to separate lines.
+Add a "then respond EOF" action, which permits a multi-line response. Terminate
+the response with a single line that has only 'EOF' (no quotes).  Eg:
+
+match ^/grue$
+then respond EOF
+The grue is a sinister, lurking presence in the dark places of the earth. Its
+favorite diet is adventurers, but its insatiable appetite is tempered by its
+fear of light. No grue has ever been seen by the light of day, and few have
+survived its fearsome jaws to tell the tale.
+EOF
+
+
 
 Respond with File
 -----------------
 Add then respondfile <filename.txt> which will be send to player.
-
-Points System
--------------
-
-New action: then points <##>
-
-New config: warning thresholds. drain rate
-
-Idea:
-
-Think of a bucket with holes in the bottom, and multiple lines on it::
-
-
-  \         / -- threshold3
-   \       /  -- threshold2
-    \     /   -- threshold1
-     - - -    -- Leak rate: points / s, or points / min
-
-Given rules like this::
-
-    rule S1 Fuck
-     match fuck
-     then points 20
-
-    rule S2 Asshole
-     match asshole
-     then points 5
-
-The following will happen:
-
-A user will have 0 points by default.  Every time they trip the filter, it
-will add the # of points (20 for 'fuck', 5 for 'asshole').  When they hit
-the threshold1 level, PwnFilter will execute the commands at the threshold1
-level.  When they hit thresh2, same, thresh3, same.  Every second or minute,
-depending on how configured, the configured leak rate number of points will
-be subtracted from the bucket.
-
-Thus, if a player swears once in a while, they will get no warning, no
-consequence.  If they have a sailor's mouth, they might get a warning at
-threshold1 and 2, and a tempban at threshold3.
-
 
 
 Event Enhancements

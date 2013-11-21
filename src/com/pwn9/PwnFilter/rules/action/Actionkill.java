@@ -26,7 +26,7 @@ public class Actionkill implements Action {
 
     public void init(String s)
     {
-        messageString = DefaultMessages.prepareMessage(s, "killmsg");
+        messageString = DefaultMessages.prepareMessage(s, "burnmsg");
     }
 
     public boolean execute(final FilterState state ) {

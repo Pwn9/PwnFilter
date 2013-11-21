@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
  * Time: 11:10 PM
  */
 public class ShortCutManager {
-
+    // TODO: Create a "ShortCuts" object to pass around, instead of HashMaps.
     private static ShortCutManager _instance;
     private static ConcurrentHashMap<String, HashMap<String,String>> shortcutFiles = new ConcurrentHashMap<String, HashMap<String, String>>();
     private static File shortcutDir;
@@ -50,6 +50,9 @@ public class ShortCutManager {
     }
 
     public static String replace(HashMap<String,String> shortcuts, String lineData) {
+        // If we don't have a shortcuts file to process, just return what we were given.
+        if (shortcuts == null) return lineData;
+
         Pattern shortcutMatch = Patterns.compilePattern("<[a-zA-Z_]{0,3}>");
         Matcher matcher = shortcutMatch.matcher(lineData);
         StringBuffer newLineData = new StringBuffer();

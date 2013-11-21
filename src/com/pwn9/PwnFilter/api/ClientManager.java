@@ -28,6 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Time: 9:25 AM
  * To change this template use File | Settings | File Templates.
  */
+@SuppressWarnings("UnusedDeclaration")
 public class ClientManager {
 
     private static ClientManager _instance;
@@ -55,11 +56,11 @@ public class ClientManager {
     }
 
     public List<FilterClient> getActiveClients() {
-        List<FilterClient> retVal = new ArrayList<FilterClient>();
+        List<FilterClient> result = new ArrayList<FilterClient>();
         for (FilterClient f : registeredClients.keySet()) {
-            if (f.isActive()) retVal.add(f);
+            if (f.isActive()) result.add(f);
         }
-        return retVal;
+        return result;
     }
 
     public Map<FilterClient,Plugin> getRegisteredClients() {

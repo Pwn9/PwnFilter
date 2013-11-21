@@ -355,34 +355,30 @@ public class PwnFilter extends JavaPlugin {
     }
 
 
-    public boolean copyRuleTemplate(File rulesFile, String configName) {
-        try{
-            InputStream templateFile;
+    public boolean copyRuleTemplate(File rulesFile, String configName) throws IOException {
+        InputStream templateFile;
 
-            templateFile = getResource(configName);
-            if (templateFile == null) {
-                // Use the default rules.txt
-                templateFile = getResource("rules.txt");
-            }
-            if (rulesFile.createNewFile()) {
-                BufferedInputStream fin = new BufferedInputStream(templateFile);
-                FileOutputStream fout = new FileOutputStream(rulesFile);
-                byte[] data = new byte[1024];
-                int c;
-                while ((c = fin.read(data, 0, 1024)) != -1)
-                    fout.write(data, 0, c);
-                fin.close();
-                fout.close();
-                getLogger().info("Created rules file from template: " + configName);
-                return true;
-            } else {
-                getLogger().warning("Failed to create rule file from template: " + configName);
-                return false;
-            }
-        }catch(Exception ex){
-            ex.printStackTrace();
+        templateFile = getResource(configName);
+        if (templateFile == null) {
+            // Use the default rules.txt
+            templateFile = getResource("rules.txt");
+            if (templateFile == null) return false;
         }
-        return false;
+        if (rulesFile.createNewFile()) {
+            BufferedInputStream fin = new BufferedInputStream(templateFile);
+            FileOutputStream fout = new FileOutputStream(rulesFile);
+            byte[] data = new byte[1024];
+            int c;
+            while ((c = fin.read(data, 0, 1024)) != -1)
+                fout.write(data, 0, c);
+            fin.close();
+            fout.close();
+            getLogger().info("Created rules file from template: " + configName);
+            return true;
+        } else {
+            getLogger().warning("Failed to create rule file from template: " + configName);
+            return false;
+        }
     }
 
 }

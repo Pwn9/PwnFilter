@@ -1,0 +1,67 @@
+Lexigraphic Format of rules.txt
+===============================
+
+Tokens
+------
+
+Each statement is composed of at least one top-level token from:
+
+Section definition tokens
+^^^^^^^^^^^^^^^^^^^^^^^^^
+match
+rule
+actiongroup
+conditiongroup
+
+Toggle tokens
+^^^^^^^^^^^^^
+shortcuts
+
+Rule tokens
+^^^^^^^^^^^
+actions
+conditions
+then
+require
+ignore
+
+Section definition tokens
+-------------------------
+When these tokens are encountered, they start a section, which continues
+until the next blank line, or the end of the file.  Each of these tokens
+can only appear _once_ in a section.
+
+A rule section can be started with either 'match' or 'rule'. The other token
+can be used in the following line, eg:
+match <regex>
+rule <id> [description]
+
+OR
+
+rule <id> [description]
+match <regex>
+
+actiongroup <name>
+conditiongroup <name>
+
+
+Toggle tokens
+-------------
+These toggle behaviour in the parser.  The only one we have right now is:
+
+shortcuts [shortcut_file]
+
+
+Rule tokens
+-----------
+These tokens can only be used in a rule / group:
+
+Action tokens
+=============
+then
+
+Condition tokens
+================
+require
+ignore
+

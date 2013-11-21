@@ -15,30 +15,40 @@ import com.pwn9.PwnFilter.util.Patterns;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.ArrayList;
+
 /**
  * Execute a chain of console commands
  */
 @SuppressWarnings("UnusedDeclaration")
 public class Actionconchain implements Action {
-    String commands;
+    String[] commands;
 
     public void init(String s)
     {
-        commands = s;
+        commands = s.split("\\|");
+        if (commands[0].isEmpty()) throw new IllegalArgumentException("No commands were provided to 'conchain'");
     }
 
     public boolean execute(final FilterState state ) {
-        String cmds = Patterns.replaceVars(commands, state);
-        String cmdchain[] = cmds.split("\\|");
-        for (final String cmd : cmdchain) {
+        final ArrayList<String> parsedCommands = new ArrayList<String>();
+
+        for (String cmd : commands)
+            parsedCommands.add(Patterns.replaceVars(cmd, state));
+
+        for (final String cmd : parsedCommands)
             state.addLogMessage("Sending console command: " + cmd);
-            Bukkit.getScheduler().runTask(state.plugin, new BukkitRunnable() {
-                @Override
-                public void run() {
-                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
-                }
-            });
-        }
+
+        Bukkit.getScheduler().runTask(state.plugin, new BukkitRunnable() {
+            @Override
+            public void run() {
+            for (String cmd : parsedCommands ) {
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
+            }
+        }});
+
         return true;
+
     }
+
 }

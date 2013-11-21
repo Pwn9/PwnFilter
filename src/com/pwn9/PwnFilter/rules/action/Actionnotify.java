@@ -28,14 +28,22 @@ public class Actionnotify implements Action {
 
     public void init(String s)
     {
-        String[] parts = s.split("\\s",2);
-        if (parts.length < 2) {
-            return;
-        } else {
-            permissionString = parts[0];
+        String[] parts;
+
+        parts = s.split("\\s",2);
+
+        permissionString = parts[0];
+
+        if (permissionString.isEmpty()) throw new IllegalArgumentException("'notify' action requires a permission or 'console'");
+
+        if (parts.length > 1) {
             messageString = ChatColor.translateAlternateColorCodes('&',parts[1]);
+        } else {
+            throw new IllegalArgumentException("'notify' action requires a message string");
         }
+
         DataCache.getInstance().addPermission(permissionString);
+
     }
 
     public boolean execute(final FilterState state ) {

@@ -1,5 +1,95 @@
-Proposed New Features for PwnFilter 3.2.0
-=========================================
+Release Notes for PwnFilter 3.2.1
+=================================
+
+New Features
+++++++++++++
+
+Points System
+-------------
+
+New action: then points <##>
+
+New config: warning thresholds. drain rate
+
+Idea:
+
+Think of a bucket with holes in the bottom, and multiple lines on it::
+
+
+  \         / -- threshold3
+   \       /  -- threshold2
+    \     /   -- threshold1
+     - - -    -- Leak rate: points / s
+
+Given rules like this::
+
+     match fuck
+     rule S1 Fuck
+     then points 20
+
+     match asshole
+     rule S2 Asshole
+     then points 5
+
+The following will happen:
+
+A user will have 0 points by default.  Every time they trip the filter, it
+will add the # of points (20 for 'fuck', 5 for 'asshole').  When they hit
+the threshold1 level, PwnFilter will execute the "ascending" commands at the
+threshold1 level.  When they hit thresh2, same, thresh3, same.  Every second
+or minute, depending on how configured, the configured leak rate number of
+points will be subtracted from the bucket.  As the points balance crosses the
+threshold from above, it will execute the "descending" actions.
+
+Thus, if a player swears once in a while, they will get no warning, no
+consequence.  If they have a sailor's mouth, they might get a warning at
+threshold1 and 2, and a ban at threshold3.  Once their points balance
+drops back below the ban threshold, they will be unbanned, and allowed back on
+the server.
+
+A sample configuration for thresholds is below:
+
+    points:
+      enabled: true # 'false' disables the points-system
+      leak:
+        points: 1.0
+        interval: 30 # seconds
+      thresholds:
+        threshold1:
+          name: Warn
+          points: 10.0
+          actions:
+            ascending:
+             - respond You have hit our warning threshold for bad language!
+            descending:
+             - respond You are now back in our good books.  Remember to keep it clean!
+
+        threshold2:
+          name: Kick
+          points: 20.0
+          actions:
+            ascending:
+             - kick You need to tone down your language!
+             - notify pwnfilter.admins %player% was kicked for hitting the kick threshold.
+
+        threshold3:
+          name: Tempban
+          points: 30.0
+          actions:
+            ascending:
+             - console ban %player% Your language is not acceptable.  Take 15m to cool off!
+             - notify pwnfilter.admins %player% was given a temporary ban for bad language.
+             - 'notify console &4%player% was given a temporary ban for bad language. Points %points%'
+            descending:
+             - console pardon %player%
+             - notify pwnfilter.admins %player% points have fallen below Tempban threshold. %player% was unbanned
+             - notify console &4%player% points have fallen below Tempban threshold. %player% was unbanned
+
+
+
+
+Release Notes for PwnFilter 3.2.0
+=================================
 
 Please read these notes in their entirety.  A lot have changes have been made since 3.1.x.
 

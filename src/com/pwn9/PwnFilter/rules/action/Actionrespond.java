@@ -16,27 +16,37 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.ArrayList;
+
 /**
  * Responds to the user with the string provided.
  */
 @SuppressWarnings("UnusedDeclaration")
 public class Actionrespond implements Action {
-    String messageString;
+    ArrayList<String> messageStrings = new ArrayList<String>();
 
     public void init(String s)
     {
-        messageString = ChatColor.translateAlternateColorCodes('&',s);
+        for ( String message : s.split("\n") ) {
+            messageStrings.add(ChatColor.translateAlternateColorCodes('&',message));
+        }
     }
 
     public boolean execute(final FilterState state ) {
-        if ( state.getPlayer() == null ) return false;
-        final String message = Patterns.replaceVars(messageString,state);
+        final ArrayList<String> preparedMessages = new ArrayList<String>();
 
-        state.addLogMessage("Responded to " + state.playerName + " with: " + message);
+        for (String message : messageStrings) {
+            preparedMessages.add(Patterns.replaceVars(message,state));
+        }
+
+        state.addLogMessage("Responded to " + state.playerName + " with: "+preparedMessages.get(0) + "...");
+
         Bukkit.getScheduler().runTask(state.plugin, new BukkitRunnable() {
             @Override
             public void run() {
-                state.getPlayer().sendMessage(message);
+                for (String m : preparedMessages) {
+                    state.getPlayer().sendMessage(m);
+                }
             }
         });
 

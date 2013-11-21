@@ -13,7 +13,7 @@ package com.pwn9.PwnFilter.rules;
 import com.pwn9.PwnFilter.FilterState;
 
 
-class Condition {
+public class Condition {
 
 
     public enum CondFlag {
@@ -33,6 +33,15 @@ class Condition {
         type = t;
         flag = f;
         parameters = p;
+    }
+
+    public static Condition newCondition(String line) {
+        String[] parts = line.split("\\s",2);
+        String conditionName = parts[0];
+        String conditionData;
+        conditionData = ((parts.length > 1) ? parts[1] : "");
+
+        return newCondition(conditionName, conditionData);
     }
 
     public static Condition newCondition(String command, String parameterString) {

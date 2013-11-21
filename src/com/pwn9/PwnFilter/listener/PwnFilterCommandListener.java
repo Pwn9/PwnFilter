@@ -62,6 +62,14 @@ public class PwnFilterCommandListener extends BaseListener {
             setActive();
             LogManager.logger.info("Activated CommandListener with Priority Setting: " + priority.toString()
                     + " Rule Count: " + getRuleChain().ruleCount() );
+
+            StringBuilder sb = new StringBuilder("Commands to filter: ");
+            for (String command : cmdlist) sb.append(command).append(" ");
+            LogManager.getInstance().debugLow(sb.toString().trim());
+
+            sb = new StringBuilder("Commands to never filter: ");
+            for (String command : cmdblist) sb.append(command).append(" ");
+            LogManager.getInstance().debugLow(sb.toString().trim());
         }
     }
 

@@ -26,7 +26,7 @@ public class Actionrandrep implements Action {
     public void init(String s)
     {
         toRand = s.split("\\|");
-
+        if (toRand[0].isEmpty()) throw new IllegalArgumentException("'randrep' requires at least one replacement string.");
     }
 
     public boolean execute(final FilterState state ) {

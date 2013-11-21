@@ -131,7 +131,9 @@
             <testResource>
                 <directory>${project.basedir}/test/resources</directory>
                 <includes>
-                    <include>*.*</include>
+                    <include>*</include>
+                  <include>*/*</include>
+                  <include>*/*/*</include>
                 </includes>
             </testResource>
         </testResources>

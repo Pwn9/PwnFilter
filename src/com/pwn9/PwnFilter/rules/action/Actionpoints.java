@@ -11,10 +11,10 @@
 package com.pwn9.PwnFilter.rules.action;
 
 import com.pwn9.PwnFilter.FilterState;
-import com.pwn9.PwnFilter.util.DefaultMessages;
 import com.pwn9.PwnFilter.util.LogManager;
 import com.pwn9.PwnFilter.util.PointManager;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -29,17 +29,15 @@ public class Actionpoints implements Action {
 
     public void init(String s)
     {
-        String[] parts = s.split("\\s",2);
+        String[] parts;
 
+        parts = s.split("\\s",2);
         try {
             pointsAmount = Double.parseDouble(parts[0]);
         } catch (NumberFormatException e ) {
-            pointsAmount = 1.00;
+            throw new IllegalArgumentException("'points' action did not have a valid amount.");
         }
-
-
-        String message = (parts.length > 1)?parts[1]:"";
-        messageString = DefaultMessages.prepareMessage(message, "pointsmsg");
+        messageString = (parts.length > 1) ? ChatColor.translateAlternateColorCodes('&',parts[1]) : "";
     }
 
     public boolean execute(final FilterState state ) {

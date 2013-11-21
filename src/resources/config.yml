@@ -77,18 +77,18 @@ cmdblist: []
 # bucket at the configured rate.  In the example below, a player who has points
 # in their bucket will have them drained at a rate of 1 point per 10s.
 points:
-  enabled: false
+  enabled: false # Set to 'true' to enable the points system
   leak:
-    points: 1.0
-    interval: 30 # seconds
+    points: 1.0 # How many points to remove each interval
+    interval: 30 # How often to remove points (seconds)
   thresholds:
     threshold1:
       name: Warn
       points: 10.0
       actions:
-        ascending:
+        ascending:  # Actions to execute when the player crosses from below.
          - respond You have hit our warning threshold for bad language!
-        descending:
+        descending: # Actions to execute when player crosses from above.
          - respond You are now back in our good books.  Remember to keep it clean!
 
     threshold2:
@@ -106,7 +106,7 @@ points:
         ascending:
          - console ban %player% Your language is not acceptable.  Take 15m to cool off!
          - notify pwnfilter.admins %player% was given a temporary ban for bad language.
-         - 'notify console &4%player% was given a temporary ban for bad language. Points %points%'
+         - notify console &4%player% was given a temporary ban for bad language. Points %points%
         descending:
          - console pardon %player%
          - notify pwnfilter.admins %player% points have fallen below Tempban threshold. %player% was unbanned

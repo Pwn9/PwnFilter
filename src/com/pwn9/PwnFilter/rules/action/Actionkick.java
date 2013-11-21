@@ -25,7 +25,7 @@ public class Actionkick implements Action {
 
     public void init(String s)
     {
-        messageString = DefaultMessages.prepareMessage(s, "kickmsg");
+        messageString = DefaultMessages.prepareMessage(s, "burnmsg");
     }
 
     public boolean execute(final FilterState state ) {

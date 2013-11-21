@@ -294,8 +294,9 @@ This option will cause all messages to be stripped of color codes (eg:
 Editing rules text files
 ------------------------
 
-This is where the real magic happens in PwnFilter.  The rules are where the
-magic happens in PwnFilter.
+This is where the real magic happens in PwnFilter. Creating Regex Rules can
+be complex and challenging.  Fortunately, EpicATrain has created some really
+comprehensive rules files that you can use in your server.
 
 
 Reference
