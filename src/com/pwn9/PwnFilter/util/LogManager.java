@@ -41,6 +41,22 @@ public class LogManager {
         return ruleLogLevel;
     }
 
+    public static void setDebugMode(String mode) {
+        try {
+            debugMode = LogManager.DebugModes.valueOf(mode);
+        } catch (IllegalArgumentException e) {
+            debugMode = LogManager.DebugModes.off;
+        }
+    }
+
+    public static void setRuleLogLevel(String level) {
+        try {
+            LogManager.ruleLogLevel = Level.parse(level.toUpperCase());
+        } catch (IllegalArgumentException e ) {
+            LogManager.ruleLogLevel = Level.INFO;
+        }
+    }
+
     public void debugLow(String message) {
         if (debugMode.compareTo(DebugModes.low) >= 0) {
             logger.finer(message);

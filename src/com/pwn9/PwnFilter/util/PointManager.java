@@ -70,6 +70,18 @@ public class PointManager implements FilterClient {
 
         return _instance;
     }
+
+    public void reset() {
+        stopLeaking();
+
+        // Reset all player points.
+        for (String playerName : playerPoints.keySet()) {
+            setPlayerPoints(playerName,0.0);
+        }
+
+        setup();
+    }
+
     private void startLeaking() {
         final PointManager pointManager = this;
 

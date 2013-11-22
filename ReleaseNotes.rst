@@ -88,8 +88,10 @@ A sample configuration for thresholds is below:
 
 Respond Multiline
 -----------------
-Add a "then respond EOF" action, which permits a multi-line response. Terminate
-the response with a single line that has only 'EOF' (no quotes).  Eg:
+Enhance "then respond" action, by allowing a "here" tag function, to permit a
+multi-line response. Use "then respond <<END" to start the multiline message,
+and Terminate the response with a single line that has only 'END' (no quotes).
+Eg:
 
 match ^/grue$
 then respond <<END

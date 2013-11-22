@@ -105,6 +105,7 @@ public class DataCache {
     public Player getPlayerForName(String name) {
         return playerForName.get(name);
     }
+
     public Player getPlayerForUUID(UUID id) {
         return playerForUUID.get(id);
     }

@@ -39,11 +39,9 @@ public class RuleSetTest {
 
     @Before
     public void setUp() throws Exception {
-        ruleManager = RuleManager.getInstance(mockPlugin);
+        ruleManager = RuleManager.getInstance();
         File testFile = new File(getClass().getResource("/testrules.txt").getFile());
-        File ruleDir = new File(testFile.getParent());
-        ruleManager.setRuleDir(ruleDir);
-        ShortCutManager.getInstance().setShortcutDir(ruleDir);
+        ruleManager.setRuleDir(testFile.getParent());
         rs = ruleManager.getRuleChain("testrules.txt");
         Logger logger = Logger.getAnonymousLogger();
         pwnLogger = LogManager.getInstance(logger, new File("/tmp/"));

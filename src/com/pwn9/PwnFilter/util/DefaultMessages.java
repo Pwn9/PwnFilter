@@ -10,8 +10,8 @@
 
 package com.pwn9.PwnFilter.util;
 
+import com.pwn9.PwnFilter.PwnFilter;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.Configuration;
 
 /**
  * Simple helper to get default messages from the PwnFilter config.yml
@@ -22,27 +22,21 @@ import org.bukkit.configuration.Configuration;
 
 public class DefaultMessages {
 
-    private static Configuration config;
-
     /**
      * Selects string from the first not null of: message, default from config.yml or null.
      * Converts & to u00A7
      * Used by Action.init() methods.
      * @return String containing message to be used.
      */
-    public static String prepareMessage(String message, String configName) {
+    public static String prepareMessage(String message, String configVarName) {
         String result;
         if ( message == null || message.isEmpty()) {
-            String defmsg = config.getString(configName);
+            String defmsg = PwnFilter.getInstance().getConfig().getString(configVarName);
             result = (defmsg != null) ? defmsg : "";
         } else {
             result = message;
         }
         return ChatColor.translateAlternateColorCodes('&',result);
-    }
-
-    public static void setConfig(Configuration c) {
-        config = c;
     }
 
 }

@@ -41,16 +41,9 @@ public class ClientManager {
         this.plugin = plugin;
     }
 
-    public static ClientManager getInstance(PwnFilter p) {
+    public static ClientManager getInstance() {
         if (_instance == null ) {
-            _instance = new ClientManager(p);
-        }
-        return _instance;
-    }
-
-    public static ClientManager getInstance() throws IllegalStateException {
-        if (_instance == null ) {
-            throw new IllegalStateException("Listener Manager Not initialized!");
+            _instance = new ClientManager(PwnFilter.getInstance());
         }
         return _instance;
     }

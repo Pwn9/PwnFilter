@@ -13,8 +13,7 @@ package com.pwn9.PwnFilter.rules;
 import com.pwn9.PwnFilter.PwnFilter;
 import com.pwn9.PwnFilter.util.LogManager;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -27,6 +26,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * Time: 2:18 PM
  */
 
+@SuppressWarnings("UnusedDeclaration")
 public class RuleManager {
     private static RuleManager _instance = null;
     private ConcurrentHashMap<String, RuleChain> ruleChains = new ConcurrentHashMap<String, RuleChain>();
@@ -39,26 +39,73 @@ public class RuleManager {
     }
 
     public static RuleManager getInstance() {
-
         if (_instance == null) {
-            throw new IllegalStateException("Rule Manager not yet initialized!");
-        } else {
-            return _instance;
-        }
-    }
-
-    public static RuleManager getInstance(PwnFilter p) {
-        if (_instance == null) {
-            _instance = new RuleManager(p);
+            _instance = new RuleManager(PwnFilter.getInstance());
         }
         return _instance;
     }
 
-    public boolean setRuleDir(File dir) {
-        if (dir.exists()) {
-            ruleDir = dir;
-            return true;
-        } else return false;
+    public File getRuleDir() {
+        return ruleDir;
+    }
+
+    public boolean setRuleDir(String dirName) {
+
+        // The folder on the filesystem to find rules/shortcut files.
+        // If not specified in the config, default to: "PwnFilter/rules"
+
+        if (dirName != null && !dirName.isEmpty()) {
+            ruleDir = new File(dirName);
+        } else {
+            ruleDir = new File(plugin.getDataFolder(),"rules");
+        }
+
+        if (!ruleDir.exists()) {
+            try {
+                if (!ruleDir.mkdir()) {
+                    LogManager.logger.severe("Unable to create rule directory: " + ruleDir.getAbsolutePath());
+                    LogManager.logger.severe("Disabling PwnFilter");
+                    plugin.getPluginLoader().disablePlugin(plugin);
+                    return false;
+                }
+            } catch (SecurityException ex) {
+                LogManager.logger.severe("Unable to create rule directory: " + ruleDir.getAbsolutePath());
+                LogManager.logger.severe("Exception: " + ex.getMessage());
+                LogManager.logger.severe("Disabling PwnFilter");
+                plugin.getPluginLoader().disablePlugin(plugin);
+                return false;
+            }
+        }
+
+        // Try to migrate an old rules file, if it exists.
+        migrateRules();
+
+        // Set the shortcut manager to use the same directory.
+        return ShortCutManager.getInstance().setShortcutDir(ruleDir);
+    }
+
+    public boolean migrateRules() {
+        // Now, check to see if there's an old rules.txt in the PwnFilter directory, and if so, move it.
+        File oldRuleFile = new File(plugin.getDataFolder(),"rules.txt");
+        if (oldRuleFile.exists()) {
+            try {
+                LogManager.logger.info("Migrating your old rules.txt into the new rules directory: " + ruleDir.getAbsolutePath());
+                if (!oldRuleFile.renameTo(new File(ruleDir,"rules.txt"))) {
+                    LogManager.logger.severe("Unable to move old rules.txt file to new dir: " + ruleDir.getAbsolutePath());
+                    LogManager.logger.severe("Please look in your plugin directory: " + plugin.getDataFolder().getAbsolutePath() + " and manually migrate your rules.");
+                    plugin.getPluginLoader().disablePlugin(plugin);
+                    return false;
+                }
+            } catch (Exception ex) {
+                LogManager.logger.severe("Unable to move old rules.txt file to new dir: " + ruleDir.getAbsolutePath());
+                LogManager.logger.severe("Please look in your plugin directory: " + plugin.getDataFolder().getAbsolutePath() + " and manually migrate your rules.");
+                LogManager.logger.severe("Disabling PwnFilter");
+                plugin.getPluginLoader().disablePlugin(plugin);
+                return false;
+            }
+        }
+        return true;
+
     }
 
     /**
@@ -77,7 +124,7 @@ public class RuleManager {
                 if (ruleFile.exists()) {
                     return ruleFile;
                 } else {
-                    if (createFile && plugin.copyRuleTemplate(ruleFile, fileName)) {
+                    if (createFile && copyRuleTemplate(ruleFile, fileName)) {
                         return ruleFile;
                     } else {
                         return null;
@@ -138,5 +185,32 @@ public class RuleManager {
             }
         }
     }
+
+    public boolean copyRuleTemplate(File rulesFile, String configName) throws IOException {
+        InputStream templateFile;
+
+        templateFile = plugin.getResource(configName);
+        if (templateFile == null) {
+            // Use the default rules.txt
+            templateFile = plugin.getResource("rules.txt");
+            if (templateFile == null) return false;
+        }
+        if (rulesFile.createNewFile()) {
+            BufferedInputStream fin = new BufferedInputStream(templateFile);
+            FileOutputStream fout = new FileOutputStream(rulesFile);
+            byte[] data = new byte[1024];
+            int c;
+            while ((c = fin.read(data, 0, 1024)) != -1)
+                fout.write(data, 0, c);
+            fin.close();
+            fout.close();
+            LogManager.logger.info("Created rules file from template: " + configName);
+            return true;
+        } else {
+            LogManager.logger.warning("Failed to create rule file from template: " + configName);
+            return false;
+        }
+    }
+
 
 }

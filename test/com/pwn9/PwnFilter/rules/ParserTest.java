@@ -11,7 +11,6 @@
 package com.pwn9.PwnFilter.rules;
 
 import com.pwn9.PwnFilter.DataCache;
-import com.pwn9.PwnFilter.PwnFilter;
 import com.pwn9.PwnFilter.rules.action.Action;
 import com.pwn9.PwnFilter.rules.action.Actiondeny;
 import com.pwn9.PwnFilter.rules.action.Actionrespond;
@@ -41,7 +40,6 @@ public class ParserTest {
 
     RuleManager ruleManager;
     RuleChain rs;
-    PwnFilter mockPlugin = new PwnFilter();
     LogManager pwnLogger;
 //    FilterClient mockClient = new FilterClient() {
 //        public String getShortName() { return "TEST"; }
@@ -53,11 +51,9 @@ public class ParserTest {
 
     @Before
     public void setUp() throws Exception {
-        ruleManager = RuleManager.getInstance(mockPlugin);
+        ruleManager = RuleManager.getInstance();
         File testFile = new File(getClass().getResource("/testrules.txt").getFile());
-        File ruleDir = new File(testFile.getParent());
-        ruleManager.setRuleDir(ruleDir);
-        ShortCutManager.getInstance().setShortcutDir(ruleDir);
+        ruleManager.setRuleDir(testFile.getParent());
         Logger logger = Logger.getLogger("PwnFilter");
         pwnLogger = LogManager.getInstance(logger, new File("/tmp/"));
         //pwnLogger.start(); logger.setLevel(Level.FINEST);pwnLogger.debugMode = LogManager.DebugModes.high; // For debugging
