@@ -29,6 +29,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.Metrics;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -63,6 +64,8 @@ public class PwnFilter extends JavaPlugin {
     public static HashMap<Player, String> lastMessage = new HashMap<Player, String>();
     public static Economy economy = null;
 
+    private File textDir;
+
     public PwnFilter() {
         _instance = this;
     }
@@ -76,6 +79,10 @@ public class PwnFilter extends JavaPlugin {
 
         // Set up the Log manager.
         LogManager.getInstance(getLogger(),getDataFolder());
+
+        //Try to migrate old rules.txt file
+        RuleManager.getInstance().migrateRules(getDataFolder());
+
 
     }
 
@@ -206,6 +213,22 @@ public class PwnFilter extends JavaPlugin {
 
         RuleManager.getInstance().setRuleDir(getConfig().getString("ruledirectory"));
 
+        // For Actionrespondfile
+        String textDirectory = getConfig().getString("textdir","textfiles");
+        if (textDirectory.startsWith("/")) {
+            textDir = new File(textDirectory);
+        } else {
+            textDir = new File(getDataFolder(),textDirectory);
+        }
+        try {
+            if (!textDir.exists()) {
+                if (textDir.mkdirs())
+                    LogManager.logger.info("Created directory for textfiles: " + textDir.getAbsolutePath());
+            }
+        } catch (SecurityException ex) {
+            LogManager.logger.warning("Unable to access/create textfile directory: " + textDir.getAbsolutePath());
+        }
+
         LogManager.setRuleLogLevel(getConfig().getString("loglevel", "info"));
         LogManager.setDebugMode(getConfig().getString("debug"));
 
@@ -213,6 +236,10 @@ public class PwnFilter extends JavaPlugin {
 
         // Other modules will pull their data directly from the configuration. (Eg: PointManager)
 
+    }
+
+    public File getTextDir() {
+        return textDir;
     }
 
     private void setupEconomy() {
@@ -233,6 +260,8 @@ public class PwnFilter extends JavaPlugin {
     public static void addKilledPlayer(Player p, String message) {
         killedPlayers.put(p, message);
     }
+
+
 
 }
 

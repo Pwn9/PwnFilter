@@ -50,6 +50,14 @@ commandspamfilter: false # For /commands
 cmdlist:
 - me
 - nick
+- m
+- mail
+- msg
+- nick
+- r
+- t
+- tell
+- whisper
 
 # Command Black List: Commands in this list will not be processed by PwnFilter
 cmdblist: []
@@ -57,6 +65,22 @@ cmdblist: []
 # If you want to specify an arbitrary directory on your server to store rules
 # you can specify it here. (Default is to use plugins/PwnFilter/rules)
 #ruledirectory: /path/to/rules
+
+
+# Specify the location to find text files, for the "then respondfile" action.
+# By default, PwnFilter will look in the plugins/PwnFilter/textfiles directory.
+# You can either specify a directory relative to the plugins/PwnFilter dir
+# (no leading /):
+# textdir: textfiles
+# or you can use the full path:
+# textdir: /home/minecraft/server/textfiles
+# eg: If you do: "then respondfile colors.txt", example 1 would look for:
+# {serverdir}/plugins/PwnFilter/textfiles/colors.txt
+# example 2:
+# /home/minecraft/server/textfiles/colors.txt
+#textdir: textfiles
+
+
 
 ###################
 ## Points System ##

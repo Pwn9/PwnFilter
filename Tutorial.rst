@@ -375,7 +375,7 @@ As of 3.2.0, the valid actions are:
 
    This will cause the matched text to be converted to lowercase.
 
--  notify ["console"|permission] [message]
+-  notify ["console" | permission] [message]
 
    This will send a message to all logged in players with [permission]
    Eg: notify pwnfilter.admins %player% just triggered %ruleid%.

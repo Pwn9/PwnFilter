@@ -196,7 +196,7 @@ public class FileParser {
                     if (!rule.addAction(newAction)) {
                         throw new ParserException(line.number,"Unable to add action to rule: " + actionName);
                     }
-               } catch (IllegalArgumentException ex) {
+                } catch (IllegalArgumentException ex) {
                     parserError(line.number,"Error in action line: " + ex.getMessage());
                 }
             }

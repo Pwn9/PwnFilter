@@ -13,7 +13,6 @@ package com.pwn9.PwnFilter.util;
 import com.pwn9.PwnFilter.FilterState;
 
 import java.text.DecimalFormat;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -25,22 +24,21 @@ public class Patterns {
     /**
      * Class Utility Methods
      */
-    static Logger logger = Logger.getLogger("Minecraft.PwnFilter");
     static final DecimalFormat df = new DecimalFormat("0.00##");
 
     public static java.util.regex.Pattern compilePattern(String re) {
         Pattern pattern = null;
         try {
             pattern = Pattern.compile(re, Pattern.CASE_INSENSITIVE);
-            logger.fine("Successfully compiled regex: " + re);
+            LogManager.logger.fine("Successfully compiled regex: " + re);
             return pattern;
         }
         catch (PatternSyntaxException e) {
-            logger.warning("Failed to compile regex: " + re);
-            logger.warning(e.getMessage());
+            LogManager.logger.warning("Failed to compile regex: " + re);
+            LogManager.logger.warning(e.getMessage());
         }
         catch (Exception e) {
-            logger.severe("Unexpected error while compiling expression '" + re + "'");
+            LogManager.logger.severe("Unexpected error while compiling expression '" + re + "'");
             e.printStackTrace();
         }
         return pattern;
@@ -54,7 +52,7 @@ public class Patterns {
         if (m.matches()) {
             String group = m.group(1);
             String replace = "%" + group.substring(1) + "%";
-            logger.warning("The use of " + m.group(1) + " is deprecated.  Please update your configuration to use " + replace + ".");
+            LogManager.logger.warning("The use of " + m.group(1) + " is deprecated.  Please update your configuration to use " + replace + ".");
             line = line.replaceAll("&world", wrapReplacement(state.playerWorldName)).
                     replaceAll("&player", wrapReplacement(state.playerName)).
                     replaceAll("&string", wrapReplacement(state.message.getColoredString())).

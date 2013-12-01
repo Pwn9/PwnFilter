@@ -102,6 +102,12 @@ survived its fearsome jaws to tell the tale.
 END
 
 
+Respond with File
+-----------------
+Add then respondfile <filename.txt> which will be send to player.  By default,
+text files for this command are stored in the PwnFilter/textfiles directory.
+This can be overridden with the config.yml textdir: config.
+
 Release Notes for PwnFilter 3.2.0
 =================================
 

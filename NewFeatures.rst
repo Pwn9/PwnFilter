@@ -12,9 +12,6 @@ matched.  This will allow a match group to be referenced in actions.  Eg::
 Would match 'derpitydah' and output 'derp dah'
 
 
-Respond with File
------------------
-Add then respondfile <filename.txt> which will be send to player.
 
 
 Event Enhancements

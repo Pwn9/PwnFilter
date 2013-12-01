@@ -11,9 +11,10 @@
 package com.pwn9.PwnFilter.rules;
 
 import com.pwn9.PwnFilter.PwnFilter;
+import com.pwn9.PwnFilter.util.FileUtil;
 import com.pwn9.PwnFilter.util.LogManager;
 
-import java.io.*;
+import java.io.File;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -77,16 +78,13 @@ public class RuleManager {
             }
         }
 
-        // Try to migrate an old rules file, if it exists.
-        migrateRules();
-
         // Set the shortcut manager to use the same directory.
         return ShortCutManager.getInstance().setShortcutDir(ruleDir);
     }
 
-    public boolean migrateRules() {
+    public boolean migrateRules(File dataFolder) {
         // Now, check to see if there's an old rules.txt in the PwnFilter directory, and if so, move it.
-        File oldRuleFile = new File(plugin.getDataFolder(),"rules.txt");
+        File oldRuleFile = new File(dataFolder,"rules.txt");
         if (oldRuleFile.exists()) {
             try {
                 LogManager.logger.info("Migrating your old rules.txt into the new rules directory: " + ruleDir.getAbsolutePath());
@@ -106,36 +104,6 @@ public class RuleManager {
         }
         return true;
 
-    }
-
-    /**
-     * Get a File object pointing to the named configuration in the configured
-     * Rule Directory.
-     *
-     *
-     * @param fileName Name of configuration File to load
-     * @param createFile Create the file if it doesn't exist.
-     * @return File object for requested config, or null if not found.
-     */
-    public File getFile(String fileName, boolean createFile) {
-        try {
-            if (ruleDir.exists()) {
-                File ruleFile = new File(ruleDir,fileName);
-                if (ruleFile.exists()) {
-                    return ruleFile;
-                } else {
-                    if (createFile && copyRuleTemplate(ruleFile, fileName)) {
-                        return ruleFile;
-                    } else {
-                        return null;
-                    }
-                }
-            }
-        } catch (IOException ex) {
-            // Log the error below.
-        }
-        LogManager.logger.warning("Unable to find or create rule file:" + fileName);
-        return null;
     }
 
     /*
@@ -186,31 +154,7 @@ public class RuleManager {
         }
     }
 
-    public boolean copyRuleTemplate(File rulesFile, String configName) throws IOException {
-        InputStream templateFile;
-
-        templateFile = plugin.getResource(configName);
-        if (templateFile == null) {
-            // Use the default rules.txt
-            templateFile = plugin.getResource("rules.txt");
-            if (templateFile == null) return false;
-        }
-        if (rulesFile.createNewFile()) {
-            BufferedInputStream fin = new BufferedInputStream(templateFile);
-            FileOutputStream fout = new FileOutputStream(rulesFile);
-            byte[] data = new byte[1024];
-            int c;
-            while ((c = fin.read(data, 0, 1024)) != -1)
-                fout.write(data, 0, c);
-            fin.close();
-            fout.close();
-            LogManager.logger.info("Created rules file from template: " + configName);
-            return true;
-        } else {
-            LogManager.logger.warning("Failed to create rule file from template: " + configName);
-            return false;
-        }
+    public File getFile(String fileName, boolean createFile) {
+        return FileUtil.getFile(ruleDir, fileName, createFile);
     }
-
-
 }

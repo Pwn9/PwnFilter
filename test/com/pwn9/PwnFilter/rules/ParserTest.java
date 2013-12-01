@@ -11,6 +11,7 @@
 package com.pwn9.PwnFilter.rules;
 
 import com.pwn9.PwnFilter.DataCache;
+import com.pwn9.PwnFilter.PwnFilter;
 import com.pwn9.PwnFilter.rules.action.Action;
 import com.pwn9.PwnFilter.rules.action.Actiondeny;
 import com.pwn9.PwnFilter.rules.action.Actionrespond;
@@ -48,9 +49,11 @@ public class ParserTest {
 //        public void activate(Configuration config) {}
 //        public void shutdown() {}
 //    };
+    PwnFilter mockPlugin;
 
     @Before
     public void setUp() throws Exception {
+        mockPlugin = new PwnFilter();
         ruleManager = RuleManager.getInstance();
         File testFile = new File(getClass().getResource("/testrules.txt").getFile());
         ruleManager.setRuleDir(testFile.getParent());

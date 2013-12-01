@@ -14,4 +14,10 @@ You can have as much text here as you want.
 NOTE: You MUST terminate a multiline response with a single line that reads: END
 END
 
+match notify
+then notify pwnfilter.notify %player% just said %rawstring%
+
+match repondfile
+then respondfile testfile.txt
+
 
