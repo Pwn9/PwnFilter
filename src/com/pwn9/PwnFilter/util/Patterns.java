@@ -61,12 +61,13 @@ public class Patterns {
                     replaceAll("&ruleid", (state.rule != null)?wrapReplacement(state.rule.getId()):"-").
                     replaceAll("&ruledescr", (state.rule !=null)?wrapReplacement(state.rule.getDescription()):"''");
         }
+        boolean pointsEnabled = PointManager.getInstance() != null;
         line = line.replaceAll("%world%", wrapReplacement(state.playerWorldName)).
                 replaceAll("%player%", wrapReplacement(state.playerName)).
                 replaceAll("%string%", wrapReplacement(state.message.getColoredString())).
                 replaceAll("%rawstring%", wrapReplacement(state.getOriginalMessage().getColoredString())).
                 replaceAll("%event%", wrapReplacement(state.getListenerName())).
-                replaceAll("%points%",wrapReplacement(df.format(PointManager.getInstance().getPlayerPoints(state.playerName)))).
+                replaceAll("%points%",(pointsEnabled)?(df.format(PointManager.getInstance().getPlayerPoints(state.playerName))):"-").
                 replaceAll("%ruleid%", (state.rule != null) ? wrapReplacement(state.rule.getId()) : "-").
                 replaceAll("%ruledescr%", (state.rule != null) ? wrapReplacement(state.rule.getDescription()) : "''");
         return line;
