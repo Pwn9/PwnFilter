@@ -34,7 +34,7 @@ public class Actionrespondfile implements Action {
         File textDir = PwnFilter.getInstance().getTextDir();
         if (textDir == null) return; // Er... Probably should return something, or at least log...
 
-        File textfile = FileUtil.getFile(textDir,s,true);
+        File textfile = FileUtil.getFile(textDir,s,false);
 
         try {
             FileInputStream fs  = new FileInputStream(textfile);

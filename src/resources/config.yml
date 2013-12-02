@@ -37,17 +37,22 @@ commandspamfilter: false # For /commands
 
 
 # The Command Whitelist/Blacklist are used to prevent PwnFilter from
-# processing some /commands.  For example, you may want to make sure that
-# a player can't do /me says badword, but you don't want the filter to run
-# on a complex worldedit command like: //set 25%Stone,50%ironore,25%coalore
-# In this case, you could either add just the "me" command to the whitelist
+# processing some /commands.  For example, you may not want to filter
+# a complex worldedit command like: //set 25%Stone,50%ironore,25%coalore
+# In this case, you could either add just the desired command to the whitelist
 # or you could add /set to the blacklist. (Note, you don't include the first
-# '/'.
+# '/').
+# Command Black List: Commands in this list will not be processed by PwnFilter
+cmdblist: []
 
 # Command White List: Commands to filter, if empty, will filter
 # ALL (except blacklist)
-# By default, only filter the /me and /nick commands.
-cmdlist:
+cmdlist: []
+
+# Commands to treat as "chat" events.  These will be processed by the chat.txt
+# filter, not the commands.txt filter.  Also, they will be subject to the
+# chatspam and decolor options
+cmdchat:
 - me
 - nick
 - m
@@ -59,8 +64,6 @@ cmdlist:
 - tell
 - whisper
 
-# Command Black List: Commands in this list will not be processed by PwnFilter
-cmdblist: []
 
 # If you want to specify an arbitrary directory on your server to store rules
 # you can specify it here. (Default is to use plugins/PwnFilter/rules)

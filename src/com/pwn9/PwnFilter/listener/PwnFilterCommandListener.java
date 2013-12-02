@@ -14,6 +14,7 @@ package com.pwn9.PwnFilter.listener;
 import com.pwn9.PwnFilter.DataCache;
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.PwnFilter;
+import com.pwn9.PwnFilter.rules.RuleChain;
 import com.pwn9.PwnFilter.rules.RuleManager;
 import com.pwn9.PwnFilter.util.LogManager;
 import org.bukkit.Bukkit;
@@ -36,6 +37,8 @@ public class PwnFilterCommandListener extends BaseListener {
 
     public List<String> cmdlist;
     public List<String> cmdblist;
+    public List<String> cmdchat;
+    private RuleChain chatRuleChain;
 
     public String getShortName() { return "COMMAND" ;}
 
@@ -48,8 +51,10 @@ public class PwnFilterCommandListener extends BaseListener {
 
         cmdlist = plugin.getConfig().getStringList("cmdlist");
         cmdblist = plugin.getConfig().getStringList("cmdblist");
+        cmdchat = plugin.getConfig().getStringList("cmdchat");
 
         setRuleChain(RuleManager.getInstance().getRuleChain("command.txt"));
+        chatRuleChain = RuleManager.getInstance().getRuleChain("chat.txt");
 
         EventPriority priority = EventPriority.valueOf(config.getString("cmdpriority", "LOWEST").toUpperCase());
         if (config.getBoolean("commandfilter")) {
@@ -88,37 +93,43 @@ public class PwnFilterCommandListener extends BaseListener {
         //Gets the actual command as a string
         String cmdmessage = message.substring(1).split(" ")[0];
 
-        if (!cmdlist.isEmpty() && !cmdlist.contains(cmdmessage)) return;
-        if (cmdblist.contains(cmdmessage)) return;
+        FilterState state = new FilterState(plugin, message, player, this);
 
-        // Global mute
-        if ((PwnFilter.pwnMute) && (!(dCache.hasPermission(player, "pwnfilter.bypass.mute")))) {
-            event.setCancelled(true);
-            return;
-        }
-
-        // Simple Spam filter TODO: Make # of repeat messages configurable (Will help with booscooldowns)
-        if (plugin.getConfig().getBoolean("commandspamfilter") && !player.hasPermission("pwnfilter.bypass.spam")) {
-            // Keep a log of the last message sent by this player.  If it's the same as the current message, cancel.
-            if (PwnFilter.lastMessage.containsKey(player) && PwnFilter.lastMessage.get(player).equals(message)) {
+        // Check to see if we should treat this command as chat (eg: /tell)
+        if (cmdchat.contains(cmdmessage)) {
+            // Global mute
+            if ((PwnFilter.pwnMute) && (!(dCache.hasPermission(player, "pwnfilter.bypass.mute")))) {
                 event.setCancelled(true);
                 return;
             }
-            PwnFilter.lastMessage.put(player, message);
+
+            // Simple Spam filter TODO: Make # of repeat messages configurable (Will help with booscooldowns)
+            if (plugin.getConfig().getBoolean("commandspamfilter") && !player.hasPermission("pwnfilter.bypass.spam")) {
+                // Keep a log of the last message sent by this player.  If it's the same as the current message, cancel.
+                if (PwnFilter.lastMessage.containsKey(player) && PwnFilter.lastMessage.get(player).equals(message)) {
+                    event.setCancelled(true);
+                    return;
+                }
+                PwnFilter.lastMessage.put(player, message);
+            }
+
+            // Global decolor
+            if ((PwnFilter.decolor) && !(dCache.hasPermission(player,"pwnfilter.color"))) {
+                state.message.decolor();
+            }
+
+            chatRuleChain.execute(state);
+
+        } else {
+
+            if (!cmdlist.isEmpty() && !cmdlist.contains(cmdmessage)) return;
+            if (cmdblist.contains(cmdmessage)) return;
+
+            // Take the message from the Command Event and send it through the filter.
+
+            ruleChain.execute(state);
 
         }
-
-        FilterState state = new FilterState(plugin, message, player, this);
-
-        // Global decolor
-        if ((PwnFilter.decolor) && !(dCache.hasPermission(player,"pwnfilter.color"))) {
-            state.message.decolor();
-        }
-
-
-        // Take the message from the Command Event and send it through the filter.
-
-        ruleChain.execute(state);
 
         // Only update the message if it has been changed.
         if (state.messageChanged()){

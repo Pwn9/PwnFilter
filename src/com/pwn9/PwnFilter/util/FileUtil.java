@@ -31,11 +31,17 @@ public class FileUtil {
             if (ruleFile.exists()) {
                 return ruleFile;
             } else {
-                if (createFile && ruleFile.mkdirs() && ruleFile.createNewFile()) {
-                    copyTemplate(ruleFile, fileName);
-                } else {
-                    LogManager.logger.warning("Unable to find or create file:" + fileName);
-                    return null;
+                if (createFile) {
+                    if (!ruleFile.getParentFile().exists() && !ruleFile.getParentFile().mkdirs()) {
+                        LogManager.logger.warning("Unable to create directory for:" + fileName);
+                        return null;
+                    }
+                    if (copyTemplate(ruleFile, fileName)) {
+                        return ruleFile;
+                    } else {
+                        LogManager.logger.warning("Unable to find or create file:" + fileName);
+                        return null;
+                    }
                 }
             }
 

@@ -4,4 +4,28 @@
 # Please refer to http://dev.bukkit.org/bukkit-plugins/pwnfilter
 # for more documentation on how to configure these files.
 
-include rules.txt
+####### HATE SPEECH - INSTABAN #######
+
+match n[^a](gg|99)+(a|er|uh)
+rule HS1 Nigger
+then deny
+# then console ban %player$ HS1 (%rawstring%)
+then warn Swearing is not allowed.
+then log
+
+match \bfag+(s)?\b|fag+.t|gay
+rule HS2 fag/gay
+ignore string fight
+then deny
+# then console ban %player% HS2 (%rawstring%)
+then warn Swearing is not allowed.
+then log
+
+match (i hate|fuck)+ this server|this server is (shit|crap)+|server sucks
+rule HS3 Server Hating
+then replace This server is great!
+then console ban %player% Server Hating.
+then log
+# NOTE: You could also use a command from a ban manager, eg:
+# then console tempban %player% 7d %ruleid% (%rawstring%)
+

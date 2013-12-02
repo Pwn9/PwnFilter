@@ -1,8 +1,8 @@
-Release Notes for PwnFilter 3.3.0
-=================================
+Release Notes for PwnFilter
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-New Features
-++++++++++++
+Changes in 3.3.0
+================
 
 Points System
 -------------
@@ -101,6 +101,18 @@ fear of light. No grue has ever been seen by the light of day, and few have
 survived its fearsome jaws to tell the tale.
 END
 
+Behavioural Changes in Command Filter
+-------------------------------------
+By default, commands will no longer be treated as "chat".  They will not be
+decolored, nor will they be "spam filtered".  There is a new config entry called
+cmdchat:.  If commands are listed in cmdchat, those commands will be treated like
+chat events, and will be filtered by the chat.txt filter, instead of the
+command.txt filter.  The reason for this change is that there are some commands
+(eg: /tell, /msg, /me) which most people feel should be filtered with the chat
+filter, and having to include chat filters in command.txt is cumbersome.
+
+cmdchat:
+
 
 Respond with File
 -----------------
@@ -108,8 +120,9 @@ Add then respondfile <filename.txt> which will be send to player.  By default,
 text files for this command are stored in the PwnFilter/textfiles directory.
 This can be overridden with the config.yml textdir: config.
 
-Release Notes for PwnFilter 3.2.0
-=================================
+
+Changes in 3.2.0
+================
 
 Please read these notes in their entirety.  A lot have changes have been made since 3.1.x.
 
