@@ -30,7 +30,7 @@ public class Patterns {
         Pattern pattern = null;
         try {
             pattern = Pattern.compile(re, Pattern.CASE_INSENSITIVE);
-            LogManager.logger.fine("Successfully compiled regex: " + re);
+            LogManager.getInstance().debugMedium("Successfully compiled regex: " + re);
             return pattern;
         }
         catch (PatternSyntaxException e) {
