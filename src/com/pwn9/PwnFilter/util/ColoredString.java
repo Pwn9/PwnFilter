@@ -72,12 +72,12 @@ public class ColoredString implements CharSequence {
 
         raw = ChatColor.translateAlternateColorCodes('&',s).toCharArray();
         plain = new char[raw.length];
-        codes = new String[raw.length];
+        codes = new String[raw.length+1];
 
         int textpos = 0;
 
         for (int i = 0; i < raw.length ; i++) {
-            if (raw[i] == '\u00A7' && "0123456789AaBbCcDdEeFfKkLlMmNnOoRr".indexOf(raw[i+1]) > -1) {
+            if (i != raw.length-1 && raw[i] == '\u00A7' && "0123456789AaBbCcDdEeFfKkLlMmNnOoRr".indexOf(raw[i+1]) > -1) {
                 if (codes[textpos] == null) {
                     codes[textpos] = new String(raw,i,2);
                 } else {
@@ -90,14 +90,16 @@ public class ColoredString implements CharSequence {
             }
         }
         plain = Arrays.copyOf(plain,textpos);
-        codes = Arrays.copyOf(codes,textpos);
+        // Copy one more code than the plain string
+        // so we can capture any trailing format codes.
+        codes = Arrays.copyOf(codes,textpos+1);
 
     }
 
 
     // Strip all codes out of this string.
     public void decolor() {
-        codes = new String[plain.length];
+        codes = new String[plain.length+1];
     }
 
     // Return a string with color codes interleaved.
@@ -108,7 +110,10 @@ public class ColoredString implements CharSequence {
             if ( codes[i] != null ) sb.append(codes[i]);
             sb.append(plain[i]);
         }
-
+        // Check to see if there is a code at the end of the text
+        // If so, append it to the end of the string.
+        if (codes[codes.length-1] != null)
+            sb.append(codes[codes.length-1]);
         return sb.toString();
     }
 
@@ -122,60 +127,108 @@ public class ColoredString implements CharSequence {
         return codes;
     }
 
-    // Replace all occurrences of Regex pattern with replacement String.  If the replacement string
-    // has codes embedded, separate them and add them to the code array.
+
+    /**
+     * Replace all occurrences of Regex pattern with replacement String.
+     * If the replacement string has codes embedded, separate them and
+     * add them to the code array.
+     *
+     * This is a tricky bit of code.  We will copy the last code before
+     * a replacement and prepend it to the next code of the current text.
+     * If the current text is done, we'll prepend the last code at the end
+     * of the replacement text to the last code of the final string.
+     * Example:
+     * Test &1foo
+     * replace foo with bar:
+     * Test &1bar
+     * replace bar with baz&2:
+     * Test &1baz&2
+     * replace baz with nothing:
+     * Test &1&2
+     *
+     *
+     * @param p Regex Pattern
+     * @param rText Replacement Text
+     */
     public void replaceText(Pattern p, String rText ) {
         Matcher m = p.matcher(new String(plain));
         ColoredString replacement = new ColoredString(rText);
 
-        char[] newText = new char[0];  // We sequentially add to these through this operation.
-        String[] newCodes = new String[0];
+        // Start with an empty set of arrays.  These will be incrementally added
+        // to, as we replace each match.
+        char[] lastMatchText = new char[0];
+        String[] lastMatchCodes = new String[1];
 
-        int pos = 0;
+        int currentPosition = 0;
 
         while (m.find()) {
             int mStart = m.start();
             int mEnd = m.end();
 
-            int firstLen = newText.length;
-            int middleLen = mStart - pos;
-            int endLen = replacement.length();
+            int lastMatchTextLength = lastMatchText.length;
+            int middleLen = mStart - currentPosition;
 
-            int newLength = firstLen + middleLen + endLen;
+            int newLength = lastMatchTextLength + middleLen + replacement.length();
 
-            char[] tempText = new char[newLength];
-            String[] tempCodes = new String[newLength];
+            char[] currentText = new char[newLength];
+            String[] currentCodes = new String[newLength+1];
+
+            // Copy all of the text up to the end of the last match.
+            System.arraycopy(lastMatchText,0,currentText,0,lastMatchTextLength);
+            // Copy any text between the end of the last match and the start
+            // of this match.
+            System.arraycopy(plain,currentPosition,currentText,lastMatchTextLength ,middleLen);
+            // Append replacement text in place of current text.
+            System.arraycopy(replacement.plain,0,currentText,lastMatchTextLength+middleLen,replacement.length());
+
+            /*
+             Now, copy the format codes.  If there are "trailing" format codes
+             from the previous match, prepend them to the codes for the next character.
+            */
+
+            // First, the codes up to the end of the last match, including any trailing codes.
+            System.arraycopy(lastMatchCodes,0,currentCodes,0,lastMatchTextLength+1);
+
+            // Append the first code to the trailing code.
+            currentCodes[lastMatchTextLength] = mergeCodes(currentCodes[lastMatchTextLength],codes[currentPosition]);
+
+            // Copy the codes from between the last match and this one.
+            if (middleLen > 1)
+                System.arraycopy(codes,currentPosition+1,currentCodes,lastMatchTextLength+1,middleLen);
+
+            // Append the first replacement code to the trailing code.
+            currentCodes[lastMatchTextLength+middleLen] = mergeCodes(currentCodes[lastMatchTextLength+middleLen],replacement.codes[0]);
+
+            // Copy the codes from the replacement text.
+            if (replacement.codes.length > 1)
+                System.arraycopy(replacement.codes,1,currentCodes,lastMatchTextLength+1+middleLen,replacement.length());
 
 
-            // Copy anything we've done so far
-            System.arraycopy(newText,0,tempText,0,firstLen);
-            System.arraycopy(newCodes,0,tempCodes,0,firstLen);
+            currentPosition = mEnd; // Set the position in the original string to the end of the match
 
-            // Copy any of the original string between the pos pointer and the start of the
-            // Current match
-            System.arraycopy(plain,pos,tempText,firstLen ,middleLen);
-            System.arraycopy(codes,pos,tempCodes,firstLen,middleLen);
-
-            // Add replacement text
-            System.arraycopy(replacement.plain,0,tempText,firstLen+middleLen,replacement.length());
-            System.arraycopy(replacement.codes,0,tempCodes,firstLen+middleLen,replacement.length());
-
-            pos = mEnd; // Set the position in the original string to the end of the match
-
-            newText = tempText;
-            newCodes = tempCodes;
+            lastMatchText = currentText;
+            lastMatchCodes = currentCodes;
 
         }
-        char[] tempText = new char[newText.length + plain.length - pos];
-        String[] tempCodes = new String[newText.length + plain.length - pos];
 
-        // Copy anything we've done so far
-        System.arraycopy(newText,0,tempText,0,newText.length);
-        System.arraycopy(newCodes,0,tempCodes,0,newText.length);
+        char[] tempText = new char[lastMatchText.length + plain.length - currentPosition];
+        String[] tempCodes = new String[lastMatchText.length + plain.length - currentPosition + 1 ];
 
-        // Now get the end of the string
-        System.arraycopy(plain,pos,tempText,newText.length,plain.length - pos);
-        System.arraycopy(codes,pos,tempCodes,newText.length,plain.length - pos);
+        // Copy the text we've processed in previous matches.
+        System.arraycopy(lastMatchText,0,tempText,0,lastMatchText.length);
+        // ... and copy the formats
+        System.arraycopy(lastMatchCodes,0,tempCodes,0,lastMatchText.length);
+
+        // Copy the original text from the end of the last match to the end
+        // of the string.
+        System.arraycopy(plain,currentPosition,tempText,lastMatchText.length,plain.length - currentPosition);
+
+        // Merge the codes from the end of the last segment and the beginning of this one
+        tempCodes[lastMatchText.length] = mergeCodes(lastMatchCodes[lastMatchText.length],codes[currentPosition]);
+
+        // Copy the remaining codes (not the first one, it was already appended),
+        // as well as the trailing code.
+        System.arraycopy(codes,currentPosition+1,tempCodes,lastMatchText.length+1,plain.length - currentPosition);
 
         plain = tempText;
         codes = tempCodes;
@@ -191,6 +244,22 @@ public class ColoredString implements CharSequence {
             }
         }
         return true;
+    }
+
+    /**
+     * Returns a concatenation of two strings, a + b.  If a or b are null, they
+     * are converted to an empty string.  If both a and b are null, returns null.
+     * @param a First string to concatenate
+     * @param b Second string to concatenate
+     * @return Concatenation of a and b, or null if they are both null.
+     */
+    private String mergeCodes(String a, String b) {
+        String result = (a == null)?"":a;
+        if (b != null) {
+            result += b;
+        }
+        return (result.isEmpty())?null:result;
+
     }
 
 }

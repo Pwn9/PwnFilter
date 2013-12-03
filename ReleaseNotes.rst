@@ -1,8 +1,26 @@
+===========================
 Release Notes for PwnFilter
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+===========================
 
 Changes in 3.3.0
 ================
+
+Deprecated Feature
+------------------
+The "events chat,command, etc.." option in the rules.txt has been deprecated.
+If you have rules that you want to apply to multiple types of events, put them
+in their own file, eg:
+
+common.txt::
+
+  match blah
+  then replace
+
+And then, in the event rules, use include...
+
+chat.txt::
+
+  include common.txt
 
 Points System
 -------------
@@ -47,7 +65,7 @@ threshold1 and 2, and a ban at threshold3.  Once their points balance
 drops back below the ban threshold, they will be unbanned, and allowed back on
 the server.
 
-A sample configuration for thresholds is below:
+A sample configuration for thresholds is below::
 
     points:
       enabled: true # 'false' disables the points-system
@@ -91,15 +109,15 @@ Respond Multiline
 Enhance "then respond" action, by allowing a "here" tag function, to permit a
 multi-line response. Use "then respond <<END" to start the multiline message,
 and Terminate the response with a single line that has only 'END' (no quotes).
-Eg:
+Eg::
 
-match ^/grue$
-then respond <<END
-The grue is a sinister, lurking presence in the dark places of the earth. Its
-favorite diet is adventurers, but its insatiable appetite is tempered by its
-fear of light. No grue has ever been seen by the light of day, and few have
-survived its fearsome jaws to tell the tale.
-END
+  match ^/grue$
+  then respond <<END
+  The grue is a sinister, lurking presence in the dark places of the earth. Its
+  favorite diet is adventurers, but its insatiable appetite is tempered by its
+  fear of light. No grue has ever been seen by the light of day, and few have
+  survived its fearsome jaws to tell the tale.
+  END
 
 Behavioural Changes in Command Filter
 -------------------------------------
@@ -111,7 +129,13 @@ command.txt filter.  The reason for this change is that there are some commands
 (eg: /tell, /msg, /me) which most people feel should be filtered with the chat
 filter, and having to include chat filters in command.txt is cumbersome.
 
-cmdchat:
+::
+
+  cmdchat:
+   - me
+   - nick
+   - tell
+   -whisper
 
 
 Respond with File
@@ -132,7 +156,7 @@ and ask your question there.  Please be patient.  We're not always around.
 
 
 !!!!!BACKWARDS INCOMPATIBLE CHANGES!!!!!
-++++++++++++++++++++++++++++++++++++++++
+----------------------------------------
 
 ***NOTE****
 
@@ -189,13 +213,13 @@ Got it? :)
 
 
 Rules file format / features
-+++++++++++++++++++++++++++++
+----------------------------
 
 All of these changes (except the ones noted above) should be backwards compatible with the 3.1.x
 and lower versions.
 
 Rules.txt format
-----------------
+^^^^^^^^^^^^^^^^
 
 By default, PwnFilter 3.2 will create a PwnFilter/rules directory, move your current rules.txt
 into it, and create one rules file for each handler, which links back to rules.txt.  You do not
@@ -232,7 +256,7 @@ and so on...
 
 
 Named Rules
------------
+^^^^^^^^^^^
 Adding a name / ID to a rule.  eg::
 
   match <matchstring>
@@ -251,7 +275,7 @@ would cause the following command to be run::
 
 
 Shortcuts
----------
+^^^^^^^^^
 
 Writing regex's can be tedious.  Shortcuts allow the use of configurable
 "variables" that can are replaced in the regex.  Eg::
@@ -292,7 +316,7 @@ If you want to match an actual less-than (<) or greater-than (>), use a backslas
 Allowed Characters in shortcut names: [_a-zA-z]
 
 Action Groups
--------------
+^^^^^^^^^^^^^
 
 Sometimes, you want to have multiple rules that all do the same actions.
 An Action Group allows you to predefine a set of actions which you can
@@ -309,7 +333,7 @@ then apply to a rule.  Eg::
   then actions swearactions
 
 Condition Groups
-----------------
+^^^^^^^^^^^^^^^^
 
 Just as with action groups, condition groups let you specify common conditions
 you wish to apply to multiple rules.   Eg::
@@ -330,10 +354,10 @@ you wish to apply to multiple rules.   Eg::
 
 
 Troubleshooting
-+++++++++++++++
+---------------
 
 Regex Timeout
--------------
+^^^^^^^^^^^^^
 An enhancement to the Regex which will automatically time-out if a Regex
 takes more than 500ms to execute.  Upon triggering the timeout, PwnFilter
 will log an error showing the failed rule as well as the text that triggered
