@@ -15,20 +15,21 @@ import java.io.File;
 import java.util.logging.Logger;
 
 /**
- * Test Conditions
+ * Tests for Actions
  * User: ptoal
  * Date: 13-05-04
- * Time: 11:30 AM
+ * Time: 11:28 AM
  */
-public class ConditionTest extends TestCase {
+
+public class ActionTest extends TestCase {
 
     RuleManager ruleManager;
     RuleChain rs;
     PwnFilter mockPlugin = new PwnFilter();
     LogManager pwnLogger;
     FilterClient mockClient = new FilterClient() {
-        public String getShortName() { return "CONDITIONTEST"; }
-        public RuleChain getRuleChain() { return ruleManager.getRuleChain("conditionTests.txt");}
+        public String getShortName() { return "ACTIONTEST"; }
+        public RuleChain getRuleChain() { return ruleManager.getRuleChain("actionTests.txt");}
         public boolean isActive() { return true; }
         public void activate(Configuration config) {}
         public void shutdown() {}
@@ -37,9 +38,9 @@ public class ConditionTest extends TestCase {
     @Before
     public void setUp() throws Exception {
         ruleManager = RuleManager.getInstance();
-        File testFile = new File(getClass().getResource("/conditionTests.txt").getFile());
+        File testFile = new File(getClass().getResource("/actionTests.txt").getFile());
         ruleManager.setRuleDir(testFile.getParent());
-        rs = ruleManager.getRuleChain("conditionTests.txt");
+        rs = ruleManager.getRuleChain("actionTests.txt");
         Logger logger = Logger.getAnonymousLogger();
         pwnLogger = LogManager.getInstance(logger, new File("/tmp/"));
         DataCache.getInstance();
@@ -47,14 +48,23 @@ public class ConditionTest extends TestCase {
     }
 
     @Test
-    public void testIgnoreString() {
-        FilterState testState = new FilterState(mockPlugin,"Ignore baseline test.", null, mockClient);
+    public void testAbort() {
+        FilterState testState = new FilterState(mockPlugin,"abort", null, mockClient);
         rs.apply(testState);
-        assertEquals("Pass baseline test.",testState.message.getPlainString());
-        FilterState state2 = new FilterState(mockPlugin,"Ignore qwerty test.", null, mockClient);
-        rs.apply(state2);
-        assertEquals("Ignore qwerty test.",state2.message.getPlainString());
+        assertTrue(testState.stop);
+    }
 
+    @Test
+    public void testRandRep() {
+        FilterState testState = new FilterState(mockPlugin,"randrep", null, mockClient);
+        rs.apply(testState);
+        System.out.println(testState.message.getPlainString());
+        assertTrue(testState.message.getPlainString().matches("(random|replace)"));
+    }
+
+    public void testBurn() {
+        FilterState testState = new FilterState(mockPlugin,"burn", null, mockClient);
+        rs.apply(testState);
     }
 
     @After

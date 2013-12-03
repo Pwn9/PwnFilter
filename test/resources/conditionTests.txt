@@ -1,0 +1,3 @@
+match ignore
+then replace Pass
+ignore string qwerty

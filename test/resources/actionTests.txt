@@ -1,0 +1,23 @@
+#match abort
+#then abort
+#
+#match burn
+#then burn
+#
+#match cmdchain
+#then cmdchain test1|test2
+#
+#match command
+#then command test
+#
+#match conchain
+
+match abort
+then abort
+
+match burn
+then burn Don't be bad.
+
+match randrep
+then randrep random|replace
+

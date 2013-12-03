@@ -201,7 +201,7 @@ public class FileParser {
                 }
             }
             // condition <parameters>
-            else if ( Condition.isCondition(tokenString.getOriginalString()) )  {
+            else if ( Condition.isCondition(command))  {
                 // This is a condition.  Add a new condition to this rule.
                 Condition newCondition = Condition.newCondition(tokenString.getOriginalString());
                 if (!rule.addCondition(newCondition)) {

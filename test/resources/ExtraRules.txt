@@ -20,4 +20,6 @@ then notify pwnfilter.notify %player% just said %rawstring%
 match repondfile
 then respondfile testfile.txt
 
+match [\[\{\(][\w\d ]+[\]\}\)]([\W_]+)?[\[\{\(][\w\d ]+[\]\}\)]
+then deny
 

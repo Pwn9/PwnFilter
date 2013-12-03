@@ -11,7 +11,10 @@ matched.  This will allow a match group to be referenced in actions.  Eg::
 
 Would match 'derpitydah' and output 'derp dah'
 
-
+19 - USERNAME | MATCH feature
+-----------------------------
+"It would be useful to be able to check a player's username when they connect to the server, and take action if it is inappropriate.
+For example, I have had "Skull_Fucker"... all join my server."
 
 
 Event Enhancements

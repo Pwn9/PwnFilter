@@ -54,8 +54,26 @@ public class RuleSetTest {
         rs.loadConfigFile();
         FilterState testState = new FilterState(mockPlugin,"This is a test", null, mockClient);
         rs.apply(testState);
-        System.out.println(rs.ruleCount());
         assertEquals("This WAS a test", testState.message.getPlainString());
+    }
+
+    @Test
+    public void testDollarSignInMessage() {
+        rs.loadConfigFile();
+        FilterState testState = new FilterState(mockPlugin,"notATestPerson {test] $ (test 2}",null,mockClient);
+        rs.apply(testState);
+    }
+
+    // DBO Ticket # 13
+    @Test
+    public void testBackslashAtEndOfLine() {
+        try {
+            rs.loadConfigFile();
+            FilterState testState = new FilterState(mockPlugin,"Message that ends with \\",null,mockClient);
+            rs.apply(testState);
+        } catch (StringIndexOutOfBoundsException ex) {
+            Assert.fail(ex.getMessage());
+        }
     }
 
     @Test
