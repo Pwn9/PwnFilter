@@ -66,7 +66,7 @@ public class PwnFilterServerCommandListener extends BaseListener {
 
         // Only update the message if it has been changed.
         if (state.messageChanged()){
-            event.setCommand(state.message.getColoredString());
+            event.setCommand(state.getModifiedMessage().getColoredString());
         }
 
         if (state.cancel) event.setCommand("");

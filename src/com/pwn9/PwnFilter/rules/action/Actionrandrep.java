@@ -11,7 +11,6 @@
 package com.pwn9.PwnFilter.rules.action;
 
 import com.pwn9.PwnFilter.FilterState;
-import com.pwn9.PwnFilter.util.ColoredString;
 
 import java.util.Random;
 
@@ -32,8 +31,11 @@ public class Actionrandrep implements Action {
     public boolean execute(final FilterState state ) {
         Random random = new Random();
         int randomInt = random.nextInt(toRand.length);
-        ColoredString cs = state.message;
-        cs.replaceText(state.pattern,toRand[randomInt]);
+        state.setModifiedMessage(state.getModifiedMessage().replaceText(state.pattern,toRand[randomInt]));
+
+        if (state.rule.modifyRaw())
+            state.setUnfilteredMessage(state.getUnfilteredMessage().replaceText(state.pattern,toRand[randomInt]));
+
         return true;
     }
 }

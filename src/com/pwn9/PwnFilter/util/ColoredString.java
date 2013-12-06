@@ -34,21 +34,46 @@ import java.util.regex.Pattern;
  * In any string modification action, the codes will be updated to reflect the new string.
  *
  */
-public class ColoredString implements CharSequence {
+public final class ColoredString implements CharSequence {
 
-    private char[] raw; // The original string
-    private String[] codes; // The String array containing the color / formatting codes
-    private char[] plain; // the plain text
+    private final String[] codes; // The String array containing the color / formatting codes
+    private final char[] plain; // the plain text
 
     public ColoredString(String s) {
-        set(s);
+        char[] raw = ChatColor.translateAlternateColorCodes('&',s).toCharArray();
+        char[] tmpPlain = new char[raw.length];
+        String[] tmpCodes = new String[raw.length+1];
+
+        int textpos = 0;
+
+        for (int i = 0; i < raw.length ; i++) {
+            if (i != raw.length-1 && raw[i] == '\u00A7' && "0123456789AaBbCcDdEeFfKkLlMmNnOoRr".indexOf(raw[i+1]) > -1) {
+                if (tmpCodes[textpos] == null) {
+                    tmpCodes[textpos] = new String(raw,i,2);
+                } else {
+                    tmpCodes[textpos] += new String(raw,i,2);
+                }
+                i++; // Move past the code character.
+            } else {
+                tmpPlain[textpos] = raw[i];
+                textpos++;
+            }
+        }
+        plain = Arrays.copyOf(tmpPlain,textpos);
+        // Copy one more code than the plain string
+        // so we can capture any trailing format codes.
+        codes = Arrays.copyOf(tmpCodes,textpos+1);
     }
 
     public ColoredString(ColoredString c) {
         // Create a copy of the original array.
-        raw = c.raw;
         codes = c.codes;
         plain = c.plain;
+    }
+
+    public ColoredString(char[] plain, String[] codes) {
+        this.plain = plain;
+        this.codes = Arrays.copyOf(codes,plain.length+1);
     }
 
     /* CharSequence methods */
@@ -58,6 +83,7 @@ public class ColoredString implements CharSequence {
     public char charAt(int i) {
         return plain[i];
     }
+
     public CharSequence subSequence(int i, int j) {
         return new String(Arrays.copyOfRange(plain,i,j));
     }
@@ -67,39 +93,10 @@ public class ColoredString implements CharSequence {
         return getColoredString();
     }
 
-    // Update this object with a new string.
-    public void set (String s) {
-
-        raw = ChatColor.translateAlternateColorCodes('&',s).toCharArray();
-        plain = new char[raw.length];
-        codes = new String[raw.length+1];
-
-        int textpos = 0;
-
-        for (int i = 0; i < raw.length ; i++) {
-            if (i != raw.length-1 && raw[i] == '\u00A7' && "0123456789AaBbCcDdEeFfKkLlMmNnOoRr".indexOf(raw[i+1]) > -1) {
-                if (codes[textpos] == null) {
-                    codes[textpos] = new String(raw,i,2);
-                } else {
-                    codes[textpos] += new String(raw,i,2);
-                }
-                i++; // Move past the code character.
-            } else {
-                plain[textpos] = raw[i];
-                textpos++;
-            }
-        }
-        plain = Arrays.copyOf(plain,textpos);
-        // Copy one more code than the plain string
-        // so we can capture any trailing format codes.
-        codes = Arrays.copyOf(codes,textpos+1);
-
-    }
-
 
     // Strip all codes out of this string.
-    public void decolor() {
-        codes = new String[plain.length+1];
+    public ColoredString decolor() {
+        return new ColoredString(new String(plain));
     }
 
     // Return a string with color codes interleaved.
@@ -150,7 +147,7 @@ public class ColoredString implements CharSequence {
      * @param p Regex Pattern
      * @param rText Replacement Text
      */
-    public void replaceText(Pattern p, String rText ) {
+    public ColoredString replaceText(Pattern p, String rText) {
         Matcher m = p.matcher(new String(plain));
         ColoredString replacement = new ColoredString(rText);
 
@@ -230,12 +227,11 @@ public class ColoredString implements CharSequence {
         // as well as the trailing code.
         System.arraycopy(codes,currentPosition+1,tempCodes,lastMatchText.length+1,plain.length - currentPosition);
 
-        plain = tempText;
-        codes = tempCodes;
+        return new ColoredString(tempText, tempCodes);
 
     }
 
-    public boolean patternToLower (Pattern p) {
+    public ColoredString patternToLower (Pattern p) {
         Matcher m = p.matcher(new String(plain));
 
         while (m.find()) {
@@ -243,7 +239,7 @@ public class ColoredString implements CharSequence {
                 plain[i] = Character.toLowerCase(plain[i]);
             }
         }
-        return true;
+        return new ColoredString(this);
     }
 
     /**

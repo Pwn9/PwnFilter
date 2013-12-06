@@ -32,6 +32,7 @@ public class Rule implements ChainEntry {
     private Pattern pattern;
     private String description = "";
     private String id = "";
+    private boolean modifyRaw = false; // Set to true, to modify "raw" message.
 
     ArrayList<Condition> conditions = new ArrayList<Condition>();
     ArrayList<Action> actions = new ArrayList<Action>();
@@ -99,10 +100,10 @@ public class Rule implements ChainEntry {
         // Check if action matches the current state of the message
 
         if (LogManager.debugMode.compareTo(LogManager.DebugModes.high) >= 0) {
-            LogManager.logger.info("Testing Pattern: '" + pattern.toString() + "' on string: '" + state.message.getPlainString()+"'");
+            LogManager.logger.info("Testing Pattern: '" + pattern.toString() + "' on string: '" + state.getModifiedMessage().getPlainString()+"'");
         }
 
-            LimitedRegexCharSequence limitedRegexCharSequence = new LimitedRegexCharSequence(state.message.getPlainString(),1000);
+            LimitedRegexCharSequence limitedRegexCharSequence = new LimitedRegexCharSequence(state.getModifiedMessage().getPlainString(),1000);
             final Matcher matcher = pattern.matcher(limitedRegexCharSequence);
         // If we don't match, return immediately with the original message
         try {
@@ -120,7 +121,7 @@ public class Rule implements ChainEntry {
         state.addLogMessage("|" + state.listener.getShortName() +  "| MATCH " +
                 (id.isEmpty()?"":"("+id+")") +
                 " <" +
-                state.playerName + "> " + state.message.getPlainString());
+                state.playerName + "> " + state.getModifiedMessage().getPlainString());
         LogManager.getInstance().debugLow("Match String: " + matcher.group());
 
 
@@ -176,5 +177,14 @@ public class Rule implements ChainEntry {
     public List<Action> getActions() {
         return actions;
     }
+
+    public boolean modifyRaw() {
+        return modifyRaw;
+    }
+
+    public void setModifyRaw(boolean modifyRaw) {
+        this.modifyRaw = modifyRaw;
+    }
+
 
 }

@@ -55,7 +55,7 @@ public class Patterns {
             LogManager.logger.warning("The use of " + m.group(1) + " is deprecated.  Please update your configuration to use " + replace + ".");
             line = line.replaceAll("&world", wrapReplacement(state.playerWorldName)).
                     replaceAll("&player", wrapReplacement(state.playerName)).
-                    replaceAll("&string", wrapReplacement(state.message.getColoredString())).
+                    replaceAll("&string", wrapReplacement(state.getModifiedMessage().getColoredString())).
                     replaceAll("&rawstring", wrapReplacement(state.getOriginalMessage().getColoredString())).
                     replaceAll("&event", wrapReplacement(state.getListenerName())).
                     replaceAll("&ruleid", (state.rule != null)?wrapReplacement(state.rule.getId()):"-").
@@ -64,7 +64,7 @@ public class Patterns {
         boolean pointsEnabled = PointManager.getInstance() != null;
         line = line.replaceAll("%world%", wrapReplacement(state.playerWorldName)).
                 replaceAll("%player%", wrapReplacement(state.playerName)).
-                replaceAll("%string%", wrapReplacement(state.message.getColoredString())).
+                replaceAll("%string%", wrapReplacement(state.getModifiedMessage().getColoredString())).
                 replaceAll("%rawstring%", wrapReplacement(state.getOriginalMessage().getColoredString())).
                 replaceAll("%event%", wrapReplacement(state.getListenerName())).
                 replaceAll("%points%",(pointsEnabled)?(df.format(PointManager.getInstance().getPlayerPoints(state.playerName))):"-").

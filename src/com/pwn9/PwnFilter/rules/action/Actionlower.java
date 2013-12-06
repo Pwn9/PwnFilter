@@ -25,9 +25,13 @@ public class Actionlower implements Action {
     }
 
     public boolean execute(final FilterState state ) {
-        ColoredString cs = state.message;
+        ColoredString cs = state.getModifiedMessage();
         state.addLogMessage("Converting to lowercase.");
-        return cs.patternToLower(state.pattern);
+        state.setModifiedMessage(cs.patternToLower(state.pattern));
 
+        if (state.rule.modifyRaw())
+            state.setUnfilteredMessage(state.getUnfilteredMessage().patternToLower(state.pattern));
+
+        return true;
     }
 }

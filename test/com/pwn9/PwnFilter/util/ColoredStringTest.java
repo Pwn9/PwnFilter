@@ -47,15 +47,15 @@ public class ColoredStringTest extends TestCase {
 
         // Replace with plain text
         Pattern p = Pattern.compile("test");
-        cs.replaceText(p, "derp");
-        assertEquals("This is the string under derp.",cs.getPlainString());
-        assertEquals("§7This §9is§l the §1string§3 under derp.",cs.getColoredString());
+        ColoredString modified = cs.replaceText(p, "derp");
+        assertEquals("This is the string under derp.",modified.getPlainString());
+        assertEquals("§7This §9is§l the §1string§3 under derp.",modified.getColoredString());
 
         // Replace with colored text
         p = Pattern.compile("string");
-        cs.replaceText(p, "§3r§4a§5i§6n§7b§8o§9w");
-        assertEquals("This is the rainbow under derp.", cs.getPlainString());
-        assertEquals("§7This §9is§l the §1§3r§4a§5i§6n§7b§8o§9w§3 under derp.", cs.getColoredString());
+        modified = cs.replaceText(p, "§3r§4a§5i§6n§7b§8o§9w");
+        assertEquals("This is the rainbow under test.", modified.getPlainString());
+        assertEquals("§7This §9is§l the §1§3r§4a§5i§6n§7b§8o§9w§3 under test.", modified.getColoredString());
 
     }
 
@@ -71,8 +71,8 @@ public class ColoredStringTest extends TestCase {
 
         ColoredString cs2 = new ColoredString("-member");
 
-        cs2.replaceText(p,"§9§l![MEMBERS]!:§r §aPlease §c§l/VOTE§r§a to get §9§l4 DIAMONDS§r§a /VOTE!");
-        assertEquals("§9§l![MEMBERS]!:§r §aPlease §c§l/VOTE§r§a to get §9§l4 DIAMONDS§r§a /VOTE!",cs2.getColoredString());
+        ColoredString modified2 = cs2.replaceText(p,"§9§l![MEMBERS]!:§r §aPlease §c§l/VOTE§r§a to get §9§l4 DIAMONDS§r§a /VOTE!");
+        assertEquals("§9§l![MEMBERS]!:§r §aPlease §c§l/VOTE§r§a to get §9§l4 DIAMONDS§r§a /VOTE!",modified2.getColoredString());
     }
 
     /**
@@ -90,8 +90,7 @@ public class ColoredStringTest extends TestCase {
         String replacement = "hello";
 
         ColoredString cs = new ColoredString(test);
-        cs.replaceText(p,replacement);
-        assertEquals("Test hello.§1",cs.getColoredString());
+        assertEquals("Test hello.§1",cs.replaceText(p,replacement).getColoredString());
     }
 
     public void testReplaceWithFormatAtEndOfReplacement() {
@@ -100,8 +99,7 @@ public class ColoredStringTest extends TestCase {
         String replacement = "hello§1";
 
         ColoredString cs = new ColoredString(test);
-        cs.replaceText(p,replacement);
-        assertEquals("Test hello§1.",cs.getColoredString());
+        assertEquals("Test hello§1.", cs.replaceText(p,replacement).getColoredString());
 
     }
 
@@ -111,8 +109,7 @@ public class ColoredStringTest extends TestCase {
         String replacement = "derp§4";
 
         ColoredString cs = new ColoredString(test);
-        cs.replaceText(p,replacement);
-        assertEquals("This is a §1derp§4§2derp§4§3derp§4.",cs.getColoredString());
+        assertEquals("This is a §1derp§4§2derp§4§3derp§4.",cs.replaceText(p,replacement).getColoredString());
     }
 
 }

@@ -11,7 +11,6 @@
 package com.pwn9.PwnFilter.rules.action;
 
 import com.pwn9.PwnFilter.FilterState;
-import com.pwn9.PwnFilter.util.ColoredString;
 import org.bukkit.ChatColor;
 
 /**
@@ -28,8 +27,11 @@ public class Actionrewrite implements Action {
     }
 
     public boolean execute(final FilterState state) {
-        ColoredString cs = state.message;
-        cs.replaceText(state.pattern, messageString);
+        state.setModifiedMessage(state.getModifiedMessage().replaceText(state.pattern, messageString));
+
+        if (state.rule.modifyRaw())
+            state.setUnfilteredMessage(state.getUnfilteredMessage().replaceText(state.pattern,messageString));
+
         return true;
     }
 }

@@ -2,6 +2,7 @@
 .project
 /.settings
 /.git
+/.idea/workspace.xml
 /lib
 /bin
 /dist

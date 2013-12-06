@@ -11,7 +11,6 @@
 package com.pwn9.PwnFilter.rules.action;
 
 import com.pwn9.PwnFilter.FilterState;
-import com.pwn9.PwnFilter.util.ColoredString;
 import org.bukkit.ChatColor;
 
 /**
@@ -22,15 +21,18 @@ public class Actionreplace implements Action {
     // messageString is what we will use to replace any matched text.
     String messageString = "";
 
+
     public void init(String s)
     {
         messageString = ChatColor.translateAlternateColorCodes('&',s).replaceAll("\"","");
     }
 
     public boolean execute(final FilterState state ) {
-        ColoredString cs = state.message;
-        cs.decolor();
-        cs.replaceText(state.pattern, messageString);
+        state.setModifiedMessage(state.getModifiedMessage().decolor().replaceText(state.pattern, messageString));
+
+        if (state.rule.modifyRaw())
+            state.setUnfilteredMessage(state.getUnfilteredMessage().replaceText(state.pattern,messageString));
+
         return true;
     }
 }

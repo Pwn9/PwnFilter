@@ -131,7 +131,7 @@ public class RuleChain implements Chain,ChainEntry {
         if (state.pattern != null) {
             logManager.debugHigh("Debug last match: " + state.pattern.pattern());
             logManager.debugHigh("Debug original: " + state.getOriginalMessage().getColoredString());
-            logManager.debugHigh("Debug current: " + state.message.getColoredString());
+            logManager.debugHigh("Debug current: " + state.getModifiedMessage().getColoredString());
             logManager.debugHigh("Debug log: " + (state.log ? "yes" : "no"));
             logManager.debugHigh("Debug deny: " + (state.cancel ? "yes" : "no"));
         } else {
@@ -142,7 +142,7 @@ public class RuleChain implements Chain,ChainEntry {
             state.addLogMessage("<"+state.playerName + "> Original message cancelled.");
         } else if (state.pattern != null) {
             state.addLogMessage("|" + state.listener.getShortName() + "| SENT <" +
-                    state.playerName + "> " + state.message.getPlainString());
+                    state.playerName + "> " + state.getModifiedMessage().getPlainString());
         }
 
         for (String s : state.getLogMessages()) {

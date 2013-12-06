@@ -115,7 +115,7 @@ public class PwnFilterCommandListener extends BaseListener {
 
             // Global decolor
             if ((PwnFilter.decolor) && !(dCache.hasPermission(player,"pwnfilter.color"))) {
-                state.message.decolor();
+                state.getModifiedMessage().decolor();
             }
 
             chatRuleChain.execute(state);
@@ -133,11 +133,11 @@ public class PwnFilterCommandListener extends BaseListener {
 
         // Only update the message if it has been changed.
         if (state.messageChanged()){
-            if (state.message.getPlainString().isEmpty()) {
+            if (state.getModifiedMessage().getPlainString().isEmpty()) {
                 event.setCancelled(true);
                 return;
             }
-            event.setMessage(state.message.getColoredString());
+            event.setMessage(state.getModifiedMessage().getColoredString());
         }
 
         if (state.cancel) event.setCancelled(true);

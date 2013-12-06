@@ -35,7 +35,7 @@ public class Actioncommand implements Action {
                 cmd = Patterns.replaceVars(command, state);
                 state.addLogMessage("Helped " + state.playerName + " execute command: " + cmd);
             } else {
-                cmd = state.message.getColoredString();
+                cmd = state.getModifiedMessage().getColoredString();
             }
             state.addLogMessage("Helped " + state.playerName + " execute command: " + cmd);
             Bukkit.getScheduler().runTask(state.plugin, new BukkitRunnable() {

@@ -5,7 +5,6 @@ import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.PwnFilter;
 import com.pwn9.PwnFilter.api.FilterClient;
 import com.pwn9.PwnFilter.util.LogManager;
-import junit.framework.TestCase;
 import org.bukkit.configuration.Configuration;
 import org.junit.After;
 import org.junit.Before;
@@ -14,6 +13,8 @@ import org.junit.Test;
 import java.io.File;
 import java.util.logging.Logger;
 
+import static junit.framework.Assert.assertTrue;
+
 /**
  * Tests for Actions
  * User: ptoal
@@ -21,7 +22,7 @@ import java.util.logging.Logger;
  * Time: 11:28 AM
  */
 
-public class ActionTest extends TestCase {
+public class ActionTest {
 
     RuleManager ruleManager;
     RuleChain rs;
@@ -58,10 +59,11 @@ public class ActionTest extends TestCase {
     public void testRandRep() {
         FilterState testState = new FilterState(mockPlugin,"randrep", null, mockClient);
         rs.apply(testState);
-        System.out.println(testState.message.getPlainString());
-        assertTrue(testState.message.getPlainString().matches("(random|replace)"));
+        System.out.println(testState.getModifiedMessage().getPlainString());
+        assertTrue(testState.getModifiedMessage().getPlainString().matches("(random|replace)"));
     }
 
+    @Test
     public void testBurn() {
         FilterState testState = new FilterState(mockPlugin,"burn", null, mockClient);
         rs.apply(testState);

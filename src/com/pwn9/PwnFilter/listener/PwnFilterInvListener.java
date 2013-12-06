@@ -79,7 +79,7 @@ public class PwnFilterInvListener extends BaseListener {
             if (state.messageChanged()){
                 ItemStack newItem = new ItemStack(item);
                 ItemMeta newItemMeta = newItem.getItemMeta();
-                newItemMeta.setDisplayName(state.message.getColoredString());
+                newItemMeta.setDisplayName(state.getModifiedMessage().getColoredString());
                 newItem.setItemMeta(newItemMeta);
                 event.setCurrentItem(newItem);
             }

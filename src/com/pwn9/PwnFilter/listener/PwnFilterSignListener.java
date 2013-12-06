@@ -68,7 +68,7 @@ public class PwnFilterSignListener extends BaseListener {
         if (state.messageChanged()){
             // TODO: Can colors be placed on signs?  Wasn't working. Find out why.
             // Break the changed string into words
-            String[] words = state.message.getPlainString().split("\\b");
+            String[] words = state.getModifiedMessage().getPlainString().split("\\b");
             String[] lines = new String[4];
 
             // Iterate over the 4 sign lines, applying one word at a time, until the line is full.

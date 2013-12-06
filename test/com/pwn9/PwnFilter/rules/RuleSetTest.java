@@ -54,7 +54,7 @@ public class RuleSetTest {
         rs.loadConfigFile();
         FilterState testState = new FilterState(mockPlugin,"This is a test", null, mockClient);
         rs.apply(testState);
-        assertEquals("This WAS a test", testState.message.getPlainString());
+        assertEquals("This WAS a test", testState.getModifiedMessage().getPlainString());
     }
 
     @Test
@@ -82,7 +82,7 @@ public class RuleSetTest {
         ruleChain.loadConfigFile();
         FilterState testState = new FilterState(mockPlugin,"ShortCutPattern",null,mockClient);
         ruleChain.apply(testState);
-        Assert.assertEquals("Replaced", testState.message.getPlainString());
+        Assert.assertEquals("Replaced", testState.getModifiedMessage().getPlainString());
     }
 
     @After

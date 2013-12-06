@@ -42,11 +42,12 @@ import java.util.regex.Pattern;
 @SuppressWarnings("UnusedDeclaration")
 public class FilterState {
     private final ColoredString originalMessage; // Original message
+    private ColoredString modifiedMessage; // Modified message string
+    private ColoredString unfilteredMessage; // message string for "raw" messages.
     public final Plugin plugin; // Which plugin is this state attached to?
     private final Player player; // Player that this event is connected to.
     public final String playerName,playerWorldName;
     public final FilterClient listener;
-    public ColoredString message; // Modified message string
     final int messageLen; // New message can't be longer than original.
     private List<String> logMessages = new ArrayList<String>(); // Rules can add strings to this array.  They will be output to log if log=true
     public boolean log = false;  // If true, actions will be logged
@@ -67,7 +68,7 @@ public class FilterState {
      */
     public FilterState(Plugin pl, String m, Player p, FilterClient l) {
         originalMessage = new ColoredString(m);
-        message = new ColoredString(m);
+        modifiedMessage = new ColoredString(m);
         messageLen = originalMessage.length();
         player = p;
         if (p != null) {
@@ -95,7 +96,7 @@ public class FilterState {
      */
     public FilterState(Plugin pl, String m, String pName, World w, FilterClient l) {
         originalMessage = new ColoredString(m);
-        message = new ColoredString(m);
+        modifiedMessage = new ColoredString(m);
         messageLen = originalMessage.length();
         playerName = pName;
         playerWorldName = (w == null)?"":w.getName();
@@ -121,7 +122,7 @@ public class FilterState {
      * @return true if the modified message is different than the original.
      */
     public boolean messageChanged() {
-        return !originalMessage.toString().equals(message.toString());
+        return !originalMessage.toString().equals(modifiedMessage.toString());
     }
 
     public boolean playerHasPermission(String perm) {
@@ -150,4 +151,22 @@ public class FilterState {
     public ColoredString getOriginalMessage() {
         return new ColoredString(originalMessage);
     }
+
+    public ColoredString getModifiedMessage() {
+        return new ColoredString(modifiedMessage);
+    }
+
+    public void setModifiedMessage(ColoredString newMessage) {
+        modifiedMessage = newMessage;
+    }
+
+    public ColoredString getUnfilteredMessage() {
+        return unfilteredMessage;
+    }
+
+    public void setUnfilteredMessage(ColoredString newMessage) {
+        unfilteredMessage = newMessage;
+    }
+
+
 }
