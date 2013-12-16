@@ -60,7 +60,6 @@ public class ConditionTest {
 
     @After
     public void tearDown() throws Exception {
-        // TODO: Anything?  Probably not.
     }
 
 

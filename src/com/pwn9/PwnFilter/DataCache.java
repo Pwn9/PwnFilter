@@ -56,8 +56,6 @@ public class DataCache {
     private ArrayList<Player> queuedPlayerList = new ArrayList<Player>();
     private Set<Player> onlinePlayers = new HashSet<Player>();
 
-    //TODO: Add a "registration" system for interesting permissions, etc.
-    // so that plugins can add/remove things they want cached.
     private DataCache(Plugin plugin) {
         if (plugin == null) throw new IllegalStateException("Could not get PwnFilter instance!");
         playerName = new ConcurrentHashMap<Player,String>();

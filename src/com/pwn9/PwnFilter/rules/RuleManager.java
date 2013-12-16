@@ -95,7 +95,7 @@ public class RuleManager {
                     return false;
                 }
             } catch (Exception ex) {
-                LogManager.logger.severe("Unable to move old rules.txt file to new dir: " + ruleDir.getAbsolutePath());
+                LogManager.logger.severe("Unable to move old rules.txt file to new dir.");
                 LogManager.logger.severe("Please look in your plugin directory: " + plugin.getDataFolder().getAbsolutePath() + " and manually migrate your rules.");
                 LogManager.logger.severe("Disabling PwnFilter");
                 plugin.getPluginLoader().disablePlugin(plugin);

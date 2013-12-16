@@ -33,6 +33,8 @@ public class Actionrespond implements Action {
     }
 
     public boolean execute(final FilterState state ) {
+        if ( state.getPlayer() == null ) return false;
+
         final ArrayList<String> preparedMessages = new ArrayList<String>();
 
         for (String message : messageStrings) {

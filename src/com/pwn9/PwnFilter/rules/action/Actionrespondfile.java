@@ -35,6 +35,7 @@ public class Actionrespondfile implements Action {
         if (textDir == null) return; // Er... Probably should return something, or at least log...
 
         File textfile = FileUtil.getFile(textDir,s,false);
+        if (textfile == null) return;
 
         try {
             FileInputStream fs  = new FileInputStream(textfile);
