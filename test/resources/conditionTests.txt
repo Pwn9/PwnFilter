@@ -1,3 +1,12 @@
-match ignore
-then replace Pass
+match string
+then replace replaced
 ignore string qwerty
+
+match command test
+ignore command tell
+then replace replace command
+
+match banned|disabled
+ignore command msg|me|nick|m|mail|r|t|tell|whisper
+then replace matched
+#then conchain runalias /tip &eDisplay the disabled items with &6/banneditems

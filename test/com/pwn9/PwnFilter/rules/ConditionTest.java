@@ -4,6 +4,8 @@ import com.pwn9.PwnFilter.DataCache;
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.PwnFilter;
 import com.pwn9.PwnFilter.api.FilterClient;
+import com.pwn9.PwnFilter.listener.PwnFilterCommandListener;
+import com.pwn9.PwnFilter.listener.PwnFilterPlayerListener;
 import com.pwn9.PwnFilter.util.LogManager;
 import org.bukkit.configuration.Configuration;
 import org.junit.After;
@@ -49,13 +51,41 @@ public class ConditionTest {
 
     @Test
     public void testIgnoreString() {
-        FilterState testState = new FilterState(mockPlugin,"Ignore baseline test.", null, mockClient);
+        FilterState testState = new FilterState(mockPlugin,"Ignore string baseline test.", null, mockClient);
         rs.apply(testState);
-        assertEquals("Pass baseline test.", testState.getModifiedMessage().getPlainString());
-        FilterState state2 = new FilterState(mockPlugin,"Ignore qwerty test.", null, mockClient);
+        assertEquals("Ignore replaced baseline test.", testState.getModifiedMessage().getPlainString());
+        FilterState state2 = new FilterState(mockPlugin,"Ignore string qwerty test.", null, mockClient);
         rs.apply(state2);
-        assertEquals("Ignore qwerty test.",state2.getModifiedMessage().getPlainString());
+        assertEquals("Ignore string qwerty test.",state2.getModifiedMessage().getPlainString());
 
+    }
+
+    @Test
+    public void testIgnoreCommand() {
+        FilterState testState1 = new FilterState(mockPlugin,"Ignore baseline command test", null, new PwnFilterCommandListener(mockPlugin));
+        rs.apply(testState1);
+        assertEquals("Ignore baseline replace command", testState1.getModifiedMessage().getPlainString());
+
+        FilterState testState2 = new FilterState(mockPlugin,"/tell Ignore command test", null, new PwnFilterCommandListener(mockPlugin));
+        rs.apply(testState2);
+        assertEquals("/tell Ignore command test",testState2.getModifiedMessage().getPlainString());
+    }
+
+    @Test
+    public void testIgnoreDoesntMatch() {
+        FilterState testState2 = new FilterState(mockPlugin,"testestest banned", null, mockClient);
+        rs.apply(testState2);
+        assertEquals("testestest matched",testState2.getModifiedMessage().getPlainString());
+    }
+
+    @Test
+    public void testComandConditionOnlyMatchesCommandHandler() {
+        FilterState testState = new FilterState(mockPlugin,"tell banned", null, new PwnFilterPlayerListener(mockPlugin));
+        rs.apply(testState);
+        assertEquals("tell matched",testState.getModifiedMessage().getPlainString());
+        FilterState testState2 = new FilterState(mockPlugin,"tell banned", null, new PwnFilterCommandListener(mockPlugin));
+        rs.apply(testState2);
+        assertEquals("tell banned", testState2.getModifiedMessage().getPlainString());
     }
 
     @After
