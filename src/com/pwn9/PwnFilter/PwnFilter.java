@@ -115,6 +115,7 @@ public class PwnFilter extends JavaPlugin {
         clientManager.registerClient(new PwnFilterPlayerListener(this), this);
         clientManager.registerClient(new PwnFilterServerCommandListener(this), this);
         clientManager.registerClient(new PwnFilterSignListener(this), this);
+        clientManager.registerClient(new PwnFilterBookListener(this), this);
 
 
         // The Entity Death handler, for custom death messages.

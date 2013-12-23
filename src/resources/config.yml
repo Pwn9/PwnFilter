@@ -32,8 +32,12 @@ consolefilter: false
 # Filter commands as well as chat true/false
 commandfilter: true
 
+# Filter Book Titles and Pages
+bookfilter: false
+
 spamfilter: false  # For chat messages
 commandspamfilter: false # For /commands
+
 
 
 # The Command Whitelist/Blacklist are used to prevent PwnFilter from
@@ -206,6 +210,8 @@ debug: off
 # Change priority of ItemListener
 # itempriority: lowest #(default)
 
+# Change priority of BookListener
+# bookpriority: lowest #(default)
 
 
 
