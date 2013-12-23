@@ -2,6 +2,22 @@
 Release Notes for PwnFilter
 ===========================
 
+Changes in 3.4.0
+================
+
+Book Filter
+-----------
+
+A new filter has been added for books.  This can be enabled with the following config.yml setting::
+
+  bookfilter: true
+
+A new file called "book.txt" in the rules directory will be applied to books.
+Both the title and the pages will be filtered.
+
+
+
+
 Changes in 3.3.0
 ================
 

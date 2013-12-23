@@ -23,7 +23,7 @@ decolor: false
 # Filter text applied to signs
 signfilter: false
 
-# Activate item filter (Naming items with Anvil)  (EXPERIMENTAL)
+# Activate item filter (Naming items with Anvil)
 itemfilter: false
 
 # Console Filter -- Filter commands entered on console (EXPERIMENTAL)
@@ -35,6 +35,8 @@ commandfilter: true
 # Filter Book Titles and Pages
 bookfilter: false
 
+# The spam filter is currently very basic.  Enhancements are
+# planned for the future
 spamfilter: false  # For chat messages
 commandspamfilter: false # For /commands
 
