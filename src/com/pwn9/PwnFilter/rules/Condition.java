@@ -105,8 +105,10 @@ public class Condition {
                 }
             case command:
                 for (String check: parameters.split("\\|")) {
-                    String command = state.getOriginalMessage().getPlainString().split("\\s")[0];
-                    if (command.toUpperCase().contains(check.toUpperCase())) matched = true;
+                    if (state.getListenerName().equals("COMMAND")) {
+                        String command = state.getOriginalMessage().getPlainString().split("\\s")[0].replaceFirst("^\\/","");
+                        if (command.toUpperCase().matches(check.toUpperCase())) matched = true;
+                    }
                 }
 
         }
