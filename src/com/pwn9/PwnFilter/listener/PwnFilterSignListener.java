@@ -10,6 +10,7 @@
 
 package com.pwn9.PwnFilter.listener;
 
+import com.pwn9.PwnFilter.DataCache;
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.PwnFilter;
 import com.pwn9.PwnFilter.rules.RuleManager;
@@ -68,7 +69,15 @@ public class PwnFilterSignListener extends BaseListener {
         if (state.messageChanged()){
             // TODO: Can colors be placed on signs?  Wasn't working. Find out why.
             // Break the changed string into words
-            String[] words = state.getModifiedMessage().getPlainString().split("\\b");
+            String[] words;
+
+            // Global decolor
+            if ((PwnFilter.decolor) && !(DataCache.getInstance().hasPermission(event.getPlayer(), "pwnfilter.color"))) {
+                words = state.getModifiedMessage().getPlainString().split("\\b");
+            } else {
+                words = state.getModifiedMessage().getColoredString().split("\\b");
+            }
+
             String[] lines = new String[4];
 
             // Iterate over the 4 sign lines, applying one word at a time, until the line is full.
