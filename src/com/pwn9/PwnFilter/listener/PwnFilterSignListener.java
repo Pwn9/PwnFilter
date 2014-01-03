@@ -24,6 +24,10 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.PluginManager;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 
 /**
  * Listen for Sign Change events and apply the filter to the text.
@@ -58,9 +62,9 @@ public class PwnFilterSignListener extends BaseListener {
         StringBuilder builder = new StringBuilder();
 
         for (String l :event.getLines()) {
-            builder.append(l).append(" ");
+            builder.append(l).append("\t");
         }
-        String signLines = builder.toString();
+        String signLines = builder.toString().trim();
 
         FilterState state = new FilterState(plugin, signLines, event.getPlayer(),this);
 
@@ -68,38 +72,31 @@ public class PwnFilterSignListener extends BaseListener {
 
         if (state.messageChanged()){
             // TODO: Can colors be placed on signs?  Wasn't working. Find out why.
-            // Break the changed string into words
-            String[] words;
+            // Break the changed string into new Lines
+            List<String> newLines = new ArrayList<String>();
 
             // Global decolor
             if ((PwnFilter.decolor) && !(DataCache.getInstance().hasPermission(event.getPlayer(), "pwnfilter.color"))) {
-                words = state.getModifiedMessage().getPlainString().split("\\b");
+                Collections.addAll(newLines,state.getModifiedMessage().getPlainString().split("\t"));
             } else {
-                words = state.getModifiedMessage().getColoredString().split("\\b");
+                Collections.addAll(newLines,state.getModifiedMessage().getColoredString().split("\t"));
             }
 
-            String[] lines = new String[4];
+            String[] outputLines = new String[4];
 
-            // Iterate over the 4 sign lines, applying one word at a time, until the line is full.
-            // If all 4 lines are full, the rest of the words are just discarded.
-            // This may negatively affect plugins that use signs and require text to appear on a certain
-            // line, but we only do this when we've matched a rule.
-            int wordIndex = 0;
-            for (int i = 0 ; i < 4 ; i++) {
-                lines[i] = "";
-                while (wordIndex < words.length) {
-                    if (lines[i].length() + words[wordIndex].length() < 15) {
-                        lines[i] = lines[i] + words[wordIndex] + " ";
-                        wordIndex++;
-                    } else {
-                        break;
-                    }
+            // Check if any of the lines are now too long to fit the sign.  Truncate if they are.
+
+            for (int i = 0 ; i < 4 && i < newLines.size() ; i++) {
+                if (newLines.get(i).length() > 15) {
+                    outputLines[i] = newLines.get(i).substring(0, 15);
+                } else {
+                    outputLines[i] = newLines.get(i);
                 }
             }
 
             for (int i = 0 ; i < 4 ; i++ ) {
-                if (lines[i] != null) {
-                    event.setLine(i,lines[i]);
+                if (outputLines[i] != null) {
+                    event.setLine(i,outputLines[i]);
                 }
             }
         }

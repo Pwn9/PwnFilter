@@ -31,7 +31,7 @@ public abstract class BaseListener implements FilterClient {
     }
 
 
-    protected void setRuleChain(RuleChain rc) {
+    public void setRuleChain(RuleChain rc) {
         ruleChain = rc;
         rc.loadConfigFile();
     }
