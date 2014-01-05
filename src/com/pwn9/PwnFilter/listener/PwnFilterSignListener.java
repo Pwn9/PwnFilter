@@ -97,6 +97,8 @@ public class PwnFilterSignListener extends BaseListener {
             for (int i = 0 ; i < 4 ; i++ ) {
                 if (outputLines[i] != null) {
                     event.setLine(i,outputLines[i]);
+                } else {
+                    event.setLine(i,"");
                 }
             }
         }

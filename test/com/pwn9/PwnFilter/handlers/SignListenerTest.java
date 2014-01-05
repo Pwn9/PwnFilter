@@ -128,6 +128,18 @@ public class SignListenerTest {
         assertArrayEquals(new String[]{"§1Test Line1", "§2Test Changed", "§3Test Line3", "§4Test Line4"}, event.getLines());
     }
 
+    @Test
+    public void testSignDeletesExtraLines() {
+        String[] theLines = {"d", "e", "r", "p"};
+
+        SignChangeEvent event = new SignChangeEvent(mockBlock,mockPlayer,theLines);
+
+        signListener.onSignChange(event);
+
+        assertArrayEquals(new String[]{"foo","","",""}, event.getLines());
+
+    }
+
     @After
     public void tearDown() throws Exception {
     }
