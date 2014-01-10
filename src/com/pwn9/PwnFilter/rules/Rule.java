@@ -103,7 +103,7 @@ public class Rule implements ChainEntry {
             LogManager.logger.info("Testing Pattern: '" + pattern.toString() + "' on string: '" + state.getModifiedMessage().getPlainString()+"'");
         }
 
-            LimitedRegexCharSequence limitedRegexCharSequence = new LimitedRegexCharSequence(state.getModifiedMessage().getPlainString(),1000);
+            LimitedRegexCharSequence limitedRegexCharSequence = new LimitedRegexCharSequence(state.getModifiedMessage().getPlainString(),100);
             final Matcher matcher = pattern.matcher(limitedRegexCharSequence);
         // If we don't match, return immediately with the original message
         try {

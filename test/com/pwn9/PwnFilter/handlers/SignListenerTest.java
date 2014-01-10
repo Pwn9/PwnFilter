@@ -32,7 +32,7 @@ import static org.easymock.EasyMock.replay;
 import static org.junit.Assert.assertArrayEquals;
 
 /**
- * Tests for Actions
+ * Tests for the Sign Listener
  * User: ptoal
  * Date: 13-05-04
  * Time: 11:28 AM
@@ -41,7 +41,6 @@ import static org.junit.Assert.assertArrayEquals;
 public class SignListenerTest {
 
     final String TESTRULECHAIN = "signTests.txt";
-    final String CLIENTNAME = "SIGNTEST";
     private Block mockBlock;
     private Player mockPlayer;
 
@@ -75,11 +74,8 @@ public class SignListenerTest {
     @Test
     public void testSignListenerNoMatch() {
         String[] theLines = {"Test Line1", "Test Line2", "Test Line3", "Test Line4"};
-
         SignChangeEvent event = new SignChangeEvent(mockBlock,mockPlayer,theLines);
-
         signListener.onSignChange(event);
-
         assertArrayEquals(new String[]{"Test Line1", "Test Line2", "Test Line3", "Test Line4"}, event.getLines());
     }
 
@@ -87,57 +83,41 @@ public class SignListenerTest {
     @Test
     public void testSignListenerReplacesText() {
         String[] theLines = {"Test Line1", "Changeme", "Test Line3", "Test Line4"};
-
         SignChangeEvent event = new SignChangeEvent(mockBlock,mockPlayer,theLines);
-
         signListener.onSignChange(event);
-
         assertArrayEquals(new String[]{"Test Line1", "Changed", "Test Line3", "Test Line4"}, event.getLines());
     }
 
     @Test
     public void testSignListenerTruncatesLine() {
         String[] theLines = {"Test Line1", "ReplaceLong", "Test Line3", "Test Line4"};
-
         SignChangeEvent event = new SignChangeEvent(mockBlock,mockPlayer,theLines);
-
         signListener.onSignChange(event);
-
         assertArrayEquals(new String[]{"Test Line1", "123456789012345", "Test Line3", "Test Line4"}, event.getLines());
     }
 
     @Test
     public void testSignColorsWork() {
         String[] theLines = {"&1Test Line1", "§2Test Line2", "&3Test Line3", "§4Test Line4"};
-
         SignChangeEvent event = new SignChangeEvent(mockBlock,mockPlayer,theLines);
-
         signListener.onSignChange(event);
-
         assertArrayEquals(new String[]{"&1Test Line1", "§2Test Line2", "&3Test Line3", "§4Test Line4"}, event.getLines());
     }
 
     @Test
     public void testSignColorsWorkAfterReplace() {
         String[] theLines = {"&1Test Line1", "§2Test Changeme", "&3Test Line3", "§4Test Line4"};
-
         SignChangeEvent event = new SignChangeEvent(mockBlock,mockPlayer,theLines);
-
         signListener.onSignChange(event);
-
         assertArrayEquals(new String[]{"§1Test Line1", "§2Test Changed", "§3Test Line3", "§4Test Line4"}, event.getLines());
     }
 
     @Test
     public void testSignDeletesExtraLines() {
         String[] theLines = {"d", "e", "r", "p"};
-
         SignChangeEvent event = new SignChangeEvent(mockBlock,mockPlayer,theLines);
-
         signListener.onSignChange(event);
-
         assertArrayEquals(new String[]{"foo","","",""}, event.getLines());
-
     }
 
     @After
