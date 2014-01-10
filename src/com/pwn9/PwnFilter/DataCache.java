@@ -194,12 +194,17 @@ public class DataCache {
           queuedPlayerList[].  If so, it will process them.  If not, it will
           grab the list of online players, and add it to the list.
          */
-        if (queuedPlayerList.size() < 1) {
+        if (queuedPlayerList.size() == 0) {
 
             // A quick "Sanity Check" that our internal list of online players matches
             // The actual list of online players...
             if (!onlinePlayers.containsAll(Arrays.asList(Bukkit.getOnlinePlayers()))) {
-                LogManager.logger.warning("Cached Player List is not equal to actual online player list!");
+                Set<Player> difference = new HashSet<Player>(Arrays.asList(Bukkit.getOnlinePlayers()));
+                difference.removeAll(onlinePlayers);
+                for (Player p : difference) {
+                    LogManager.logger.fine("Player: "+p.getName() + " was not detected when logging in.  Added to cache.");
+                    addPlayer(p);
+                }
             }
 
             if (onlinePlayers.size() > 0) {
@@ -208,14 +213,14 @@ public class DataCache {
             // Clear out stale data
             for (Player p : playerName.keySet() ) {
                 if (!onlinePlayers.contains(p)) {
-                    LogManager.logger.warning("Removing cached, but offline player: " + p.getName());
+                    LogManager.logger.fine("Player: " + p.getName() + " was not detected when logging off.  Removed from cache.");
                     removePlayer(p);
                 }
             }
         }
         // Update the cache
         for (int i= 0 ; i < playersPerRun ; i++) {
-            if (queuedPlayerList.size() < 1) break;
+            if (queuedPlayerList.size() == 0) break;
             Player player = queuedPlayerList.remove(0);
             cachePlayerPermissions(player);
 
