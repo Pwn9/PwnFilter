@@ -15,6 +15,18 @@ A new filter has been added for books.  This can be enabled with the following c
 A new file called "book.txt" in the rules directory will be applied to books.
 Both the title and the pages will be filtered.
 
+New Actions
+-----------
+
+then broadcast <string>|<<END
+
+This action is the same as "then respond", but instead of sending the message
+to the player, it is broadcast to all players on the server.
+
+then broadcastfile <filename.txt>
+
+This is the same as "then respondfile", but instead of sending the message to
+the player, it sends it to all players on the server.
 
 
 
