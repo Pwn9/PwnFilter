@@ -168,5 +168,4 @@ public class FilterState {
         unfilteredMessage = newMessage;
     }
 
-
 }

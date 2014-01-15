@@ -258,4 +258,12 @@ public final class ColoredString implements CharSequence {
 
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof ColoredString ) {
+            return ((ColoredString) obj).getColoredString().equals(getColoredString());
+        } else {
+            return getColoredString().equals(obj);
+        }
+    }
 }
