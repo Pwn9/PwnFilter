@@ -72,7 +72,7 @@ public class PwnFilterPlayerListener extends BaseListener {
         // Global decolor
         if ((PwnFilter.decolor) && !(dCache.hasPermission(player, "pwnfilter.color"))) {
             // We are changing the state of the message.  Let's do that before any rules processing.
-            state.getModifiedMessage().decolor();
+            state.setModifiedMessage(state.getModifiedMessage().decolor());
         }
 
         // Take the message from the ChatEvent and send it through the filter.

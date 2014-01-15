@@ -113,11 +113,6 @@ public class PwnFilterCommandListener extends BaseListener {
                 PwnFilter.lastMessage.put(player, message);
             }
 
-            // Global decolor
-            if ((PwnFilter.decolor) && !(dCache.hasPermission(player,"pwnfilter.color"))) {
-                state.getModifiedMessage().decolor();
-            }
-
             chatRuleChain.execute(state);
 
         } else {
