@@ -10,6 +10,8 @@
 
 package com.pwn9.PwnFilter;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import com.pwn9.PwnFilter.util.LogManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -17,7 +19,6 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.Plugin;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 /**
@@ -43,26 +44,21 @@ public class DataCache {
     private static DataCache _instance = null;
 
     // Permissions we are interested in caching
-    protected Set<String> permSet = new TreeSet<String>();
+    protected Set<String> permSet = new HashSet<String>();
 
     //private
     private final Plugin plugin;
     private int taskId;
-    private ConcurrentHashMap<Player,String> playerName;
-    private ConcurrentHashMap<String, Player> playerForName;
-    private ConcurrentHashMap<UUID, Player> playerForUUID;
-    private ConcurrentHashMap<Player,String> playerWorld;
-    private ConcurrentHashMap<Player,HashSet<String>> playerPermissions;
-    private ArrayList<Player> queuedPlayerList = new ArrayList<Player>();
+    private Map<Player,String> playerName = new HashMap<Player, String>();
+    private Map<String, Player> playerForName = new HashMap<String, Player>();
+    private Map<UUID, Player> playerForUUID = new HashMap<UUID, Player>();
+    private Map<Player,String> playerWorld = new HashMap<Player, String>();
+    private Multimap<Player, String> playerPermissions = HashMultimap.create();
+    private List<Player> queuedPlayerList = new ArrayList<Player>();
     private Set<Player> onlinePlayers = new HashSet<Player>();
 
     private DataCache(Plugin plugin) {
         if (plugin == null) throw new IllegalStateException("Could not get PwnFilter instance!");
-        playerName = new ConcurrentHashMap<Player,String>();
-        playerForName = new ConcurrentHashMap<String, Player>();
-        playerForUUID = new ConcurrentHashMap<UUID, Player>();
-        playerWorld = new ConcurrentHashMap<Player,String>();
-        playerPermissions = new ConcurrentHashMap<Player,HashSet<String>>();
         this.plugin = plugin;
     }
 
@@ -80,13 +76,11 @@ public class DataCache {
 
 
     public boolean hasPermission(Player p, String s) {
-        HashSet<String> perms = playerPermissions.get(p);
-        return perms != null && perms.contains(s);
+        return playerPermissions.get(p).contains(s);
     }
 
     public boolean hasPermission(Player p, Permission perm) {
-        HashSet<String> perms = playerPermissions.get(p);
-        return perms != null && perms.contains(perm.getName());
+        return playerPermissions.get(p).contains(perm.getName());
     }
 
     public String getPlayerWorld(Player p) {
@@ -153,7 +147,7 @@ public class DataCache {
             l.finest("Player ID: " + p.getUniqueId() + " Name: " + playerName.get(p) + " World: " + playerWorld.get(p));
             StringBuilder s = new StringBuilder();
             sb.append("PermissionsSet : ");
-            HashSet<String> perms = playerPermissions.get(p);
+            Collection<String> perms = playerPermissions.get(p);
             for (String perm : perms) {
                 s.append(perm);
                 s.append(" ");
@@ -185,7 +179,7 @@ public class DataCache {
         playerName.remove(p);
         playerWorld.remove(p);
         playerForUUID.remove(p.getUniqueId());
-        playerPermissions.remove(p);
+        playerPermissions.get(p).clear();
     }
 
     private synchronized void updateCache() {
@@ -240,15 +234,13 @@ public class DataCache {
     // synchronized methods can call it.
 
     private void cachePlayerPermissions(Player p) {
-        HashSet<String> playerPerms = new HashSet<String>();
 
         for (String perm : permSet) {
             if (p.hasPermission(perm)) {
-                playerPerms.add(perm);
+                playerPermissions.put(p, perm);
             }
         }
 
-        playerPermissions.put(p, playerPerms);
     }
 
 
