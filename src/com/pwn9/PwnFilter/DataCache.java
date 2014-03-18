@@ -49,10 +49,6 @@ public class DataCache {
     //private
     private final Plugin plugin;
     private int taskId;
-    private Map<Player,String> playerName = new HashMap<Player, String>();
-    private Map<String, Player> playerForName = new HashMap<String, Player>();
-    private Map<UUID, Player> playerForUUID = new HashMap<UUID, Player>();
-    private Map<Player,String> playerWorld = new HashMap<Player, String>();
     private Multimap<Player, String> playerPermissions = HashMultimap.create();
     private List<Player> queuedPlayerList = new ArrayList<Player>();
     private Set<Player> onlinePlayers = new HashSet<Player>();
@@ -74,32 +70,12 @@ public class DataCache {
         return onlinePlayers.toArray(new Player[onlinePlayers.size()]);
     }
 
-
     public boolean hasPermission(Player p, String s) {
         return playerPermissions.get(p).contains(s);
     }
 
     public boolean hasPermission(Player p, Permission perm) {
         return playerPermissions.get(p).contains(perm.getName());
-    }
-
-    public String getPlayerWorld(Player p) {
-        if (p.isOnline())
-            return playerWorld.get(p);
-        else
-            return null;
-    }
-
-    public String getPlayerName(Player p) {
-        return playerName.get(p);
-    }
-
-    public Player getPlayerForName(String name) {
-        return playerForName.get(name);
-    }
-
-    public Player getPlayerForUUID(UUID id) {
-        return playerForUUID.get(id);
     }
 
     public void start() {
@@ -118,7 +94,7 @@ public class DataCache {
 
     public void stop() {
         Bukkit.getScheduler().cancelTask(taskId);
-        for (Player p : playerName.keySet()) {
+        for (Player p : onlinePlayers) {
             removePlayer(p);
         }
         taskId = 0;
@@ -135,7 +111,7 @@ public class DataCache {
         l.finest("PwnFilter Data Cache Contents:");
         l.finest("Task Id: " + taskId);
         l.finest("Online Players: " + Bukkit.getOnlinePlayers().length);
-        l.finest("Total Names: " + playerName.size() + " Worlds: " + playerWorld.size() + " Perms: " + playerPermissions.size());
+        l.finest("Total Names: " + onlinePlayers.size() + " Perms: " + playerPermissions.size());
         StringBuilder sb = new StringBuilder();
         for (Player p : queuedPlayerList ){
             sb.append(p.toString());
@@ -143,8 +119,8 @@ public class DataCache {
         }
         l.finest(sb.toString());
         l.finest("-----PlayerCache ------");
-        for (Player p : playerName.keySet()) {
-            l.finest("Player ID: " + p.getUniqueId() + " Name: " + playerName.get(p) + " World: " + playerWorld.get(p));
+        for (Player p : onlinePlayers) {
+            l.finest("Player ID: " + p.getUniqueId() + " Name: " + p.getName() + " World: " + p.getWorld().getName());
             StringBuilder s = new StringBuilder();
             sb.append("PermissionsSet : ");
             Collection<String> perms = playerPermissions.get(p);
@@ -163,22 +139,10 @@ public class DataCache {
     */
     public synchronized void addPlayer(Player p) {
         onlinePlayers.add(p);
-        playerName.put(p, p.getName());
-        playerForName.put(p.getName(), p);
-        playerForUUID.put(p.getUniqueId(),p);
-        playerWorld.put(p, p.getWorld().getName());
-    }
-
-    public synchronized void updatePlayerWorld(Player p) {
-        playerWorld.put(p,p.getWorld().getName());
     }
 
     public synchronized void removePlayer(Player p) {
         onlinePlayers.remove(p);
-        playerForName.remove(p.getName());
-        playerName.remove(p);
-        playerWorld.remove(p);
-        playerForUUID.remove(p.getUniqueId());
         playerPermissions.get(p).clear();
     }
 
@@ -188,8 +152,7 @@ public class DataCache {
           queuedPlayerList[].  If so, it will process them.  If not, it will
           grab the list of online players, and add it to the list.
          */
-        if (queuedPlayerList.size() < 1) {
-
+        if (queuedPlayerList.isEmpty()) {
             // A quick "Sanity Check" that our internal list of online players matches
             // The actual list of online players...
             if (!onlinePlayers.containsAll(Arrays.asList(Bukkit.getOnlinePlayers()))) {
@@ -200,16 +163,18 @@ public class DataCache {
                 queuedPlayerList.addAll(onlinePlayers);
             }
             // Clear out stale data
-            for (Player p : playerName.keySet() ) {
-                if (!onlinePlayers.contains(p)) {
+            for (Iterator<Player> it = onlinePlayers.iterator(); it.hasNext(); ) {
+                Player p = it.next();
+                if (!p.isOnline()) {
                     LogManager.logger.warning("Removing cached, but offline player: " + p.getName());
-                    removePlayer(p);
+                    playerPermissions.get(p).clear();
+                    it.remove();
                 }
             }
         }
         // Update the cache
         for (int i= 0 ; i < playersPerRun ; i++) {
-            if (queuedPlayerList.size() < 1) break;
+            if (queuedPlayerList.isEmpty()) break;
             Player player = queuedPlayerList.remove(0);
             cachePlayerPermissions(player);
 

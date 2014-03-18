@@ -19,6 +19,8 @@ import java.util.Random;
  */
 @SuppressWarnings("UnusedDeclaration")
 public class Actionrandrep implements Action {
+    private static Random random = new Random();
+
     // toRand is a String array of options to chose from for replacement.
     String[] toRand;
 
@@ -29,7 +31,6 @@ public class Actionrandrep implements Action {
     }
 
     public boolean execute(final FilterState state ) {
-        Random random = new Random();
         int randomInt = random.nextInt(toRand.length);
         state.setModifiedMessage(state.getModifiedMessage().replaceText(state.pattern,toRand[randomInt]));
 

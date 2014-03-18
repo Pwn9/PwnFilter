@@ -13,6 +13,7 @@ package com.pwn9.PwnFilter;
 import com.pwn9.PwnFilter.api.FilterClient;
 import com.pwn9.PwnFilter.rules.Rule;
 import com.pwn9.PwnFilter.util.ColoredString;
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -72,12 +73,12 @@ public class FilterState {
         messageLen = originalMessage.length();
         player = p;
         if (p != null) {
-            playerName = DataCache.getInstance().getPlayerName(p);
+            playerName = p.getName();
         } else {
             playerName = "*CONSOLE*";
         }
         if (p != null) {
-            playerWorldName = DataCache.getInstance().getPlayerWorld(p);
+            playerWorldName = p.getWorld().getName();
         } else {
             playerWorldName = "";
         }
@@ -102,7 +103,7 @@ public class FilterState {
         playerWorldName = (w == null)?"":w.getName();
         plugin = pl;
         listener = l;
-        player = DataCache.getInstance().getPlayerForName(pName);
+        player = Bukkit.getPlayerExact(pName);
     }
 
     /**

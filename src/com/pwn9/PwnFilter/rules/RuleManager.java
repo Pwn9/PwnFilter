@@ -15,9 +15,11 @@ import com.pwn9.PwnFilter.util.FileUtil;
 import com.pwn9.PwnFilter.util.LogManager;
 
 import java.io.File;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Manage RuleSets, rulefiles, etc.  All ruleChains that are to be managed by
@@ -30,7 +32,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @SuppressWarnings("UnusedDeclaration")
 public class RuleManager {
     private static RuleManager _instance = null;
-    private ConcurrentHashMap<String, RuleChain> ruleChains = new ConcurrentHashMap<String, RuleChain>();
+    private final Map<String, RuleChain> ruleChains = Collections.synchronizedMap(new HashMap<String, RuleChain>());
     private File ruleDir;
     private PwnFilter plugin;
 
@@ -129,27 +131,29 @@ public class RuleManager {
         // references properly.
 
         // Invalidate all ruleChains
-        for (RuleChain rc : ruleChains.values()) {
-            rc.resetChain();
-        }
-
-        // Reload all the shortcuts
-        ShortCutManager.getInstance().reloadFiles();
-
-        // Now, reparse the configs
-        for (String ruleSetName : new CopyOnWriteArrayList<String>(ruleChains.keySet())) {
-            RuleChain chain = ruleChains.get(ruleSetName);
-            if (chain.loadConfigFile()) {
-                LogManager.getInstance().debugMedium("Re-loaded RuleChain from config: " + chain.getConfigName());
-            } else {
-                LogManager.getInstance().debugMedium("Unable to load RuleChain from config: " + chain.getConfigName());
+        synchronized (ruleChains) {
+            for (RuleChain rc : ruleChains.values()) {
+                rc.resetChain();
             }
-        }
 
-        // Now remove the ones that aren't fully loaded.
-        for (Map.Entry <String, RuleChain>e : ruleChains.entrySet()) {
-            if (e.getValue().isValid()) {
-                ruleChains.remove(e.getKey());
+            // Reload all the shortcuts
+            ShortCutManager.getInstance().reloadFiles();
+
+            // Now, reparse the configs
+            for (Map.Entry <String, RuleChain> entry : ruleChains.entrySet()) {
+                if (entry.getValue().loadConfigFile()) {
+                    LogManager.getInstance().debugMedium("Re-loaded RuleChain from config: " + entry.getValue().getConfigName());
+                } else {
+                    LogManager.getInstance().debugMedium("Unable to load RuleChain from config: " + entry.getValue().getConfigName());
+                }
+            }
+
+            // Now remove the ones that aren't fully loaded.
+            for (Iterator<Map.Entry <String, RuleChain>>it = ruleChains.entrySet().iterator(); it.hasNext(); ) {
+                Map.Entry <String, RuleChain> e = it.next();
+                if (!e.getValue().isValid()) {
+                    it.remove();
+                }
             }
         }
     }

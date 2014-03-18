@@ -17,7 +17,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.HashMap;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
 public class ShortCutManager {
     // TODO: Create a "ShortCuts" object to pass around, instead of HashMaps.
     private static ShortCutManager _instance;
-    private static ConcurrentHashMap<String, HashMap<String,String>> shortcutFiles = new ConcurrentHashMap<String, HashMap<String, String>>();
+    private static Map<String, Map<String,String>> shortcutFiles = new HashMap<String, Map<String, String>>();
     private static File shortcutDir;
 
     private ShortCutManager() {}
@@ -49,7 +49,7 @@ public class ShortCutManager {
         } else return false;
     }
 
-    public static String replace(HashMap<String,String> shortcuts, String lineData) {
+    public static String replace(Map<String,String> shortcuts, String lineData) {
         // If we don't have a shortcuts file to process, just return what we were given.
         if (shortcuts == null) return lineData;
 
@@ -76,8 +76,8 @@ public class ShortCutManager {
 
     }
 
-    public HashMap<String, String> getShortcutMap(String mapFileName) {
-        HashMap<String, String> returnValue = shortcutFiles.get(mapFileName);
+    public Map<String, String> getShortcutMap(String mapFileName) {
+        Map<String, String> returnValue = shortcutFiles.get(mapFileName);
 
         if (returnValue != null) {
             return returnValue;
@@ -89,12 +89,12 @@ public class ShortCutManager {
 
     public void reloadFiles() {
         // Just wipe out the old.  They will be reloaded on first access.
-        shortcutFiles = new ConcurrentHashMap<String, HashMap<String, String>>();
+        shortcutFiles.clear();
     }
 
     public boolean loadFile(String fileName) {
 
-        HashMap<String,String> varset = new HashMap<String, String>();
+        Map<String,String> varset = new HashMap<String, String>();
 
         File shortcutFile = getFile(fileName);
 

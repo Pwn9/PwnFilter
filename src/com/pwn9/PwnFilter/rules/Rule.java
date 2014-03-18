@@ -34,10 +34,10 @@ public class Rule implements ChainEntry {
     private String id = "";
     private boolean modifyRaw = false; // Set to true, to modify "raw" message.
 
-    ArrayList<Condition> conditions = new ArrayList<Condition>();
-    ArrayList<Action> actions = new ArrayList<Action>();
-    public ArrayList<String> includeEvents = new ArrayList<String>();
-    public ArrayList<String> excludeEvents = new ArrayList<String>();
+    List<Condition> conditions = new ArrayList<Condition>();
+    List<Action> actions = new ArrayList<Action>();
+    public List<String> includeEvents = new ArrayList<String>();
+    public List<String> excludeEvents = new ArrayList<String>();
 
         /* Constructors */
 
@@ -78,7 +78,7 @@ public class Rule implements ChainEntry {
 
     @Override
     public Set<String> getPermissionList() {
-        TreeSet<String> permList = new TreeSet<String>();
+        Set<String> permList = new HashSet<String>();
 
         for (Condition c : conditions) {
             if (c.type == Condition.CondType.permission) {
@@ -158,7 +158,7 @@ public class Rule implements ChainEntry {
     public boolean addCondition(Condition c) {
         return c != null && conditions.add(c);
     }
-    public boolean addConditions(List<Condition> conditionList) {
+    public boolean addConditions(Collection<Condition> conditionList) {
         return conditionList != null && conditions.addAll(conditionList);
     }
 
@@ -170,7 +170,7 @@ public class Rule implements ChainEntry {
         return a != null && actions.add(a);
     }
 
-    public boolean addActions(List<Action> actionList) {
+    public boolean addActions(Collection<Action> actionList) {
         return actionList != null && actions.addAll(actionList);
     }
 
