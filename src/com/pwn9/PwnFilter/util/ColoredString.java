@@ -241,6 +241,17 @@ public final class ColoredString implements CharSequence {
         }
         return new ColoredString(this);
     }
+    
+    public ColoredString patternToUpper (Pattern p) {
+        Matcher m = p.matcher(new String(plain));
+
+        while (m.find()) {
+            for (int i = m.start() ; i < m.end() ; i++ ) {
+                plain[i] = Character.toUpperCase(plain[i]);
+            }
+        }
+        return new ColoredString(this);
+    }    
 
     /**
      * Returns a concatenation of two strings, a + b.  If a or b are null, they
