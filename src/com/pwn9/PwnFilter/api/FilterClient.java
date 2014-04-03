@@ -32,6 +32,7 @@ public interface FilterClient extends Listener {
      */
     public String getShortName();
 
+
     /**
      *
       * @return The primary rulechain for this filter

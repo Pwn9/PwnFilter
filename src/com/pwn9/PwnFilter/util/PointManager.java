@@ -177,9 +177,9 @@ public class PointManager implements FilterClient {
 
     }
 
-    private void executeActions(Double fromValue, Double toValue, String playerName) {
-        Double oldKey = thresholds.floorKey(fromValue);
-        Double newKey = thresholds.floorKey(toValue);
+    private void executeActions(final Double fromValue, final Double toValue, final String playerName) {
+        final Double oldKey = thresholds.floorKey(fromValue);
+        final Double newKey = thresholds.floorKey(toValue);
 
         if (oldKey.equals(newKey)) return;
 
@@ -187,12 +187,21 @@ public class PointManager implements FilterClient {
 
             // Check to see if we've crossed any thresholds on our way up/down, and if so
             // execute the actions for that crossing.
-
-            for (Map.Entry<Double,Threshold> entry : thresholds.subMap(oldKey, false, newKey, true).entrySet())
-                entry.getValue().executeAscending(playerName);
+            Bukkit.getScheduler().runTask(plugin, new BukkitRunnable() {
+                @Override
+                public void run() {
+                    for (Map.Entry<Double, Threshold> entry : thresholds.subMap(oldKey, false, newKey, true).entrySet())
+                        entry.getValue().executeAscending(playerName);
+                }
+            });
         } else {
-            for (Map.Entry<Double, Threshold> entry : thresholds.subMap(newKey, false, oldKey, true).descendingMap().entrySet())
-                entry.getValue().executeDescending(playerName);
+            Bukkit.getScheduler().runTask(plugin, new BukkitRunnable() {
+                @Override
+                public void run() {
+                    for (Map.Entry<Double, Threshold> entry : thresholds.subMap(newKey, false, oldKey, true).descendingMap().entrySet())
+                        entry.getValue().executeDescending(playerName);
+                }
+            });
         }
 
     }
