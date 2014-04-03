@@ -46,8 +46,10 @@ public class Actionrespondfile implements Action {
             }
         } catch (FileNotFoundException ex) {
             LogManager.logger.warning("File not found while trying to add Action: " + ex.getMessage());
+            messageStrings.add("[PwnFilter] Configuration error: file not found.");
         } catch (IOException ex) {
             LogManager.logger.warning("Error reading: " + textfile.getName());
+            messageStrings.add("[PwnFilter] Error: respondfile IO.  Please notify admins.");
         }
     }
 
