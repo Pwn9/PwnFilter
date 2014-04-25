@@ -58,10 +58,19 @@ public class DataCache {
         this.plugin = plugin;
     }
 
+    public static DataCache init(PwnFilter p) {
+        if (_instance == null) {
+            _instance = new DataCache(p);
+            return _instance;
+        } else {
+            return _instance;
+        }
+    }
+
     // This method is for other classes to call to query the cache.
     public static DataCache getInstance() throws IllegalStateException {
         if ( _instance == null ) {
-            _instance = new DataCache(PwnFilter.getInstance());
+            throw new IllegalStateException("DataCache not initialized.");
         }
         return _instance;
     }

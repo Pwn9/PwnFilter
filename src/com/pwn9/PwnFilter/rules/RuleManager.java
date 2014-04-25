@@ -19,7 +19,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Manage RuleSets, rulefiles, etc.  All ruleChains that are to be managed by
@@ -43,9 +42,18 @@ public class RuleManager {
 
     public static RuleManager getInstance() {
         if (_instance == null) {
-            _instance = new RuleManager(PwnFilter.getInstance());
+            throw new IllegalStateException("Rule Manager not initialized.");
         }
         return _instance;
+    }
+
+    public static RuleManager init(PwnFilter p) {
+        if (_instance == null) {
+            _instance = new RuleManager(p);
+            return _instance;
+        } else {
+            return _instance;
+        }
     }
 
     public File getRuleDir() {

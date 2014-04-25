@@ -17,13 +17,19 @@ import com.pwn9.PwnFilter.rules.action.Actiondeny;
 import com.pwn9.PwnFilter.rules.action.Actionrespond;
 import com.pwn9.PwnFilter.util.LogManager;
 import junit.framework.Assert;
+import org.easymock.EasyMock;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.easymock.PowerMock;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.io.StringReader;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -37,24 +43,27 @@ import static org.junit.Assert.assertTrue;
  * Time: 11:28 AM
  */
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({PwnFilter.class})
 public class ParserTest {
 
     RuleManager ruleManager;
     RuleChain rs;
     LogManager pwnLogger;
-//    FilterClient mockClient = new FilterClient() {
-//        public String getShortName() { return "TEST"; }
-//        public RuleChain getRuleChain() { return ruleManager.getRuleChain("testrules.txt");}
-//        public boolean isActive() { return true; }
-//        public void activate(Configuration config) {}
-//        public void shutdown() {}
-//    };
+
     PwnFilter mockPlugin;
 
     @Before
     public void setUp() throws Exception {
-        mockPlugin = new PwnFilter();
-        ruleManager = RuleManager.getInstance();
+        PowerMock.mockStatic(PwnFilter.class);
+        mockPlugin = PowerMock.createMock(PwnFilter.class);
+        EasyMock.expect(PwnFilter.getInstance()).andReturn(mockPlugin).anyTimes();
+        EasyMock.expect(mockPlugin.getBufferedReader("testfile.txt"))
+                .andReturn(new BufferedReader(new StringReader("test")));
+        PowerMock.replay(PwnFilter.class);
+        PowerMock.replay(mockPlugin);
+        ruleManager = RuleManager.init(mockPlugin);
+        DataCache.init(mockPlugin);
         File testFile = new File(getClass().getResource("/testrules.txt").getFile());
         ruleManager.setRuleDir(testFile.getParent());
         Logger logger = Logger.getLogger("PwnFilter");

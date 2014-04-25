@@ -50,7 +50,7 @@ public class pfreload implements CommandExecutor {
 
         LogManager.logger.config("Reloaded config.yml as requested by " + sender.getName());
 
-        PointManager.setup();
+        PointManager.setup(plugin);
 
         RuleManager.getInstance().reloadAllConfigs();
         LogManager.logger.config("All rules reloaded by " + sender.getName());

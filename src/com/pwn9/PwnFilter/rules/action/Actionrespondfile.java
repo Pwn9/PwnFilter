@@ -12,14 +12,15 @@ package com.pwn9.PwnFilter.rules.action;
 
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.PwnFilter;
-import com.pwn9.PwnFilter.util.FileUtil;
 import com.pwn9.PwnFilter.util.LogManager;
 import com.pwn9.PwnFilter.util.Patterns;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -31,15 +32,8 @@ public class Actionrespondfile implements Action {
 
     public void init(String s)
     {
-        File textDir = PwnFilter.getInstance().getTextDir();
-        if (textDir == null) return; // Er... Probably should return something, or at least log...
-
-        File textfile = FileUtil.getFile(textDir,s,false);
-        if (textfile == null) return;
-
         try {
-            FileInputStream fs  = new FileInputStream(textfile);
-            BufferedReader br = new BufferedReader(new InputStreamReader(fs));
+            BufferedReader br = PwnFilter.getInstance().getBufferedReader(s);
             String message;
             while ( (message = br.readLine()) != null ) {
                 messageStrings.add(ChatColor.translateAlternateColorCodes('&',message));
@@ -48,7 +42,7 @@ public class Actionrespondfile implements Action {
             LogManager.logger.warning("File not found while trying to add Action: " + ex.getMessage());
             messageStrings.add("[PwnFilter] Configuration error: file not found.");
         } catch (IOException ex) {
-            LogManager.logger.warning("Error reading: " + textfile.getName());
+            LogManager.logger.warning("Error reading file: " + s);
             messageStrings.add("[PwnFilter] Error: respondfile IO.  Please notify admins.");
         }
     }

@@ -6,6 +6,7 @@ import com.pwn9.PwnFilter.PwnFilter;
 import com.pwn9.PwnFilter.api.FilterClient;
 import com.pwn9.PwnFilter.util.LogManager;
 import org.bukkit.configuration.Configuration;
+import org.easymock.EasyMock;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,7 +27,7 @@ public class ActionTest {
 
     RuleManager ruleManager;
     RuleChain rs;
-    PwnFilter mockPlugin = new PwnFilter();
+    PwnFilter mockPlugin;
     LogManager pwnLogger;
     FilterClient mockClient = new FilterClient() {
         public String getShortName() { return "ACTIONTEST"; }
@@ -38,13 +39,14 @@ public class ActionTest {
 
     @Before
     public void setUp() throws Exception {
-        ruleManager = RuleManager.getInstance();
+        mockPlugin = EasyMock.createMock(PwnFilter.class);
+        ruleManager = RuleManager.init(mockPlugin);
+        DataCache.init(mockPlugin);
         File testFile = new File(getClass().getResource("/actionTests.txt").getFile());
         ruleManager.setRuleDir(testFile.getParent());
         rs = ruleManager.getRuleChain("actionTests.txt");
         Logger logger = Logger.getAnonymousLogger();
         pwnLogger = LogManager.getInstance(logger, new File("/tmp/"));
-        DataCache.getInstance();
         rs.loadConfigFile();
     }
 

@@ -49,8 +49,7 @@ public class PointManager implements FilterClient {
         this.plugin = p;
     }
 
-    public static PointManager setup() {
-        PwnFilter pwnFilter = PwnFilter.getInstance();
+    public static PointManager setup(PwnFilter pwnFilter) {
         ConfigurationSection pointsSection = pwnFilter.getConfig().getConfigurationSection("points");
         if (!pointsSection.getBoolean("enabled")) {
             if (_instance != null) _instance.stopLeaking();
@@ -79,7 +78,7 @@ public class PointManager implements FilterClient {
             setPlayerPoints(playerName,0.0);
         }
 
-        setup();
+        setup(plugin);
     }
 
     private void startLeaking() {
@@ -143,7 +142,7 @@ public class PointManager implements FilterClient {
 
     public static PointManager getInstance() {
         if (_instance == null ) {
-            return setup();
+            throw new IllegalStateException("Point Manager Not initialized.");
         }
         return _instance;
     }

@@ -20,6 +20,7 @@ import com.pwn9.PwnFilter.command.pfreload;
 import com.pwn9.PwnFilter.listener.*;
 import com.pwn9.PwnFilter.rules.RuleChain;
 import com.pwn9.PwnFilter.rules.RuleManager;
+import com.pwn9.PwnFilter.util.FileUtil;
 import com.pwn9.PwnFilter.util.LogManager;
 import com.pwn9.PwnFilter.util.PointManager;
 import com.pwn9.PwnFilter.util.Tracker;
@@ -30,11 +31,8 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.Metrics;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
@@ -100,12 +98,15 @@ public class PwnFilter extends JavaPlugin {
         setupEconomy();
 
         // Initialize the DataCache
-        DataCache.getInstance();
+        DataCache.init(this);
 
         DataCache.getInstance().addPermissions(getDescription().getPermissions());
 
+        // Initialize the Rule Manager
+        RuleManager.init(this);
+
         // Initialize Points Manager if its enabled
-        PointManager.setup();
+        PointManager.setup(this);
 
         // Activate Plugin Metrics
         activateMetrics();
@@ -256,6 +257,17 @@ public class PwnFilter extends JavaPlugin {
         }
         LogManager.logger.info("Vault dependency not found.  Disabling actions requiring Vault");
 
+    }
+
+    public BufferedReader getBufferedReader(String filename) throws FileNotFoundException {
+
+        if (textDir == null) throw new FileNotFoundException("Could not open Textfile Directory.");
+
+        File textfile = FileUtil.getFile(getTextDir(), filename, false);
+        if (textfile == null) throw new FileNotFoundException("Unable to open file: " + filename);
+
+        FileInputStream fs  = new FileInputStream(textfile);
+        return new BufferedReader(new InputStreamReader(fs));
     }
 
     //TODO: Handle this better
