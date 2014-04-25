@@ -80,6 +80,9 @@ public class PwnFilter extends JavaPlugin {
         // Set up the Log manager.
         LogManager.getInstance(getLogger(),getDataFolder());
 
+        // Initialize the Rule Manager
+        RuleManager.init(this);
+
         //Try to migrate old rules.txt file
         RuleManager.getInstance().migrateRules(getDataFolder());
 
@@ -101,9 +104,6 @@ public class PwnFilter extends JavaPlugin {
         DataCache.init(this);
 
         DataCache.getInstance().addPermissions(getDescription().getPermissions());
-
-        // Initialize the Rule Manager
-        RuleManager.init(this);
 
         // Initialize Points Manager if its enabled
         PointManager.setup(this);
