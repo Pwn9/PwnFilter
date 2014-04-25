@@ -74,7 +74,7 @@ public class ParserTest {
     public void testShortcuts() {
         rs = ruleManager.getRuleChain("testrules.txt");
         rs.loadConfigFile();
-        ArrayList<ChainEntry> ruleChain = rs.getChain();
+        List<ChainEntry> ruleChain = rs.getChain();
         for (ChainEntry e : ruleChain) {
             if(e.toString().equals("ShortCutPattern")) {
                 return;

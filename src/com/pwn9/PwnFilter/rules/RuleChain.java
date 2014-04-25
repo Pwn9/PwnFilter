@@ -10,16 +10,15 @@
 
 package com.pwn9.PwnFilter.rules;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import com.pwn9.PwnFilter.DataCache;
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.rules.action.Action;
 import com.pwn9.PwnFilter.rules.parser.FileParser;
 import com.pwn9.PwnFilter.util.LogManager;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 
 /**
@@ -48,9 +47,9 @@ public class RuleChain implements Chain,ChainEntry {
     }
 
     private ChainState chainState;
-    private ArrayList<ChainEntry> chain = new ArrayList<ChainEntry>();
-    private HashMap<String, ArrayList<Action>> actionGroups = new HashMap<String, ArrayList<Action>>();
-    private HashMap<String, ArrayList<Condition>> conditionGroups = new HashMap<String, ArrayList<Condition>>();
+    private List<ChainEntry> chain = new ArrayList<ChainEntry>();
+    private Multimap<String, Action> actionGroups = ArrayListMultimap.create();
+    private Multimap<String, Condition> conditionGroups = ArrayListMultimap.create();
 
     private final String configName;
 
@@ -161,7 +160,7 @@ public class RuleChain implements Chain,ChainEntry {
         } else return false;
     }
 
-    public ArrayList<ChainEntry> getChain() {
+    public List<ChainEntry> getChain() {
         return chain;
     }
 
@@ -190,36 +189,36 @@ public class RuleChain implements Chain,ChainEntry {
         return permList;
     }
 
-    public HashMap<String,ArrayList<Action>> getActionGroups() {
+    public Multimap<String, Action> getActionGroups() {
         return actionGroups;
     }
 
-    public HashMap<String,ArrayList<Condition>> getConditionGroups() {
+    public Multimap<String, Condition> getConditionGroups() {
         return conditionGroups;
     }
     /**
      * Delete all rules in the chain, and reset its state to INIT
      */
     public void resetChain() {
-        chain = new ArrayList<ChainEntry>();
-        conditionGroups = new HashMap<String, ArrayList<Condition>>();
-        actionGroups = new HashMap<String, ArrayList<Action>>();
+        chain.clear();
+        conditionGroups.clear();
+        actionGroups.clear();
         chainState = ChainState.INIT;
     }
 
-    public void addConditionGroup(String name, ArrayList<Condition> cGroup) {
+    public void addConditionGroup(String name, List<Condition> cGroup) {
         if (name != null && cGroup != null)
-            if(!conditionGroups.containsKey(name)) {
-                conditionGroups.put(name,cGroup);
+            if(conditionGroups.get(name).isEmpty()) {
+                conditionGroups.get(name).addAll(cGroup);
             } else {
                 LogManager.getInstance().debugLow("Condition Group named '"+name+"' already exists in chain: " + getConfigName());
             }
     }
 
-    public void addActionGroup(String name, ArrayList<Action> aGroup) {
+    public void addActionGroup(String name, List<Action> aGroup) {
         if (name != null && aGroup != null)
             if(!actionGroups.containsKey(name)) {
-                actionGroups.put(name,aGroup);
+                actionGroups.get(name).addAll(aGroup);
             } else {
                 LogManager.getInstance().debugLow("Action Group named '"+name+"' already exists in chain: " + getConfigName());
             }

@@ -31,10 +31,4 @@ public class PlayerCacheListener implements Listener {
         DataCache.getInstance().addPlayer(event.getPlayer());
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onPlayerWorldChange(PlayerChangedWorldEvent event) {
-        DataCache.getInstance().updatePlayerWorld(event.getPlayer());
-    }
-
-
 }

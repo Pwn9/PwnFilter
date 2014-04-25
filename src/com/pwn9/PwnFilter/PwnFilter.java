@@ -10,6 +10,7 @@
 
 package com.pwn9.PwnFilter;
 
+import com.google.common.collect.MapMaker;
 import com.pwn9.PwnFilter.api.ClientManager;
 import com.pwn9.PwnFilter.api.FilterClient;
 import com.pwn9.PwnFilter.command.pfcls;
@@ -34,6 +35,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * A Regular Expression (REGEX) Chat Filter For Bukkit with many great features
@@ -55,13 +57,13 @@ public class PwnFilter extends JavaPlugin {
     public static Tracker matchTracker;
     private Metrics.Graph eventGraph;
 
-    public static ConcurrentHashMap<Player, String> killedPlayers = new ConcurrentHashMap<Player,String>();
+    public static ConcurrentMap<Player, String> killedPlayers = new MapMaker().concurrencyLevel(2).weakKeys().makeMap();
 
     // Filter switches
     public static boolean decolor = false;
-    public static Boolean pwnMute = false;
+    public static boolean pwnMute = false;
 
-    public static HashMap<Player, String> lastMessage = new HashMap<Player, String>();
+    public static ConcurrentMap<Player, String> lastMessage = new MapMaker().concurrencyLevel(2).weakKeys().makeMap();
     public static Economy economy = null;
 
     private File textDir;

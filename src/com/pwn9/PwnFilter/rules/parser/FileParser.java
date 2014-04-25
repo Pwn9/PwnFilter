@@ -35,7 +35,7 @@ public class FileParser {
     final private boolean createFile;
 
     private int lineNo;
-    private HashMap<String,String> shortcuts = null;
+    private Map<String, String> shortcuts = null;
     private Chain chain;
 
     public FileParser(String filename, FileParser parent, boolean createFile) {
@@ -212,7 +212,7 @@ public class FileParser {
             else if (command.equalsIgnoreCase("events")) {
                 parserError(line.number, "Deprecation warning: 'events' keyword is deprecated.  Please add " +
                         "rules to the correct file instead of using 'events' (eg: command.txt, chat.txt, etc.)");
-                ArrayList<String> eventlist;
+                List<String> eventlist;
                 if (tokenString.getString().matches("^not\b")) {
                     eventlist = rule.excludeEvents;
                 } else {

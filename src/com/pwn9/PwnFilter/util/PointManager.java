@@ -38,7 +38,7 @@ public class PointManager implements FilterClient {
     private static PointManager _instance;
     private final PwnFilter plugin;
 
-    private ConcurrentHashMap<String,Double> playerPoints = new ConcurrentHashMap<String, Double>();
+    private Map<String,Double> playerPoints = new ConcurrentHashMap<String, Double>(8, 0.75f, 2);
     private TreeMap<Double, Threshold> thresholds = new TreeMap<Double,Threshold>();
 
     private int leakInterval;

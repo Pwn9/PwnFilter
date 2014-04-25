@@ -10,10 +10,10 @@
 
 package com.pwn9.PwnFilter.rules;
 
+import com.google.common.collect.Multimap;
 import com.pwn9.PwnFilter.rules.action.Action;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 
 /**
  * Interface for a RuleChain
@@ -29,15 +29,15 @@ public interface Chain {
 
     public boolean isValid();
 
-    public HashMap<String,ArrayList<Action>> getActionGroups();
+    public Multimap<String, Action> getActionGroups();
 
-    public HashMap<String,ArrayList<Condition>> getConditionGroups();
+    public Multimap<String, Condition> getConditionGroups();
 
     public void resetChain();
 
-    public void addConditionGroup(String name, ArrayList<Condition> cGroup);
+    public void addConditionGroup(String name, List<Condition> cGroup);
 
-    public void addActionGroup(String name, ArrayList<Action> aGroup);
+    public void addActionGroup(String name, List<Action> aGroup);
 
     public boolean isEmpty();
 }
