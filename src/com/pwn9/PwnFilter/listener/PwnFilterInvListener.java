@@ -67,7 +67,7 @@ public class PwnFilterInvListener extends BaseListener {
         ItemStack item = event.getCurrentItem();
         ItemMeta itemMeta = item.getItemMeta();
 
-        if (itemMeta.hasDisplayName()) {
+        if (itemMeta != null && itemMeta.hasDisplayName()) {
             message = itemMeta.getDisplayName();
 
             FilterState state = new FilterState(plugin, message, player, this);
