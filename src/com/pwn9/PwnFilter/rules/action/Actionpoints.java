@@ -58,12 +58,14 @@ public class Actionpoints implements Action {
 
         state.addLogMessage(String.format("Points Accumulated %s : %f. Total: %f",state.playerName,pointsAmount, pm.getPlayerPoints(p)));
 
-        Bukkit.getScheduler().runTask(state.plugin, new BukkitRunnable() {
-            @Override
-            public void run() {
-                state.getPlayer().sendMessage(messageString);
-            }
-        });
+        if (!messageString.isEmpty()) {
+            Bukkit.getScheduler().runTask(state.plugin, new BukkitRunnable() {
+                @Override
+                public void run() {
+                    state.getPlayer().sendMessage(messageString);
+                }
+            });
+        }
 
         return true;
 
