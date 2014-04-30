@@ -17,8 +17,8 @@ import java.util.regex.Pattern;
 /**
  * This object is used to provide a mechanism for running regex match and replacements on a string that may
  * have Color Codes and formats (eg: &5&k) embedded in it.
- * NOTE: This object works on the ampersand (&) character.  Any valid format code will be removed from the
- *       string for matching purposes
+ * NOTE: By default, this object works on the ampersand (&) character, but this can be specified in the constructor.
+ * Any valid format code will be removed from the string for matching purposes.
  *
  * Example String:
  * raw:
