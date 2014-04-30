@@ -40,7 +40,7 @@ public final class ColoredString implements CharSequence {
     private final char formatPrefix;
 
     public ColoredString(String s) {
-        this(s, '\0');
+        this(s, '&');
     }
 
     public ColoredString(String s, char prefix) {
