@@ -45,9 +45,10 @@ public class Actionpoints implements Action {
 
         if (p == null) return false;
 
-        PointManager pm = PointManager.getInstance();
-
-        if (pm == null) {
+        PointManager pm;
+        try {
+            pm = PointManager.getInstance();
+        } catch (IllegalStateException ex) {
             LogManager.getInstance().debugLow(String.format("Rule: %s has 'then points', but PointManager is disabled in config.yml",state.rule.getId()));
             return false;
         }
