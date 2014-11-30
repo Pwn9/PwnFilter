@@ -7,11 +7,18 @@ import com.pwn9.PwnFilter.api.FilterClient;
 import com.pwn9.PwnFilter.util.LogManager;
 import junit.framework.Assert;
 import org.bukkit.configuration.Configuration;
+import org.easymock.EasyMock;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.easymock.PowerMock;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.StringReader;
 import java.util.logging.Logger;
 
 import static org.junit.Assert.assertEquals;
@@ -22,12 +29,13 @@ import static org.junit.Assert.assertEquals;
  * Date: 13-05-04
  * Time: 11:28 AM
  */
-
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({PwnFilter.class})
 public class RuleSetTest {
 
     RuleManager ruleManager;
     RuleChain rs;
-    PwnFilter mockPlugin = new PwnFilter();
+    PwnFilter mockPlugin;
     LogManager pwnLogger;
     FilterClient mockClient = new FilterClient() {
         public String getShortName() { return "TEST"; }
@@ -39,13 +47,20 @@ public class RuleSetTest {
 
     @Before
     public void setUp() throws Exception {
-        ruleManager = RuleManager.getInstance();
+        PowerMock.mockStatic(PwnFilter.class);
+        mockPlugin = PowerMock.createMock(PwnFilter.class);
+        EasyMock.expect(PwnFilter.getInstance()).andReturn(mockPlugin).anyTimes();
+        EasyMock.expect(mockPlugin.getBufferedReader("testfile.txt"))
+                .andReturn(new BufferedReader(new StringReader("test"))).anyTimes();
+        PowerMock.replay(PwnFilter.class);
+        PowerMock.replay(mockPlugin);
+        ruleManager = RuleManager.init(mockPlugin);
         File testFile = new File(getClass().getResource("/testrules.txt").getFile());
         ruleManager.setRuleDir(testFile.getParent());
         rs = ruleManager.getRuleChain("testrules.txt");
         Logger logger = Logger.getAnonymousLogger();
         pwnLogger = LogManager.getInstance(logger, new File("/tmp/"));
-        DataCache.getInstance();
+        DataCache.init(mockPlugin);
         rs.loadConfigFile();
     }
 

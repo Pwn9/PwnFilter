@@ -10,26 +10,25 @@
 
 package com.pwn9.PwnFilter.util;
 
-import org.bukkit.ChatColor;
-
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * This object is used to provide a mechanism for running regex match and replacements on a string that may
- * have Color Codes and formats (eg: §5§k) embedded in it.
- * NOTE: This object works on the section character (§), not ampersand (&).
+ * have Color Codes and formats (eg: &5&k) embedded in it.
+ * NOTE: By default, this object works on the ampersand (&) character, but this can be specified in the constructor.
+ * Any valid format code will be removed from the string for matching purposes.
  *
  * Example String:
  * raw:
- * The quick §4brown fox §1§kj§2u§3m§4p§5e§6d over§7 the lazy §ldog.
+ * The quick &4brown fox &1&kj&2u&3m&4p&5e&6d over&7 the lazy &ldog.
  * plain:
  * The quick brown fox jumped over the lazy dog
  * codes:
- * {,,,,,,,,,,§4,,,,,,,,,§1§k,§2,§3,§4,§5,§6,,,,,§7,,,,,,,,,§l,,,}
+ * {,,,,,,,,,,&4,,,,,,,,,&1&k,&2,&3,&4,&5,&6,,,,,&7,,,,,,,,,&l,,,}
  *
- * The codes array maps codes to the character following it.  In the example above, plain[10] = 'b', codes[10] = "§4"
+ * The codes array maps codes to the character following it.  In the example above, plain[10] = 'b', codes[10] = "&4"
  *
  * In any string modification action, the codes will be updated to reflect the new string.
  *
@@ -38,16 +37,22 @@ public final class ColoredString implements CharSequence {
 
     private final String[] codes; // The String array containing the color / formatting codes
     private final char[] plain; // the plain text
+    private final char formatPrefix;
 
     public ColoredString(String s) {
-        char[] raw = ChatColor.translateAlternateColorCodes('&',s).toCharArray();
+        this(s, '&');
+    }
+
+    public ColoredString(String s, char prefix) {
+        formatPrefix = prefix;
+        char[] raw = s.toCharArray();
         char[] tmpPlain = new char[raw.length];
         String[] tmpCodes = new String[raw.length+1];
 
         int textpos = 0;
 
         for (int i = 0; i < raw.length ; i++) {
-            if (i != raw.length-1 && raw[i] == '\u00A7' && "0123456789AaBbCcDdEeFfKkLlMmNnOoRr".indexOf(raw[i+1]) > -1) {
+            if (i != raw.length-1 && raw[i] == formatPrefix && "0123456789AaBbCcDdEeFfKkLlMmNnOoRr".indexOf(raw[i+1]) > -1) {
                 if (tmpCodes[textpos] == null) {
                     tmpCodes[textpos] = new String(raw,i,2);
                 } else {
@@ -69,11 +74,13 @@ public final class ColoredString implements CharSequence {
         // Create a copy of the original array.
         codes = c.codes;
         plain = c.plain;
+        formatPrefix = c.formatPrefix;
     }
 
-    public ColoredString(char[] plain, String[] codes) {
+    public ColoredString(char[] plain, String[] codes, char prefix) {
         this.plain = plain;
         this.codes = Arrays.copyOf(codes,plain.length+1);
+        formatPrefix = prefix;
     }
 
     /* CharSequence methods */
@@ -190,8 +197,7 @@ public final class ColoredString implements CharSequence {
             currentCodes[lastMatchTextLength] = mergeCodes(currentCodes[lastMatchTextLength],codes[currentPosition]);
 
             // Copy the codes from between the last match and this one.
-            if (middleLen > 1)
-                System.arraycopy(codes,currentPosition+1,currentCodes,lastMatchTextLength+1,middleLen);
+            System.arraycopy(codes,currentPosition+1,currentCodes,lastMatchTextLength+1,middleLen);
 
             // Append the first replacement code to the trailing code.
             currentCodes[lastMatchTextLength+middleLen] = mergeCodes(currentCodes[lastMatchTextLength+middleLen],replacement.codes[0]);
@@ -227,7 +233,7 @@ public final class ColoredString implements CharSequence {
         // as well as the trailing code.
         System.arraycopy(codes,currentPosition+1,tempCodes,lastMatchText.length+1,plain.length - currentPosition);
 
-        return new ColoredString(tempText, tempCodes);
+        return new ColoredString(tempText, tempCodes, formatPrefix);
 
     }
 
@@ -241,6 +247,17 @@ public final class ColoredString implements CharSequence {
         }
         return new ColoredString(this);
     }
+    
+    public ColoredString patternToUpper (Pattern p) {
+        Matcher m = p.matcher(new String(plain));
+
+        while (m.find()) {
+            for (int i = m.start() ; i < m.end() ; i++ ) {
+                plain[i] = Character.toUpperCase(plain[i]);
+            }
+        }
+        return new ColoredString(this);
+    }    
 
     /**
      * Returns a concatenation of two strings, a + b.  If a or b are null, they

@@ -38,7 +38,7 @@ public class PointManager implements FilterClient {
     private static PointManager _instance;
     private final PwnFilter plugin;
 
-    private ConcurrentHashMap<String,Double> playerPoints = new ConcurrentHashMap<String, Double>();
+    private Map<String,Double> playerPoints = new ConcurrentHashMap<String, Double>(8, 0.75f, 2);
     private TreeMap<Double, Threshold> thresholds = new TreeMap<Double,Threshold>();
 
     private int leakInterval;
@@ -79,7 +79,7 @@ public class PointManager implements FilterClient {
             setPlayerPoints(playerName,0.0);
         }
 
-        setup();
+        setup(plugin);
     }
 
     private void startLeaking() {
@@ -141,9 +141,9 @@ public class PointManager implements FilterClient {
     }
 
 
-    public static PointManager getInstance() {
+    public static PointManager getInstance() throws IllegalStateException {
         if (_instance == null ) {
-            return setup();
+            throw new IllegalStateException("Point Manager Not initialized.");
         }
         return _instance;
     }
@@ -175,6 +175,10 @@ public class PointManager implements FilterClient {
 
         executeActions(current, updated, playerName);
 
+    }
+
+    public static boolean isEnabled() {
+        return _instance != null;
     }
 
     private void executeActions(final Double fromValue, final Double toValue, final String playerName) {
@@ -250,7 +254,7 @@ public class PointManager implements FilterClient {
 
     /**
      * Setup as a Client, so we can create a FilterState object, and execute actions.
-     * Really, the only thing we implament is the getShortName() call.  This is hackish.
+     * Really, the only thing we implement is the getShortName() call.  This is hackish.
      * Should really re-think this implementation.
      */
     @Override

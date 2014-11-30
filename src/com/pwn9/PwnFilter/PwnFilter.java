@@ -10,6 +10,7 @@
 
 package com.pwn9.PwnFilter;
 
+import com.google.common.collect.MapMaker;
 import com.pwn9.PwnFilter.api.ClientManager;
 import com.pwn9.PwnFilter.api.FilterClient;
 import com.pwn9.PwnFilter.command.pfcls;
@@ -19,6 +20,7 @@ import com.pwn9.PwnFilter.command.pfreload;
 import com.pwn9.PwnFilter.listener.*;
 import com.pwn9.PwnFilter.rules.RuleChain;
 import com.pwn9.PwnFilter.rules.RuleManager;
+import com.pwn9.PwnFilter.util.FileUtil;
 import com.pwn9.PwnFilter.util.LogManager;
 import com.pwn9.PwnFilter.util.PointManager;
 import com.pwn9.PwnFilter.util.Tracker;
@@ -29,11 +31,9 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.Metrics;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * A Regular Expression (REGEX) Chat Filter For Bukkit with many great features
@@ -55,13 +55,13 @@ public class PwnFilter extends JavaPlugin {
     public static Tracker matchTracker;
     private Metrics.Graph eventGraph;
 
-    public static ConcurrentHashMap<Player, String> killedPlayers = new ConcurrentHashMap<Player,String>();
+    public static ConcurrentMap<Player, String> killedPlayers = new MapMaker().concurrencyLevel(2).weakKeys().makeMap();
 
     // Filter switches
     public static boolean decolor = false;
-    public static Boolean pwnMute = false;
+    public static boolean pwnMute = false;
 
-    public static HashMap<Player, String> lastMessage = new HashMap<Player, String>();
+    public static ConcurrentMap<Player, String> lastMessage = new MapMaker().concurrencyLevel(2).weakKeys().makeMap();
     public static Economy economy = null;
 
     private File textDir;
@@ -79,6 +79,9 @@ public class PwnFilter extends JavaPlugin {
 
         // Set up the Log manager.
         LogManager.getInstance(getLogger(),getDataFolder());
+
+        // Initialize the Rule Manager
+        RuleManager.init(this);
 
         //Try to migrate old rules.txt file
         RuleManager.getInstance().migrateRules(getDataFolder());
@@ -98,12 +101,12 @@ public class PwnFilter extends JavaPlugin {
         setupEconomy();
 
         // Initialize the DataCache
-        DataCache.getInstance();
+        DataCache.init(this);
 
         DataCache.getInstance().addPermissions(getDescription().getPermissions());
 
         // Initialize Points Manager if its enabled
-        PointManager.setup();
+        PointManager.setup(this);
 
         // Activate Plugin Metrics
         activateMetrics();
@@ -255,6 +258,17 @@ public class PwnFilter extends JavaPlugin {
         }
         LogManager.logger.info("Vault dependency not found.  Disabling actions requiring Vault");
 
+    }
+
+    public BufferedReader getBufferedReader(String filename) throws FileNotFoundException {
+
+        if (textDir == null) throw new FileNotFoundException("Could not open Textfile Directory.");
+
+        File textfile = FileUtil.getFile(getTextDir(), filename, false);
+        if (textfile == null) throw new FileNotFoundException("Unable to open file: " + filename);
+
+        FileInputStream fs  = new FileInputStream(textfile);
+        return new BufferedReader(new InputStreamReader(fs));
     }
 
     //TODO: Handle this better

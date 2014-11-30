@@ -45,9 +45,10 @@ public class Actionpoints implements Action {
 
         if (p == null) return false;
 
-        PointManager pm = PointManager.getInstance();
-
-        if (pm == null) {
+        PointManager pm;
+        try {
+            pm = PointManager.getInstance();
+        } catch (IllegalStateException ex) {
             LogManager.getInstance().debugLow(String.format("Rule: %s has 'then points', but PointManager is disabled in config.yml",state.rule.getId()));
             return false;
         }
@@ -58,12 +59,14 @@ public class Actionpoints implements Action {
 
         state.addLogMessage(String.format("Points Accumulated %s : %f. Total: %f",state.playerName,pointsAmount, pm.getPlayerPoints(p)));
 
-        Bukkit.getScheduler().runTask(state.plugin, new BukkitRunnable() {
-            @Override
-            public void run() {
-                state.getPlayer().sendMessage(messageString);
-            }
-        });
+        if (!messageString.isEmpty()) {
+            Bukkit.getScheduler().runTask(state.plugin, new BukkitRunnable() {
+                @Override
+                public void run() {
+                    state.getPlayer().sendMessage(messageString);
+                }
+            });
+        }
 
         return true;
 
