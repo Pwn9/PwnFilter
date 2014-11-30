@@ -5,7 +5,7 @@
 
     <groupId>com.pwn9.PwnFilter</groupId>
     <artifactId>PwnFilter</artifactId>
-    <version>3.3.1-SNAPSHOT</version>
+    <version>3.3.2-SNAPSHOT</version>
     <name>PwnFilter</name>
     <description>Complete chat control with the power of regex.</description>
     <url>http://dev.bukkit.org/server-mods/pwnfilter/</url>
@@ -228,12 +228,12 @@
         <repository>
             <id>toal-ca</id>
             <name>PwnFilter Release</name>
-            <url>scpexe://ci.toal.ca/home/tkflight/domains/toal.ca/public_html/repo/</url>
+            <url>scpexe://ci.toal.ca/home/ci/public_html/repo/</url>
         </repository>
         <snapshotRepository>
             <id>toal-ca</id>
             <name>PwnFilter Snapshot</name>
-            <url>scpexe://ci.toal.ca/home/tkflight/domains/toal.ca/public_html/repo/snapshots</url>
+            <url>scpexe://ci.toal.ca/home/ci/public_html/repo/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
 
