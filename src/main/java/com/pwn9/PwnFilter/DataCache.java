@@ -119,7 +119,7 @@ public class DataCache {
     public void dumpCache(Logger l) {
         l.finest("PwnFilter Data Cache Contents:");
         l.finest("Task Id: " + taskId);
-        l.finest("Online Players: " + Bukkit.getOnlinePlayers().length);
+        l.finest("Online Players: " + Bukkit.getOnlinePlayers().size());
         l.finest("Total Names: " + onlinePlayers.size() + " Perms: " + playerPermissions.size());
         StringBuilder sb = new StringBuilder();
         for (Player p : queuedPlayerList ){
@@ -164,7 +164,10 @@ public class DataCache {
         if (queuedPlayerList.isEmpty()) {
             // A quick "Sanity Check" that our internal list of online players matches
             // The actual list of online players...
-            if (!onlinePlayers.containsAll(Arrays.asList(Bukkit.getOnlinePlayers()))) {
+
+            Collection<? extends Player> onlinePlayerSnapshot = Bukkit.getOnlinePlayers();
+
+            if (!onlinePlayers.containsAll(onlinePlayerSnapshot)) {
                 LogManager.logger.warning("Cached Player List is not equal to actual online player list!");
             }
 
