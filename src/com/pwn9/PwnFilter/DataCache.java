@@ -101,11 +101,10 @@ public class DataCache {
         },0,DataCache.runEveryTicks);
     }
 
-    public void stop() {
+    public synchronized void stop() {
         Bukkit.getScheduler().cancelTask(taskId);
-        for (Player p : onlinePlayers) {
-            removePlayer(p);
-        }
+        onlinePlayers.clear();
+        playerPermissions.clear();
         taskId = 0;
     }
 
