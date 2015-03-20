@@ -15,9 +15,6 @@
 decolor: false
 
 # The following options enable / disable filtering features
-# The "spamfilter" will enable/disable a basic filter that
-# prevents a player from entering the same line 2x in a row.
-
 # The 'chat' filter is always enabled.
 
 # Filter text applied to signs
@@ -35,8 +32,9 @@ commandfilter: true
 # Filter Book Titles and Pages
 bookfilter: false
 
-# The spam filter is currently very basic.  Enhancements are
-# planned for the future
+# The "spamfilter" will enable/disable a basic filter that
+# prevents a player from entering the same line 2x in a row.
+
 spamfilter: false  # For chat messages
 commandspamfilter: false # For /commands
 
