@@ -14,7 +14,6 @@ import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.PwnFilter;
 import com.pwn9.PwnFilter.util.LogManager;
 import com.pwn9.PwnFilter.util.Patterns;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -25,11 +24,15 @@ import java.util.ArrayList;
 
 /**
  * Responds to the user with the string provided.
+ *
+ * @author ptoal
+ * @version $Id: $Id
  */
 @SuppressWarnings("UnusedDeclaration")
 public class Actionrespondfile implements Action {
     ArrayList<String> messageStrings = new ArrayList<String>();
 
+    /** {@inheritDoc} */
     public void init(String s)
     {
         try {
@@ -47,6 +50,7 @@ public class Actionrespondfile implements Action {
         }
     }
 
+    /** {@inheritDoc} */
     public boolean execute(final FilterState state ) {
         final ArrayList<String> preparedMessages = new ArrayList<String>();
 
@@ -56,14 +60,15 @@ public class Actionrespondfile implements Action {
 
         state.addLogMessage("Responded to " + state.playerName + " with: "+preparedMessages.get(0) + "...");
 
-        Bukkit.getScheduler().runTask(state.plugin, new BukkitRunnable() {
+        BukkitRunnable task = new BukkitRunnable() {
             @Override
             public void run() {
                 for (String m : preparedMessages) {
                     state.getPlayer().sendMessage(m);
                 }
             }
-        });
+        };
+        task.runTask(state.plugin);
 
         return true;
     }

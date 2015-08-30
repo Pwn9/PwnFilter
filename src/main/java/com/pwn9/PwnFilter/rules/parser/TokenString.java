@@ -18,12 +18,20 @@ package com.pwn9.PwnFilter.rules.parser;
  * User: ptoal
  * Date: 13-11-20
  * Time: 8:20 AM
+ *
+ * @author ptoal
+ * @version $Id: $Id
  */
 public class TokenString {
 
     final private String originalString;
     private String string;
 
+    /**
+     * <p>Constructor for TokenString.</p>
+     *
+     * @param originalString a {@link java.lang.String} object.
+     */
     public TokenString(String originalString) {
 
         string = (originalString == null)?"":originalString;
@@ -48,10 +56,20 @@ public class TokenString {
         return parts[0];
     }
 
+    /**
+     * <p>Getter for the field <code>string</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getString() {
         return string;
     }
 
+    /**
+     * <p>Getter for the field <code>originalString</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getOriginalString() {
         return originalString;
     }

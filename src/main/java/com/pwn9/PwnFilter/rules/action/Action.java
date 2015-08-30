@@ -14,10 +14,23 @@ import com.pwn9.PwnFilter.FilterState;
 
 /**
  * Actions are triggered by Rules when they match.
+ *
+ * @author ptoal
+ * @version $Id: $Id
  */
-
 public interface Action {
 
+    /**
+     * <p>init.</p>
+     *
+     * @param s a {@link java.lang.String} object.
+     */
     void init(String s);
+    /**
+     * <p>execute.</p>
+     *
+     * @param state a {@link com.pwn9.PwnFilter.FilterState} object.
+     * @return a boolean.
+     */
     boolean execute(FilterState state );
 }

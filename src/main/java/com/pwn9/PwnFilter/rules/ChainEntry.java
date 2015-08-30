@@ -20,15 +20,38 @@ import java.util.Set;
  * Date: 13-09-24
  * Time: 12:41 PM
  * To change this template use File | Settings | File Templates.
+ *
+ * @author ptoal
+ * @version $Id: $Id
  */
 public interface ChainEntry {
 
-    public String toString();
+    /**
+     * <p>toString.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
+    String toString();
 
-    public boolean isValid();
+    /**
+     * <p>isValid.</p>
+     *
+     * @return a boolean.
+     */
+    boolean isValid();
 
-    public void apply(FilterState state);
+    /**
+     * <p>apply.</p>
+     *
+     * @param state a {@link com.pwn9.PwnFilter.FilterState} object.
+     */
+    void apply(FilterState state);
 
-    public Set<String> getPermissionList();
+    /**
+     * <p>getPermissionList.</p>
+     *
+     * @return a {@link java.util.Set} object.
+     */
+    Set<String> getPermissionList();
 
 }

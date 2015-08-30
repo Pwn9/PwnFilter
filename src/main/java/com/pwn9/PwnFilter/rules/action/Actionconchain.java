@@ -19,17 +19,22 @@ import java.util.ArrayList;
 
 /**
  * Execute a chain of console commands
+ *
+ * @author ptoal
+ * @version $Id: $Id
  */
 @SuppressWarnings("UnusedDeclaration")
 public class Actionconchain implements Action {
     String[] commands;
 
+    /** {@inheritDoc} */
     public void init(String s)
     {
         commands = s.split("\\|");
         if (commands[0].isEmpty()) throw new IllegalArgumentException("No commands were provided to 'conchain'");
     }
 
+    /** {@inheritDoc} */
     public boolean execute(final FilterState state ) {
         final ArrayList<String> parsedCommands = new ArrayList<String>();
 
@@ -39,13 +44,15 @@ public class Actionconchain implements Action {
         for (final String cmd : parsedCommands)
             state.addLogMessage("Sending console command: " + cmd);
 
-        Bukkit.getScheduler().runTask(state.plugin, new BukkitRunnable() {
+        BukkitRunnable task = new BukkitRunnable() {
             @Override
             public void run() {
             for (String cmd : parsedCommands ) {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
             }
-        }});
+        }};
+
+        task.runTask(state.plugin);
 
         return true;
 

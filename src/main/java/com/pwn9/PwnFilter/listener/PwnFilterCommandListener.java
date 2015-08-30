@@ -30,9 +30,11 @@ import org.bukkit.plugin.PluginManager;
 import java.util.List;
 
 /**
-* Apply the filter to commands.
-*/
-
+ * Apply the filter to commands.
+ *
+ * @author ptoal
+ * @version $Id: $Id
+ */
 public class PwnFilterCommandListener extends BaseListener {
 
     public List<String> cmdlist;
@@ -40,12 +42,23 @@ public class PwnFilterCommandListener extends BaseListener {
     public List<String> cmdchat;
     private RuleChain chatRuleChain;
 
+    /**
+     * <p>getShortName.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getShortName() { return "COMMAND" ;}
 
+    /**
+     * <p>Constructor for PwnFilterCommandListener.</p>
+     *
+     * @param p a {@link com.pwn9.PwnFilter.PwnFilter} object.
+     */
     public PwnFilterCommandListener(PwnFilter p) {
 	    super(p);
     }
 
+    /** {@inheritDoc} */
     public void activate(Configuration config) {
         if (isActive()) return;
 
@@ -79,6 +92,11 @@ public class PwnFilterCommandListener extends BaseListener {
     }
 
 
+    /**
+     * <p>eventProcessor.</p>
+     *
+     * @param event a {@link org.bukkit.event.player.PlayerCommandPreprocessEvent} object.
+     */
     public void eventProcessor(PlayerCommandPreprocessEvent event) {
 
         if (event.isCancelled()) return;

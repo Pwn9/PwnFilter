@@ -26,15 +26,24 @@ import org.bukkit.command.CommandSender;
  * User: ptoal
  * Date: 13-08-10
  * Time: 9:23 AM
+ *
+ * @author ptoal
+ * @version $Id: $Id
  */
 public class pfreload implements CommandExecutor {
 
     private final PwnFilter plugin;
 
+    /**
+     * <p>Constructor for pfreload.</p>
+     *
+     * @param plugin a {@link com.pwn9.PwnFilter.PwnFilter} object.
+     */
     public pfreload(PwnFilter plugin) {
         this.plugin = plugin;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         sender.sendMessage(ChatColor.RED + "Reloading config.yml and rules/*.txt files.");

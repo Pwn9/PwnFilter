@@ -14,11 +14,13 @@ import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.PwnFilter;
 import com.pwn9.PwnFilter.util.DefaultMessages;
 import net.milkbowl.vault.economy.EconomyResponse;
-import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * Fine the user by extracting money from his economy account.
+ *
+ * @author ptoal
+ * @version $Id: $Id
  */
 @SuppressWarnings("UnusedDeclaration")
 public class Actionfine implements Action {
@@ -26,6 +28,7 @@ public class Actionfine implements Action {
     String messageString; // Message to apply to this action
     double fineAmount; // How much to fine the player.
 
+    /** {@inheritDoc} */
     public void init(String s)
     {
         if (PwnFilter.economy == null) {
@@ -45,12 +48,13 @@ public class Actionfine implements Action {
         messageString = DefaultMessages.prepareMessage((parts.length > 1)?parts[1]:"", "finemsg");
     }
 
+    /** {@inheritDoc} */
     public boolean execute(final FilterState state ) {
 
         if (state.getPlayer() == null) return false;
 
         if (PwnFilter.economy != null ) {
-            EconomyResponse resp = PwnFilter.economy.withdrawPlayer(state.playerName,fineAmount);
+            EconomyResponse resp = PwnFilter.economy.withdrawPlayer(state.getPlayer(),fineAmount);
             if (resp.transactionSuccess()) {
                 state.addLogMessage(String.format("Fined %s : %f",state.playerName,resp.amount));
             } else {
@@ -58,13 +62,13 @@ public class Actionfine implements Action {
                         state.playerName,resp.amount,resp.errorMessage));
                 return false;
             }
-            Bukkit.getScheduler().runTask(state.plugin, new BukkitRunnable() {
+            BukkitRunnable task = new BukkitRunnable() {
                 @Override
                 public void run() {
                     state.getPlayer().sendMessage(messageString);
                 }
-            });
-
+            };
+            task.runTask(state.plugin);
             return true;
 
         } else return false;

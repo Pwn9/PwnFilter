@@ -10,10 +10,22 @@
 
 package com.pwn9.PwnFilter.rules.parser;
 
+/**
+ * <p>NumberedLine class.</p>
+ *
+ * @author ptoal
+ * @version $Id: $Id
+ */
 public class NumberedLine {
     public final Integer number;
     public final String string;
 
+    /**
+     * <p>Constructor for NumberedLine.</p>
+     *
+     * @param number a {@link java.lang.Integer} object.
+     * @param string a {@link java.lang.String} object.
+     */
     public NumberedLine(Integer number, String string) {
         this.number = number;
         this.string = string;

@@ -31,14 +31,22 @@ import java.util.List;
 
 /**
  * Listen for Sign Change events and apply the filter to the text.
+ *
+ * @author ptoal
+ * @version $Id: $Id
  */
-
 public class PwnFilterSignListener extends BaseListener {
 
+    /**
+     * <p>Constructor for PwnFilterSignListener.</p>
+     *
+     * @param p a {@link com.pwn9.PwnFilter.PwnFilter} object.
+     */
     public PwnFilterSignListener(PwnFilter p) {
         super(p);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getShortName() {
         return "SIGN";
@@ -49,6 +57,7 @@ public class PwnFilterSignListener extends BaseListener {
      * 1. Take lines of sign and aggregate them into one string for processing
      * 2. Feed them into the filter.
      * 3. Re-split the lines so they can be placed on the sign.
+     *
      * @param event The SignChangeEvent to be processed.
      */
     public void onSignChange(SignChangeEvent event) {
@@ -113,15 +122,14 @@ public class PwnFilterSignListener extends BaseListener {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Activate this listener.  This method can be called either by the owning plugin
      * or by PwnFilter.  PwnFilter will call the shutdown / activate methods when PwnFilter
      * is enabled / disabled and whenever it is reloading its config / rules.
      * <p/>
      * These methods could either register / deregister the listener with Bukkit, or
      * they could just enable / disable the use of the filter.
-     *
-     * @param config PwnFilter Configuration object, which the plugin can read for configuration
-     *               information. (eg: config.getString("ruledir")
      */
     @Override
     public void activate(Configuration config) {

@@ -10,11 +10,16 @@
 
 package com.pwn9.PwnFilter.util;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Create a Timed Regex match.
  * User: ptoal
  * Date: 13-07-26
  * Time: 4:35 PM
+ *
+ * @author ptoal
+ * @version $Id: $Id
  */
 
 /* NOTE: The goal here is to create a matcher that won't run forever.
@@ -25,7 +30,6 @@ package com.pwn9.PwnFilter.util;
  4. the caller.  In PwnFilter, we can then check for this exception, disable the rule, and log the offending regex and
  string.
 */
-
 public class LimitedRegexCharSequence implements CharSequence {
 
     private final CharSequence inner;
@@ -36,14 +40,24 @@ public class LimitedRegexCharSequence implements CharSequence {
 
     private long accessCount;
 
+    /**
+     * <p>Constructor for LimitedRegexCharSequence.</p>
+     *
+     * @param inner a {@link java.lang.CharSequence} object.
+     * @param timeoutMillis a int.
+     */
     public LimitedRegexCharSequence(CharSequence inner, int timeoutMillis)  {
         super();
+        if ( inner == null ) {
+            throw new NullPointerException("CharSequence must not be null");
+        }
         this.inner = inner;
         this.timeoutMillis = timeoutMillis;
         timeoutTime = System.currentTimeMillis() + timeoutMillis;
         accessCount = 0;
     }
 
+    /** {@inheritDoc} */
     public char charAt(int index) {
         accessCount++ ;
         if (System.currentTimeMillis() > timeoutTime) {
@@ -52,19 +66,32 @@ public class LimitedRegexCharSequence implements CharSequence {
         return inner.charAt(index);
     }
 
+    /**
+     * <p>length.</p>
+     *
+     * @return a int.
+     */
     public int length() {
         return inner.length();
     }
 
+    /** {@inheritDoc} */
     public CharSequence subSequence(int start, int end) {
         return new LimitedRegexCharSequence(inner.subSequence(start, end), timeoutMillis);
     }
 
+    /**
+     * <p>Getter for the field <code>accessCount</code>.</p>
+     *
+     * @return a long.
+     */
     public long getAccessCount() {
         return accessCount;
     }
 
+    /** {@inheritDoc} */
     @Override
+    @NotNull
     public String toString() {
         return inner.toString();
     }

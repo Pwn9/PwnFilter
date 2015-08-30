@@ -20,11 +20,18 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
 /**
-* Catch Death events to rewrite them with a custom message.
-*/
-
+ * Catch Death events to rewrite them with a custom message.
+ *
+ * @author ptoal
+ * @version $Id: $Id
+ */
 public class PwnFilterEntityListener implements Listener {
 
+    /**
+     * <p>onEntityDeath.</p>
+     *
+     * @param event a {@link org.bukkit.event.entity.EntityDeathEvent} object.
+     */
     @EventHandler(priority=EventPriority.LOWEST)
     public void onEntityDeath(EntityDeathEvent event) {
         if (!(event instanceof PlayerDeathEvent)) return;

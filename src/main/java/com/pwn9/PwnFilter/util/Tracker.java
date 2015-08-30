@@ -14,34 +14,47 @@ import org.mcstats.Metrics;
 
 /**
  * Plugin Metrics Tracker class (courtesy of mbaxter)
+ *
+ * @author ptoal
+ * @version $Id: $Id
  */
-
 public class Tracker extends Metrics.Plotter {
 
     private final String name;
     private int value, last;
 
+    /**
+     * <p>Constructor for Tracker.</p>
+     *
+     * @param name a {@link java.lang.String} object.
+     */
     public Tracker(String name) {
         this.name = name;
         this.value = 0;
         this.last = 0;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getColumnName() {
         return this.name;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int getValue() {
         this.last = this.value;
         return this.value;
     }
 
+    /**
+     * <p>increment.</p>
+     */
     public void increment() {
         this.value++;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void reset() {
         this.value = this.value - this.last;

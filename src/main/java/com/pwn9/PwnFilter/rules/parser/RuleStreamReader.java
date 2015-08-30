@@ -22,6 +22,9 @@ import java.util.List;
  * User: ptoal
  * Date: 13-11-14
  * Time: 9:49 PM
+ *
+ * @author ptoal
+ * @version $Id: $Id
  */
 @SuppressWarnings("UnusedDeclaration")
 public class RuleStreamReader extends LineNumberReader{
@@ -49,14 +52,11 @@ public class RuleStreamReader extends LineNumberReader{
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Scan the file for the next statement (a non-blank line that doesn't
      * start with a #).  If the statement ends with EOF, read and append
      * lines until an EOF on a line of its own is reached.
-     *
-     * @return A String containing the contents of the line(s), not including
-     *         a final <a href="#lt">line termination character</a>, or
-     *         <tt>null</tt> if the end of the stream has been reached
-     * @throws java.io.IOException If an I/O error occurs
      */
     @Override
     public String readLine() throws IOException {
@@ -94,7 +94,7 @@ public class RuleStreamReader extends LineNumberReader{
      * newline.
      *
      * @return A List of NumberedLine's containing the lines for this section.
-     * @throws IOException
+     * @throws java.io.IOException if any.
      */
     public List<NumberedLine> readSection() throws IOException {
         List<NumberedLine> result = new ArrayList<NumberedLine>();

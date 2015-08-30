@@ -26,6 +26,9 @@ import java.util.Map;
  * User: ptoal
  * Date: 13-09-25
  * Time: 2:18 PM
+ *
+ * @author ptoal
+ * @version $Id: $Id
  */
 
 @SuppressWarnings("UnusedDeclaration")
@@ -40,6 +43,11 @@ public class RuleManager {
         plugin = p;
     }
 
+    /**
+     * <p>getInstance.</p>
+     *
+     * @return a {@link com.pwn9.PwnFilter.rules.RuleManager} object.
+     */
     public static RuleManager getInstance() {
         if (_instance == null) {
             throw new IllegalStateException("Rule Manager not initialized.");
@@ -47,6 +55,12 @@ public class RuleManager {
         return _instance;
     }
 
+    /**
+     * <p>init.</p>
+     *
+     * @param p a {@link com.pwn9.PwnFilter.PwnFilter} object.
+     * @return a {@link com.pwn9.PwnFilter.rules.RuleManager} object.
+     */
     public static RuleManager init(PwnFilter p) {
         if (_instance == null) {
             _instance = new RuleManager(p);
@@ -56,10 +70,21 @@ public class RuleManager {
         }
     }
 
+    /**
+     * <p>Getter for the field <code>ruleDir</code>.</p>
+     *
+     * @return a {@link java.io.File} object.
+     */
     public File getRuleDir() {
         return ruleDir;
     }
 
+    /**
+     * <p>Setter for the field <code>ruleDir</code>.</p>
+     *
+     * @param dirName a {@link java.lang.String} object.
+     * @return a boolean.
+     */
     public boolean setRuleDir(String dirName) {
 
         // The folder on the filesystem to find rules/shortcut files.
@@ -92,6 +117,12 @@ public class RuleManager {
         return ShortCutManager.getInstance().setShortcutDir(ruleDir);
     }
 
+    /**
+     * <p>migrateRules.</p>
+     *
+     * @param dataFolder a {@link java.io.File} object.
+     * @return a boolean.
+     */
     public boolean migrateRules(File dataFolder) {
         // Now, check to see if there's an old rules.txt in the PwnFilter directory, and if so, move it.
         File oldRuleFile = new File(dataFolder,"rules.txt");
@@ -119,6 +150,12 @@ public class RuleManager {
     /*
      * Get a rulechain, or create a new one from the named config
      */
+    /**
+     * <p>getRuleChain.</p>
+     *
+     * @param configName a {@link java.lang.String} object.
+     * @return a {@link com.pwn9.PwnFilter.rules.RuleChain} object.
+     */
     public RuleChain getRuleChain(String configName) {
         if (ruleChains.containsKey(configName)) {
             return ruleChains.get(configName);
@@ -131,6 +168,9 @@ public class RuleManager {
 
     /*
      * Force all ruleChains to be refreshed.
+     */
+    /**
+     * <p>reloadAllConfigs.</p>
      */
     public void reloadAllConfigs() {
 
@@ -166,6 +206,13 @@ public class RuleManager {
         }
     }
 
+    /**
+     * <p>getFile.</p>
+     *
+     * @param fileName a {@link java.lang.String} object.
+     * @param createFile a boolean.
+     * @return a {@link java.io.File} object.
+     */
     public File getFile(String fileName, boolean createFile) {
         return FileUtil.getFile(ruleDir, fileName, createFile);
     }

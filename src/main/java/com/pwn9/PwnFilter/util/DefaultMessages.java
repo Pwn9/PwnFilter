@@ -18,15 +18,20 @@ import org.bukkit.ChatColor;
  * User: ptoal
  * Date: 13-10-01
  * Time: 3:56 PM
+ *
+ * @author ptoal
+ * @version $Id: $Id
  */
-
 public class DefaultMessages {
 
     /**
      * Selects string from the first not null of: message, default from config.yml or null.
      * Converts & to u00A7
      * Used by Action.init() methods.
+     *
      * @return String containing message to be used.
+     * @param message a {@link java.lang.String} object.
+     * @param configVarName a {@link java.lang.String} object.
      */
     public static String prepareMessage(String message, String configVarName) {
         String result;

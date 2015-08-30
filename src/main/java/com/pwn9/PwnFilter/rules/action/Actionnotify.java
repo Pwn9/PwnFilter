@@ -20,12 +20,16 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * Notify all users with the permission specified in notifyperm:
+ *
+ * @author ptoal
+ * @version $Id: $Id
  */
 @SuppressWarnings("UnusedDeclaration")
 public class Actionnotify implements Action {
     String permissionString;
     String messageString;
 
+    /** {@inheritDoc} */
     public void init(String s)
     {
         String[] parts;
@@ -46,21 +50,23 @@ public class Actionnotify implements Action {
 
     }
 
+    /** {@inheritDoc} */
     public boolean execute(final FilterState state ) {
 
         // Create the message to send
         final String sendString = Patterns.replaceVars(messageString,state);
 
         if (permissionString.equalsIgnoreCase("console")) {
-            Bukkit.getScheduler().runTask(state.plugin, new BukkitRunnable() {
+            BukkitRunnable task = new BukkitRunnable() {
                 @Override
                 public void run() {
                     Bukkit.getConsoleSender().sendMessage(sendString);
                 }
-            });
+            };
+            task.runTask(state.plugin);
         }  else {
             // Get all logged in players who have the required permission and send them the message
-            Bukkit.getScheduler().runTask(state.plugin, new BukkitRunnable() {
+            BukkitRunnable task = new BukkitRunnable() {
                 @Override
                 public void run() {
                     for (Player p : DataCache.getInstance().getOnlinePlayers()) {
@@ -69,7 +75,8 @@ public class Actionnotify implements Action {
                         }
                     }
                 }
-            });
+            };
+            task.runTask(state.plugin);
         }
 
         return true;

@@ -14,14 +14,19 @@ import com.pwn9.PwnFilter.FilterState;
 
 /**
  * This action stops processing of any more rules.
+ *
+ * @author ptoal
+ * @version $Id: $Id
  */
 @SuppressWarnings("UnusedDeclaration")
 public class Actionabort implements Action {
 
+    /** {@inheritDoc} */
     public void init(String s) {
         // This action doesn't require any initialization.
     }
 
+    /** {@inheritDoc} */
     public boolean execute(final FilterState state ) {
         state.stop = true;
         state.addLogMessage("<Abort> Not processing more rules.");

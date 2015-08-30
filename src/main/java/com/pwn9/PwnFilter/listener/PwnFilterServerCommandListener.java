@@ -26,23 +26,36 @@ import org.bukkit.plugin.PluginManager;
 import java.util.List;
 
 /**
-* Apply the filter to commands.
-*/
-
+ * Apply the filter to commands.
+ *
+ * @author ptoal
+ * @version $Id: $Id
+ */
 public class PwnFilterServerCommandListener extends BaseListener {
 
     public List<String> cmdlist;
     public List<String> cmdblist;
 
+    /**
+     * <p>Constructor for PwnFilterServerCommandListener.</p>
+     *
+     * @param p a {@link com.pwn9.PwnFilter.PwnFilter} object.
+     */
     public PwnFilterServerCommandListener(PwnFilter p) {
 	    super(p);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getShortName() {
         return "CONSOLE";
     }
 
+    /**
+     * <p>onServerCommandEvent.</p>
+     *
+     * @param event a {@link org.bukkit.event.server.ServerCommandEvent} object.
+     */
     public void onServerCommandEvent(ServerCommandEvent event) {
 
         String command = event.getCommand();
@@ -74,15 +87,14 @@ public class PwnFilterServerCommandListener extends BaseListener {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Activate this listener.  This method can be called either by the owning plugin
      * or by PwnFilter.  PwnFilter will call the shutdown / activate methods when PwnFilter
      * is enabled / disabled and whenever it is reloading its config / rules.
      * <p/>
      * These methods could either register / deregister the listener with Bukkit, or
      * they could just enable / disable the use of the filter.
-     *
-     * @param config PwnFilter Configuration object, which the plugin can read for configuration
-     *               information. (eg: config.getString("ruledir")
      */
     @Override
     public void activate(Configuration config) {

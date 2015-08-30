@@ -19,6 +19,9 @@ import java.util.regex.PatternSyntaxException;
 
 /**
  * Some helpful utility methods.
+ *
+ * @author ptoal
+ * @version $Id: $Id
  */
 public class Patterns {
     /**
@@ -26,6 +29,12 @@ public class Patterns {
      */
     static final DecimalFormat df = new DecimalFormat("0.00##");
 
+    /**
+     * <p>compilePattern.</p>
+     *
+     * @param re a {@link java.lang.String} object.
+     * @return a java$util$regex$Pattern object.
+     */
     public static java.util.regex.Pattern compilePattern(String re) {
         Pattern pattern = null;
         try {
@@ -44,6 +53,13 @@ public class Patterns {
         return pattern;
     }
 
+    /**
+     * <p>replaceVars.</p>
+     *
+     * @param line a {@link java.lang.String} object.
+     * @param state a {@link com.pwn9.PwnFilter.FilterState} object.
+     * @return a {@link java.lang.String} object.
+     */
     public static String replaceVars(String line, FilterState state) {
         Pattern p = Pattern.compile("(&player|&string|&rawstring|&event|&ruleid|&ruledescr)");
         Matcher m = p.matcher(line);

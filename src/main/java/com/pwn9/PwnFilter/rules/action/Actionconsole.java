@@ -17,26 +17,32 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * Execute a console command
+ *
+ * @author ptoal
+ * @version $Id: $Id
  */
 @SuppressWarnings("UnusedDeclaration")
 public class Actionconsole implements Action {
     String command;
 
+    /** {@inheritDoc} */
     public void init(String s)
     {
         if ((command = s).isEmpty()) throw new IllegalArgumentException("No command was provided to 'console'");
 
     }
 
+    /** {@inheritDoc} */
     public boolean execute(final FilterState state ) {
         final String cmd = Patterns.replaceVars(command, state);
         state.addLogMessage("Sending console command: " + cmd);
-        Bukkit.getScheduler().runTask(state.plugin, new BukkitRunnable() {
+        BukkitRunnable task = new BukkitRunnable() {
             @Override
             public void run() {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
             }
-        });
+        };
+        task.runTask(state.plugin);
         return true;
     }
 }

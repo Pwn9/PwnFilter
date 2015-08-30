@@ -10,9 +10,10 @@ import java.io.*;
  * User: ptoal
  * Date: 13-11-25
  * Time: 1:04 PM
-
+ *
+ * @author ptoal
+ * @version $Id: $Id
  */
-
 public class FileUtil {
 
     /**
@@ -57,11 +58,12 @@ public class FileUtil {
 
     /**
      * Copy a file from the plugin resources to the local filesystem.
+     *
      * @param destFile The File object that points to the destination file
      * @param configName The name of the configuration file to look for in the plugin resources.
      * @return Success or failure.
-     * @throws IOException
-     * @throws SecurityException
+     * @throws java.io.IOException if any.
+     * @throws java.lang.SecurityException if any.
      */
     public static boolean copyTemplate(File destFile, String configName) throws IOException, SecurityException {
         Plugin plugin = PwnFilter.getInstance();

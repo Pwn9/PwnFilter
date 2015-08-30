@@ -33,12 +33,17 @@ import java.util.logging.Logger;
  *
  * This implementation is probably not the optimal way of doing things, but it
  * is the best I could come up with. - Sage
+ *
+ * @author ptoal
+ * @version $Id: $Id
  */
 
 @SuppressWarnings("UnusedDeclaration")
 public class DataCache {
 
+    /** Constant <code>runEveryTicks=20</code> */
     public final static int runEveryTicks = 20; // Once per second
+    /** Constant <code>playersPerRun=50</code> */
     public final static int playersPerRun = 50;
 
     private static DataCache _instance = null;
@@ -58,6 +63,12 @@ public class DataCache {
         this.plugin = plugin;
     }
 
+    /**
+     * <p>init.</p>
+     *
+     * @param p a {@link com.pwn9.PwnFilter.PwnFilter} object.
+     * @return a {@link com.pwn9.PwnFilter.DataCache} object.
+     */
     public static DataCache init(PwnFilter p) {
         if (_instance == null) {
             _instance = new DataCache(p);
@@ -68,6 +79,12 @@ public class DataCache {
     }
 
     // This method is for other classes to call to query the cache.
+    /**
+     * <p>getInstance.</p>
+     *
+     * @return a {@link com.pwn9.PwnFilter.DataCache} object.
+     * @throws java.lang.IllegalStateException if any.
+     */
     public static DataCache getInstance() throws IllegalStateException {
         if ( _instance == null ) {
             throw new IllegalStateException("DataCache not initialized.");
@@ -75,18 +92,40 @@ public class DataCache {
         return _instance;
     }
 
+    /**
+     * <p>Getter for the field <code>onlinePlayers</code>.</p>
+     *
+     * @return an array of {@link org.bukkit.entity.Player} objects.
+     */
     public Player[] getOnlinePlayers() {
         return onlinePlayers.toArray(new Player[onlinePlayers.size()]);
     }
 
+    /**
+     * <p>hasPermission.</p>
+     *
+     * @param p a {@link org.bukkit.entity.Player} object.
+     * @param s a {@link java.lang.String} object.
+     * @return a boolean.
+     */
     public boolean hasPermission(Player p, String s) {
         return playerPermissions.get(p).contains(s);
     }
 
+    /**
+     * <p>hasPermission.</p>
+     *
+     * @param p a {@link org.bukkit.entity.Player} object.
+     * @param perm a {@link org.bukkit.permissions.Permission} object.
+     * @return a boolean.
+     */
     public boolean hasPermission(Player p, Permission perm) {
         return playerPermissions.get(p).contains(perm.getName());
     }
 
+    /**
+     * <p>start.</p>
+     */
     public void start() {
         // Initialize with current online players
         for (Player p : Bukkit.getOnlinePlayers()) {
@@ -101,14 +140,21 @@ public class DataCache {
         },0,DataCache.runEveryTicks);
     }
 
-    public void stop() {
+    /**
+     * <p>stop.</p>
+     */
+    public synchronized void stop() {
         Bukkit.getScheduler().cancelTask(taskId);
-        for (Player p : onlinePlayers) {
-            removePlayer(p);
-        }
+        onlinePlayers.clear();
+        playerPermissions.clear();
         taskId = 0;
     }
 
+    /**
+     * <p>finalize.</p>
+     *
+     * @throws java.lang.Throwable if any.
+     */
     public void finalize() throws Throwable {
         if ( taskId != 0 ) {
             stop();
@@ -116,6 +162,11 @@ public class DataCache {
         super.finalize();
     }
 
+    /**
+     * <p>dumpCache.</p>
+     *
+     * @param l a {@link java.util.logging.Logger} object.
+     */
     public void dumpCache(Logger l) {
         l.finest("PwnFilter Data Cache Contents:");
         l.finest("Task Id: " + taskId);
@@ -146,10 +197,20 @@ public class DataCache {
              ever be called from the Bukkit main thread task.  ALL writes to
              the DataCache MUST happen in a thread-safe way!
     */
+    /**
+     * <p>addPlayer.</p>
+     *
+     * @param p a {@link org.bukkit.entity.Player} object.
+     */
     public synchronized void addPlayer(Player p) {
         onlinePlayers.add(p);
     }
 
+    /**
+     * <p>removePlayer.</p>
+     *
+     * @param p a {@link org.bukkit.entity.Player} object.
+     */
     public synchronized void removePlayer(Player p) {
         onlinePlayers.remove(p);
         playerPermissions.get(p).clear();
@@ -193,16 +254,31 @@ public class DataCache {
         }
     }
 
+    /**
+     * <p>addPermission.</p>
+     *
+     * @param permission a {@link java.lang.String} object.
+     */
     public synchronized void addPermission(String permission) {
         permSet.add(permission);
     }
 
+    /**
+     * <p>addPermissions.</p>
+     *
+     * @param permissions a {@link java.util.List} object.
+     */
     public synchronized void addPermissions(List<Permission> permissions) {
         for (Permission p : permissions ) {
             permSet.add(p.getName());
         }
     }
 
+    /**
+     * <p>addPermissions.</p>
+     *
+     * @param permissions a {@link java.util.Set} object.
+     */
     public synchronized void addPermissions(Set<String> permissions) {
         permSet.addAll(permissions);
     }

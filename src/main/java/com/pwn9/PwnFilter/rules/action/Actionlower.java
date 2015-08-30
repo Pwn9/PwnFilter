@@ -15,15 +15,20 @@ import com.pwn9.PwnFilter.util.ColoredString;
 
 /**
  * Convert the matched text to lowercase.
+ *
+ * @author ptoal
+ * @version $Id: $Id
  */
 @SuppressWarnings("UnusedDeclaration")
 public class Actionlower implements Action {
 
+    /** {@inheritDoc} */
     public void init(String s)
     {
         // Do nothing with a string, if one is provided.
     }
 
+    /** {@inheritDoc} */
     public boolean execute(final FilterState state ) {
         ColoredString cs = state.getModifiedMessage();
         state.addLogMessage("Converting to lowercase.");

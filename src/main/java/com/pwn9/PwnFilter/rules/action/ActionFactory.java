@@ -14,10 +14,18 @@ package com.pwn9.PwnFilter.rules.action;
  * This factory returns an action object selected by the rules file.
  * eg: "then kick" would return the Actionkick object.
  *
+ * @author ptoal
+ * @version $Id: $Id
  */
 @SuppressWarnings("UnusedDeclaration")
 public final class ActionFactory {
 
+    /**
+     * <p>getActionFromString.</p>
+     *
+     * @param s a {@link java.lang.String} object.
+     * @return a {@link com.pwn9.PwnFilter.rules.action.Action} object.
+     */
     public static Action getActionFromString(String s)
     {
         String[] parts = s.split("\\s",2);
@@ -28,6 +36,13 @@ public final class ActionFactory {
         return getAction(actionName, actionData);
     }
 
+    /**
+     * <p>getAction.</p>
+     *
+     * @param actionName a {@link java.lang.String} object.
+     * @param actionData a {@link java.lang.String} object.
+     * @return a {@link com.pwn9.PwnFilter.rules.action.Action} object.
+     */
     public static Action getAction(final String actionName, final String actionData)
     {
         // Return a subclass instance based on actionName.

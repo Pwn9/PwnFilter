@@ -14,9 +14,17 @@ import org.bukkit.event.player.PlayerQuitEvent;
  * User: ptoal
  * Date: 13-11-13
  * Time: 10:34 AM
+ *
+ * @author ptoal
+ * @version $Id: $Id
  */
 public class PlayerCacheListener implements Listener {
 
+    /**
+     * <p>onPlayerQuit.</p>
+     *
+     * @param event a {@link org.bukkit.event.player.PlayerQuitEvent} object.
+     */
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerQuit(PlayerQuitEvent event) {
         // Cleanup player messages on quit
@@ -26,6 +34,11 @@ public class PlayerCacheListener implements Listener {
         DataCache.getInstance().removePlayer(event.getPlayer());
     }
 
+    /**
+     * <p>onPlayerJoin.</p>
+     *
+     * @param event a {@link org.bukkit.event.player.PlayerJoinEvent} object.
+     */
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerJoin(PlayerJoinEvent event) {
         DataCache.getInstance().addPlayer(event.getPlayer());

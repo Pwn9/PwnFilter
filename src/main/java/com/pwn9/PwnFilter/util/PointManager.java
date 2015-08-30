@@ -16,12 +16,12 @@ import com.pwn9.PwnFilter.api.FilterClient;
 import com.pwn9.PwnFilter.rules.RuleChain;
 import com.pwn9.PwnFilter.rules.action.Action;
 import com.pwn9.PwnFilter.rules.action.ActionFactory;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -31,6 +31,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * User: ptoal
  * Date: 13-10-31
  * Time: 3:49 PM
+ *
+ * @author ptoal
+ * @version $Id: $Id
  */
 @SuppressWarnings("UnusedDeclaration")
 public class PointManager implements FilterClient {
@@ -49,6 +52,12 @@ public class PointManager implements FilterClient {
         this.plugin = p;
     }
 
+    /**
+     * <p>setup.</p>
+     *
+     * @param pwnFilter a {@link com.pwn9.PwnFilter.PwnFilter} object.
+     * @return a {@link com.pwn9.PwnFilter.util.PointManager} object.
+     */
     public static PointManager setup(PwnFilter pwnFilter) {
         ConfigurationSection pointsSection = pwnFilter.getConfig().getConfigurationSection("points");
         if (!pointsSection.getBoolean("enabled")) {
@@ -70,6 +79,9 @@ public class PointManager implements FilterClient {
         return _instance;
     }
 
+    /**
+     * <p>reset.</p>
+     */
     public void reset() {
         stopLeaking();
 
@@ -85,7 +97,7 @@ public class PointManager implements FilterClient {
         final PointManager pointManager = this;
 
         if (leakTask == null) {
-            leakTask = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, new BukkitRunnable() {
+            BukkitRunnable leakTask = new BukkitRunnable() {
                 @Override
                 public void run() {
                     //Every interval, check point balances, and if they are > 0, subtract leakPoints
@@ -94,7 +106,8 @@ public class PointManager implements FilterClient {
                         pointManager.subPlayerPoints(playerName,leakPoints);
                     }
                 }
-            }, 20, 20*leakInterval);
+            };
+            leakTask.runTaskTimerAsynchronously(plugin, 20, 20 * leakInterval);
         }
     }
 
@@ -140,6 +153,12 @@ public class PointManager implements FilterClient {
     }
 
 
+    /**
+     * <p>getInstance.</p>
+     *
+     * @return a {@link com.pwn9.PwnFilter.util.PointManager} object.
+     * @throws java.lang.IllegalStateException if any.
+     */
     public static PointManager getInstance() throws IllegalStateException {
         if (_instance == null ) {
             throw new IllegalStateException("Point Manager Not initialized.");
@@ -147,24 +166,53 @@ public class PointManager implements FilterClient {
         return _instance;
     }
 
+    /**
+     * <p>getPlayersWithPoints.</p>
+     *
+     * @return a {@link java.util.Set} object.
+     */
     public Set<String> getPlayersWithPoints() {
         return playerPoints.keySet();
     }
 
+    /**
+     * <p>Getter for the field <code>playerPoints</code>.</p>
+     *
+     * @param p a {@link java.lang.String} object.
+     * @return a {@link java.lang.Double} object.
+     */
     public Double getPlayerPoints(String p) {
         return (playerPoints.containsKey(p))?playerPoints.get(p):0.0;
     }
 
+    /**
+     * <p>Getter for the field <code>playerPoints</code>.</p>
+     *
+     * @param p a {@link org.bukkit.entity.Player} object.
+     * @return a {@link java.lang.Double} object.
+     */
     public Double getPlayerPoints(Player p) {
         return (playerPoints.containsKey(p.getName()))?playerPoints.get(p.getName()):0.0;
     }
 
+    /**
+     * <p>Setter for the field <code>playerPoints</code>.</p>
+     *
+     * @param playerName a {@link java.lang.String} object.
+     * @param points a {@link java.lang.Double} object.
+     */
     public void setPlayerPoints(String playerName, Double points) {
         Double old = playerPoints.get(playerName);
         playerPoints.put(playerName,points);
         executeActions(old, points,playerName);
     }
 
+    /**
+     * <p>addPlayerPoints.</p>
+     *
+     * @param playerName a {@link java.lang.String} object.
+     * @param points a {@link java.lang.Double} object.
+     */
     public void addPlayerPoints(String playerName, Double points) {
         Double current = playerPoints.get(playerName);
         if (current == null) current = 0.0;
@@ -176,6 +224,11 @@ public class PointManager implements FilterClient {
 
     }
 
+    /**
+     * <p>isEnabled.</p>
+     *
+     * @return a boolean.
+     */
     public static boolean isEnabled() {
         return _instance != null;
     }
@@ -190,25 +243,33 @@ public class PointManager implements FilterClient {
 
             // Check to see if we've crossed any thresholds on our way up/down, and if so
             // execute the actions for that crossing.
-            Bukkit.getScheduler().runTask(plugin, new BukkitRunnable() {
+            BukkitRunnable task = new BukkitRunnable() {
                 @Override
                 public void run() {
                     for (Map.Entry<Double, Threshold> entry : thresholds.subMap(oldKey, false, newKey, true).entrySet())
                         entry.getValue().executeAscending(playerName);
                 }
-            });
+            };
+            task.runTask(plugin);
         } else {
-            Bukkit.getScheduler().runTask(plugin, new BukkitRunnable() {
+            BukkitRunnable task = new BukkitRunnable() {
                 @Override
                 public void run() {
                     for (Map.Entry<Double, Threshold> entry : thresholds.subMap(newKey, false, oldKey, true).descendingMap().entrySet())
                         entry.getValue().executeDescending(playerName);
                 }
-            });
+            };
+            task.runTask(plugin);
         }
 
     }
 
+    /**
+     * <p>subPlayerPoints.</p>
+     *
+     * @param playerName a {@link java.lang.String} object.
+     * @param points a {@link java.lang.Double} object.
+     */
     public void subPlayerPoints(String playerName, Double points) {
         Double updated;
         Double current = playerPoints.get(playerName);
@@ -231,7 +292,8 @@ public class PointManager implements FilterClient {
         List<Action> actionsAscending = new ArrayList<Action>();
         List<Action> actionsDescending = new ArrayList<Action>();
 
-        public int compareTo(Threshold o) {
+        @Override
+        public int compareTo(@NotNull Threshold o) {
             return Double.compare(this.points, o.points);
         }
 
@@ -252,6 +314,8 @@ public class PointManager implements FilterClient {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Setup as a Client, so we can create a FilterState object, and execute actions.
      * Really, the only thing we implement is the getShortName() call.  This is hackish.
      * Should really re-think this implementation.
@@ -261,20 +325,24 @@ public class PointManager implements FilterClient {
         return "POINTS";
     }
 
+    /** {@inheritDoc} */
     @Override
     public RuleChain getRuleChain() {
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isActive() {
         return false;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void activate(Configuration config) {
     }
 
+    /** {@inheritDoc} */
     @Override
     public void shutdown() {
     }

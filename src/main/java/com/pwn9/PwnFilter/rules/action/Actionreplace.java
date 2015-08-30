@@ -15,6 +15,9 @@ import org.bukkit.ChatColor;
 
 /**
  * Decolor the whole string and replace the matched text with the replacement string.
+ *
+ * @author ptoal
+ * @version $Id: $Id
  */
 @SuppressWarnings("UnusedDeclaration")
 public class Actionreplace implements Action {
@@ -22,11 +25,13 @@ public class Actionreplace implements Action {
     String messageString = "";
 
 
+    /** {@inheritDoc} */
     public void init(String s)
     {
         messageString = ChatColor.translateAlternateColorCodes('&',s).replaceAll("\"","");
     }
 
+    /** {@inheritDoc} */
     public boolean execute(final FilterState state ) {
         state.setModifiedMessage(state.getModifiedMessage().decolor().replaceText(state.pattern, messageString));
 

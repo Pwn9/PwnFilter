@@ -17,6 +17,9 @@ package com.pwn9.PwnFilter.command;
  * User: ptoal
  * Date: 13-07-01
  * Time: 4:19 PM
+ *
+ * @author ptoal
+ * @version $Id: $Id
  */
 
 import com.pwn9.PwnFilter.PwnFilter;
@@ -28,17 +31,26 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 public class BaseCommandExecutor implements TabExecutor {
     protected final PwnFilter plugin;
     private final Map<String,SubCommand> subCommands;
 
+    /**
+     * <p>Constructor for BaseCommandExecutor.</p>
+     *
+     * @param instance a {@link com.pwn9.PwnFilter.PwnFilter} object.
+     */
     public BaseCommandExecutor(PwnFilter instance){
         plugin = instance;
         subCommands = new HashMap<String, SubCommand>();
 
     }
 
+    /**
+     * <p>addSubCommand.</p>
+     *
+     * @param subCommand a {@link com.pwn9.PwnFilter.command.SubCommand} object.
+     */
     public void addSubCommand(SubCommand subCommand) {
         if (subCommand == null) {
             throw new IllegalArgumentException("SubCommand was null.");
@@ -46,6 +58,7 @@ public class BaseCommandExecutor implements TabExecutor {
         subCommands.put(subCommand.getName(), subCommand);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean onCommand(final CommandSender sender, final Command command, String alias, final String[] args) {
         if (args.length < 1) {
@@ -67,6 +80,13 @@ public class BaseCommandExecutor implements TabExecutor {
         return true;
     }
 
+    /**
+     * <p>sendHelpMsg.</p>
+     *
+     * @param sender a {@link org.bukkit.command.CommandSender} object.
+     * @param alias a {@link java.lang.String} object.
+     * @return a boolean.
+     */
     public boolean sendHelpMsg(CommandSender sender, String alias) {
 
         ArrayList<SubCommand> availableCommands = new ArrayList<SubCommand>();
@@ -91,13 +111,9 @@ public class BaseCommandExecutor implements TabExecutor {
     }
 
     /**
-     * Requests a list of possible completions for a command argument.
+     * {@inheritDoc}
      *
-     * @param sender  Source of the command
-     * @param command Command which was executed
-     * @param alias   The alias used
-     * @param args    The arguments passed to the command, including final partial argument to be completed and command label
-     * @return A List of possible completions for the final argument, or null to default to the command executor
+     * Requests a list of possible completions for a command argument.
      */
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
