@@ -26,19 +26,36 @@ import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.PluginManager;
 
 /**
-* Listen for Chat events and apply the filter.
-*/
-
+ * Listen for Chat events and apply the filter.
+ *
+ * @author ptoal
+ * @version $Id: $Id
+ */
 public class PwnFilterPlayerListener extends BaseListener {
 
+    /**
+     * <p>getShortName.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getShortName() {
         return "CHAT";
     }
 
+	/**
+	 * <p>Constructor for PwnFilterPlayerListener.</p>
+	 *
+	 * @param p a {@link com.pwn9.PwnFilter.PwnFilter} object.
+	 */
 	public PwnFilterPlayerListener(PwnFilter p) {
         super(p);
     }
 
+    /**
+     * <p>onPlayerChat.</p>
+     *
+     * @param event a {@link org.bukkit.event.player.AsyncPlayerChatEvent} object.
+     */
     public void onPlayerChat(AsyncPlayerChatEvent event) {
 
         if (event.isCancelled()) return;
@@ -87,15 +104,14 @@ public class PwnFilterPlayerListener extends BaseListener {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Activate this listener.  This method can be called either by the owning plugin
      * or by PwnFilter.  PwnFilter will call the shutdown / activate methods when PwnFilter
      * is enabled / disabled and whenever it is reloading its config / rules.
      * <p/>
      * These methods could either register / deregister the listener with Bukkit, or
      * they could just enable / disable the use of the filter.
-     *
-     * @param config PwnFilter Configuration object, which the plugin can read for configuration
-     *               information. (eg: config.getString("ruledir")
      */
     @Override
     public void activate(Configuration config) {

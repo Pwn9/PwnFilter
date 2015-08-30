@@ -21,6 +21,9 @@ import org.bukkit.event.Listener;
  * Date: 13-09-28
  * Time: 12:15 PM
  * To change this template use File | Settings | File Templates.
+ *
+ * @author ptoal
+ * @version $Id: $Id
  */
 public interface FilterClient extends Listener {
 
@@ -30,20 +33,23 @@ public interface FilterClient extends Listener {
      *
      * @return String containing the listeners short name.
      */
-    public String getShortName();
+    String getShortName();
 
 
     /**
+     * <p>getRuleChain.</p>
      *
-      * @return The primary rulechain for this filter
+     * @return The primary rulechain for this filter
      */
-    public RuleChain getRuleChain();
+    RuleChain getRuleChain();
 
 
     /**
+     * <p>isActive.</p>
+     *
      * @return True if this FilterListener is currently active
      */
-    public boolean isActive();
+    boolean isActive();
 
     /**
      * Activate this listener.  This method can be called either by the owning plugin
@@ -56,7 +62,7 @@ public interface FilterClient extends Listener {
      * @param config PwnFilter Configuration object, which the plugin can read for configuration
      *               information. (eg: config.getString("ruledir")
      */
-    public void activate(Configuration config);
+    void activate(Configuration config);
 
     /**
      * Shutdown this listener.  This method can be called either by the owning plugin
@@ -66,6 +72,6 @@ public interface FilterClient extends Listener {
      * These methods could either register / deregister the listener with Bukkit, or
      * they could just enable / disable the use of the filter.
      */
-    public void shutdown();
+    void shutdown();
 
 }

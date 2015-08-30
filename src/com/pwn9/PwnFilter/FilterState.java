@@ -36,6 +36,8 @@ import java.util.regex.Pattern;
  * stop: If true, no further rules will be processed
  * cancel: If true, this event will be set Cancelled (if possible)
  *
+ * @author ptoal
+ * @version $Id: $Id
  */
 
 //TODO: Make all this stuff private and create getters/setters
@@ -66,6 +68,9 @@ public class FilterState {
      * will not be correctly processed.
      *
      * @param m The original text string to run rules against.
+     * @param pl a {@link org.bukkit.plugin.Plugin} object.
+     * @param p a {@link org.bukkit.entity.Player} object.
+     * @param l a {@link com.pwn9.PwnFilter.api.FilterClient} object.
      */
     public FilterState(Plugin pl, String m, Player p, FilterClient l) {
         originalMessage = new ColoredString(m);
@@ -89,6 +94,7 @@ public class FilterState {
     /**
      * A FilterState object from a Player Name, instead of Player Object.  This
      * can be used for offline players.
+     *
      * @param pl PwnFilter plugin instance
      * @param m String message to process
      * @param pName Player name String
@@ -108,44 +114,79 @@ public class FilterState {
 
     /**
      * Add a string to the list of log messages that will be written to the logfile /console.
-     * These messages will only be output if the rule has the "then log" action, or if debug >= low
+     * These messages will only be output if the rule has the "then log" action, or if debug &gt;= low
      * in the comfig.yml
+     *
      * @param message A string containing the log message to be output.
      */
     public void addLogMessage (String message) {
         logMessages.add(message);
     }
 
+    /**
+     * <p>Getter for the field <code>logMessages</code>.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<String> getLogMessages() {
         return logMessages;
     }
     /**
+     * <p>messageChanged.</p>
+     *
      * @return true if the modified message is different than the original.
      */
     public boolean messageChanged() {
         return !originalMessage.toString().equals(modifiedMessage.toString());
     }
 
+    /**
+     * <p>playerHasPermission.</p>
+     *
+     * @param perm a {@link java.lang.String} object.
+     * @return a boolean.
+     */
     public boolean playerHasPermission(String perm) {
         return player != null && DataCache.getInstance().hasPermission(player, perm);
     }
 
+    /**
+     * <p>Getter for the field <code>player</code>.</p>
+     *
+     * @return a {@link org.bukkit.entity.Player} object.
+     */
     public Player getPlayer() {
         return player;
     }
 
+    /**
+     * <p>isCancelled.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isCancelled() {
         return cancel;
     }
 
+    /**
+     * <p>setCancelled.</p>
+     *
+     * @param cancel a boolean.
+     */
     public void setCancelled(boolean cancel) {
         this.cancel = cancel;
     }
 
+    /**
+     * <p>getListenerName.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getListenerName() {
         return listener.getShortName();
     }
     /**
+     * <p>Getter for the field <code>originalMessage</code>.</p>
      *
      * @return a new Instance of ColouredString with a copy of the originalMessage.
      */
@@ -153,18 +194,38 @@ public class FilterState {
         return new ColoredString(originalMessage);
     }
 
+    /**
+     * <p>Getter for the field <code>modifiedMessage</code>.</p>
+     *
+     * @return a {@link com.pwn9.PwnFilter.util.ColoredString} object.
+     */
     public ColoredString getModifiedMessage() {
         return new ColoredString(modifiedMessage);
     }
 
+    /**
+     * <p>Setter for the field <code>modifiedMessage</code>.</p>
+     *
+     * @param newMessage a {@link com.pwn9.PwnFilter.util.ColoredString} object.
+     */
     public void setModifiedMessage(ColoredString newMessage) {
         modifiedMessage = newMessage;
     }
 
+    /**
+     * <p>Getter for the field <code>unfilteredMessage</code>.</p>
+     *
+     * @return a {@link com.pwn9.PwnFilter.util.ColoredString} object.
+     */
     public ColoredString getUnfilteredMessage() {
         return unfilteredMessage;
     }
 
+    /**
+     * <p>Setter for the field <code>unfilteredMessage</code>.</p>
+     *
+     * @param newMessage a {@link com.pwn9.PwnFilter.util.ColoredString} object.
+     */
     public void setUnfilteredMessage(ColoredString newMessage) {
         unfilteredMessage = newMessage;
     }

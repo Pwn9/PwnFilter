@@ -16,8 +16,15 @@ import java.util.Date;
 import java.util.logging.LogRecord;
 import java.util.logging.SimpleFormatter;
 
+/**
+ * <p>PwnFormatter class.</p>
+ *
+ * @author ptoal
+ * @version $Id: $Id
+ */
 public class PwnFormatter extends SimpleFormatter {
 
+    /** {@inheritDoc} */
     @Override
     public synchronized String format(LogRecord record) {
 

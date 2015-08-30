@@ -13,6 +13,12 @@ package com.pwn9.PwnFilter.rules;
 import com.pwn9.PwnFilter.FilterState;
 
 
+/**
+ * <p>Condition class.</p>
+ *
+ * @author ptoal
+ * @version $Id: $Id
+ */
 public class Condition {
 
 
@@ -29,12 +35,25 @@ public class Condition {
     final String parameters;
 
 
+    /**
+     * <p>Constructor for Condition.</p>
+     *
+     * @param t a {@link com.pwn9.PwnFilter.rules.Condition.CondType} object.
+     * @param f a {@link com.pwn9.PwnFilter.rules.Condition.CondFlag} object.
+     * @param p a {@link java.lang.String} object.
+     */
     public Condition(CondType t, CondFlag f, String p) {
         type = t;
         flag = f;
         parameters = p;
     }
 
+    /**
+     * <p>newCondition.</p>
+     *
+     * @param line a {@link java.lang.String} object.
+     * @return a {@link com.pwn9.PwnFilter.rules.Condition} object.
+     */
     public static Condition newCondition(String line) {
         String[] parts = line.split("\\s",2);
         String conditionName = parts[0];
@@ -44,6 +63,13 @@ public class Condition {
         return newCondition(conditionName, conditionData);
     }
 
+    /**
+     * <p>newCondition.</p>
+     *
+     * @param command a {@link java.lang.String} object.
+     * @param parameterString a {@link java.lang.String} object.
+     * @return a {@link com.pwn9.PwnFilter.rules.Condition} object.
+     */
     public static Condition newCondition(String command, String parameterString) {
         String subCmd;
         CondType newType;
@@ -72,6 +98,12 @@ public class Condition {
         return new Condition(newType, newFlag, newParameters);
     }
 
+    /**
+     * <p>isCondition.</p>
+     *
+     * @param command a {@link java.lang.String} object.
+     * @return a boolean.
+     */
     public static boolean isCondition(String command) {
         try {
             return CondFlag.valueOf(command) != CondFlag.NONE;

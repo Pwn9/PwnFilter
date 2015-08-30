@@ -22,12 +22,19 @@ import org.bukkit.command.CommandSender;
  * User: ptoal
  * Date: 13-08-10
  * Time: 9:23 AM
+ *
+ * @author ptoal
+ * @version $Id: $Id
  */
 public class pfdumpcache implements CommandExecutor {
 
+    /**
+     * <p>Constructor for pfdumpcache.</p>
+     */
     public pfdumpcache() {
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         DataCache.getInstance().dumpCache(LogManager.logger);

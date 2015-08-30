@@ -16,6 +16,9 @@ import java.util.Random;
 
 /**
  * Replace the matched text with a random selection from a | seperated list of text.
+ *
+ * @author ptoal
+ * @version $Id: $Id
  */
 @SuppressWarnings("UnusedDeclaration")
 public class Actionrandrep implements Action {
@@ -24,12 +27,14 @@ public class Actionrandrep implements Action {
     // toRand is a String array of options to chose from for replacement.
     String[] toRand;
 
+    /** {@inheritDoc} */
     public void init(String s)
     {
         toRand = s.split("\\|");
         if (toRand[0].isEmpty()) throw new IllegalArgumentException("'randrep' requires at least one replacement string.");
     }
 
+    /** {@inheritDoc} */
     public boolean execute(final FilterState state ) {
         int randomInt = random.nextInt(toRand.length);
         state.setModifiedMessage(state.getModifiedMessage().replaceText(state.pattern,toRand[randomInt]));

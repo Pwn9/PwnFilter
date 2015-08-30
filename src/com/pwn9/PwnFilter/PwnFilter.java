@@ -37,43 +37,59 @@ import java.util.concurrent.ConcurrentMap;
 
 /**
  * A Regular Expression (REGEX) Chat Filter For Bukkit with many great features
+ *
  * @author tremor77
- **/
+ * @version $Id: $Id
+ */
 
 // TODO: Add support for Books
 // TODO: Enable configuration management /pfset /pfsave
 // TODO: It's powerful.  Now, make it easier.
 // TODO: Make 'base' files that users can pull in to get started quickly (eg: swearing.txt, hate.txt, etc.)
 // TODO: Multiverse-support? (Different configs for different worlds)
-
 public class PwnFilter extends JavaPlugin {
 
     private static PwnFilter _instance;
 
     // Metrics data
     private Metrics metrics;
+    /** Constant <code>matchTracker</code> */
     public static Tracker matchTracker;
     private Metrics.Graph eventGraph;
 
+    /** Constant <code>killedPlayers</code> */
     public static ConcurrentMap<Player, String> killedPlayers = new MapMaker().concurrencyLevel(2).weakKeys().makeMap();
 
     // Filter switches
+    /** Constant <code>decolor=false</code> */
     public static boolean decolor = false;
+    /** Constant <code>pwnMute=false</code> */
     public static boolean pwnMute = false;
 
+    /** Constant <code>lastMessage</code> */
     public static ConcurrentMap<Player, String> lastMessage = new MapMaker().concurrencyLevel(2).weakKeys().makeMap();
+    /** Constant <code>economy</code> */
     public static Economy economy = null;
 
     private File textDir;
 
+    /**
+     * <p>Constructor for PwnFilter.</p>
+     */
     public PwnFilter() {
         _instance = this;
     }
 
+    /**
+     * <p>getInstance.</p>
+     *
+     * @return a {@link com.pwn9.PwnFilter.PwnFilter} object.
+     */
     public static PwnFilter getInstance() {
         return _instance;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onLoad() {
 
@@ -89,6 +105,9 @@ public class PwnFilter extends JavaPlugin {
 
     }
 
+    /**
+     * <p>onEnable.</p>
+     */
     public void onEnable() {
 
         // Initialize Configuration
@@ -140,6 +159,9 @@ public class PwnFilter extends JavaPlugin {
 
     }
 
+    /**
+     * <p>onDisable.</p>
+     */
     public void onDisable() {
 
         ClientManager.getInstance().unregisterClients();
@@ -153,6 +175,9 @@ public class PwnFilter extends JavaPlugin {
 
     }
 
+    /**
+     * <p>activateMetrics.</p>
+     */
     public void activateMetrics() {
         // Activate Plugin Metrics
         try {
@@ -176,6 +201,9 @@ public class PwnFilter extends JavaPlugin {
 
     }
 
+    /**
+     * <p>updateMetrics.</p>
+     */
     public void updateMetrics() {
 
         ArrayList<String> activeListenerNames = new ArrayList<String>();
@@ -207,6 +235,9 @@ public class PwnFilter extends JavaPlugin {
 
     }
 
+    /**
+     * <p>configurePlugin.</p>
+     */
     public void configurePlugin() {
 
         if (getConfig().getBoolean("logfile")) {
@@ -242,6 +273,11 @@ public class PwnFilter extends JavaPlugin {
 
     }
 
+    /**
+     * <p>Getter for the field <code>textDir</code>.</p>
+     *
+     * @return a {@link java.io.File} object.
+     */
     public File getTextDir() {
         return textDir;
     }
@@ -260,6 +296,13 @@ public class PwnFilter extends JavaPlugin {
 
     }
 
+    /**
+     * <p>getBufferedReader.</p>
+     *
+     * @param filename a {@link java.lang.String} object.
+     * @return a {@link java.io.BufferedReader} object.
+     * @throws java.io.FileNotFoundException if any.
+     */
     public BufferedReader getBufferedReader(String filename) throws FileNotFoundException {
 
         if (textDir == null) throw new FileNotFoundException("Could not open Textfile Directory.");
@@ -272,6 +315,12 @@ public class PwnFilter extends JavaPlugin {
     }
 
     //TODO: Handle this better
+    /**
+     * <p>addKilledPlayer.</p>
+     *
+     * @param p a {@link org.bukkit.entity.Player} object.
+     * @param message a {@link java.lang.String} object.
+     */
     public static void addKilledPlayer(Player p, String message) {
         killedPlayers.put(p, message);
     }

@@ -12,7 +12,6 @@ package com.pwn9.PwnFilter.rules.action;
 
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.util.Patterns;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -20,11 +19,15 @@ import java.util.ArrayList;
 
 /**
  * Responds to the user with the string provided.
+ *
+ * @author ptoal
+ * @version $Id: $Id
  */
 @SuppressWarnings("UnusedDeclaration")
 public class Actionrespond implements Action {
     ArrayList<String> messageStrings = new ArrayList<String>();
 
+    /** {@inheritDoc} */
     public void init(String s)
     {
         for ( String message : s.split("\n") ) {
@@ -32,6 +35,7 @@ public class Actionrespond implements Action {
         }
     }
 
+    /** {@inheritDoc} */
     public boolean execute(final FilterState state ) {
         if ( state.getPlayer() == null ) return false;
 
@@ -41,17 +45,17 @@ public class Actionrespond implements Action {
             preparedMessages.add(Patterns.replaceVars(message,state));
         }
 
-        state.addLogMessage("Responded to " + state.playerName + " with: "+preparedMessages.get(0) + "...");
+        state.addLogMessage("Responded to " + state.playerName + " with: " + preparedMessages.get(0) + "...");
 
-        Bukkit.getScheduler().runTask(state.plugin, new BukkitRunnable() {
+        BukkitRunnable task = new BukkitRunnable() {
             @Override
             public void run() {
                 for (String m : preparedMessages) {
                     state.getPlayer().sendMessage(m);
                 }
             }
-        });
-
+        };
+        task.runTask(state.plugin);
         return true;
     }
 }

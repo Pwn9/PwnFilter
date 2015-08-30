@@ -22,11 +22,17 @@ import java.util.logging.SimpleFormatter;
  * User: ptoal
  * Date: 13-10-02
  * Time: 4:50 PM
+ *
+ * @author ptoal
+ * @version $Id: $Id
  */
 public class LogManager {
+    /** Constant <code>ruleLogLevel</code> */
     public static Level ruleLogLevel;
     // Logging variables
+    /** Constant <code>debugMode</code> */
     public static DebugModes debugMode = DebugModes.off;
+    /** Constant <code>logger</code> */
     public static Logger logger;
     private static File logFolder;
 
@@ -37,10 +43,20 @@ public class LogManager {
     private LogManager() {
     }
 
+    /**
+     * <p>Getter for the field <code>ruleLogLevel</code>.</p>
+     *
+     * @return a {@link java.util.logging.Level} object.
+     */
     public static Level getRuleLogLevel() {
         return ruleLogLevel;
     }
 
+    /**
+     * <p>Setter for the field <code>debugMode</code>.</p>
+     *
+     * @param mode a {@link java.lang.String} object.
+     */
     public static void setDebugMode(String mode) {
         try {
             debugMode = LogManager.DebugModes.valueOf(mode);
@@ -49,6 +65,11 @@ public class LogManager {
         }
     }
 
+    /**
+     * <p>Setter for the field <code>ruleLogLevel</code>.</p>
+     *
+     * @param level a {@link java.lang.String} object.
+     */
     public static void setRuleLogLevel(String level) {
         try {
             LogManager.ruleLogLevel = Level.parse(level.toUpperCase());
@@ -57,24 +78,46 @@ public class LogManager {
         }
     }
 
+    /**
+     * <p>debugLow.</p>
+     *
+     * @param message a {@link java.lang.String} object.
+     */
     public void debugLow(String message) {
         if (debugMode.compareTo(DebugModes.low) >= 0) {
             logger.finer(message);
         }
     }
 
+    /**
+     * <p>debugMedium.</p>
+     *
+     * @param message a {@link java.lang.String} object.
+     */
     public void debugMedium(String message) {
         if (debugMode.compareTo(DebugModes.medium) >= 0) {
             logger.finer(message);
         }
     }
 
+    /**
+     * <p>debugHigh.</p>
+     *
+     * @param message a {@link java.lang.String} object.
+     */
     public void debugHigh(String message) {
         if (debugMode.compareTo(DebugModes.high) >= 0) {
             logger.finer(message);
         }
     }
 
+    /**
+     * <p>getInstance.</p>
+     *
+     * @param l a {@link java.util.logging.Logger} object.
+     * @param f a {@link java.io.File} object.
+     * @return a {@link com.pwn9.PwnFilter.util.LogManager} object.
+     */
     public static LogManager getInstance(Logger l, File f) {
         if (_instance == null) {
             _instance = new LogManager();
@@ -84,6 +127,11 @@ public class LogManager {
         return _instance;
     }
 
+    /**
+     * <p>getInstance.</p>
+     *
+     * @return a {@link com.pwn9.PwnFilter.util.LogManager} object.
+     */
     public static LogManager getInstance() {
         if (_instance == null) {
             throw new IllegalStateException("LogManager not yet initialized!");
@@ -92,6 +140,9 @@ public class LogManager {
         }
     }
 
+    /**
+     * <p>stop.</p>
+     */
     public void stop() {
         if (logfileHandler != null) {
             logfileHandler.close();
@@ -107,6 +158,9 @@ public class LogManager {
         high, // You're crazy. :)
     }
 
+    /**
+     * <p>start.</p>
+     */
     public void start() {
         if (logfileHandler == null) {
             try {

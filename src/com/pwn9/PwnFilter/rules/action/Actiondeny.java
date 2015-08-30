@@ -14,15 +14,20 @@ import com.pwn9.PwnFilter.FilterState;
 
 /**
  * Deny this event by cancelling it.
+ *
+ * @author ptoal
+ * @version $Id: $Id
  */
 @SuppressWarnings("UnusedDeclaration")
 public class Actiondeny implements Action {
 
+    /** {@inheritDoc} */
     public void init(String s)
     {
         // Do nothing with a string, if one is provided.
     }
 
+    /** {@inheritDoc} */
     public boolean execute(final FilterState state ) {
         state.cancel = true;
         return true;

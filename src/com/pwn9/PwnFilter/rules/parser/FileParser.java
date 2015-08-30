@@ -26,8 +26,10 @@ import java.util.*;
  * User: ptoal
  * Date: 13-11-16
  * Time: 3:17 PM
+ *
+ * @author ptoal
+ * @version $Id: $Id
  */
-
 public class FileParser {
 
     final private String filename;
@@ -38,24 +40,51 @@ public class FileParser {
     private Map<String, String> shortcuts = null;
     private Chain chain;
 
+    /**
+     * <p>Constructor for FileParser.</p>
+     *
+     * @param filename a {@link java.lang.String} object.
+     * @param parent a {@link com.pwn9.PwnFilter.rules.parser.FileParser} object.
+     * @param createFile a boolean.
+     */
     public FileParser(String filename, FileParser parent, boolean createFile) {
         this.filename = filename;
         this.parent = parent;
         this.createFile = createFile;
     }
 
+    /**
+     * <p>Constructor for FileParser.</p>
+     *
+     * @param filename a {@link java.lang.String} object.
+     */
     public FileParser(String filename) {
         this(filename, null, true);
     }
 
+    /**
+     * <p>Getter for the field <code>filename</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getFilename() {
         return filename;
     }
 
+    /**
+     * <p>Getter for the field <code>parent</code>.</p>
+     *
+     * @return a {@link com.pwn9.PwnFilter.rules.parser.FileParser} object.
+     */
     public FileParser getParent() {
         return parent;
     }
 
+    /**
+     * <p>getParentFiles.</p>
+     *
+     * @return a {@link java.util.Set} object.
+     */
     public Set<String> getParentFiles() {
         FileParser nextParent = parent;
         HashSet<String> result = new HashSet<String>();
@@ -72,6 +101,7 @@ public class FileParser {
      * Load rules from a Reader stream.  This is the top-level parser for the file.
      *
      * @return true on successful read.  false if file was not found, or an IOException occurred.
+     * @param chain a {@link com.pwn9.PwnFilter.rules.Chain} object.
      */
     public boolean parseRules(Chain chain) {
         RuleStreamReader reader;

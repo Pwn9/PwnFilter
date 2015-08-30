@@ -27,6 +27,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * Date: 13-09-29
  * Time: 9:25 AM
  * To change this template use File | Settings | File Templates.
+ *
+ * @author ptoal
+ * @version $Id: $Id
  */
 @SuppressWarnings("UnusedDeclaration")
 public class ClientManager {
@@ -41,6 +44,11 @@ public class ClientManager {
         this.plugin = plugin;
     }
 
+    /**
+     * <p>getInstance.</p>
+     *
+     * @return a {@link com.pwn9.PwnFilter.api.ClientManager} object.
+     */
     public static ClientManager getInstance() {
         if (_instance == null ) {
             _instance = new ClientManager(PwnFilter.getInstance());
@@ -48,6 +56,11 @@ public class ClientManager {
         return _instance;
     }
 
+    /**
+     * <p>getActiveClients.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<FilterClient> getActiveClients() {
         List<FilterClient> result = new ArrayList<FilterClient>();
         for (FilterClient f : registeredClients.keySet()) {
@@ -56,10 +69,18 @@ public class ClientManager {
         return result;
     }
 
+    /**
+     * <p>Getter for the field <code>registeredClients</code>.</p>
+     *
+     * @return a {@link java.util.Map} object.
+     */
     public Map<FilterClient,Plugin> getRegisteredClients() {
         return registeredClients;
     }
 
+    /**
+     * <p>enableClients.</p>
+     */
     public void enableClients() {
         Configuration config = plugin.getConfig();
 
@@ -69,6 +90,9 @@ public class ClientManager {
 
     }
 
+    /**
+     * <p>disableClients.</p>
+     */
     public void disableClients() {
         for (FilterClient f : getActiveClients()) {
             f.shutdown();
@@ -118,6 +142,9 @@ public class ClientManager {
         }
     }
 
+    /**
+     * <p>unregisterClients.</p>
+     */
     public void unregisterClients() {
         for (FilterClient f : registeredClients.keySet() ) {
             f.shutdown();
@@ -125,6 +152,7 @@ public class ClientManager {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     protected void finalize() throws Throwable {
         super.finalize();

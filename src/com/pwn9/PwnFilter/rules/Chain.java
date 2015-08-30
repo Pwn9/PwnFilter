@@ -20,24 +20,73 @@ import java.util.List;
  * User: ptoal
  * Date: 13-11-16
  * Time: 7:17 PM
+ *
+ * @author ptoal
+ * @version $Id: $Id
  */
 public interface Chain {
 
-    public String getConfigName();
+    /**
+     * <p>getConfigName.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
+    String getConfigName();
 
-    public boolean append(ChainEntry r);
+    /**
+     * <p>append.</p>
+     *
+     * @param r a {@link com.pwn9.PwnFilter.rules.ChainEntry} object.
+     * @return a boolean.
+     */
+    boolean append(ChainEntry r);
 
-    public boolean isValid();
+    /**
+     * <p>isValid.</p>
+     *
+     * @return a boolean.
+     */
+    boolean isValid();
 
-    public Multimap<String, Action> getActionGroups();
+    /**
+     * <p>getActionGroups.</p>
+     *
+     * @return a {@link com.google.common.collect.Multimap} object.
+     */
+    Multimap<String, Action> getActionGroups();
 
-    public Multimap<String, Condition> getConditionGroups();
+    /**
+     * <p>getConditionGroups.</p>
+     *
+     * @return a {@link com.google.common.collect.Multimap} object.
+     */
+    Multimap<String, Condition> getConditionGroups();
 
-    public void resetChain();
+    /**
+     * <p>resetChain.</p>
+     */
+    void resetChain();
 
-    public void addConditionGroup(String name, List<Condition> cGroup);
+    /**
+     * <p>addConditionGroup.</p>
+     *
+     * @param name a {@link java.lang.String} object.
+     * @param cGroup a {@link java.util.List} object.
+     */
+    void addConditionGroup(String name, List<Condition> cGroup);
 
-    public void addActionGroup(String name, List<Action> aGroup);
+    /**
+     * <p>addActionGroup.</p>
+     *
+     * @param name a {@link java.lang.String} object.
+     * @param aGroup a {@link java.util.List} object.
+     */
+    void addActionGroup(String name, List<Action> aGroup);
 
-    public boolean isEmpty();
+    /**
+     * <p>isEmpty.</p>
+     *
+     * @return a boolean.
+     */
+    boolean isEmpty();
 }

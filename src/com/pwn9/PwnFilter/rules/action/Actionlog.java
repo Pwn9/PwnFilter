@@ -14,15 +14,20 @@ import com.pwn9.PwnFilter.FilterState;
 
 /**
  * Log this event.
+ *
+ * @author ptoal
+ * @version $Id: $Id
  */
 @SuppressWarnings("UnusedDeclaration")
 public class Actionlog implements Action {
 
+    /** {@inheritDoc} */
     public void init(String s)
     {
         // Do nothing with a string, if one is provided.
     }
 
+    /** {@inheritDoc} */
     public boolean execute(final FilterState state ) {
         state.log = true;
         return true;

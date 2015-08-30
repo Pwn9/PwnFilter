@@ -37,8 +37,10 @@ import java.util.*;
  * User: ptoal
  * Date: 13-04-05
  * Time: 12:38 PM
+ *
+ * @author ptoal
+ * @version $Id: $Id
  */
-
 public class RuleChain implements Chain,ChainEntry {
     enum ChainState {
         INIT,  // Chain was reset and needs to be reloaded before use.
@@ -54,6 +56,11 @@ public class RuleChain implements Chain,ChainEntry {
     private final String configName;
 
 
+    /**
+     * <p>Constructor for RuleChain.</p>
+     *
+     * @param configName a {@link java.lang.String} object.
+     */
     public RuleChain(String configName) {
         this.configName = configName;
         chainState = ChainState.INIT;
@@ -82,8 +89,18 @@ public class RuleChain implements Chain,ChainEntry {
         }
     }
 
+    /**
+     * <p>Getter for the field <code>configName</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getConfigName() { return configName;}
 
+    /**
+     * <p>ruleCount.</p>
+     *
+     * @return a int.
+     */
     public int ruleCount() {
         Integer count = 0;
         for (ChainEntry c : chain) {
@@ -95,18 +112,15 @@ public class RuleChain implements Chain,ChainEntry {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Iterate over the chain in order, checking the Rule pattern against the
      * current message.  If the text pattern matches, test the rule conditions, to
      * ensure they are all met.  If all of the conditions are met, execute the Rule's
      * actions in sequential order.  If the Rule sets the stop=true of the FilterState,
      * stop processing rules.  If not, continue along the rule chain, checking the
      * (possibly modified) message against subsequent rules.
-     *
-     * @param state A FilterState object which is used to get information about
-     *              this event, and update its status (eg: set cancelled)
-     *
      */
-
     public void apply(FilterState state) throws IllegalStateException {
 
         if (chain == null) {
@@ -121,6 +135,11 @@ public class RuleChain implements Chain,ChainEntry {
         }
     }
 
+    /**
+     * <p>execute.</p>
+     *
+     * @param state a {@link com.pwn9.PwnFilter.FilterState} object.
+     */
     public void execute(FilterState state ) {
 
         LogManager logManager = LogManager.getInstance();
@@ -153,6 +172,7 @@ public class RuleChain implements Chain,ChainEntry {
         }
     }
 
+    /** {@inheritDoc} */
     public boolean append(ChainEntry r) {
         if (r.isValid()) {
             chain.add(r); // Add the Rule to this chain
@@ -160,24 +180,39 @@ public class RuleChain implements Chain,ChainEntry {
         } else return false;
     }
 
+    /**
+     * <p>Getter for the field <code>chain</code>.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<ChainEntry> getChain() {
         return chain;
     }
 
+    /**
+     * <p>isEmpty.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isEmpty() {
         return chain.isEmpty();
     }
 
+    /**
+     * <p>isValid.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isValid() {
         return chainState == ChainState.READY;
     }
 
     /**
+     * {@inheritDoc}
+     *
      * The DataCache object needs to know what permissions to cache.  Whenever this
      * rulechain is updated, the datacache should also be updated with the list of
      * permissions which are interesting.
-     *
-     * @return a Set of all permissions that this rule is interested in.
      */
     @Override
     public Set<String> getPermissionList() {
@@ -189,10 +224,20 @@ public class RuleChain implements Chain,ChainEntry {
         return permList;
     }
 
+    /**
+     * <p>Getter for the field <code>actionGroups</code>.</p>
+     *
+     * @return a {@link com.google.common.collect.Multimap} object.
+     */
     public Multimap<String, Action> getActionGroups() {
         return actionGroups;
     }
 
+    /**
+     * <p>Getter for the field <code>conditionGroups</code>.</p>
+     *
+     * @return a {@link com.google.common.collect.Multimap} object.
+     */
     public Multimap<String, Condition> getConditionGroups() {
         return conditionGroups;
     }
@@ -206,6 +251,7 @@ public class RuleChain implements Chain,ChainEntry {
         chainState = ChainState.INIT;
     }
 
+    /** {@inheritDoc} */
     public void addConditionGroup(String name, List<Condition> cGroup) {
         if (name != null && cGroup != null)
             if(conditionGroups.get(name).isEmpty()) {
@@ -215,6 +261,7 @@ public class RuleChain implements Chain,ChainEntry {
             }
     }
 
+    /** {@inheritDoc} */
     public void addActionGroup(String name, List<Action> aGroup) {
         if (name != null && aGroup != null)
             if(!actionGroups.containsKey(name)) {

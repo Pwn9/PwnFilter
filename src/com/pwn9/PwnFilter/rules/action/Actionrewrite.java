@@ -15,17 +15,22 @@ import org.bukkit.ChatColor;
 
 /**
  * Rewrite the string by replacing the matched text with the provided string.
+ *
+ * @author ptoal
+ * @version $Id: $Id
  */
 @SuppressWarnings("UnusedDeclaration")
 public class Actionrewrite implements Action {
     // messageString is what we will use to replace any matched text.
     String messageString = "";
 
+    /** {@inheritDoc} */
     public void init(String s)
     {
         messageString = ChatColor.translateAlternateColorCodes('&',s);
     }
 
+    /** {@inheritDoc} */
     public boolean execute(final FilterState state) {
         state.setModifiedMessage(state.getModifiedMessage().replaceText(state.pattern, messageString));
 

@@ -22,15 +22,24 @@ import org.bukkit.command.CommandSender;
  * User: ptoal
  * Date: 13-08-10
  * Time: 9:23 AM
+ *
+ * @author ptoal
+ * @version $Id: $Id
  */
 public class pfcls implements CommandExecutor {
 
     private final PwnFilter plugin;
 
+    /**
+     * <p>Constructor for pfcls.</p>
+     *
+     * @param plugin a {@link com.pwn9.PwnFilter.PwnFilter} object.
+     */
     public pfcls(PwnFilter plugin) {
         this.plugin = plugin;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         sender.sendMessage(ChatColor.RED + "Clearing chat screen");

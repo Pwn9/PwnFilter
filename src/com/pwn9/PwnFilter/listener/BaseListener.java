@@ -20,47 +20,64 @@ import org.bukkit.event.HandlerList;
  * User: ptoal
  * Date: 13-10-02
  * Time: 2:04 PM
+ *
+ * @author ptoal
+ * @version $Id: $Id
  */
 public abstract class BaseListener implements FilterClient {
     protected final PwnFilter plugin;
     protected boolean active;
     protected RuleChain ruleChain;
 
+    /**
+     * <p>Constructor for BaseListener.</p>
+     *
+     * @param p a {@link com.pwn9.PwnFilter.PwnFilter} object.
+     */
     public BaseListener(PwnFilter p) {
         plugin = p;
     }
 
 
+    /**
+     * <p>Setter for the field <code>ruleChain</code>.</p>
+     *
+     * @param rc a {@link com.pwn9.PwnFilter.rules.RuleChain} object.
+     */
     public void setRuleChain(RuleChain rc) {
         ruleChain = rc;
         rc.loadConfigFile();
     }
 
-    /**
-     * @return The primary rulechain for this filter
-     */
+    /** {@inheritDoc} */
     @Override
     public RuleChain getRuleChain() {
         return ruleChain;
     }
 
-    /**
-     * @return True if this FilterListener is currently active
-     */
+    /** {@inheritDoc} */
     @Override
     public boolean isActive() {
         return active;
     }
 
+    /**
+     * <p>Setter for the field <code>active</code>.</p>
+     */
     protected void setActive() {
         active = true;
     }
 
+    /**
+     * <p>setInactive.</p>
+     */
     protected void setInactive() {
         active = false;
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Shutdown this listener.  This method can be called either by the owning plugin
      * or by PwnFilter.  PwnFilter will call the activate / shutdown methods when PwnFilter
      * is enabled / disabled and whenever it is reloading its config / rules.

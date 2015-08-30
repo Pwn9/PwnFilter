@@ -33,20 +33,33 @@ import java.util.List;
 
 /**
  * Listen for Book Change events and apply the filter to the text.
+ *
+ * @author ptoal
+ * @version $Id: $Id
  */
-
 public class PwnFilterBookListener extends BaseListener {
 
+    /**
+     * <p>Constructor for PwnFilterBookListener.</p>
+     *
+     * @param p a {@link com.pwn9.PwnFilter.PwnFilter} object.
+     */
     public PwnFilterBookListener(PwnFilter p) {
         super(p);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getShortName() {
         return "BOOK";
     }
 
     // This is the handler
+    /**
+     * <p>onBookEdit.</p>
+     *
+     * @param event a {@link org.bukkit.event.player.PlayerEditBookEvent} object.
+     */
     public void onBookEdit(PlayerEditBookEvent event) {
         Player player;
         String message;
@@ -98,15 +111,14 @@ public class PwnFilterBookListener extends BaseListener {
 
 
     /**
+     * {@inheritDoc}
+     *
      * Activate this listener.  This method can be called either by the owning plugin
      * or by PwnFilter.  PwnFilter will call the shutdown / activate methods when PwnFilter
      * is enabled / disabled and whenever it is reloading its config / rules.
      * <p/>
      * These methods could either register / deregister the listener with Bukkit, or
      * they could just enable / disable the use of the filter.
-     *
-     * @param config PwnFilter Configuration object, which the plugin can read for configuration
-     *               information. (eg: config.getString("ruledir")
      */
     @Override
     public void activate(Configuration config) {

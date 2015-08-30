@@ -24,8 +24,11 @@ import java.util.regex.Pattern;
 /**
  * Rule object
  * <p/>
- * <P>Each Rule has a single match Pattern, an ArrayList of {@link Condition}'s and an ArrayList of {@link com.pwn9.PwnFilter.rules.action.Action}'s</P>
+ * <P>Each Rule has a single match Pattern, an ArrayList of {@link com.pwn9.PwnFilter.rules.Condition}'s and an ArrayList of {@link com.pwn9.PwnFilter.rules.action.Action}'s</P>
  * TODO: Finish docs
+ *
+ * @author ptoal
+ * @version $Id: $Id
  */
 @SuppressWarnings("UnusedDeclaration")
 public class Rule implements ChainEntry {
@@ -41,41 +44,86 @@ public class Rule implements ChainEntry {
 
         /* Constructors */
 
+    /**
+     * <p>Constructor for Rule.</p>
+     */
     public Rule() {}
 
+    /**
+     * <p>Constructor for Rule.</p>
+     *
+     * @param matchStr a {@link java.lang.String} object.
+     */
     public Rule(String matchStr) {
         this.pattern = Patterns.compilePattern(matchStr);
     }
 
+    /**
+     * <p>Constructor for Rule.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     * @param description a {@link java.lang.String} object.
+     */
     public Rule(String id, String description) {
         this.id = id;
         this.description = description;
     }
 
+    /**
+     * <p>Getter for the field <code>pattern</code>.</p>
+     *
+     * @return a {@link java.util.regex.Pattern} object.
+     */
     public Pattern getPattern() {
         return pattern;
     }
 
+    /**
+     * <p>Getter for the field <code>description</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * <p>Getter for the field <code>id</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     * <p>Setter for the field <code>pattern</code>.</p>
+     *
+     * @param pattern a {@link java.lang.String} object.
+     */
     public void setPattern(String pattern) {
         this.pattern = Patterns.compilePattern(pattern);
     }
 
+    /**
+     * <p>Setter for the field <code>description</code>.</p>
+     *
+     * @param description a {@link java.lang.String} object.
+     */
     public void setDescription(String description) {
         this.description = description;
     }
 
+    /**
+     * <p>Setter for the field <code>id</code>.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     */
     public void setId(String id) {
         this.id = id;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Set<String> getPermissionList() {
         Set<String> permList = new HashSet<String>();
@@ -92,8 +140,9 @@ public class Rule implements ChainEntry {
     /* Methods */
 
     /**
+     * {@inheritDoc}
+     *
      * apply this action to the current message / event.  May trigger other bukkit events.
-     * @param state A FilterState object for this event.
      */
     public void apply(FilterState state) {
 
@@ -146,42 +195,96 @@ public class Rule implements ChainEntry {
 
     }
 
+    /**
+     * <p>isValid.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isValid() {
         // Check that we have a valid pattern and at least one action
         return this.pattern != null && this.actions != null;
     }
 
+    /**
+     * <p>toString.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String toString() {
         return pattern.toString();
     }
 
+    /**
+     * <p>addCondition.</p>
+     *
+     * @param c a {@link com.pwn9.PwnFilter.rules.Condition} object.
+     * @return a boolean.
+     */
     public boolean addCondition(Condition c) {
         return c != null && conditions.add(c);
     }
+    /**
+     * <p>addConditions.</p>
+     *
+     * @param conditionList a {@link java.util.Collection} object.
+     * @return a boolean.
+     */
     public boolean addConditions(Collection<Condition> conditionList) {
         return conditionList != null && conditions.addAll(conditionList);
     }
 
+    /**
+     * <p>Getter for the field <code>conditions</code>.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<Condition> getConditions() {
         return conditions;
     }
 
+    /**
+     * <p>addAction.</p>
+     *
+     * @param a a {@link com.pwn9.PwnFilter.rules.action.Action} object.
+     * @return a boolean.
+     */
     public boolean addAction(Action a) {
         return a != null && actions.add(a);
     }
 
+    /**
+     * <p>addActions.</p>
+     *
+     * @param actionList a {@link java.util.Collection} object.
+     * @return a boolean.
+     */
     public boolean addActions(Collection<Action> actionList) {
         return actionList != null && actions.addAll(actionList);
     }
 
+    /**
+     * <p>Getter for the field <code>actions</code>.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<Action> getActions() {
         return actions;
     }
 
+    /**
+     * <p>modifyRaw.</p>
+     *
+     * @return a boolean.
+     */
     public boolean modifyRaw() {
         return modifyRaw;
     }
 
+    /**
+     * <p>Setter for the field <code>modifyRaw</code>.</p>
+     *
+     * @param modifyRaw a boolean.
+     */
     public void setModifyRaw(boolean modifyRaw) {
         this.modifyRaw = modifyRaw;
     }

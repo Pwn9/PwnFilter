@@ -22,15 +22,24 @@ import org.bukkit.command.CommandSender;
  * User: ptoal
  * Date: 13-08-10
  * Time: 9:23 AM
+ *
+ * @author ptoal
+ * @version $Id: $Id
  */
 public class pfmute implements CommandExecutor {
 
     private final PwnFilter plugin;
 
+    /**
+     * <p>Constructor for pfmute.</p>
+     *
+     * @param plugin a {@link com.pwn9.PwnFilter.PwnFilter} object.
+     */
     public pfmute(PwnFilter plugin) {
         this.plugin = plugin;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (PwnFilter.pwnMute) {

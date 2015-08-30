@@ -26,6 +26,9 @@ import java.util.regex.Pattern;
  * User: ptoal
  * Date: 13-10-11
  * Time: 11:10 PM
+ *
+ * @author ptoal
+ * @version $Id: $Id
  */
 public class ShortCutManager {
     // TODO: Create a "ShortCuts" object to pass around, instead of HashMaps.
@@ -35,6 +38,11 @@ public class ShortCutManager {
 
     private ShortCutManager() {}
 
+    /**
+     * <p>getInstance.</p>
+     *
+     * @return a {@link com.pwn9.PwnFilter.rules.ShortCutManager} object.
+     */
     public static ShortCutManager getInstance() {
         if (_instance == null) {
             _instance = new ShortCutManager();
@@ -42,6 +50,12 @@ public class ShortCutManager {
         return _instance;
     }
 
+    /**
+     * <p>Setter for the field <code>shortcutDir</code>.</p>
+     *
+     * @param dir a {@link java.io.File} object.
+     * @return a boolean.
+     */
     public boolean setShortcutDir(File dir) {
         if (dir.exists()) {
             shortcutDir = dir;
@@ -49,6 +63,13 @@ public class ShortCutManager {
         } else return false;
     }
 
+    /**
+     * <p>replace.</p>
+     *
+     * @param shortcuts a {@link java.util.Map} object.
+     * @param lineData a {@link java.lang.String} object.
+     * @return a {@link java.lang.String} object.
+     */
     public static String replace(Map<String,String> shortcuts, String lineData) {
         // If we don't have a shortcuts file to process, just return what we were given.
         if (shortcuts == null) return lineData;
@@ -76,6 +97,12 @@ public class ShortCutManager {
 
     }
 
+    /**
+     * <p>getShortcutMap.</p>
+     *
+     * @param mapFileName a {@link java.lang.String} object.
+     * @return a {@link java.util.Map} object.
+     */
     public Map<String, String> getShortcutMap(String mapFileName) {
         Map<String, String> returnValue = shortcutFiles.get(mapFileName);
 
@@ -87,11 +114,20 @@ public class ShortCutManager {
         return shortcutFiles.get(mapFileName);
     }
 
+    /**
+     * <p>reloadFiles.</p>
+     */
     public void reloadFiles() {
         // Just wipe out the old.  They will be reloaded on first access.
         shortcutFiles.clear();
     }
 
+    /**
+     * <p>loadFile.</p>
+     *
+     * @param fileName a {@link java.lang.String} object.
+     * @return a boolean.
+     */
     public boolean loadFile(String fileName) {
 
         Map<String,String> varset = new HashMap<String, String>();
@@ -128,6 +164,12 @@ public class ShortCutManager {
         return true;
     }
 
+    /**
+     * <p>getFile.</p>
+     *
+     * @param fileName a {@link java.lang.String} object.
+     * @return a {@link java.io.File} object.
+     */
     public File getFile(String fileName) {
         if (shortcutDir.exists()) {
             File shortcutFile = new File(shortcutDir,fileName);

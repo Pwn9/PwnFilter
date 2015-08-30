@@ -32,6 +32,8 @@ import java.util.regex.Pattern;
  *
  * In any string modification action, the codes will be updated to reflect the new string.
  *
+ * @author ptoal
+ * @version $Id: $Id
  */
 public final class ColoredString implements CharSequence {
 
@@ -39,10 +41,21 @@ public final class ColoredString implements CharSequence {
     private final char[] plain; // the plain text
     private final char formatPrefix;
 
+    /**
+     * <p>Constructor for ColoredString.</p>
+     *
+     * @param s a {@link java.lang.String} object.
+     */
     public ColoredString(String s) {
         this(s, '&');
     }
 
+    /**
+     * <p>Constructor for ColoredString.</p>
+     *
+     * @param s a {@link java.lang.String} object.
+     * @param prefix a char.
+     */
     public ColoredString(String s, char prefix) {
         formatPrefix = prefix;
         char[] raw = s.toCharArray();
@@ -70,6 +83,11 @@ public final class ColoredString implements CharSequence {
         codes = Arrays.copyOf(tmpCodes,textpos+1);
     }
 
+    /**
+     * <p>Constructor for ColoredString.</p>
+     *
+     * @param c a {@link com.pwn9.PwnFilter.util.ColoredString} object.
+     */
     public ColoredString(ColoredString c) {
         // Create a copy of the original array.
         codes = c.codes;
@@ -77,6 +95,13 @@ public final class ColoredString implements CharSequence {
         formatPrefix = c.formatPrefix;
     }
 
+    /**
+     * <p>Constructor for ColoredString.</p>
+     *
+     * @param plain an array of char.
+     * @param codes an array of {@link java.lang.String} objects.
+     * @param prefix a char.
+     */
     public ColoredString(char[] plain, String[] codes, char prefix) {
         this.plain = plain;
         this.codes = Arrays.copyOf(codes,plain.length+1);
@@ -84,17 +109,25 @@ public final class ColoredString implements CharSequence {
     }
 
     /* CharSequence methods */
+    /**
+     * <p>length.</p>
+     *
+     * @return a int.
+     */
     public int length() {
         return plain.length;
     }
+    /** {@inheritDoc} */
     public char charAt(int i) {
         return plain[i];
     }
 
+    /** {@inheritDoc} */
     public CharSequence subSequence(int i, int j) {
         return new String(Arrays.copyOfRange(plain,i,j));
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return getColoredString();
@@ -102,11 +135,21 @@ public final class ColoredString implements CharSequence {
 
 
     // Strip all codes out of this string.
+    /**
+     * <p>decolor.</p>
+     *
+     * @return a {@link com.pwn9.PwnFilter.util.ColoredString} object.
+     */
     public ColoredString decolor() {
         return new ColoredString(new String(plain));
     }
 
     // Return a string with color codes interleaved.
+    /**
+     * <p>getColoredString.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getColoredString() {
         StringBuilder sb = new StringBuilder();
 
@@ -122,11 +165,21 @@ public final class ColoredString implements CharSequence {
     }
 
     // Return a string without codes
+    /**
+     * <p>getPlainString.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getPlainString() {
         return new String(plain);
     }
 
     // Return the char array with the code information.
+    /**
+     * <p>getCodeArray.</p>
+     *
+     * @return an array of {@link java.lang.String} objects.
+     */
     public String[] getCodeArray() {
         return codes;
     }
@@ -150,9 +203,9 @@ public final class ColoredString implements CharSequence {
      * replace baz with nothing:
      * Test &1&2
      *
-     *
      * @param p Regex Pattern
      * @param rText Replacement Text
+     * @return a {@link com.pwn9.PwnFilter.util.ColoredString} object.
      */
     public ColoredString replaceText(Pattern p, String rText) {
         Matcher m = p.matcher(new String(plain));
@@ -237,6 +290,12 @@ public final class ColoredString implements CharSequence {
 
     }
 
+    /**
+     * <p>patternToLower.</p>
+     *
+     * @param p a {@link java.util.regex.Pattern} object.
+     * @return a {@link com.pwn9.PwnFilter.util.ColoredString} object.
+     */
     public ColoredString patternToLower (Pattern p) {
         Matcher m = p.matcher(new String(plain));
 
@@ -248,6 +307,12 @@ public final class ColoredString implements CharSequence {
         return new ColoredString(this);
     }
     
+    /**
+     * <p>patternToUpper.</p>
+     *
+     * @param p a {@link java.util.regex.Pattern} object.
+     * @return a {@link com.pwn9.PwnFilter.util.ColoredString} object.
+     */
     public ColoredString patternToUpper (Pattern p) {
         Matcher m = p.matcher(new String(plain));
 
@@ -275,6 +340,7 @@ public final class ColoredString implements CharSequence {
 
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof ColoredString ) {
