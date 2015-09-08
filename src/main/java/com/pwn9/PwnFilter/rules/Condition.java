@@ -125,7 +125,7 @@ public class Condition {
         switch (type) {
             case user:
                 for (String check : parameters.split("\\s")) {
-                    if (state.playerName.equalsIgnoreCase(check)) matched = true;
+                    if (state.getAuthor().getName().equalsIgnoreCase(check)) matched = true;
                 }
             case permission:
                 for (String check: parameters.split("\\s")) {

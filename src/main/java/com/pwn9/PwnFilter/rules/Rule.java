@@ -11,7 +11,7 @@
 package com.pwn9.PwnFilter.rules;
 
 import com.pwn9.PwnFilter.FilterState;
-import com.pwn9.PwnFilter.PwnFilter;
+import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
 import com.pwn9.PwnFilter.rules.action.Action;
 import com.pwn9.PwnFilter.util.LimitedRegexCharSequence;
 import com.pwn9.PwnFilter.util.LogManager;
@@ -170,7 +170,7 @@ public class Rule implements ChainEntry {
         state.addLogMessage("|" + state.listener.getShortName() +  "| MATCH " +
                 (id.isEmpty()?"":"("+id+")") +
                 " <" +
-                state.playerName + "> " + state.getModifiedMessage().getPlainString());
+                state.getAuthor().getName() + "> " + state.getModifiedMessage().getPlainString());
         LogManager.getInstance().debugLow("Match String: " + matcher.group());
 
 
@@ -184,8 +184,8 @@ public class Rule implements ChainEntry {
 
         }
 
-        if(PwnFilter.matchTracker != null) {
-            PwnFilter.matchTracker.increment(); // Update Match Statistics
+        if(PwnFilterPlugin.matchTracker != null) {
+            PwnFilterPlugin.matchTracker.increment(); // Update Match Statistics
         }
 
         // If we get this far, execute the actions
@@ -243,7 +243,7 @@ public class Rule implements ChainEntry {
     }
 
     /**
-     * <p>addAction.</p>
+     * <p>add.</p>
      *
      * @param a a {@link com.pwn9.PwnFilter.rules.action.Action} object.
      * @return a boolean.

@@ -10,6 +10,8 @@
 
 package com.pwn9.PwnFilter.rules.action;
 
+import java.util.HashMap;
+
 /**
  * This factory returns an action object selected by the rules file.
  * eg: "then kick" would return the Actionkick object.
@@ -20,18 +22,20 @@ package com.pwn9.PwnFilter.rules.action;
 @SuppressWarnings("UnusedDeclaration")
 public final class ActionFactory {
 
+    public static HashMap<String, Class<? extends Action>> actionClassMap =
+            new HashMap<String, Class<? extends Action>>();
+
     /**
      * <p>getActionFromString.</p>
      *
      * @param s a {@link java.lang.String} object.
      * @return a {@link com.pwn9.PwnFilter.rules.action.Action} object.
      */
-    public static Action getActionFromString(String s)
-    {
-        String[] parts = s.split("\\s",2);
+    public static Action getActionFromString(String s) {
+        String[] parts = s.split("\\s", 2);
         String actionName = parts[0];
         String actionData;
-        actionData = ((parts.length > 1) ? parts[1]:"");
+        actionData = ((parts.length > 1) ? parts[1] : "");
 
         return getAction(actionName, actionData);
     }
@@ -43,22 +47,39 @@ public final class ActionFactory {
      * @param actionData a {@link java.lang.String} object.
      * @return a {@link com.pwn9.PwnFilter.rules.action.Action} object.
      */
-    public static Action getAction(final String actionName, final String actionData)
-    {
+    public static Action getAction(final String actionName, final String actionData) {
         // Return a subclass instance based on actionName.
-        try {
+
+        Class<? extends Action> actionClass = actionClassMap.get(actionName);
+
+        if (actionClass != null) {
             Action newAction;
-            String className = "com.pwn9.PwnFilter.rules.action.Action" + actionName;
-            newAction = (Action)(Class.forName(className).newInstance());
+            try {
+                newAction = actionClass.newInstance();
+            } catch (Exception e) {
+                return null;
+            }
             newAction.init(actionData);
             return newAction;
-        } catch ( ClassNotFoundException ex ) {
-            return null;
-        } catch ( InstantiationException ex ) {
-            return null;
-        } catch ( IllegalAccessException ex) {
-            return null;
         }
+
+        return null;
+
     }
+
+    synchronized public static void add(String keyword, Class<? extends Action> actionClass) {
+
+        Class<? extends Action> current = actionClassMap.get(keyword);
+
+        if (current == null ) {
+            actionClassMap.put(keyword, actionClass);
+        } else if (current != actionClass ) {
+            throw new RuntimeException("Action Keyword already Registered: " +
+                keyword + "new class: " + actionClass.getName() +
+                ". current class: " + current.getName());
+        }
+
+    }
+
 }
 

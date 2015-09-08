@@ -10,7 +10,7 @@
 
 package com.pwn9.PwnFilter.util;
 
-import com.pwn9.PwnFilter.PwnFilter;
+import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
 import org.bukkit.ChatColor;
 
 /**
@@ -36,7 +36,7 @@ public class DefaultMessages {
     public static String prepareMessage(String message, String configVarName) {
         String result;
         if ( message == null || message.isEmpty()) {
-            String defmsg = PwnFilter.getInstance().getConfig().getString(configVarName);
+            String defmsg = PwnFilterPlugin.getInstance().getConfig().getString(configVarName);
             result = (defmsg != null) ? defmsg : "";
         } else {
             result = message;

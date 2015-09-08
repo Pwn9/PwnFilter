@@ -12,7 +12,6 @@ package com.pwn9.PwnFilter.rules;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import com.pwn9.PwnFilter.DataCache;
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.rules.action.Action;
 import com.pwn9.PwnFilter.rules.parser.FileParser;
@@ -52,6 +51,7 @@ public class RuleChain implements Chain,ChainEntry {
     private List<ChainEntry> chain = new ArrayList<ChainEntry>();
     private Multimap<String, Action> actionGroups = ArrayListMultimap.create();
     private Multimap<String, Condition> conditionGroups = ArrayListMultimap.create();
+    private Set<RuleChainListener> listeners = new HashSet<RuleChainListener>();
 
     private final String configName;
 
@@ -82,7 +82,7 @@ public class RuleChain implements Chain,ChainEntry {
 
         if (parser.parseRules(this)) {
             chainState = ChainState.READY;
-            DataCache.getInstance().addPermissions(getPermissionList());
+            notifyUpdate();
             return true;
         } else {
             return false;
@@ -157,10 +157,10 @@ public class RuleChain implements Chain,ChainEntry {
         }
 
         if (state.cancel){
-            state.addLogMessage("<"+state.playerName + "> Original message cancelled.");
+            state.addLogMessage("<"+state.getAuthor().getName() + "> Original message cancelled.");
         } else if (state.pattern != null) {
             state.addLogMessage("|" + state.listener.getShortName() + "| SENT <" +
-                    state.playerName + "> " + state.getModifiedMessage().getPlainString());
+                    state.getAuthor().getName() + "> " + state.getModifiedMessage().getPlainString());
         }
 
         for (String s : state.getLogMessages()) {
@@ -210,9 +210,7 @@ public class RuleChain implements Chain,ChainEntry {
     /**
      * {@inheritDoc}
      *
-     * The DataCache object needs to know what permissions to cache.  Whenever this
-     * rulechain is updated, the datacache should also be updated with the list of
-     * permissions which are interesting.
+     * Get the Set of all permissions used in this chain.
      */
     @Override
     public Set<String> getPermissionList() {
@@ -271,4 +269,18 @@ public class RuleChain implements Chain,ChainEntry {
             }
     }
 
+    public void addListener(RuleChainListener listener) {
+        listeners.add(listener);
+    }
+
+    public void removeListener(RuleChainListener listener) {
+        listeners.remove(listener);
+    }
+
+    private void notifyUpdate() {
+        //TODO: Update to notify state change (INIT/READY, etc)
+        for (RuleChainListener l : listeners) {
+            l.ruleChainUpdated(this);
+        }
+    }
 }

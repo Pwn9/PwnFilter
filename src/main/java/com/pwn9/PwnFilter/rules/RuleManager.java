@@ -10,7 +10,7 @@
 
 package com.pwn9.PwnFilter.rules;
 
-import com.pwn9.PwnFilter.PwnFilter;
+import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
 import com.pwn9.PwnFilter.util.FileUtil;
 import com.pwn9.PwnFilter.util.LogManager;
 
@@ -36,10 +36,10 @@ public class RuleManager {
     private static RuleManager _instance = null;
     private final Map<String, RuleChain> ruleChains = Collections.synchronizedMap(new HashMap<String, RuleChain>());
     private File ruleDir;
-    private PwnFilter plugin;
+    private PwnFilterPlugin plugin;
 
 
-    private RuleManager(PwnFilter p) {
+    private RuleManager(PwnFilterPlugin p) {
         plugin = p;
     }
 
@@ -58,10 +58,10 @@ public class RuleManager {
     /**
      * <p>init.</p>
      *
-     * @param p a {@link com.pwn9.PwnFilter.PwnFilter} object.
+     * @param p a {@link PwnFilterPlugin} object.
      * @return a {@link com.pwn9.PwnFilter.rules.RuleManager} object.
      */
-    public static RuleManager init(PwnFilter p) {
+    public static RuleManager init(PwnFilterPlugin p) {
         if (_instance == null) {
             _instance = new RuleManager(p);
             return _instance;

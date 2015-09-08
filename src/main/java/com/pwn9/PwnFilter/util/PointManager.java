@@ -11,14 +11,14 @@
 package com.pwn9.PwnFilter.util;
 
 import com.pwn9.PwnFilter.FilterState;
-import com.pwn9.PwnFilter.PwnFilter;
+import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
 import com.pwn9.PwnFilter.api.FilterClient;
+import com.pwn9.PwnFilter.api.MessageAuthor;
 import com.pwn9.PwnFilter.rules.RuleChain;
 import com.pwn9.PwnFilter.rules.action.Action;
 import com.pwn9.PwnFilter.rules.action.ActionFactory;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
@@ -27,7 +27,14 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Mange the Points system of PwnFilter
+ * Mange the Points system of PwnFilter.
+ *
+ * Each entity that is capable of having points assigned must have a UUID.
+ * This manager will track the points assigned to a particular UUID.
+ *
+ * TODO: Refactor to remove the FilterClient implementation. (IoC, instead?)
+ * TODO: Remove Dependency on BukkitTask to leak points.
+ *
  * User: ptoal
  * Date: 13-10-31
  * Time: 3:49 PM
@@ -39,26 +46,26 @@ import java.util.concurrent.ConcurrentHashMap;
 public class PointManager implements FilterClient {
 
     private static PointManager _instance;
-    private final PwnFilter plugin;
+    private final PwnFilterPlugin plugin;
 
-    private Map<String,Double> playerPoints = new ConcurrentHashMap<String, Double>(8, 0.75f, 2);
-    private TreeMap<Double, Threshold> thresholds = new TreeMap<Double,Threshold>();
+    private final Map<UUID,Double> pointsMap = new ConcurrentHashMap<UUID, Double>(8, 0.75f, 2);
+    private final TreeMap<Double, Threshold> thresholds = new TreeMap<Double,Threshold>();
 
     private int leakInterval;
     private Double leakPoints;
     private BukkitTask leakTask;
 
-    private PointManager(PwnFilter p) {
+    private PointManager(PwnFilterPlugin p) {
         this.plugin = p;
     }
 
     /**
      * <p>setup.</p>
      *
-     * @param pwnFilter a {@link com.pwn9.PwnFilter.PwnFilter} object.
+     * @param pwnFilter a {@link PwnFilterPlugin} object.
      * @return a {@link com.pwn9.PwnFilter.util.PointManager} object.
      */
-    public static PointManager setup(PwnFilter pwnFilter) {
+    public static PointManager setup(PwnFilterPlugin pwnFilter) {
         ConfigurationSection pointsSection = pwnFilter.getConfig().getConfigurationSection("points");
         if (!pointsSection.getBoolean("enabled")) {
             if (_instance != null) _instance.stopLeaking();
@@ -86,8 +93,8 @@ public class PointManager implements FilterClient {
         stopLeaking();
 
         // Reset all player points.
-        for (String playerName : playerPoints.keySet()) {
-            setPlayerPoints(playerName,0.0);
+        for (UUID id : pointsMap.keySet()) {
+            setPoints(id, 0.0);
         }
 
         setup(plugin);
@@ -102,8 +109,8 @@ public class PointManager implements FilterClient {
                 public void run() {
                     //Every interval, check point balances, and if they are > 0, subtract leakPoints
                     // from the players balance.  If they reach 0, remove them from the list.
-                    for (String playerName : pointManager.getPlayersWithPoints()) {
-                        pointManager.subPlayerPoints(playerName,leakPoints);
+                    for (UUID id : pointManager.getPointsMap()) {
+                        pointManager.subPoints(id, leakPoints);
                     }
                 }
             };
@@ -167,60 +174,56 @@ public class PointManager implements FilterClient {
     }
 
     /**
-     * <p>getPlayersWithPoints.</p>
+     * <p>getPointsMap.</p>
      *
      * @return a {@link java.util.Set} object.
      */
-    public Set<String> getPlayersWithPoints() {
-        return playerPoints.keySet();
+    public Set<UUID> getPointsMap() {
+        return pointsMap.keySet();
     }
 
     /**
-     * <p>Getter for the field <code>playerPoints</code>.</p>
+     * <p>Getter for the field <code>pointsMap</code>.</p>
      *
-     * @param p a {@link java.lang.String} object.
      * @return a {@link java.lang.Double} object.
      */
-    public Double getPlayerPoints(String p) {
-        return (playerPoints.containsKey(p))?playerPoints.get(p):0.0;
+    public Double getPoints(UUID uuid) {
+        return (pointsMap.containsKey(uuid))? pointsMap.get(uuid):0.0;
     }
 
     /**
-     * <p>Getter for the field <code>playerPoints</code>.</p>
+     * <p>Getter for the field <code>pointsMap</code>.</p>
      *
-     * @param p a {@link org.bukkit.entity.Player} object.
      * @return a {@link java.lang.Double} object.
      */
-    public Double getPlayerPoints(Player p) {
-        return (playerPoints.containsKey(p.getName()))?playerPoints.get(p.getName()):0.0;
+    public Double getPoints(MessageAuthor author) {
+        return (pointsMap.containsKey(author.getID()))? pointsMap.get(author.getID()):0.0;
     }
 
     /**
-     * <p>Setter for the field <code>playerPoints</code>.</p>
+     * <p>Setter for the field <code>pointsMap</code>.</p>
      *
-     * @param playerName a {@link java.lang.String} object.
      * @param points a {@link java.lang.Double} object.
      */
-    public void setPlayerPoints(String playerName, Double points) {
-        Double old = playerPoints.get(playerName);
-        playerPoints.put(playerName,points);
-        executeActions(old, points,playerName);
+    public void setPoints(UUID id, Double points) {
+        Double old = pointsMap.get(id);
+        pointsMap.put(id, points);
+        executeActions(old, points,id);
     }
 
     /**
-     * <p>addPlayerPoints.</p>
+     * <p>addPoints.</p>
      *
-     * @param playerName a {@link java.lang.String} object.
      * @param points a {@link java.lang.Double} object.
      */
-    public void addPlayerPoints(String playerName, Double points) {
-        Double current = playerPoints.get(playerName);
+    public void addPoints(UUID id, Double points) {
+        Double current = pointsMap.get(id);
         if (current == null) current = 0.0;
         Double updated = current + points;
 
-        playerPoints.put(playerName,updated);
+        pointsMap.put(id, updated);
 
-        executeActions(current, updated, playerName);
+        executeActions(current, updated, id);
 
     }
 
@@ -233,7 +236,7 @@ public class PointManager implements FilterClient {
         return _instance != null;
     }
 
-    private void executeActions(final Double fromValue, final Double toValue, final String playerName) {
+    private void executeActions(final Double fromValue, final Double toValue, final UUID id) {
         final Double oldKey = thresholds.floorKey(fromValue);
         final Double newKey = thresholds.floorKey(toValue);
 
@@ -247,7 +250,7 @@ public class PointManager implements FilterClient {
                 @Override
                 public void run() {
                     for (Map.Entry<Double, Threshold> entry : thresholds.subMap(oldKey, false, newKey, true).entrySet())
-                        entry.getValue().executeAscending(playerName);
+                        entry.getValue().executeAscending(id);
                 }
             };
             task.runTask(plugin);
@@ -256,7 +259,7 @@ public class PointManager implements FilterClient {
                 @Override
                 public void run() {
                     for (Map.Entry<Double, Threshold> entry : thresholds.subMap(newKey, false, oldKey, true).descendingMap().entrySet())
-                        entry.getValue().executeDescending(playerName);
+                        entry.getValue().executeDescending(id);
                 }
             };
             task.runTask(plugin);
@@ -265,23 +268,22 @@ public class PointManager implements FilterClient {
     }
 
     /**
-     * <p>subPlayerPoints.</p>
+     * <p>subPoints.</p>
      *
-     * @param playerName a {@link java.lang.String} object.
      * @param points a {@link java.lang.Double} object.
      */
-    public void subPlayerPoints(String playerName, Double points) {
+    public void subPoints(UUID id, Double points) {
         Double updated;
-        Double current = playerPoints.get(playerName);
+        Double current = pointsMap.get(id);
         if (current == null) current = 0.0;
         updated = current - points;
         if ( updated <=0 ) {
-            playerPoints.remove(playerName);
+            pointsMap.remove(id);
             updated = 0.0;
         }
-        playerPoints.put(playerName,updated);
+        pointsMap.put(id, updated);
 
-        executeActions(current, updated, playerName);
+        executeActions(current, updated, id);
 
     }
 
@@ -297,15 +299,15 @@ public class PointManager implements FilterClient {
             return Double.compare(this.points, o.points);
         }
 
-        public void executeAscending(String playerName) {
-            FilterState state = new FilterState(plugin, "", playerName, null, _instance );
+        public void executeAscending(UUID id) {
+            FilterState state = new FilterState(plugin, "", id, _instance );
             for (Action a : actionsAscending ) {
                 a.execute(state);
             }
         }
 
-        public void executeDescending(String playerName) {
-            FilterState state = new FilterState(plugin, "", playerName, null, _instance );
+        public void executeDescending(UUID id) {
+            FilterState state = new FilterState(plugin, "", id, _instance );
             for (Action a : actionsDescending ) {
                 a.execute(state);
             }

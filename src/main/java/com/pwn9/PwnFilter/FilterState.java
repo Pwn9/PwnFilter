@@ -11,15 +11,15 @@
 package com.pwn9.PwnFilter;
 
 import com.pwn9.PwnFilter.api.FilterClient;
+import com.pwn9.PwnFilter.api.MessageAuthor;
+import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
 import com.pwn9.PwnFilter.rules.Rule;
 import com.pwn9.PwnFilter.util.ColoredString;
-import org.bukkit.Bukkit;
-import org.bukkit.World;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 /**
@@ -48,8 +48,7 @@ public class FilterState {
     private ColoredString modifiedMessage; // Modified message string
     private ColoredString unfilteredMessage; // message string for "raw" messages.
     public final Plugin plugin; // Which plugin is this state attached to?
-    private final Player player; // Player that this event is connected to.
-    public final String playerName,playerWorldName;
+    private final MessageAuthor author; // Player that this event is connected to.
     public final FilterClient listener;
     final int messageLen; // New message can't be longer than original.
     private List<String> logMessages = new ArrayList<String>(); // Rules can add strings to this array.  They will be output to log if log=true
@@ -67,49 +66,34 @@ public class FilterState {
      * already be converted to the section character (u00A7), otherwise they
      * will not be correctly processed.
      *
-     * @param m The original text string to run rules against.
      * @param pl a {@link org.bukkit.plugin.Plugin} object.
-     * @param p a {@link org.bukkit.entity.Player} object.
+     * @param m The original text string to run rules against.
+     * @param a  a {@link com.pwn9.PwnFilter.api.MessageAuthor} object.
      * @param l a {@link com.pwn9.PwnFilter.api.FilterClient} object.
      */
-    public FilterState(Plugin pl, String m, Player p, FilterClient l) {
+    public FilterState(Plugin pl, String m, MessageAuthor a, FilterClient l) {
         originalMessage = new ColoredString(m);
         modifiedMessage = new ColoredString(m);
         messageLen = originalMessage.length();
-        player = p;
-        if (p != null) {
-            playerName = p.getName();
-        } else {
-            playerName = "*CONSOLE*";
-        }
-        if (p != null) {
-            playerWorldName = p.getWorld().getName();
-        } else {
-            playerWorldName = "";
-        }
+        author = a;
         plugin = pl;
         listener = l;
     }
 
     /**
-     * A FilterState object from a Player Name, instead of Player Object.  This
-     * can be used for offline players.
+     * A FilterState object from a UUID, instead of an Author Object.
      *
      * @param pl PwnFilter plugin instance
      * @param m String message to process
-     * @param pName Player name String
-     * @param w World object (optional. Can be null)
      * @param l Listener that is calling.
      */
-    public FilterState(Plugin pl, String m, String pName, World w, FilterClient l) {
+    public FilterState(Plugin pl, String m, UUID uuid, FilterClient l) {
         originalMessage = new ColoredString(m);
         modifiedMessage = new ColoredString(m);
         messageLen = originalMessage.length();
-        playerName = pName;
-        playerWorldName = (w == null)?"":w.getName();
         plugin = pl;
         listener = l;
-        player = Bukkit.getPlayerExact(pName);
+        author = PwnFilterPlugin.getCache().getAuthor(uuid);
     }
 
     /**
@@ -147,16 +131,16 @@ public class FilterState {
      * @return a boolean.
      */
     public boolean playerHasPermission(String perm) {
-        return player != null && DataCache.getInstance().hasPermission(player, perm);
+        return author != null && author.hasPermission(perm);
     }
 
     /**
-     * <p>Getter for the field <code>player</code>.</p>
+     * <p>Getter for the field <code>author</code>.</p>
      *
      * @return a {@link org.bukkit.entity.Player} object.
      */
-    public Player getPlayer() {
-        return player;
+    public MessageAuthor getAuthor() {
+        return author;
     }
 
     /**
@@ -171,10 +155,9 @@ public class FilterState {
     /**
      * <p>setCancelled.</p>
      *
-     * @param cancel a boolean.
      */
-    public void setCancelled(boolean cancel) {
-        this.cancel = cancel;
+    public void setCancelled() {
+        this.cancel = true;
     }
 
     /**

@@ -12,7 +12,7 @@
 
 package com.pwn9.PwnFilter.api;
 
-import com.pwn9.PwnFilter.PwnFilter;
+import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.plugin.Plugin;
 
@@ -38,9 +38,9 @@ public class ClientManager {
 
     private ConcurrentHashMap<FilterClient,Plugin> registeredClients = new ConcurrentHashMap<FilterClient, Plugin>();
 
-    private final PwnFilter plugin;
+    private final PwnFilterPlugin plugin;
 
-    private ClientManager(PwnFilter plugin) {
+    private ClientManager(PwnFilterPlugin plugin) {
         this.plugin = plugin;
     }
 
@@ -51,7 +51,7 @@ public class ClientManager {
      */
     public static ClientManager getInstance() {
         if (_instance == null ) {
-            _instance = new ClientManager(PwnFilter.getInstance());
+            _instance = new ClientManager(PwnFilterPlugin.getInstance());
         }
         return _instance;
     }

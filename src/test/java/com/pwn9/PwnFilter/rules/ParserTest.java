@@ -10,11 +10,11 @@
 
 package com.pwn9.PwnFilter.rules;
 
-import com.pwn9.PwnFilter.DataCache;
-import com.pwn9.PwnFilter.PwnFilter;
+import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
 import com.pwn9.PwnFilter.rules.action.Action;
-import com.pwn9.PwnFilter.rules.action.Actiondeny;
-import com.pwn9.PwnFilter.rules.action.Actionrespond;
+import com.pwn9.PwnFilter.rules.action.RegisterActions;
+import com.pwn9.PwnFilter.rules.action.core.Deny;
+import com.pwn9.PwnFilter.rules.action.targeted.Respond;
 import com.pwn9.PwnFilter.util.LogManager;
 import junit.framework.Assert;
 import org.easymock.EasyMock;
@@ -44,32 +44,32 @@ import static org.junit.Assert.assertTrue;
  */
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({PwnFilter.class})
+@PrepareForTest({PwnFilterPlugin.class})
 public class ParserTest {
 
     RuleManager ruleManager;
     RuleChain rs;
     LogManager pwnLogger;
 
-    PwnFilter mockPlugin;
+    PwnFilterPlugin mockPlugin;
 
     @Before
     public void setUp() throws Exception {
-        PowerMock.mockStatic(PwnFilter.class);
-        mockPlugin = PowerMock.createMock(PwnFilter.class);
-        EasyMock.expect(PwnFilter.getInstance()).andReturn(mockPlugin).anyTimes();
+        RegisterActions.all();
+        //TODO: Remove this, and add a FilterEngine initialization call.
+        PowerMock.mockStatic(PwnFilterPlugin.class);
+        mockPlugin = PowerMock.createMock(PwnFilterPlugin.class);
+        EasyMock.expect(PwnFilterPlugin.getInstance()).andReturn(mockPlugin).anyTimes();
         EasyMock.expect(mockPlugin.getBufferedReader("testfile.txt"))
                 .andReturn(new BufferedReader(new StringReader("test")));
-        PowerMock.replay(PwnFilter.class);
+        PowerMock.replay(PwnFilterPlugin.class);
         PowerMock.replay(mockPlugin);
         ruleManager = RuleManager.init(mockPlugin);
-        DataCache.init(mockPlugin);
         File testFile = new File(getClass().getResource("/testrules.txt").getFile());
         ruleManager.setRuleDir(testFile.getParent());
         Logger logger = Logger.getLogger("PwnFilter");
         pwnLogger = LogManager.getInstance(logger, new File("/tmp/"));
         //pwnLogger.start(); logger.setLevel(Level.FINEST);pwnLogger.debugMode = LogManager.DebugModes.high; // For debugging
-        DataCache.getInstance();
 
     }
 
@@ -103,8 +103,8 @@ public class ParserTest {
         Rule rule = (Rule)ruleChain.getChain().get(0);
         List<Action> actionList = rule.getActions();
 
-        assertTrue(actionList.remove(0) instanceof Actiondeny);
-        assertTrue(actionList.remove(0) instanceof Actionrespond);
+        assertTrue(actionList.remove(0) instanceof Deny);
+        assertTrue(actionList.remove(0) instanceof Respond);
     }
 
     @Test

@@ -1,17 +1,20 @@
 package com.pwn9.PwnFilter.rules;
 
-import com.pwn9.PwnFilter.DataCache;
 import com.pwn9.PwnFilter.FilterState;
-import com.pwn9.PwnFilter.PwnFilter;
 import com.pwn9.PwnFilter.api.FilterClient;
+import com.pwn9.PwnFilter.api.MessageAuthor;
+import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
+import com.pwn9.PwnFilter.rules.action.RegisterActions;
 import com.pwn9.PwnFilter.util.LogManager;
 import org.bukkit.configuration.Configuration;
 import org.easymock.EasyMock;
+import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 import static junit.framework.Assert.assertTrue;
@@ -27,7 +30,7 @@ public class ActionTest {
 
     RuleManager ruleManager;
     RuleChain rs;
-    PwnFilter mockPlugin;
+    PwnFilterPlugin mockPlugin;
     LogManager pwnLogger;
     FilterClient mockClient = new FilterClient() {
         public String getShortName() { return "ACTIONTEST"; }
@@ -37,11 +40,36 @@ public class ActionTest {
         public void shutdown() {}
     };
 
+    MessageAuthor author = new MessageAuthor() {
+        @Override
+        public boolean hasPermission(String permString) {
+            return false;
+        }
+
+        @NotNull
+        @Override
+        public String getName() {
+            return "";
+        }
+
+        @NotNull
+        @Override
+        public UUID getID() {
+            return UUID.randomUUID();
+        }
+
+        @Override
+        public void sendMessage(String message) {
+
+        }
+    };
+
     @Before
     public void setUp() throws Exception {
-        mockPlugin = EasyMock.createMock(PwnFilter.class);
+        RegisterActions.all();
+        //TODO: Remove this, and add a FilterEngine initialization call.
+        mockPlugin = EasyMock.createMock(PwnFilterPlugin.class);
         ruleManager = RuleManager.init(mockPlugin);
-        DataCache.init(mockPlugin);
         File testFile = new File(getClass().getResource("/actionTests.txt").getFile());
         ruleManager.setRuleDir(testFile.getParent());
         rs = ruleManager.getRuleChain("actionTests.txt");
@@ -52,14 +80,14 @@ public class ActionTest {
 
     @Test
     public void testAbort() {
-        FilterState testState = new FilterState(mockPlugin,"abort", null, mockClient);
+        FilterState testState = new FilterState(mockPlugin,"abort", author, mockClient);
         rs.apply(testState);
         assertTrue(testState.stop);
     }
 
     @Test
     public void testRandRep() {
-        FilterState testState = new FilterState(mockPlugin,"randrep", null, mockClient);
+        FilterState testState = new FilterState(mockPlugin,"randrep", author, mockClient);
         rs.apply(testState);
         System.out.println(testState.getModifiedMessage().getPlainString());
         assertTrue(testState.getModifiedMessage().getPlainString().matches("(random|replace)"));
@@ -67,7 +95,7 @@ public class ActionTest {
 
     @Test
     public void testBurn() {
-        FilterState testState = new FilterState(mockPlugin,"burn", null, mockClient);
+        FilterState testState = new FilterState(mockPlugin,"burn", author, mockClient);
         rs.apply(testState);
     }
 

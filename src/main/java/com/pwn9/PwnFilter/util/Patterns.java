@@ -10,10 +10,6 @@
 
 package com.pwn9.PwnFilter.util;
 
-import com.pwn9.PwnFilter.FilterState;
-
-import java.text.DecimalFormat;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
@@ -24,10 +20,6 @@ import java.util.regex.PatternSyntaxException;
  * @version $Id: $Id
  */
 public class Patterns {
-    /**
-     * Class Utility Methods
-     */
-    static final DecimalFormat df = new DecimalFormat("0.00##");
 
     /**
      * <p>compilePattern.</p>
@@ -53,42 +45,4 @@ public class Patterns {
         return pattern;
     }
 
-    /**
-     * <p>replaceVars.</p>
-     *
-     * @param line a {@link java.lang.String} object.
-     * @param state a {@link com.pwn9.PwnFilter.FilterState} object.
-     * @return a {@link java.lang.String} object.
-     */
-    public static String replaceVars(String line, FilterState state) {
-        Pattern p = Pattern.compile("(&player|&string|&rawstring|&event|&ruleid|&ruledescr)");
-        Matcher m = p.matcher(line);
-
-
-        if (m.matches()) {
-            String group = m.group(1);
-            String replace = "%" + group.substring(1) + "%";
-            LogManager.logger.warning("The use of " + m.group(1) + " is deprecated.  Please update your configuration to use " + replace + ".");
-            line = line.replaceAll("&world", wrapReplacement(state.playerWorldName)).
-                    replaceAll("&player", wrapReplacement(state.playerName)).
-                    replaceAll("&string", wrapReplacement(state.getModifiedMessage().getColoredString())).
-                    replaceAll("&rawstring", wrapReplacement(state.getOriginalMessage().getColoredString())).
-                    replaceAll("&event", wrapReplacement(state.getListenerName())).
-                    replaceAll("&ruleid", (state.rule != null)?wrapReplacement(state.rule.getId()):"-").
-                    replaceAll("&ruledescr", (state.rule !=null)?wrapReplacement(state.rule.getDescription()):"''");
-        }
-        line = line.replaceAll("%world%", wrapReplacement(state.playerWorldName)).
-                replaceAll("%player%", wrapReplacement(state.playerName)).
-                replaceAll("%string%", wrapReplacement(state.getModifiedMessage().getColoredString())).
-                replaceAll("%rawstring%", wrapReplacement(state.getOriginalMessage().getColoredString())).
-                replaceAll("%event%", wrapReplacement(state.getListenerName())).
-                replaceAll("%points%",(PointManager.isEnabled())?(df.format(PointManager.getInstance().getPlayerPoints(state.playerName))):"-").
-                replaceAll("%ruleid%", (state.rule != null) ? wrapReplacement(state.rule.getId()) : "-").
-                replaceAll("%ruledescr%", (state.rule != null) ? wrapReplacement(state.rule.getDescription()) : "''");
-        return line;
-    }
-
-    private static String wrapReplacement(String s) {
-        return (s != null)?Matcher.quoteReplacement(s):"-";
-    }
 }

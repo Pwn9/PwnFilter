@@ -1,6 +1,6 @@
 package com.pwn9.PwnFilter.util;
 
-import com.pwn9.PwnFilter.PwnFilter;
+import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
 import org.bukkit.plugin.Plugin;
 
 import java.io.*;
@@ -66,7 +66,7 @@ public class FileUtil {
      * @throws java.lang.SecurityException if any.
      */
     public static boolean copyTemplate(File destFile, String configName) throws IOException, SecurityException {
-        Plugin plugin = PwnFilter.getInstance();
+        Plugin plugin = PwnFilterPlugin.getInstance();
 
         InputStream templateFile;
 
