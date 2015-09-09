@@ -72,7 +72,7 @@ public class PwnFilterServerCommandListener extends BaseListener {
         if (!cmdlist.isEmpty() && !cmdlist.contains(cmdmessage)) return;
         if (cmdblist.contains(cmdmessage)) return;
 
-        FilterState state = new FilterState(plugin, command, BukkitConsole.getInstance(), this);
+        FilterState state = new FilterState(command, BukkitConsole.getInstance(), this);
 
         // Take the message from the Command Event and send it through the filter.
 

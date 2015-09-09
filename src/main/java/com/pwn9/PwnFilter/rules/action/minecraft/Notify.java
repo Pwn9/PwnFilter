@@ -11,6 +11,7 @@
 package com.pwn9.PwnFilter.rules.action.minecraft;
 
 import com.pwn9.PwnFilter.FilterState;
+import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
 import com.pwn9.PwnFilter.rules.action.Action;
 import com.pwn9.PwnFilter.util.tags.TagRegistry;
 import org.bukkit.Bukkit;
@@ -57,13 +58,13 @@ public class Notify implements Action {
             // We are in the main thread, just execute API calls directly.
             notifyWithPerm(permissionString, sendString);
         } else {
-            Bukkit.getScheduler().runTask(state.plugin,
-                new Runnable(){
-                    @Override
-                    public void run() {
-                        notifyWithPerm(permissionString, sendString);
-                    }
-                });
+            PwnFilterPlugin.getBukkitAPI().safeBukkitDispatch(
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            notifyWithPerm(permissionString, sendString);
+                        }
+                    });
         }
 
         return true;

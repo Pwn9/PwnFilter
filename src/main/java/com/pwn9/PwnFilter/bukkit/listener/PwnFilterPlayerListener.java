@@ -63,17 +63,17 @@ public class PwnFilterPlayerListener extends BaseListener {
         final Player player = event.getPlayer();
 
         // Permissions Check, if player has bypass permissions, then skip everything.
-        if (PwnFilterPlugin.getCache().getAuthor(player.getUniqueId()).hasPermission("pwnfilter.bypass.chat")) return;
+        if (PwnFilterPlugin.getBukkitAPI().getAuthor(player.getUniqueId()).hasPermission("pwnfilter.bypass.chat")) return;
 
         String message = event.getMessage();
 
         // Global mute
-        if ((PwnFilterPlugin.globalMute) && (!(PwnFilterPlugin.getCache().getAuthor(player.getUniqueId()).hasPermission("pwnfilter.bypass.mute")))) {
+        if ((PwnFilterPlugin.globalMute) && (!(PwnFilterPlugin.getBukkitAPI().getAuthor(player.getUniqueId()).hasPermission("pwnfilter.bypass.mute")))) {
             event.setCancelled(true);
             return; // No point in continuing.
         }
 
-        if (plugin.getConfig().getBoolean("spamfilter") && !PwnFilterPlugin.getCache().getAuthor(player.getUniqueId()).hasPermission("pwnfilter.bypass.spam")) {
+        if (plugin.getConfig().getBoolean("spamfilter") && !PwnFilterPlugin.getBukkitAPI().getAuthor(player.getUniqueId()).hasPermission("pwnfilter.bypass.spam")) {
             // Keep a log of the last message sent by this player.  If it's the same as the current message, cancel.
             if (PwnFilterPlugin.lastMessage.containsKey(player.getUniqueId()) && PwnFilterPlugin.lastMessage.get(player.getUniqueId()).equals(message)) {
                 event.setCancelled(true);
@@ -83,11 +83,11 @@ public class PwnFilterPlayerListener extends BaseListener {
 
         }
 
-        FilterState state = new FilterState(plugin, message,
+        FilterState state = new FilterState(message,
                 BukkitPlayer.getInstance(event.getPlayer(),plugin), this);
 
         // Global decolor
-        if ((PwnFilterPlugin.decolor) && !(PwnFilterPlugin.getCache().getAuthor(player.getUniqueId()).hasPermission("pwnfilter.color"))) {
+        if ((PwnFilterPlugin.decolor) && !(PwnFilterPlugin.getBukkitAPI().getAuthor(player.getUniqueId()).hasPermission("pwnfilter.color"))) {
             // We are changing the state of the message.  Let's do that before any rules processing.
             state.setModifiedMessage(state.getModifiedMessage().decolor());
         }

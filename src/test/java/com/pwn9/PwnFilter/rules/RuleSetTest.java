@@ -94,7 +94,7 @@ public class RuleSetTest {
     @Test
     public void testApplyRules() {
         rs.loadConfigFile();
-        FilterState testState = new FilterState(mockPlugin,"This is a test", author, mockClient);
+        FilterState testState = new FilterState("This is a test", author, mockClient);
         rs.apply(testState);
         assertEquals("This WAS a test", testState.getModifiedMessage().getPlainString());
     }
@@ -102,7 +102,7 @@ public class RuleSetTest {
     @Test
     public void testDollarSignInMessage() {
         rs.loadConfigFile();
-        FilterState testState = new FilterState(mockPlugin,"notATestPerson {test] $ (test 2}",author,mockClient);
+        FilterState testState = new FilterState("notATestPerson {test] $ (test 2}",author,mockClient);
         rs.apply(testState);
     }
 
@@ -111,7 +111,7 @@ public class RuleSetTest {
     public void testBackslashAtEndOfLine() {
         try {
             rs.loadConfigFile();
-            FilterState testState = new FilterState(mockPlugin,"Message that ends with \\",author,mockClient);
+            FilterState testState = new FilterState("Message that ends with \\",author,mockClient);
             rs.apply(testState);
         } catch (StringIndexOutOfBoundsException ex) {
             Assert.fail(ex.getMessage());
@@ -122,7 +122,7 @@ public class RuleSetTest {
     public void testShortcuts() {
         RuleChain ruleChain = ruleManager.getRuleChain("shortcutTest.txt");
         ruleChain.loadConfigFile();
-        FilterState testState = new FilterState(mockPlugin,"ShortCutPattern",author,mockClient);
+        FilterState testState = new FilterState("ShortCutPattern",author,mockClient);
         ruleChain.apply(testState);
         Assert.assertEquals("Replaced", testState.getModifiedMessage().getPlainString());
     }

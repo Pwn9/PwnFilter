@@ -15,7 +15,6 @@ import com.pwn9.PwnFilter.api.MessageAuthor;
 import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
 import com.pwn9.PwnFilter.rules.Rule;
 import com.pwn9.PwnFilter.util.ColoredString;
-import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +46,6 @@ public class FilterState {
     private final ColoredString originalMessage; // Original message
     private ColoredString modifiedMessage; // Modified message string
     private ColoredString unfilteredMessage; // message string for "raw" messages.
-    public final Plugin plugin; // Which plugin is this state attached to?
     private final MessageAuthor author; // Player that this event is connected to.
     public final FilterClient listener;
     final int messageLen; // New message can't be longer than original.
@@ -65,35 +63,30 @@ public class FilterState {
      * Class Constructor with the text string to act upon.  Colour codes must
      * already be converted to the section character (u00A7), otherwise they
      * will not be correctly processed.
-     *
-     * @param pl a {@link org.bukkit.plugin.Plugin} object.
-     * @param m The original text string to run rules against.
-     * @param a  a {@link com.pwn9.PwnFilter.api.MessageAuthor} object.
-     * @param l a {@link com.pwn9.PwnFilter.api.FilterClient} object.
+     *  @param m The original text string to run rules against.
+     * @param a  a {@link MessageAuthor} object.
+     * @param l a {@link FilterClient} object.
      */
-    public FilterState(Plugin pl, String m, MessageAuthor a, FilterClient l) {
+    public FilterState(String m, MessageAuthor a, FilterClient l) {
         originalMessage = new ColoredString(m);
         modifiedMessage = new ColoredString(m);
         messageLen = originalMessage.length();
         author = a;
-        plugin = pl;
         listener = l;
     }
 
     /**
      * A FilterState object from a UUID, instead of an Author Object.
-     *
-     * @param pl PwnFilter plugin instance
-     * @param m String message to process
+     *  @param m String message to process
+     * @param uuid Unique ID of the Author
      * @param l Listener that is calling.
      */
-    public FilterState(Plugin pl, String m, UUID uuid, FilterClient l) {
+    public FilterState(String m, UUID uuid, FilterClient l) {
         originalMessage = new ColoredString(m);
         modifiedMessage = new ColoredString(m);
         messageLen = originalMessage.length();
-        plugin = pl;
         listener = l;
-        author = PwnFilterPlugin.getCache().getAuthor(uuid);
+        author = PwnFilterPlugin.getBukkitAPI().getAuthor(uuid);
     }
 
     /**

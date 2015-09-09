@@ -11,7 +11,7 @@
 
 package com.pwn9.PwnFilter.bukkit.listener;
 
-import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
+import com.pwn9.PwnFilter.bukkit.DeathMessages;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -40,8 +40,8 @@ public class PwnFilterEntityListener implements Listener {
 
         final Player player = (Player)event.getEntity();
 
-        if (PwnFilterPlugin.killedPlayers.containsKey(player.getUniqueId())) {
-            e.setDeathMessage(PwnFilterPlugin.killedPlayers.remove(player.getUniqueId()));
+        if (DeathMessages.killedPlayers.containsKey(player.getUniqueId())) {
+            e.setDeathMessage(DeathMessages.killedPlayers.remove(player.getUniqueId()));
         }
 
     }

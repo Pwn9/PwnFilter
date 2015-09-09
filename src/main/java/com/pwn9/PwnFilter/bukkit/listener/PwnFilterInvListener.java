@@ -84,7 +84,7 @@ public class PwnFilterInvListener extends BaseListener {
         if (itemMeta != null && itemMeta.hasDisplayName()) {
             message = itemMeta.getDisplayName();
 
-            FilterState state = new FilterState(plugin, message, BukkitPlayer.getInstance(player, plugin), this);
+            FilterState state = new FilterState(message, BukkitPlayer.getInstance(player, plugin), this);
 
             ruleChain.execute(state);
             if (state.cancel) event.setCancelled(true);

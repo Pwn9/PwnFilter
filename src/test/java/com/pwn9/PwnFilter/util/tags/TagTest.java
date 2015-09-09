@@ -91,7 +91,7 @@ public class TagTest {
     @Test
     public void testBuiltinTags() throws Exception {
         String input = "Test %player% tag";
-        FilterState testState = new FilterState(null, input, testAuthor , testClient );
+        FilterState testState = new FilterState(input, testAuthor , testClient );
         TagRegistry.addTag("player",new PlayerTag());
         Assert.assertEquals(TagRegistry.replaceTags(input, testState), "Test TESTPLAYER tag");
 

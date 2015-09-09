@@ -33,14 +33,15 @@ import java.util.ArrayList;
 public class RespondFile implements Action {
     ArrayList<String> messageStrings = new ArrayList<String>();
 
-    /** {@inheritDoc} */
-    public void init(String s)
-    {
+    /**
+     * {@inheritDoc}
+     */
+    public void init(String s) {
         try {
             BufferedReader br = PwnFilterPlugin.getInstance().getBufferedReader(s);
             String message;
-            while ( (message = br.readLine()) != null ) {
-                messageStrings.add(ChatColor.translateAlternateColorCodes('&',message));
+            while ((message = br.readLine()) != null) {
+                messageStrings.add(ChatColor.translateAlternateColorCodes('&', message));
             }
         } catch (FileNotFoundException ex) {
             LogManager.logger.warning("File not found while trying to add Action: " + ex.getMessage());
@@ -51,25 +52,28 @@ public class RespondFile implements Action {
         }
     }
 
-    /** {@inheritDoc} */
-    public boolean execute(final FilterState state ) {
+    /**
+     * {@inheritDoc}
+     */
+    public boolean execute(final FilterState state) {
         final ArrayList<String> preparedMessages = new ArrayList<String>();
 
         for (String message : messageStrings) {
             preparedMessages.add(TagRegistry.replaceTags(message, state));
         }
 
-        state.addLogMessage("Responded to " + state.getAuthor().getName() + " with: "+preparedMessages.get(0) + "...");
+        state.addLogMessage("Responded to " + state.getAuthor().getName() + " with: " + preparedMessages.get(0) + "...");
 
-        BukkitRunnable task = new BukkitRunnable() {
-            @Override
-            public void run() {
-                for (String m : preparedMessages) {
-                    state.getAuthor().sendMessage(m);
-                }
-            }
-        };
-        task.runTask(state.plugin);
+        PwnFilterPlugin.getBukkitAPI().safeBukkitDispatch(
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        for (String m : preparedMessages) {
+                            state.getAuthor().sendMessage(m);
+                        }
+                    }
+                });
+
 
         return true;
     }

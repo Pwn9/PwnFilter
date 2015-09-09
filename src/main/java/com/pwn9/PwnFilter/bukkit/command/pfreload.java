@@ -14,7 +14,6 @@ import com.pwn9.PwnFilter.api.ClientManager;
 import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
 import com.pwn9.PwnFilter.rules.RuleManager;
 import com.pwn9.PwnFilter.util.LogManager;
-import com.pwn9.PwnFilter.util.PointManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -54,8 +53,6 @@ public class pfreload implements CommandExecutor {
         plugin.configurePlugin();
 
         LogManager.logger.config("Reloaded config.yml as requested by " + sender.getName());
-
-        PointManager.setup(plugin);
 
         RuleManager.getInstance().reloadAllConfigs();
         LogManager.logger.config("All rules reloaded by " + sender.getName());

@@ -11,6 +11,7 @@
 package com.pwn9.PwnFilter.rules.action.targeted;
 
 import com.pwn9.PwnFilter.FilterState;
+import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
 import com.pwn9.PwnFilter.rules.action.Action;
 import com.pwn9.PwnFilter.util.tags.TagRegistry;
 import org.bukkit.ChatColor;
@@ -28,17 +29,20 @@ import java.util.ArrayList;
 public class Respond implements Action {
     ArrayList<String> messageStrings = new ArrayList<String>();
 
-    /** {@inheritDoc} */
-    public void init(String s)
-    {
-        for ( String message : s.split("\n") ) {
-            messageStrings.add(ChatColor.translateAlternateColorCodes('&',message));
+    /**
+     * {@inheritDoc}
+     */
+    public void init(String s) {
+        for (String message : s.split("\n")) {
+            messageStrings.add(ChatColor.translateAlternateColorCodes('&', message));
         }
     }
 
-    /** {@inheritDoc} */
-    public boolean execute(final FilterState state ) {
-        if ( state.getAuthor() == null ) return false;
+    /**
+     * {@inheritDoc}
+     */
+    public boolean execute(final FilterState state) {
+        if (state.getAuthor() == null) return false;
 
         final ArrayList<String> preparedMessages = new ArrayList<String>();
 
@@ -49,15 +53,15 @@ public class Respond implements Action {
         state.addLogMessage("Responded to " + state.getAuthor().getName()
                 + " with: " + preparedMessages.get(0) + "...");
 
-        BukkitRunnable task = new BukkitRunnable() {
-            @Override
-            public void run() {
-                for (String m : preparedMessages) {
-                    state.getAuthor().sendMessage(m);
-                }
-            }
-        };
-        task.runTask(state.plugin);
+        PwnFilterPlugin.getBukkitAPI().safeBukkitDispatch(
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        for (String m : preparedMessages) {
+                            state.getAuthor().sendMessage(m);
+                        }
+                    }
+                });
         return true;
     }
 }

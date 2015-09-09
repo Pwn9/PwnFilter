@@ -103,19 +103,19 @@ public class PwnFilterCommandListener extends BaseListener {
 
         final Player player = event.getPlayer();
 
-        if (PwnFilterPlugin.getCache().getAuthor(player.getUniqueId()).hasPermission("pwnfilter.bypass.commands")) return;
+        if (PwnFilterPlugin.getBukkitAPI().getAuthor(player.getUniqueId()).hasPermission("pwnfilter.bypass.commands")) return;
 
         String message = event.getMessage();
 
         //Gets the actual command as a string
         String cmdmessage = message.substring(1).split(" ")[0];
 
-        FilterState state = new FilterState(plugin, message, BukkitPlayer.getInstance(player, plugin), this);
+        FilterState state = new FilterState(message, BukkitPlayer.getInstance(player, plugin), this);
 
         // Check to see if we should treat this command as chat (eg: /tell)
         if (cmdchat.contains(cmdmessage)) {
             // Global mute
-            if ((PwnFilterPlugin.globalMute) && (!(PwnFilterPlugin.getCache().getAuthor(player.getUniqueId()).hasPermission("pwnfilter.bypass.mute")))) {
+            if ((PwnFilterPlugin.globalMute) && (!(PwnFilterPlugin.getBukkitAPI().getAuthor(player.getUniqueId()).hasPermission("pwnfilter.bypass.mute")))) {
                 event.setCancelled(true);
                 return;
             }

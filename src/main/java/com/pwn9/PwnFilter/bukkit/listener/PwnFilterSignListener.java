@@ -75,7 +75,7 @@ public class PwnFilterSignListener extends BaseListener {
         }
         String signLines = builder.toString().trim();
 
-        FilterState state = new FilterState(plugin, signLines,
+        FilterState state = new FilterState(signLines,
                 BukkitPlayer.getInstance(event.getPlayer(),plugin), this);
 
         ruleChain.execute(state);
@@ -86,7 +86,7 @@ public class PwnFilterSignListener extends BaseListener {
             List<String> newLines = new ArrayList<String>();
 
             // Global decolor
-            if ((PwnFilterPlugin.decolor) && !(PwnFilterPlugin.getCache().getAuthor(event.getPlayer().getUniqueId()).hasPermission("pwnfilter.color"))) {
+            if ((PwnFilterPlugin.decolor) && !(PwnFilterPlugin.getBukkitAPI().getAuthor(event.getPlayer().getUniqueId()).hasPermission("pwnfilter.color"))) {
                 Collections.addAll(newLines,state.getModifiedMessage().getPlainString().split("\t"));
             } else {
                 Collections.addAll(newLines,state.getModifiedMessage().getColoredString().split("\t"));

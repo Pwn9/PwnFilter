@@ -5,9 +5,7 @@ Actions are performed on ActionTargets.
 Actions are registered with the ActionFactory.  The action is registered
 with a text-string, which will become the keyword that the action uses.
 
-Reserved Actions are searched first, eg: 'replace', 'lower', 'points', etc.
-
-If a Reserved Action isn't found, the ActionFactory list is searched for Actions
+The ActionFactory list is searched for Actions, both internal, and those
 registered by other modules.
 
 Actions will try to execute a named function on the target object first.  If

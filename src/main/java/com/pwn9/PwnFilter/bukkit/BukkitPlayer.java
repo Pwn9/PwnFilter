@@ -55,7 +55,7 @@ public class BukkitPlayer implements MessageAuthor {
      */
     public boolean hasPermission(String s) {
         try {
-            return PwnFilterPlugin.getCache().getData(bukkitPlayerId).getPermissionSet().contains(s);
+            return PwnFilterPlugin.getBukkitAPI().getData(bukkitPlayerId).getPermissionSet().contains(s);
         } catch (Exception e) {
             return false;
         }
@@ -74,7 +74,7 @@ public class BukkitPlayer implements MessageAuthor {
     @NotNull
     public String getName() {
         try {
-            return PwnFilterPlugin.getCache().getData(bukkitPlayerId).getName();
+            return PwnFilterPlugin.getBukkitAPI().getData(bukkitPlayerId).getName();
         } catch (Exception e) {
             return "";
         }
@@ -129,7 +129,7 @@ public class BukkitPlayer implements MessageAuthor {
     public boolean withdrawMoney(final Double amount, final String messageString) {
 
         if (PwnFilterPlugin.economy != null) {
-            Boolean result = PwnFilterPlugin.getCache().safeBukkitAPICall(
+            Boolean result = PwnFilterPlugin.getBukkitAPI().safeBukkitAPICall(
                     new Callable<Boolean>() {
                         @Override
                         public Boolean call() {
@@ -173,7 +173,7 @@ public class BukkitPlayer implements MessageAuthor {
 
     public String getWorldName() {
         try {
-            return PwnFilterPlugin.getCache().getData(bukkitPlayerId).getWorld().getName();
+            return PwnFilterPlugin.getBukkitAPI().getData(bukkitPlayerId).getWorld().getName();
         } catch (ExecutionException e) {
             return null;
         }

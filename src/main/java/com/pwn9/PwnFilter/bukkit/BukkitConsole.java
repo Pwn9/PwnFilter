@@ -52,7 +52,7 @@ public class BukkitConsole implements MessageAuthor {
 
     @Override
     public void sendMessage(final String message) {
-        PwnFilterPlugin.getCache().safeBukkitDispatch(new Runnable() {
+        PwnFilterPlugin.getBukkitAPI().safeBukkitDispatch(new Runnable() {
             @Override
             public void run() {
                 Bukkit.getConsoleSender().sendMessage(message);

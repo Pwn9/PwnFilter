@@ -68,7 +68,7 @@ public class PwnFilterBookListener extends BaseListener {
 
         player = event.getPlayer();
 
-        if (PwnFilterPlugin.getCache().getAuthor(player.getUniqueId()).hasPermission("pwnfilter.bypass.book")) return;
+        if (PwnFilterPlugin.getBukkitAPI().getAuthor(player.getUniqueId()).hasPermission("pwnfilter.bypass.book")) return;
 
         BookMeta bookMeta = event.getNewBookMeta();
 
@@ -76,7 +76,7 @@ public class PwnFilterBookListener extends BaseListener {
         if (bookMeta.hasTitle()) {
             // Run title through filter.
             message = bookMeta.getTitle();
-            FilterState state = new FilterState(plugin, message,
+            FilterState state = new FilterState(message,
                     BukkitPlayer.getInstance(player,plugin), this);
             ruleChain.execute(state);
             if (state.cancel) event.setCancelled(true);
@@ -91,7 +91,7 @@ public class PwnFilterBookListener extends BaseListener {
             List<String> newPages = new ArrayList<String>();
             boolean modified = false;
             for (String page : bookMeta.getPages()) {
-                FilterState state = new FilterState(plugin, page,
+                FilterState state = new FilterState(page,
                         BukkitPlayer.getInstance(player, plugin), this);
                 ruleChain.execute(state);
                 if (state.isCancelled()) {

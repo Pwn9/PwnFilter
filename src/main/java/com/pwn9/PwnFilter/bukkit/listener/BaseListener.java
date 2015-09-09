@@ -108,7 +108,7 @@ public abstract class BaseListener implements FilterClient,RuleChainListener {
      */
     @Override
     public void ruleChainUpdated(RuleChain ruleChain) {
-        PwnFilterPlugin.getCache().addPermissions(ruleChain.getPermissionList());
+        PwnFilterPlugin.getBukkitAPI().addPermissions(ruleChain.getPermissionList());
     }
 
 }

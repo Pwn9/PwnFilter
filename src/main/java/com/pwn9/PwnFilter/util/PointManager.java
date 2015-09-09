@@ -13,13 +13,9 @@ package com.pwn9.PwnFilter.util;
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.api.FilterClient;
 import com.pwn9.PwnFilter.api.MessageAuthor;
-import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
 import com.pwn9.PwnFilter.rules.RuleChain;
 import com.pwn9.PwnFilter.rules.action.Action;
-import com.pwn9.PwnFilter.rules.action.ActionFactory;
 import org.bukkit.configuration.Configuration;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -45,7 +41,6 @@ import java.util.concurrent.*;
 public class PointManager implements FilterClient {
 
     private static PointManager _instance;
-    private final PwnFilterPlugin plugin;
 
     private final Map<UUID,Double> pointsMap = new ConcurrentHashMap<UUID, Double>(8, 0.75f, 2);
     private final TreeMap<Double, Threshold> thresholds = new TreeMap<Double,Threshold>();
@@ -54,33 +49,26 @@ public class PointManager implements FilterClient {
     private Double leakPoints;
     private ScheduledFuture<?> leakHandle;
 
-    private PointManager(PwnFilterPlugin p) {
-        this.plugin = p;
-    }
     private final ScheduledExecutorService scheduler =
             Executors.newScheduledThreadPool(1);
+
+    private PointManager() {}
 
     /**
      * <p>setup.</p>
      *
-     * @param pwnFilter a {@link PwnFilterPlugin} object.
      * @return a {@link com.pwn9.PwnFilter.util.PointManager} object.
      */
-    public static PointManager setup(PwnFilterPlugin pwnFilter) {
-        ConfigurationSection pointsSection = pwnFilter.getConfig().getConfigurationSection("points");
-        if (!pointsSection.getBoolean("enabled")) {
-            if (_instance != null) _instance.stopLeaking();
-            _instance = null;
-            return null;
-        }
-        if (_instance == null ) {
-            _instance = new PointManager(pwnFilter);
+    public static PointManager setup(Double leakPoints, Integer leakInterval) {
+
+        if (_instance == null) {
+            _instance = new PointManager();
         }
 
-        _instance.leakPoints = pointsSection.getDouble("leak.points",1);
-        _instance.leakInterval = pointsSection.getInt("leak.interval",30);
+        _instance.leakPoints = leakPoints;
+        _instance.leakInterval = leakInterval;
 
-        _instance.parseThresholds(pointsSection.getConfigurationSection("thresholds"));
+        _instance.clearThresholds();
 
         _instance.startLeaking();
 
@@ -98,8 +86,15 @@ public class PointManager implements FilterClient {
             setPoints(id, 0.0);
         }
 
-        setup(plugin);
+        startLeaking();
     }
+
+    public void clearThresholds() {
+        thresholds.clear();
+        // Setup the 0 threshold
+        addThreshold("Default", (double) 0, new ArrayList<Action>(), new ArrayList<Action>());
+    }
+
 
     private void startLeaking() {
         final PointManager pointManager = this;
@@ -126,40 +121,6 @@ public class PointManager implements FilterClient {
             leakHandle = null;
         }
     }
-    private void parseThresholds(ConfigurationSection cs) {
-
-        // Setup the 0 threshold
-        Threshold defaultThreshold = new Threshold();
-        defaultThreshold.name = "Default";
-        defaultThreshold.points = (double)0;
-        thresholds.put((double)0,defaultThreshold);
-
-        for (String threshold : cs.getKeys(false)) {
-            Threshold newThreshold = new Threshold();
-            newThreshold.name = cs.getString(threshold + ".name");
-            newThreshold.points = cs.getDouble(threshold+".points");
-
-            for (String action : cs.getStringList(threshold + ".actions.ascending")) {
-                Action actionObject = ActionFactory.getActionFromString(action);
-                if (actionObject != null) {
-                    newThreshold.actionsAscending.add(actionObject);
-                } else {
-                    LogManager.logger.warning("Unable to parse action in threshold: " + threshold);
-                }
-            }
-            for (String action : cs.getStringList(threshold + ".actions.descending")) {
-                Action actionObject = ActionFactory.getActionFromString(action);
-                if (actionObject != null) {
-                    newThreshold.actionsDescending.add(actionObject);
-                } else {
-                    LogManager.logger.warning("Unable to parse action in threshold: " + threshold);
-                }
-            }
-            thresholds.put(newThreshold.points, newThreshold);
-        }
-
-    }
-
 
     /**
      * <p>getInstance.</p>
@@ -247,23 +208,13 @@ public class PointManager implements FilterClient {
 
             // Check to see if we've crossed any thresholds on our way up/down, and if so
             // execute the actions for that crossing.
-            BukkitRunnable task = new BukkitRunnable() {
-                @Override
-                public void run() {
-                    for (Map.Entry<Double, Threshold> entry : thresholds.subMap(oldKey, false, newKey, true).entrySet())
-                        entry.getValue().executeAscending(id);
-                }
-            };
-            task.runTask(plugin);
+
+            for (Map.Entry<Double, Threshold> entry : thresholds.subMap(oldKey, false, newKey, true).entrySet())
+                entry.getValue().executeAscending(id);
+
         } else {
-            BukkitRunnable task = new BukkitRunnable() {
-                @Override
-                public void run() {
-                    for (Map.Entry<Double, Threshold> entry : thresholds.subMap(newKey, false, oldKey, true).descendingMap().entrySet())
-                        entry.getValue().executeDescending(id);
-                }
-            };
-            task.runTask(plugin);
+            for (Map.Entry<Double, Threshold> entry : thresholds.subMap(newKey, false, oldKey, true).descendingMap().entrySet())
+                entry.getValue().executeDescending(id);
         }
 
     }
@@ -288,12 +239,22 @@ public class PointManager implements FilterClient {
 
     }
 
+    public void addThreshold(String name, Double points, List<Action> ascending, List<Action> descending) {
+        thresholds.put(points, new Threshold(name, points, ascending, descending));
+    }
 
     class Threshold implements Comparable<Threshold> {
         String name;
         Double points;
-        List<Action> actionsAscending = new ArrayList<Action>();
-        List<Action> actionsDescending = new ArrayList<Action>();
+        List<Action> actionsAscending;
+        List<Action> actionsDescending;
+
+        protected Threshold(String name, Double points, List<Action> ascending, List<Action> descending) {
+            this.name = name;
+            this.points = points;
+            this.actionsAscending = ascending;
+            this.actionsDescending = descending;
+        }
 
         @Override
         public int compareTo(@NotNull Threshold o) {
@@ -301,14 +262,14 @@ public class PointManager implements FilterClient {
         }
 
         public void executeAscending(UUID id) {
-            FilterState state = new FilterState(plugin, "", id, _instance );
+            FilterState state = new FilterState("", id, _instance );
             for (Action a : actionsAscending ) {
                 a.execute(state);
             }
         }
 
         public void executeDescending(UUID id) {
-            FilterState state = new FilterState(plugin, "", id, _instance );
+            FilterState state = new FilterState("", id, _instance );
             for (Action a : actionsDescending ) {
                 a.execute(state);
             }
@@ -348,5 +309,7 @@ public class PointManager implements FilterClient {
     /** {@inheritDoc} */
     @Override
     public void shutdown() {
+        stopLeaking();
+        _instance = null;
     }
 }

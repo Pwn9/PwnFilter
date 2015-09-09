@@ -22,12 +22,15 @@ import com.pwn9.PwnFilter.bukkit.command.pfreload;
 import com.pwn9.PwnFilter.bukkit.listener.*;
 import com.pwn9.PwnFilter.rules.RuleChain;
 import com.pwn9.PwnFilter.rules.RuleManager;
+import com.pwn9.PwnFilter.rules.action.Action;
+import com.pwn9.PwnFilter.rules.action.ActionFactory;
 import com.pwn9.PwnFilter.util.FileUtil;
 import com.pwn9.PwnFilter.util.LogManager;
 import com.pwn9.PwnFilter.util.PointManager;
 import com.pwn9.PwnFilter.util.Tracker;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -36,6 +39,7 @@ import org.mcstats.Metrics;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentMap;
 
@@ -123,7 +127,7 @@ public class PwnFilterPlugin extends JavaPlugin {
         setupEconomy();
 
         // Initialize Points Manager if its enabled
-        PointManager.setup(this);
+        setupPoints();
 
         // Activate Plugin Metrics
         activateMetrics();
@@ -167,7 +171,7 @@ public class PwnFilterPlugin extends JavaPlugin {
 
     }
 
-    public static BukkitAPI getCache() throws IllegalStateException {
+    public static BukkitAPI getBukkitAPI() throws IllegalStateException {
         if (bukkitAPI == null )
             throw new IllegalStateException("BukkitCache accessed before initialization");
         return bukkitAPI;
@@ -297,6 +301,56 @@ public class PwnFilterPlugin extends JavaPlugin {
         LogManager.logger.info("Vault dependency not found.  Disabling actions requiring Vault");
 
     }
+
+    private void setupPoints() {
+        ConfigurationSection pointsSection = getConfig().getConfigurationSection("points");
+        if (!pointsSection.getBoolean("enabled")) {
+            if (PointManager.isEnabled()) {
+                PointManager.getInstance().shutdown();
+            }
+        } else {
+            if (!PointManager.isEnabled()) {
+                PointManager.setup(
+                    pointsSection.getDouble("leak.points",1),
+                    pointsSection.getInt("leak.interval",30)
+                );
+
+                parseThresholds(pointsSection);
+            }
+        }
+    }
+
+    private void parseThresholds(ConfigurationSection cs) {
+
+        for (String threshold : cs.getKeys(false)) {
+            List<Action> ascending = new ArrayList<Action>();
+            List<Action> descending = new ArrayList<Action>();
+
+            for (String action : cs.getStringList(threshold + ".actions.ascending")) {
+                Action actionObject = ActionFactory.getActionFromString(action);
+                if (actionObject != null) {
+                    ascending.add(actionObject);
+                } else {
+                    LogManager.logger.warning("Unable to parse action in threshold: " + threshold);
+                }
+            }
+            for (String action : cs.getStringList(threshold + ".actions.descending")) {
+                Action actionObject = ActionFactory.getActionFromString(action);
+                if (actionObject != null) {
+                    descending.add(actionObject);
+                } else {
+                    LogManager.logger.warning("Unable to parse action in threshold: " + threshold);
+                }
+            }
+            PointManager.getInstance().addThreshold(
+                    cs.getString(threshold + ".name"),
+                    cs.getDouble(threshold + ".points"),
+                    ascending,
+                    descending);
+        }
+
+    }
+
 
     /**
      * <p>getBufferedReader.</p>

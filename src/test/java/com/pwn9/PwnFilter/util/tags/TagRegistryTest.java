@@ -91,7 +91,7 @@ public class TagRegistryTest {
     @Test
     public void testUntaggedStringIsUnmodified() throws Exception {
 
-        FilterState testState = new FilterState(null, "TestString", testAuthor, testClient);
+        FilterState testState = new FilterState("TestString", testAuthor, testClient);
 
         String input = "This is a test";
         String result = TagRegistry.replaceTags(input, testState);
@@ -100,7 +100,7 @@ public class TagRegistryTest {
 
     @Test
     public void testUnmatchedTagIsUnmodified() throws Exception {
-        FilterState testState = new FilterState(null, "TestString", testAuthor, testClient);
+        FilterState testState = new FilterState("TestString", testAuthor, testClient);
 
         String input = "This is a %test%";
         String result = TagRegistry.replaceTags(input, testState);
@@ -109,7 +109,7 @@ public class TagRegistryTest {
 
     @Test
     public void testStaticTagIsReplaced() throws Exception {
-        FilterState testState = new FilterState(null, "TestString", testAuthor, testClient);
+        FilterState testState = new FilterState("TestString", testAuthor, testClient);
 
         TagRegistry.addTag("test", new Tag() {
             @Override

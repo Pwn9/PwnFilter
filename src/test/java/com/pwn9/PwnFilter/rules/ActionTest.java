@@ -80,14 +80,14 @@ public class ActionTest {
 
     @Test
     public void testAbort() {
-        FilterState testState = new FilterState(mockPlugin,"abort", author, mockClient);
+        FilterState testState = new FilterState("abort", author, mockClient);
         rs.apply(testState);
         assertTrue(testState.stop);
     }
 
     @Test
     public void testRandRep() {
-        FilterState testState = new FilterState(mockPlugin,"randrep", author, mockClient);
+        FilterState testState = new FilterState("randrep", author, mockClient);
         rs.apply(testState);
         System.out.println(testState.getModifiedMessage().getPlainString());
         assertTrue(testState.getModifiedMessage().getPlainString().matches("(random|replace)"));
@@ -95,7 +95,7 @@ public class ActionTest {
 
     @Test
     public void testBurn() {
-        FilterState testState = new FilterState(mockPlugin,"burn", author, mockClient);
+        FilterState testState = new FilterState("burn", author, mockClient);
         rs.apply(testState);
     }
 
