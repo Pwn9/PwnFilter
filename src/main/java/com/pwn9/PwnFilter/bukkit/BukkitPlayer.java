@@ -160,7 +160,7 @@ public class BukkitPlayer implements MessageAuthor {
     }
 
     public void kill(final String messageString) {
-        PwnFilterPlugin.addKilledPlayer(bukkitPlayerId, getName() + " " + messageString);
+        DeathMessages.addKilledPlayer(bukkitPlayerId, getName() + " " + messageString);
         new BukkitRunnable() {
             @Override
             public void run() {

@@ -64,7 +64,6 @@ public class PwnFilterPlugin extends JavaPlugin {
     public static boolean decolor = false;
     public static boolean globalMute = false;
 
-    public static ConcurrentMap<UUID, String> killedPlayers = new MapMaker().concurrencyLevel(2).weakKeys().makeMap();
     public static ConcurrentMap<UUID, String> lastMessage = new MapMaker().concurrencyLevel(2).weakKeys().makeMap();
 
 
@@ -315,17 +314,6 @@ public class PwnFilterPlugin extends JavaPlugin {
 
         FileInputStream fs  = new FileInputStream(textfile);
         return new BufferedReader(new InputStreamReader(fs));
-    }
-
-    //TODO: Handle this better
-    /**
-     * <p>addKilledPlayer.</p>
-     *
-     * @param p a {@link org.bukkit.entity.Player} object.
-     * @param message a {@link java.lang.String} object.
-     */
-    public static void addKilledPlayer(UUID p, String message) {
-        killedPlayers.put(p, message);
     }
 
 
