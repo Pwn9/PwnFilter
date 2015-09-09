@@ -11,20 +11,19 @@
 package com.pwn9.PwnFilter.util;
 
 import com.pwn9.PwnFilter.FilterState;
-import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
 import com.pwn9.PwnFilter.api.FilterClient;
 import com.pwn9.PwnFilter.api.MessageAuthor;
+import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
 import com.pwn9.PwnFilter.rules.RuleChain;
 import com.pwn9.PwnFilter.rules.action.Action;
 import com.pwn9.PwnFilter.rules.action.ActionFactory;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.*;
 
 /**
  * Mange the Points system of PwnFilter.
@@ -53,11 +52,13 @@ public class PointManager implements FilterClient {
 
     private int leakInterval;
     private Double leakPoints;
-    private BukkitTask leakTask;
+    private ScheduledFuture<?> leakHandle;
 
     private PointManager(PwnFilterPlugin p) {
         this.plugin = p;
     }
+    private final ScheduledExecutorService scheduler =
+            Executors.newScheduledThreadPool(1);
 
     /**
      * <p>setup.</p>
@@ -103,8 +104,7 @@ public class PointManager implements FilterClient {
     private void startLeaking() {
         final PointManager pointManager = this;
 
-        if (leakTask == null) {
-            BukkitRunnable leakTask = new BukkitRunnable() {
+            final Runnable leakTask = new Runnable() {
                 @Override
                 public void run() {
                     //Every interval, check point balances, and if they are > 0, subtract leakPoints
@@ -114,15 +114,16 @@ public class PointManager implements FilterClient {
                     }
                 }
             };
-            leakTask.runTaskTimerAsynchronously(plugin, 20, 20 * leakInterval);
+        if (leakHandle == null) {
+            leakHandle = scheduler.scheduleAtFixedRate(leakTask, 1, leakInterval, TimeUnit.SECONDS);
         }
     }
 
 
     private void stopLeaking() {
-        if (leakTask != null) {
-            leakTask.cancel();
-            leakTask = null;
+        if (leakHandle != null) {
+            leakHandle.cancel(true);
+            leakHandle = null;
         }
     }
     private void parseThresholds(ConfigurationSection cs) {

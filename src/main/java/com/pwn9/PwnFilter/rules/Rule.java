@@ -25,7 +25,6 @@ import java.util.regex.Pattern;
  * Rule object
  * <p/>
  * <P>Each Rule has a single match Pattern, an ArrayList of {@link com.pwn9.PwnFilter.rules.Condition}'s and an ArrayList of {@link com.pwn9.PwnFilter.rules.action.Action}'s</P>
- * TODO: Finish docs
  *
  * @author ptoal
  * @version $Id: $Id

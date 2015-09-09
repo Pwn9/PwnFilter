@@ -30,9 +30,6 @@ import java.util.*;
  * The apply() method iterates over the rules, one at a time, matching, checking conditions,
  * and executing actions based on the message and the rules.
  *
- *
- * TODO: More documentation
- *
  * User: ptoal
  * Date: 13-04-05
  * Time: 12:38 PM
