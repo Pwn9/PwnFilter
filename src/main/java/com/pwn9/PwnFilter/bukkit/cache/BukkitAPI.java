@@ -74,7 +74,7 @@ public class BukkitAPI {
 
     }
 
-    public static BukkitAPI createCache(PwnFilterPlugin plugin) {
+    public static BukkitAPI getInstance(PwnFilterPlugin plugin) {
         return new BukkitAPI(plugin);
     }
 
@@ -165,6 +165,22 @@ public class BukkitAPI {
 
         }
         return null;
+    }
+
+    public void safeBukkitDispatch(Runnable runnable) {
+        if (Bukkit.isPrimaryThread()) {
+            // We are in the main thread, just execute API calls directly.
+            try {
+                runnable.run();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            // Red Alert, Shields Up.  We are an Async task.  Ask the main
+            // thread to execute these calls, and return the Player data to
+            // cache.
+            Bukkit.getScheduler().runTask(plugin, runnable);
+        }
     }
 
 

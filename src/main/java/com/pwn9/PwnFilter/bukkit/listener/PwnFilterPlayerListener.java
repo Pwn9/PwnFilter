@@ -75,11 +75,11 @@ public class PwnFilterPlayerListener extends BaseListener {
 
         if (plugin.getConfig().getBoolean("spamfilter") && !PwnFilterPlugin.getCache().getAuthor(player.getUniqueId()).hasPermission("pwnfilter.bypass.spam")) {
             // Keep a log of the last message sent by this player.  If it's the same as the current message, cancel.
-            if (PwnFilterPlugin.lastMessage.containsKey(player) && PwnFilterPlugin.lastMessage.get(player).equals(message)) {
+            if (PwnFilterPlugin.lastMessage.containsKey(player.getUniqueId()) && PwnFilterPlugin.lastMessage.get(player.getUniqueId()).equals(message)) {
                 event.setCancelled(true);
                 return;
             }
-            PwnFilterPlugin.lastMessage.put(player, message);
+            PwnFilterPlugin.lastMessage.put(player.getUniqueId(), message);
 
         }
 

@@ -11,6 +11,7 @@
 package com.pwn9.PwnFilter.bukkit.listener;
 
 import com.pwn9.PwnFilter.FilterState;
+import com.pwn9.PwnFilter.bukkit.BukkitConsole;
 import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
 import com.pwn9.PwnFilter.rules.RuleManager;
 import com.pwn9.PwnFilter.util.LogManager;
@@ -24,7 +25,6 @@ import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.PluginManager;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Apply the filter to commands.
@@ -72,8 +72,7 @@ public class PwnFilterServerCommandListener extends BaseListener {
         if (!cmdlist.isEmpty() && !cmdlist.contains(cmdmessage)) return;
         if (cmdblist.contains(cmdmessage)) return;
 
-        //TODO: NOPE! Fix this!
-        FilterState state = new FilterState(plugin, command, (UUID)null, this);
+        FilterState state = new FilterState(plugin, command, BukkitConsole.getInstance(), this);
 
         // Take the message from the Command Event and send it through the filter.
 

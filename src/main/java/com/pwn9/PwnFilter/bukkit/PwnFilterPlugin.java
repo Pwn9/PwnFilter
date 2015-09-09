@@ -28,7 +28,6 @@ import com.pwn9.PwnFilter.util.PointManager;
 import com.pwn9.PwnFilter.util.Tracker;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -56,25 +55,17 @@ public class PwnFilterPlugin extends JavaPlugin {
 
     private static PwnFilterPlugin _instance;
     private static BukkitAPI bukkitAPI;
-
-    // Metrics data
     private Metrics metrics;
-    /** Constant <code>matchTracker</code> */
     public static Tracker matchTracker;
     private Metrics.Graph eventGraph;
+    public static Economy economy = null;
 
-    // Filter switches
-    /** Constant <code>globalMute=false</code> */
+    // Global Plugin switches
     public static boolean decolor = false;
     public static boolean globalMute = false;
 
-    /** Constant <code>killedPlayers</code> */
     public static ConcurrentMap<UUID, String> killedPlayers = new MapMaker().concurrencyLevel(2).weakKeys().makeMap();
-
-    /** Constant <code>lastMessage</code> */
-    public static ConcurrentMap<Player, String> lastMessage = new MapMaker().concurrencyLevel(2).weakKeys().makeMap();
-    /** Constant <code>economy</code> */
-    public static Economy economy = null;
+    public static ConcurrentMap<UUID, String> lastMessage = new MapMaker().concurrencyLevel(2).weakKeys().makeMap();
 
 
     private File textDir;
@@ -114,7 +105,7 @@ public class PwnFilterPlugin extends JavaPlugin {
 
         // Initialize the cache and add all built-in PwnFilter Permissions to
         // the "interested" permissions list in the cache.
-        bukkitAPI = BukkitAPI.createCache(this);
+        bukkitAPI = BukkitAPI.getInstance(this);
 
     }
 
@@ -337,16 +328,6 @@ public class PwnFilterPlugin extends JavaPlugin {
         killedPlayers.put(p, message);
     }
 
-    public static void sendConsoleCommand(final String command) {
-        BukkitRunnable task = new BukkitRunnable() {
-            @Override
-            public void run() {
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
-            }
-        };
-        task.runTask(_instance);
-
-    }
 
     public static void sendBroadcast(final ArrayList<String> preparedMessages) {
         BukkitRunnable task = new BukkitRunnable() {

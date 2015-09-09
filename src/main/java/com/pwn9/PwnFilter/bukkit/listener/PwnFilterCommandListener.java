@@ -120,14 +120,14 @@ public class PwnFilterCommandListener extends BaseListener {
                 return;
             }
 
-            // Simple Spam filter TODO: Make # of repeat messages configurable (Will help with booscooldowns)
+            // Simple Spam filter
             if (plugin.getConfig().getBoolean("commandspamfilter") && !player.hasPermission("pwnfilter.bypass.spam")) {
                 // Keep a log of the last message sent by this player.  If it's the same as the current message, cancel.
-                if (PwnFilterPlugin.lastMessage.containsKey(player) && PwnFilterPlugin.lastMessage.get(player).equals(message)) {
+                if (PwnFilterPlugin.lastMessage.containsKey(player.getUniqueId()) && PwnFilterPlugin.lastMessage.get(player.getUniqueId()).equals(message)) {
                     event.setCancelled(true);
                     return;
                 }
-                PwnFilterPlugin.lastMessage.put(player, message);
+                PwnFilterPlugin.lastMessage.put(player.getUniqueId(), message);
             }
 
             chatRuleChain.execute(state);

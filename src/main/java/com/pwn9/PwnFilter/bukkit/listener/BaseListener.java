@@ -108,8 +108,6 @@ public abstract class BaseListener implements FilterClient,RuleChainListener {
      */
     @Override
     public void ruleChainUpdated(RuleChain ruleChain) {
-        /* TODO: We really should allow listeners to register / deregister permissions
-                 to prevent stale caching. */
         PwnFilterPlugin.getCache().addPermissions(ruleChain.getPermissionList());
     }
 
