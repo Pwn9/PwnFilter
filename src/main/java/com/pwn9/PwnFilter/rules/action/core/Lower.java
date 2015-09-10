@@ -35,9 +35,6 @@ public class Lower implements Action {
         state.addLogMessage("Converting to lowercase.");
         state.setModifiedMessage(cs.patternToLower(state.pattern));
 
-        if (state.rule.modifyRaw())
-            state.setUnfilteredMessage(state.getUnfilteredMessage().patternToLower(state.pattern));
-
         return true;
     }
 }

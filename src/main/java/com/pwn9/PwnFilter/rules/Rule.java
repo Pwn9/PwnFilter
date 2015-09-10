@@ -34,7 +34,6 @@ public class Rule implements ChainEntry {
     private Pattern pattern;
     private String description = "";
     private String id = "";
-    private boolean modifyRaw = false; // Set to true, to modify "raw" message.
 
     List<Condition> conditions = new ArrayList<Condition>();
     List<Action> actions = new ArrayList<Action>();
@@ -183,6 +182,8 @@ public class Rule implements ChainEntry {
 
         }
 
+        //TODO: Abstract statistics counters from mcstats
+        //TODO: Make internal stats tracker on matches per hour, etc?
         if(PwnFilterPlugin.matchTracker != null) {
             PwnFilterPlugin.matchTracker.increment(); // Update Match Statistics
         }
@@ -268,24 +269,6 @@ public class Rule implements ChainEntry {
      */
     public List<Action> getActions() {
         return actions;
-    }
-
-    /**
-     * <p>modifyRaw.</p>
-     *
-     * @return a boolean.
-     */
-    public boolean modifyRaw() {
-        return modifyRaw;
-    }
-
-    /**
-     * <p>Setter for the field <code>modifyRaw</code>.</p>
-     *
-     * @param modifyRaw a boolean.
-     */
-    public void setModifyRaw(boolean modifyRaw) {
-        this.modifyRaw = modifyRaw;
     }
 
 

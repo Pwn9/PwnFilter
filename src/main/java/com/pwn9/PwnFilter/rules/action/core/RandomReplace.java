@@ -39,10 +39,6 @@ public class RandomReplace implements Action {
     public boolean execute(final FilterState state ) {
         int randomInt = random.nextInt(toRand.length);
         state.setModifiedMessage(state.getModifiedMessage().replaceText(state.pattern,toRand[randomInt]));
-
-        if (state.rule.modifyRaw())
-            state.setUnfilteredMessage(state.getUnfilteredMessage().replaceText(state.pattern,toRand[randomInt]));
-
         return true;
     }
 }

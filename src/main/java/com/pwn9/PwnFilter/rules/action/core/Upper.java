@@ -35,9 +35,6 @@ public class Upper implements Action {
         state.addLogMessage("Converting to uppercase.");
         state.setModifiedMessage(cs.patternToUpper(state.pattern));
 
-        if (state.rule.modifyRaw())
-        	// Make a state for patternToUpper
-            state.setUnfilteredMessage(state.getUnfilteredMessage().patternToUpper(state.pattern));
         return true;
     }
 }

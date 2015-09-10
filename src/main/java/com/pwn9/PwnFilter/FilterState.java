@@ -13,7 +13,6 @@ package com.pwn9.PwnFilter;
 import com.pwn9.PwnFilter.api.FilterClient;
 import com.pwn9.PwnFilter.api.MessageAuthor;
 import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
-import com.pwn9.PwnFilter.bukkit.util.ColoredString;
 import com.pwn9.PwnFilter.rules.Rule;
 import com.pwn9.PwnFilter.util.EnhancedString;
 import com.pwn9.PwnFilter.util.SimpleString;
@@ -98,6 +97,7 @@ public class FilterState {
         modifiedMessage = m;
         messageLen = originalMessage.length();
         listener = l;
+        //TODO: Abstract this into a generic MessageAuthor lookup?
         author = PwnFilterPlugin.getBukkitAPI().getAuthor(uuid);
     }
 
@@ -185,7 +185,7 @@ public class FilterState {
     /**
      * <p>Getter for the field <code>modifiedMessage</code>.</p>
      *
-     * @return a {@link ColoredString} object.
+     * @return a {@link EnhancedString} object.
      */
     public EnhancedString getModifiedMessage() {
         return modifiedMessage;
@@ -194,7 +194,7 @@ public class FilterState {
     /**
      * <p>Setter for the field <code>modifiedMessage</code>.</p>
      *
-     * @param newMessage a {@link ColoredString} object.
+     * @param newMessage a {@link EnhancedString} object.
      */
     public void setModifiedMessage(EnhancedString newMessage) {
         modifiedMessage = newMessage;
@@ -203,7 +203,7 @@ public class FilterState {
     /**
      * <p>Getter for the field <code>unfilteredMessage</code>.</p>
      *
-     * @return a {@link ColoredString} object.
+     * @return a {@link EnhancedString} object.
      */
     public EnhancedString getUnfilteredMessage() {
         return unfilteredMessage;
@@ -212,7 +212,7 @@ public class FilterState {
     /**
      * <p>Setter for the field <code>unfilteredMessage</code>.</p>
      *
-     * @param newMessage a {@link ColoredString} object.
+     * @param newMessage a {@link EnhancedString} object.
      */
     public void setUnfilteredMessage(EnhancedString newMessage) {
         unfilteredMessage = newMessage;

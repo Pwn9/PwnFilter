@@ -31,6 +31,8 @@ import java.util.Map;
  * @version $Id: $Id
  */
 
+// TODO: Abstract out the dependencies on PwnFilterPlugin
+
 @SuppressWarnings("UnusedDeclaration")
 public class RuleManager {
     private static RuleManager _instance = null;

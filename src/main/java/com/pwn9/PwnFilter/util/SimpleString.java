@@ -16,8 +16,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * A Simple wrapper around a String object.  This provides similar convenience
- * methods to the {@link com.pwn9.PwnFilter.bukkit.util.ColoredString} object.
+ * A Simple wrapper around a String object.
  *
  * Created by ptoal on 15-09-09.
  */

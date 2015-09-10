@@ -35,9 +35,6 @@ public class Rewrite implements Action {
     public boolean execute(final FilterState state) {
         state.setModifiedMessage(state.getModifiedMessage().replaceText(state.pattern, messageString));
 
-        if (state.rule.modifyRaw())
-            state.setUnfilteredMessage(state.getUnfilteredMessage().replaceText(state.pattern,messageString));
-
         return true;
     }
 }

@@ -36,10 +36,6 @@ public class Replace implements Action {
     /** {@inheritDoc} */
     public boolean execute(final FilterState state ) {
         state.setModifiedMessage(new SimpleString(state.getModifiedMessage().toString()).replaceText(state.pattern, messageString));
-
-        if (state.rule.modifyRaw())
-            state.setUnfilteredMessage(state.getUnfilteredMessage().replaceText(state.pattern,messageString));
-
         return true;
     }
 }
