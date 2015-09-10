@@ -27,7 +27,7 @@ import com.pwn9.PwnFilter.rules.action.ActionFactory;
 import com.pwn9.PwnFilter.bukkit.util.FileUtil;
 import com.pwn9.PwnFilter.util.LogManager;
 import com.pwn9.PwnFilter.util.PointManager;
-import com.pwn9.PwnFilter.util.Tracker;
+import com.pwn9.PwnFilter.bukkit.util.Tracker;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
