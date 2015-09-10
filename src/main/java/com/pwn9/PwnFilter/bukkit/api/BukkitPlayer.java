@@ -8,9 +8,12 @@
  * of the License, or (at your option) any later version.
  */
 
-package com.pwn9.PwnFilter.bukkit;
+package com.pwn9.PwnFilter.bukkit.api;
 
 import com.pwn9.PwnFilter.api.MessageAuthor;
+import com.pwn9.PwnFilter.api.MinecraftPlayer;
+import com.pwn9.PwnFilter.bukkit.DeathMessages;
+import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -19,6 +22,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -29,7 +33,7 @@ import java.util.concurrent.ExecutionException;
  * <p/>
  * Created by ptoal on 15-08-31.
  */
-public class BukkitPlayer implements MessageAuthor {
+public class BukkitPlayer implements MessageAuthor, MinecraftPlayer {
 
     private final UUID bukkitPlayerId;
     private final Plugin plugin;
@@ -86,6 +90,7 @@ public class BukkitPlayer implements MessageAuthor {
         return bukkitPlayerId;
     }
 
+    @Override
     public boolean burn(final int duration, final String messageString) {
         new BukkitRunnable() {
             @Override
@@ -103,29 +108,51 @@ public class BukkitPlayer implements MessageAuthor {
 
     @Override
     public void sendMessage(final String message) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                Player bukkitPlayer = Bukkit.getPlayer(bukkitPlayerId);
-                if (bukkitPlayer != null) {
-                    bukkitPlayer.sendMessage(message);
+        PwnFilterPlugin.getBukkitAPI().safeBukkitDispatch(
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        Player bukkitPlayer = Bukkit.getPlayer(bukkitPlayerId);
+                        if (bukkitPlayer != null) {
+                            bukkitPlayer.sendMessage(message);
+                        }
+                    }
                 }
-            }
-        }.runTask(plugin);
+        );
     }
 
+    public void sendMessages(final List<String> messages) {
+        PwnFilterPlugin.getBukkitAPI().safeBukkitDispatch(
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        Player bukkitPlayer = Bukkit.getPlayer(bukkitPlayerId);
+                        if (bukkitPlayer != null) {
+                            for (String m : messages) {
+                                bukkitPlayer.sendMessage(m);
+                            }
+                        }
+                    }
+                }
+        );
+    }
+
+    @Override
     public void executeCommand(final String command) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                Player bukkitPlayer = Bukkit.getPlayer(bukkitPlayerId);
-                if (bukkitPlayer != null) {
-                    bukkitPlayer.performCommand(command);
-                }
-            }
-        }.runTask(plugin);
+        PwnFilterPlugin.getBukkitAPI().safeBukkitDispatch(
+
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        Player bukkitPlayer = Bukkit.getPlayer(bukkitPlayerId);
+                        if (bukkitPlayer != null) {
+                            bukkitPlayer.performCommand(command);
+                        }
+                    }
+                });
     }
 
+    @Override
     public boolean withdrawMoney(final Double amount, final String messageString) {
 
         if (PwnFilterPlugin.economy != null) {
@@ -148,27 +175,31 @@ public class BukkitPlayer implements MessageAuthor {
         return false;
     }
 
+    @Override
     public void kick(final String messageString) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                Player bukkitPlayer = Bukkit.getPlayer(bukkitPlayerId);
-                if (bukkitPlayer != null)
-                bukkitPlayer.kickPlayer(messageString);
-            }
-        }.runTask(plugin);
+        PwnFilterPlugin.getBukkitAPI().safeBukkitDispatch(
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        Player bukkitPlayer = Bukkit.getPlayer(bukkitPlayerId);
+                        if (bukkitPlayer != null)
+                            bukkitPlayer.kickPlayer(messageString);
+                    }
+                });
     }
 
+    @Override
     public void kill(final String messageString) {
         DeathMessages.addKilledPlayer(bukkitPlayerId, getName() + " " + messageString);
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                Player bukkitPlayer = Bukkit.getPlayer(bukkitPlayerId);
-                if (bukkitPlayer != null)
-                    bukkitPlayer.getPlayer().setHealth(0);
-            }
-        }.runTask(plugin);
+        PwnFilterPlugin.getBukkitAPI().safeBukkitDispatch(
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        Player bukkitPlayer = Bukkit.getPlayer(bukkitPlayerId);
+                        if (bukkitPlayer != null)
+                            bukkitPlayer.getPlayer().setHealth(0);
+                    }
+                });
     }
 
     public String getWorldName() {

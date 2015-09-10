@@ -11,9 +11,9 @@
 package com.pwn9.PwnFilter.rules.action.targeted;
 
 import com.pwn9.PwnFilter.FilterTask;
-import com.pwn9.PwnFilter.bukkit.BukkitPlayer;
-import com.pwn9.PwnFilter.rules.action.Action;
+import com.pwn9.PwnFilter.api.MinecraftPlayer;
 import com.pwn9.PwnFilter.bukkit.util.DefaultMessages;
+import com.pwn9.PwnFilter.rules.action.Action;
 
 import static com.pwn9.PwnFilter.util.tags.TagRegistry.replaceTags;
 
@@ -37,10 +37,10 @@ public class Kick implements Action {
     /** {@inheritDoc} */
     public boolean execute(final FilterTask filterTask ) {
 
-        if (filterTask.getAuthor() instanceof BukkitPlayer ) {
+        if (filterTask.getAuthor() instanceof MinecraftPlayer) {
 
             String outMessage = replaceTags(messageString, filterTask);
-            ((BukkitPlayer) filterTask.getAuthor()).kick(messageString);
+            ((MinecraftPlayer) filterTask.getAuthor()).kick(messageString);
             filterTask.addLogMessage("Kicked " + filterTask.getAuthor().getName() + ": " + messageString);
             return true;
         }

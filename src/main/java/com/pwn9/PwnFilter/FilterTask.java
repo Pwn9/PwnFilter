@@ -36,7 +36,7 @@ public class FilterTask {
     private final EnhancedString originalMessage; // Original message
     private EnhancedString modifiedMessage; // Modified message string
     private final MessageAuthor author; // Author that this event is connected to.
-    private final FilterClient listener;
+    private final FilterClient filterClient;
     private List<String> logMessages = new ArrayList<String>(); // Rules can add strings to this array.  They will be output to log if log=true
     private boolean logging = false;  // If true, actions will be logged
     private boolean aborted = false; // If set true by a rule, will stop further processing.
@@ -59,7 +59,7 @@ public class FilterTask {
         originalMessage = m;
         modifiedMessage = m;
         author = a;
-        listener = l;
+        filterClient = l;
     }
 
     /**
@@ -81,7 +81,7 @@ public class FilterTask {
     public FilterTask(EnhancedString m, UUID uuid, FilterClient l) {
         originalMessage = m;
         modifiedMessage = m;
-        listener = l;
+        filterClient = l;
         //TODO: Abstract this into a generic MessageAuthor lookup?
         author = PwnFilterPlugin.getBukkitAPI().getAuthor(uuid);
     }
@@ -156,7 +156,7 @@ public class FilterTask {
      * @return a {@link java.lang.String} object.
      */
     public String getListenerName() {
-        return listener.getShortName();
+        return filterClient.getShortName();
     }
     /**
      * <p>Getter for the field <code>originalMessage</code>.</p>
@@ -215,5 +215,9 @@ public class FilterTask {
 
     public void setPattern(Pattern pattern) {
         this.pattern = pattern;
+    }
+
+    public FilterClient getFilterClient() {
+        return filterClient;
     }
 }

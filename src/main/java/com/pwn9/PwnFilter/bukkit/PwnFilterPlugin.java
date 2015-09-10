@@ -14,7 +14,7 @@ import com.google.common.collect.MapMaker;
 import com.pwn9.PwnFilter.FilterEngine;
 import com.pwn9.PwnFilter.api.ClientManager;
 import com.pwn9.PwnFilter.api.FilterClient;
-import com.pwn9.PwnFilter.bukkit.cache.BukkitAPI;
+import com.pwn9.PwnFilter.bukkit.api.BukkitAPI;
 import com.pwn9.PwnFilter.bukkit.command.pfcls;
 import com.pwn9.PwnFilter.bukkit.command.pfdumpcache;
 import com.pwn9.PwnFilter.bukkit.command.pfmute;

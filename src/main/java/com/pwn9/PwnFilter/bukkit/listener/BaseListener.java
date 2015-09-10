@@ -16,6 +16,7 @@ import com.pwn9.PwnFilter.api.FilterClient;
 import com.pwn9.PwnFilter.rules.RuleChain;
 import com.pwn9.PwnFilter.rules.RuleChainListener;
 import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
 
 /**
  * User: ptoal
@@ -25,7 +26,7 @@ import org.bukkit.event.HandlerList;
  * @author ptoal
  * @version $Id: $Id
  */
-public abstract class BaseListener implements FilterClient,RuleChainListener {
+public abstract class BaseListener implements FilterClient,RuleChainListener, Listener {
     protected final PwnFilterPlugin plugin;
     protected boolean active;
     protected RuleChain ruleChain;

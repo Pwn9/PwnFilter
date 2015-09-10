@@ -12,7 +12,7 @@
 package com.pwn9.PwnFilter.bukkit.listener;
 
 import com.pwn9.PwnFilter.FilterTask;
-import com.pwn9.PwnFilter.bukkit.BukkitPlayer;
+import com.pwn9.PwnFilter.bukkit.api.BukkitPlayer;
 import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
 import com.pwn9.PwnFilter.bukkit.util.ColoredString;
 import com.pwn9.PwnFilter.rules.RuleChain;

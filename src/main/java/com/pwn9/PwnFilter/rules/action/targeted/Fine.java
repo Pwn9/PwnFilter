@@ -11,9 +11,9 @@
 package com.pwn9.PwnFilter.rules.action.targeted;
 
 import com.pwn9.PwnFilter.FilterTask;
-import com.pwn9.PwnFilter.bukkit.BukkitPlayer;
-import com.pwn9.PwnFilter.rules.action.Action;
+import com.pwn9.PwnFilter.api.MinecraftPlayer;
 import com.pwn9.PwnFilter.bukkit.util.DefaultMessages;
+import com.pwn9.PwnFilter.rules.action.Action;
 
 /**
  * Fine the user by extracting money from his economy account.
@@ -45,9 +45,9 @@ public class Fine implements Action {
     /** {@inheritDoc} */
     public boolean execute(final FilterTask filterTask ) {
 
-        if (filterTask.getAuthor() instanceof BukkitPlayer) {
+        if (filterTask.getAuthor() instanceof MinecraftPlayer) {
 
-            BukkitPlayer p = (BukkitPlayer)filterTask.getAuthor();
+            MinecraftPlayer p = (MinecraftPlayer)filterTask.getAuthor();
             if (p.withdrawMoney(fineAmount, messageString)) {
                 filterTask.addLogMessage(String.format("Fined %s : %f", filterTask.getAuthor().getName(), fineAmount));
                 return true;

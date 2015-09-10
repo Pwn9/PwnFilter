@@ -10,29 +10,20 @@
 
 package com.pwn9.PwnFilter.api;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
-import java.util.UUID;
-
 /**
- * MessageAuthors are the entities that write the message.  For example,
- * A Bukkit Player, an IRC user, etc.
+ * Implements Minecraft Player Actions
  *
- * Created by ptoal on 15-08-31.
+ * Created by ptoal on 15-09-10.
  */
-public interface MessageAuthor {
+public interface MinecraftPlayer {
 
-    boolean hasPermission(String permString);
+    void executeCommand(String cmd);
 
-    @NotNull
-    String getName();
+    boolean withdrawMoney(final Double amount, final String messageString);
 
-    @NotNull
-    UUID getID();
+    void kick(final String messageString);
 
-    void sendMessage(String message);
+    void kill(final String messageString);
 
-    void sendMessages(List<String> messages);
-
+    boolean burn(final int duration, final String messageString);
 }

@@ -11,7 +11,7 @@
 package com.pwn9.PwnFilter.rules.action.minecraft;
 
 import com.pwn9.PwnFilter.FilterTask;
-import com.pwn9.PwnFilter.bukkit.BukkitPlayer;
+import com.pwn9.PwnFilter.api.MinecraftPlayer;
 import com.pwn9.PwnFilter.rules.action.Action;
 import com.pwn9.PwnFilter.util.tags.TagRegistry;
 
@@ -23,6 +23,7 @@ import com.pwn9.PwnFilter.util.tags.TagRegistry;
  */
 @SuppressWarnings("UnusedDeclaration")
 public class Command implements Action {
+
     String command;
 
     /** {@inheritDoc} */
@@ -35,15 +36,15 @@ public class Command implements Action {
     public boolean execute(final FilterTask filterTask ) {
         filterTask.setCancelled(true);
         final String cmd;
-        if (filterTask.getAuthor() instanceof BukkitPlayer ) {
-            BukkitPlayer player = (BukkitPlayer)filterTask.getAuthor();
+        if (filterTask.getAuthor() instanceof MinecraftPlayer) {
+            MinecraftPlayer player = (MinecraftPlayer)filterTask.getAuthor();
 
             if (!command.isEmpty()) {
                 cmd = TagRegistry.replaceTags(command, filterTask);
             } else {
                 cmd = filterTask.getModifiedMessage().getRaw();
             }
-            filterTask.addLogMessage("Helped " + player.getName() + " execute command: " + cmd);
+            filterTask.addLogMessage("Helped " + filterTask.getAuthor().getName() + " execute command: " + cmd);
             player.executeCommand(cmd);
 
             return true;

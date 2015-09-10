@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -59,6 +60,11 @@ public class ActionTest {
 
         @Override
         public void sendMessage(String message) {
+
+        }
+
+        @Override
+        public void sendMessages(List<String> messages) {
 
         }
     };

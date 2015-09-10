@@ -8,7 +8,7 @@
  * of the License, or (at your option) any later version.
  */
 
-package com.pwn9.PwnFilter.bukkit.cache;
+package com.pwn9.PwnFilter.bukkit.api;
 
 import org.bukkit.World;
 

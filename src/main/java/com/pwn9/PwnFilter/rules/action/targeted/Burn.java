@@ -12,9 +12,9 @@ package com.pwn9.PwnFilter.rules.action.targeted;
 
 import com.pwn9.PwnFilter.FilterTask;
 import com.pwn9.PwnFilter.api.MessageAuthor;
-import com.pwn9.PwnFilter.bukkit.BukkitPlayer;
-import com.pwn9.PwnFilter.rules.action.Action;
+import com.pwn9.PwnFilter.api.MinecraftPlayer;
 import com.pwn9.PwnFilter.bukkit.util.DefaultMessages;
+import com.pwn9.PwnFilter.rules.action.Action;
 
 /**
  * Burns a player to death.
@@ -40,10 +40,12 @@ public class Burn implements Action {
     public boolean execute(final FilterTask filterTask ) {
         MessageAuthor target = filterTask.getAuthor();
 
-        if (target instanceof BukkitPlayer) {
-            if (((BukkitPlayer) target).burn(5000, messageString)) {
+        if (target instanceof MinecraftPlayer) {
+            if (((MinecraftPlayer)target).burn(5000, messageString)) {
                 filterTask.addLogMessage("Burned " + target.getName() + ": " + messageString);
             }
+        } else {
+            filterTask.addLogMessage("Target not flamable: " + target.getName());
         }
 
         return false;

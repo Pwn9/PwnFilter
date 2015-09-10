@@ -11,12 +11,10 @@
 package com.pwn9.PwnFilter.rules.action.minecraft;
 
 import com.pwn9.PwnFilter.FilterTask;
-import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
+import com.pwn9.PwnFilter.bukkit.api.BukkitServer;
 import com.pwn9.PwnFilter.rules.action.Action;
 import com.pwn9.PwnFilter.util.tags.TagRegistry;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 
 /**
  * Notify all users with the permission specified in notifyperm:
@@ -54,35 +52,9 @@ public class Notify implements Action {
         // Create the message to send
         final String sendString = TagRegistry.replaceTags(messageString, filterTask);
 
-        if (Bukkit.isPrimaryThread()) {
-            // We are in the main thread, just execute API calls directly.
-            notifyWithPerm(permissionString, sendString);
-        } else {
-            PwnFilterPlugin.getBukkitAPI().safeBukkitDispatch(
-                    new Runnable() {
-                        @Override
-                        public void run() {
-                            notifyWithPerm(permissionString, sendString);
-                        }
-                    });
-        }
+        return BukkitServer.getInstance().notifyWithPerm(permissionString, sendString);
 
-        return true;
     }
 
-    // Must be called thread-safely.
-    private void notifyWithPerm(final String permissionString, final String sendString) {
-        // Get all logged in players who have the required permission and send them the message
-
-        if (permissionString.equalsIgnoreCase("console")) {
-            Bukkit.getConsoleSender().sendMessage(sendString);
-        } else {
-            for (Player p : Bukkit.getOnlinePlayers()) {
-                if (p.hasPermission(permissionString)) {
-                    p.sendMessage(sendString);
-                }
-            }
-        }
-    }
 }
 

@@ -11,9 +11,9 @@
 package com.pwn9.PwnFilter.rules.action.targeted;
 
 import com.pwn9.PwnFilter.FilterTask;
-import com.pwn9.PwnFilter.bukkit.BukkitPlayer;
-import com.pwn9.PwnFilter.rules.action.Action;
+import com.pwn9.PwnFilter.api.MinecraftPlayer;
 import com.pwn9.PwnFilter.bukkit.util.DefaultMessages;
+import com.pwn9.PwnFilter.rules.action.Action;
 
 /**
  * Kill a player with a customized Death Message
@@ -35,9 +35,9 @@ public class Kill implements Action {
     /** {@inheritDoc} */
     public boolean execute(final FilterTask filterTask ) {
 
-        if (filterTask.getAuthor() instanceof BukkitPlayer) {
+        if (filterTask.getAuthor() instanceof MinecraftPlayer) {
 
-            ((BukkitPlayer) filterTask.getAuthor()).kill(messageString);
+            ((MinecraftPlayer) filterTask.getAuthor()).kill(messageString);
             filterTask.addLogMessage("Killed by Filter: " + filterTask.getAuthor().getName() + " " + messageString);
 
             return true;

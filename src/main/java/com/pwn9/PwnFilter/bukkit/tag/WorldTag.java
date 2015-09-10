@@ -12,7 +12,7 @@ package com.pwn9.PwnFilter.bukkit.tag;
 
 import com.pwn9.PwnFilter.FilterTask;
 import com.pwn9.PwnFilter.api.MessageAuthor;
-import com.pwn9.PwnFilter.bukkit.BukkitPlayer;
+import com.pwn9.PwnFilter.bukkit.api.BukkitPlayer;
 import com.pwn9.PwnFilter.util.tags.Tag;
 
 /**

@@ -11,11 +11,9 @@
 package com.pwn9.PwnFilter.rules.action.targeted;
 
 import com.pwn9.PwnFilter.FilterTask;
-import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
 import com.pwn9.PwnFilter.rules.action.Action;
 import com.pwn9.PwnFilter.util.tags.TagRegistry;
 import org.bukkit.ChatColor;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 
@@ -50,18 +48,11 @@ public class Respond implements Action {
             preparedMessages.add(TagRegistry.replaceTags(message, filterTask));
         }
 
+        filterTask.getAuthor().sendMessages(preparedMessages);
+
         filterTask.addLogMessage("Responded to " + filterTask.getAuthor().getName()
                 + " with: " + preparedMessages.get(0) + "...");
 
-        PwnFilterPlugin.getBukkitAPI().safeBukkitDispatch(
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        for (String m : preparedMessages) {
-                            filterTask.getAuthor().sendMessage(m);
-                        }
-                    }
-                });
         return true;
     }
 }

@@ -12,7 +12,6 @@
 package com.pwn9.PwnFilter.api;
 
 import com.pwn9.PwnFilter.rules.RuleChain;
-import org.bukkit.event.Listener;
 
 /**
  * Listeners that can call PwnFilter
@@ -24,7 +23,7 @@ import org.bukkit.event.Listener;
  * @author ptoal
  * @version $Id: $Id
  */
-public interface FilterClient extends Listener {
+public interface FilterClient {
 
     /**
      * A short name for this filter to be used in log messages and statistics.

@@ -20,6 +20,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.StringReader;
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -66,6 +67,11 @@ public class RuleSetTest {
 
         @Override
         public void sendMessage(String message) {
+
+        }
+
+        @Override
+        public void sendMessages(List<String> messages) {
 
         }
     };

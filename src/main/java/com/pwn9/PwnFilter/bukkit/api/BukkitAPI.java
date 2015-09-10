@@ -8,13 +8,12 @@
  * of the License, or (at your option) any later version.
  */
 
-package com.pwn9.PwnFilter.bukkit.cache;
+package com.pwn9.PwnFilter.bukkit.api;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.pwn9.PwnFilter.api.MessageAuthor;
-import com.pwn9.PwnFilter.bukkit.BukkitPlayer;
 import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
 import com.pwn9.PwnFilter.util.LogManager;
 import org.bukkit.Bukkit;

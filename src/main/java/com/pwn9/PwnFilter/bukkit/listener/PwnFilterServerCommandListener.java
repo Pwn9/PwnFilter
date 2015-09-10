@@ -11,7 +11,7 @@
 package com.pwn9.PwnFilter.bukkit.listener;
 
 import com.pwn9.PwnFilter.FilterTask;
-import com.pwn9.PwnFilter.bukkit.BukkitConsole;
+import com.pwn9.PwnFilter.bukkit.api.BukkitServer;
 import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
 import com.pwn9.PwnFilter.bukkit.util.ColoredString;
 import com.pwn9.PwnFilter.rules.RuleManager;
@@ -72,7 +72,7 @@ public class PwnFilterServerCommandListener extends BaseListener {
         if (!cmdlist.isEmpty() && !cmdlist.contains(cmdmessage)) return;
         if (cmdblist.contains(cmdmessage)) return;
 
-        FilterTask state = new FilterTask(new ColoredString(command), BukkitConsole.getInstance(), this);
+        FilterTask state = new FilterTask(new ColoredString(command), BukkitServer.getInstance(), this);
 
         // Take the message from the Command Event and send it through the filter.
 

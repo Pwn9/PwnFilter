@@ -21,8 +21,7 @@ import java.util.ArrayList;
 /**
  * Responds to the user with the string provided.
  *
- * @author ptoal
- * @version $Id: $Id
+ * TODO: Extract Broadcast actions from Minecraft to make them universal.
  */
 @SuppressWarnings("UnusedDeclaration")
 public class Broadcast implements Action {
@@ -32,12 +31,18 @@ public class Broadcast implements Action {
     public void init(String s)
     {
         for ( String message : s.split("\n") ) {
+            //TODO: Handle chatcolors outside of FilterEngine?
             messageStrings.add(ChatColor.translateAlternateColorCodes('&',message));
         }
     }
 
     /** {@inheritDoc} */
     public boolean execute(final FilterTask filterTask ) {
+
+        /*
+        TODO: Abstract out to a BroadcastDestination object, so that broadcasts
+        can be sent to more than just the minecraft server (eg: to IRC)
+         */
 
         final ArrayList<String> preparedMessages = new ArrayList<String>();
 

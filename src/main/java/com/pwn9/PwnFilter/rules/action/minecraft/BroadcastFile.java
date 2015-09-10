@@ -35,7 +35,9 @@ public class BroadcastFile implements Action {
     public void init(String s)
     {
         File textDir = PwnFilterPlugin.getInstance().getTextDir();
-        if (textDir == null) return; // Er... Probably should return something, or at least log...
+        if (textDir == null) {
+            return; // Er... Probably should return something, or at least log...
+        }
 
         File textfile = FileUtil.getFile(textDir,s,false);
         if (textfile == null) return;
