@@ -95,7 +95,7 @@ public class RuleSetTest {
         rs.loadConfigFile();
         FilterState testState = new FilterState("This is a test", author, mockClient);
         rs.apply(testState);
-        assertEquals("This WAS a test", testState.getModifiedMessage().getPlainString());
+        assertEquals("This WAS a test", testState.getModifiedMessage().toString());
     }
 
     @Test
@@ -123,7 +123,7 @@ public class RuleSetTest {
         ruleChain.loadConfigFile();
         FilterState testState = new FilterState("ShortCutPattern",author,mockClient);
         ruleChain.apply(testState);
-        Assert.assertEquals("Replaced", testState.getModifiedMessage().getPlainString());
+        Assert.assertEquals("Replaced", testState.getModifiedMessage().toString());
     }
 
     @After

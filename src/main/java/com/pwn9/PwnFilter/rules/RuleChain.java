@@ -145,19 +145,19 @@ public class RuleChain implements Chain,ChainEntry {
 
         if (state.pattern != null) {
             logManager.debugHigh("Debug last match: " + state.pattern.pattern());
-            logManager.debugHigh("Debug original: " + state.getOriginalMessage().getColoredString());
-            logManager.debugHigh("Debug current: " + state.getModifiedMessage().getColoredString());
+            logManager.debugHigh("Debug original: " + state.getOriginalMessage().getRaw());
+            logManager.debugHigh("Debug current: " + state.getModifiedMessage().getRaw());
             logManager.debugHigh("Debug log: " + (state.log ? "yes" : "no"));
             logManager.debugHigh("Debug deny: " + (state.cancel ? "yes" : "no"));
         } else {
-            logManager.debugHigh("[PwnFilter] Debug no match: " + state.getOriginalMessage().getColoredString());
+            logManager.debugHigh("[PwnFilter] Debug no match: " + state.getOriginalMessage().getRaw());
         }
 
         if (state.cancel){
             state.addLogMessage("<"+state.getAuthor().getName() + "> Original message cancelled.");
         } else if (state.pattern != null) {
             state.addLogMessage("|" + state.listener.getShortName() + "| SENT <" +
-                    state.getAuthor().getName() + "> " + state.getModifiedMessage().getPlainString());
+                    state.getAuthor().getName() + "> " + state.getModifiedMessage().toString());
         }
 
         for (String s : state.getLogMessages()) {

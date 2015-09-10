@@ -261,14 +261,14 @@ public class PointManager implements FilterClient {
         }
 
         public void executeAscending(UUID id) {
-            FilterState state = new FilterState("", id, _instance );
+            FilterState state = new FilterState(new SimpleString(""), id, _instance );
             for (Action a : actionsAscending ) {
                 a.execute(state);
             }
         }
 
         public void executeDescending(UUID id) {
-            FilterState state = new FilterState("", id, _instance );
+            FilterState state = new FilterState(new SimpleString(""), id, _instance );
             for (Action a : actionsDescending ) {
                 a.execute(state);
             }

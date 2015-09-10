@@ -12,7 +12,7 @@ package com.pwn9.PwnFilter.rules.action.core;
 
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.rules.action.Action;
-import com.pwn9.PwnFilter.bukkit.util.ColoredString;
+import com.pwn9.PwnFilter.util.EnhancedString;
 
 /**
  * Convert the matched text to uppercase.
@@ -31,7 +31,7 @@ public class Upper implements Action {
 
     /** {@inheritDoc} */
     public boolean execute(final FilterState state ) {
-        ColoredString cs = state.getModifiedMessage();
+        EnhancedString cs = state.getModifiedMessage();
         state.addLogMessage("Converting to uppercase.");
         state.setModifiedMessage(cs.patternToUpper(state.pattern));
 

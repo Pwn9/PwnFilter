@@ -88,8 +88,8 @@ public class ActionTest {
     public void testRandRep() {
         FilterState testState = new FilterState("randrep", author, mockClient);
         rs.apply(testState);
-        System.out.println(testState.getModifiedMessage().getPlainString());
-        assertTrue(testState.getModifiedMessage().getPlainString().matches("(random|replace)"));
+        System.out.println(testState.getModifiedMessage().toString());
+        assertTrue(testState.getModifiedMessage().toString().matches("(random|replace)"));
     }
 
     @Test

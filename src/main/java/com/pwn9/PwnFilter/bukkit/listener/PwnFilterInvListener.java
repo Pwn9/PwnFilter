@@ -14,6 +14,7 @@ package com.pwn9.PwnFilter.bukkit.listener;
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.bukkit.BukkitPlayer;
 import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
+import com.pwn9.PwnFilter.bukkit.util.ColoredString;
 import com.pwn9.PwnFilter.rules.RuleManager;
 import com.pwn9.PwnFilter.util.LogManager;
 import org.bukkit.Bukkit;
@@ -83,7 +84,7 @@ public class PwnFilterInvListener extends BaseListener {
         if (itemMeta != null && itemMeta.hasDisplayName()) {
             message = itemMeta.getDisplayName();
 
-            FilterState state = new FilterState(message, BukkitPlayer.getInstance(player, plugin), this);
+            FilterState state = new FilterState(new ColoredString(message), BukkitPlayer.getInstance(player, plugin), this);
 
             ruleChain.execute(state);
             if (state.cancel) event.setCancelled(true);
@@ -92,7 +93,7 @@ public class PwnFilterInvListener extends BaseListener {
             if (state.messageChanged()){
                 ItemStack newItem = new ItemStack(item);
                 ItemMeta newItemMeta = newItem.getItemMeta();
-                newItemMeta.setDisplayName(state.getModifiedMessage().getColoredString());
+                newItemMeta.setDisplayName(state.getModifiedMessage().getRaw());
                 newItem.setItemMeta(newItemMeta);
                 event.setCurrentItem(newItem);
             }

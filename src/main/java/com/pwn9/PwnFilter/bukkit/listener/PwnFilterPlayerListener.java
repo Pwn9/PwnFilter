@@ -13,8 +13,10 @@ package com.pwn9.PwnFilter.bukkit.listener;
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.bukkit.BukkitPlayer;
 import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
+import com.pwn9.PwnFilter.bukkit.util.ColoredString;
 import com.pwn9.PwnFilter.rules.RuleManager;
 import com.pwn9.PwnFilter.util.LogManager;
+import com.pwn9.PwnFilter.util.SimpleString;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -82,13 +84,13 @@ public class PwnFilterPlayerListener extends BaseListener {
 
         }
 
-        FilterState state = new FilterState(message,
+        FilterState state = new FilterState(new ColoredString(message),
                 BukkitPlayer.getInstance(event.getPlayer(),plugin), this);
 
         // Global decolor
         if ((PwnFilterPlugin.decolor) && !(PwnFilterPlugin.getBukkitAPI().getAuthor(player.getUniqueId()).hasPermission("pwnfilter.color"))) {
             // We are changing the state of the message.  Let's do that before any rules processing.
-            state.setModifiedMessage(state.getModifiedMessage().decolor());
+            state.setModifiedMessage(new SimpleString(state.getModifiedMessage().toString()));
         }
 
         // Take the message from the ChatEvent and send it through the filter.
@@ -97,7 +99,7 @@ public class PwnFilterPlayerListener extends BaseListener {
 
         // Only update the message if it has been changed.
         if (state.messageChanged()){
-            event.setMessage(state.getModifiedMessage().getColoredString());
+            event.setMessage(state.getModifiedMessage().getRaw());
         }
         if (state.cancel) event.setCancelled(true);
     }

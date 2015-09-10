@@ -40,7 +40,7 @@ public class ColoredStringTest extends TestCase {
         assertEquals("is th",cs.subSequence(5,10));
 
         // Basic setup tests
-        assertEquals(plainString, cs.getPlainString());
+        assertEquals(plainString, cs.toString());
         assertArrayEquals(codeArray, cs.getCodeArray());
         assertEquals(testString, cs.getColoredString());
         assertEquals(plainString, cs.toString());
@@ -49,13 +49,13 @@ public class ColoredStringTest extends TestCase {
         // Replace with plain text
         Pattern p = Pattern.compile("test");
         ColoredString modified = cs.replaceText(p, "derp");
-        assertEquals("This is the string under derp.",modified.getPlainString());
+        assertEquals("This is the string under derp.",modified.toString());
         assertEquals("&7This &9is&l the &1string&3 under derp.",modified.getColoredString());
 
         // Replace with colored text
         p = Pattern.compile("string");
         modified = cs.replaceText(p, "&3r&4a&5i&6n&7b&8o&9w");
-        assertEquals("This is the rainbow under test.", modified.getPlainString());
+        assertEquals("This is the rainbow under test.", modified.toString());
         assertEquals("&7This &9is&l the &1&3r&4a&5i&6n&7b&8o&9w&3 under test.", modified.getColoredString());
 
     }
@@ -68,12 +68,12 @@ public class ColoredStringTest extends TestCase {
         ColoredString cs1 = new ColoredString(test);
 
         assertEquals(test,cs1.getColoredString());
-        assertEquals(plain,cs1.getPlainString());
+        assertEquals(plain,cs1.toString());
 
-        ColoredString cs2 = new ColoredString("-member");
+        EnhancedString cs2 = new ColoredString("-member");
 
-        ColoredString modified2 = cs2.replaceText(p,"&9&l![MEMBERS]!:&r &aPlease &c&l/VOTE&r&a to get &9&l4 DIAMONDS&r&a /VOTE!");
-        assertEquals("&9&l![MEMBERS]!:&r &aPlease &c&l/VOTE&r&a to get &9&l4 DIAMONDS&r&a /VOTE!",modified2.getColoredString());
+        EnhancedString modified2 = cs2.replaceText(p,"&9&l![MEMBERS]!:&r &aPlease &c&l/VOTE&r&a to get &9&l4 DIAMONDS&r&a /VOTE!");
+        assertEquals("&9&l![MEMBERS]!:&r &aPlease &c&l/VOTE&r&a to get &9&l4 DIAMONDS&r&a /VOTE!",modified2.getRaw());
     }
 
     /**
@@ -88,9 +88,9 @@ public class ColoredStringTest extends TestCase {
     public void testReplaceText() {
         // Complex string test.  Make sure that characters are not lost.
         String test = "a&3test.";
-        ColoredString cs = new ColoredString(test);
-        ColoredString result = cs.replaceText(Pattern.compile("test"), "derp&4");
-        assertEquals(result.getColoredString(),"a&3derp&4.");
+        EnhancedString cs = new ColoredString(test);
+        EnhancedString result = cs.replaceText(Pattern.compile("test"), "derp&4");
+        assertEquals(result.getRaw(),"a&3derp&4.");
     }
 
     public void testReplaceWithFormatAtEnd() {
@@ -98,8 +98,8 @@ public class ColoredStringTest extends TestCase {
         Pattern p = Pattern.compile("string");
         String replacement = "hello";
 
-        ColoredString cs = new ColoredString(test);
-        assertEquals("Test hello.&1",cs.replaceText(p,replacement).getColoredString());
+        EnhancedString cs = new ColoredString(test);
+        assertEquals("Test hello.&1",cs.replaceText(p,replacement).getRaw());
     }
 
     public void testReplaceWithFormatAtEndOfReplacement() {
@@ -107,8 +107,8 @@ public class ColoredStringTest extends TestCase {
         Pattern p = Pattern.compile("string");
         String replacement = "hello&1";
 
-        ColoredString cs = new ColoredString(test);
-        assertEquals("Test hello&1.", cs.replaceText(p,replacement).getColoredString());
+        EnhancedString cs = new ColoredString(test);
+        assertEquals("Test hello&1.", cs.replaceText(p,replacement).getRaw());
 
     }
 
@@ -116,9 +116,9 @@ public class ColoredStringTest extends TestCase {
         String test = "&This is a &1test&2testa&3test.&";
         Pattern p = Pattern.compile("test");
         String replacement = "derp&4";
-        ColoredString cs = new ColoredString(test);
-        ColoredString result = cs.replaceText(p, replacement);
-        assertEquals("&This is a &1derp&4&2derp&4a&3derp&4.&",result.getColoredString());
+        EnhancedString cs = new ColoredString(test);
+        EnhancedString result = cs.replaceText(p, replacement);
+        assertEquals("&This is a &1derp&4&2derp&4a&3derp&4.&",result.getRaw());
     }
 
 

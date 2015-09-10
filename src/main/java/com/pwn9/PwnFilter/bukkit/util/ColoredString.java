@@ -10,6 +10,7 @@
 
 package com.pwn9.PwnFilter.bukkit.util;
 
+import com.pwn9.PwnFilter.util.EnhancedString;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -37,7 +38,7 @@ import java.util.regex.Pattern;
  * @author ptoal
  * @version $Id: $Id
  */
-public final class ColoredString implements CharSequence {
+public final class ColoredString implements EnhancedString {
 
     private final String[] codes; // The String array containing the color / formatting codes
     private final char[] plain; // the plain text
@@ -133,18 +134,7 @@ public final class ColoredString implements CharSequence {
     @Override
     @NotNull
     public String toString() {
-        return getPlainString();
-    }
-
-
-    // Strip all codes out of this string.
-    /**
-     * <p>decolor.</p>
-     *
-     * @return a {@link ColoredString} object.
-     */
-    public ColoredString decolor() {
-        return new ColoredString(new String(plain));
+        return new String(plain);
     }
 
     // Return a string with color codes interleaved.
@@ -165,16 +155,6 @@ public final class ColoredString implements CharSequence {
         if (codes[codes.length-1] != null)
             sb.append(codes[codes.length-1]);
         return sb.toString();
-    }
-
-    // Return a string without codes
-    /**
-     * <p>getPlainString.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
-    public String getPlainString() {
-        return new String(plain);
     }
 
     // Return the char array with the code information.
@@ -210,6 +190,7 @@ public final class ColoredString implements CharSequence {
      * @param rText Replacement Text
      * @return a {@link ColoredString} object.
      */
+    @Override
     public ColoredString replaceText(Pattern p, String rText) {
         Matcher m = p.matcher(new String(plain));
         ColoredString replacement = new ColoredString(rText);
@@ -351,5 +332,10 @@ public final class ColoredString implements CharSequence {
         } else {
             return getColoredString().equals(obj);
         }
+    }
+
+    @Override
+    public String getRaw() {
+        return getColoredString();
     }
 }

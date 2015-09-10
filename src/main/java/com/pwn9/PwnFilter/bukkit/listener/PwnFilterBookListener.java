@@ -14,6 +14,7 @@ package com.pwn9.PwnFilter.bukkit.listener;
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.bukkit.BukkitPlayer;
 import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
+import com.pwn9.PwnFilter.bukkit.util.ColoredString;
 import com.pwn9.PwnFilter.rules.RuleManager;
 import com.pwn9.PwnFilter.util.LogManager;
 import org.bukkit.Bukkit;
@@ -75,12 +76,12 @@ public class PwnFilterBookListener extends BaseListener {
         if (bookMeta.hasTitle()) {
             // Run title through filter.
             message = bookMeta.getTitle();
-            FilterState state = new FilterState(message,
+            FilterState state = new FilterState(new ColoredString(message),
                     BukkitPlayer.getInstance(player,plugin), this);
             ruleChain.execute(state);
             if (state.cancel) event.setCancelled(true);
             if (state.messageChanged()) {
-                bookMeta.setTitle(state.getModifiedMessage().getColoredString());
+                bookMeta.setTitle(state.getModifiedMessage().getRaw());
                 event.setNewBookMeta(bookMeta);
             }
         }
@@ -90,14 +91,14 @@ public class PwnFilterBookListener extends BaseListener {
             List<String> newPages = new ArrayList<String>();
             boolean modified = false;
             for (String page : bookMeta.getPages()) {
-                FilterState state = new FilterState(page,
-                        BukkitPlayer.getInstance(player, plugin), this);
+                FilterState state = new FilterState(new ColoredString(page),
+                        BukkitPlayer.getInstance(player.getUniqueId(), plugin), this);
                 ruleChain.execute(state);
                 if (state.isCancelled()) {
                     event.setCancelled(true);
                 }
                 if (state.messageChanged()) {
-                    page = state.getModifiedMessage().getColoredString();
+                    page = state.getModifiedMessage().getRaw();
                     modified = true;
                 }
                 newPages.add(page);

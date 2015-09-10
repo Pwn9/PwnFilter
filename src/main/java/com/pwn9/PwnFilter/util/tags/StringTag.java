@@ -20,6 +20,6 @@ public class StringTag implements Tag {
 
     @Override
     public java.lang.String getValue(FilterState state) {
-        return state.getModifiedMessage().getColoredString();
+        return state.getModifiedMessage().getRaw();
     }
 }

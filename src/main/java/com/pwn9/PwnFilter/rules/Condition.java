@@ -133,12 +133,12 @@ public class Condition {
                 }
             case string:
                 for (String check: parameters.split("\\|")) {
-                    if (state.getOriginalMessage().getPlainString().toUpperCase().contains(check.toUpperCase())) matched=true;
+                    if (state.getOriginalMessage().toString().toUpperCase().contains(check.toUpperCase())) matched=true;
                 }
             case command:
                 for (String check: parameters.split("\\|")) {
                     if (state.getListenerName().equals("COMMAND")) {
-                        String command = state.getOriginalMessage().getPlainString().split("\\s")[0].replaceFirst("^\\/","");
+                        String command = state.getOriginalMessage().toString().split("\\s")[0].replaceFirst("^\\/","");
                         if (command.toUpperCase().matches(check.toUpperCase())) matched = true;
                     }
                 }

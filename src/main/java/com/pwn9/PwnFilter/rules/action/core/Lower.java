@@ -12,7 +12,7 @@ package com.pwn9.PwnFilter.rules.action.core;
 
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.rules.action.Action;
-import com.pwn9.PwnFilter.bukkit.util.ColoredString;
+import com.pwn9.PwnFilter.util.EnhancedString;
 
 /**
  * Convert the matched text to lowercase.
@@ -31,7 +31,7 @@ public class Lower implements Action {
 
     /** {@inheritDoc} */
     public boolean execute(final FilterState state ) {
-        ColoredString cs = state.getModifiedMessage();
+        EnhancedString cs = state.getModifiedMessage();
         state.addLogMessage("Converting to lowercase.");
         state.setModifiedMessage(cs.patternToLower(state.pattern));
 

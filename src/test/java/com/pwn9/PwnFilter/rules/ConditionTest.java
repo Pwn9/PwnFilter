@@ -81,10 +81,10 @@ public class ConditionTest {
     public void testIgnoreString() {
         FilterState testState = new FilterState("Ignore string baseline test.", author, mockClient);
         rs.apply(testState);
-        assertEquals("Ignore replaced baseline test.", testState.getModifiedMessage().getPlainString());
+        assertEquals("Ignore replaced baseline test.", testState.getModifiedMessage().toString());
         FilterState state2 = new FilterState("Ignore string qwerty test.", author, mockClient);
         rs.apply(state2);
-        assertEquals("Ignore string qwerty test.",state2.getModifiedMessage().getPlainString());
+        assertEquals("Ignore string qwerty test.",state2.getModifiedMessage().toString());
 
     }
 
@@ -92,28 +92,28 @@ public class ConditionTest {
     public void testIgnoreCommand() {
         FilterState testState1 = new FilterState("Ignore baseline command test", author, new PwnFilterCommandListener(mockPlugin));
         rs.apply(testState1);
-        assertEquals("Ignore baseline replace command", testState1.getModifiedMessage().getPlainString());
+        assertEquals("Ignore baseline replace command", testState1.getModifiedMessage().toString());
 
         FilterState testState2 = new FilterState("/tell Ignore command test", author, new PwnFilterCommandListener(mockPlugin));
         rs.apply(testState2);
-        assertEquals("/tell Ignore command test",testState2.getModifiedMessage().getPlainString());
+        assertEquals("/tell Ignore command test",testState2.getModifiedMessage().toString());
     }
 
     @Test
     public void testIgnoreDoesntMatch() {
         FilterState testState2 = new FilterState("testestest banned", author, mockClient);
         rs.apply(testState2);
-        assertEquals("testestest matched",testState2.getModifiedMessage().getPlainString());
+        assertEquals("testestest matched",testState2.getModifiedMessage().toString());
     }
 
     @Test
     public void testComandConditionOnlyMatchesCommandHandler() {
         FilterState testState = new FilterState("tell banned", author, new PwnFilterPlayerListener(mockPlugin));
         rs.apply(testState);
-        assertEquals("tell matched",testState.getModifiedMessage().getPlainString());
+        assertEquals("tell matched",testState.getModifiedMessage().toString());
         FilterState testState2 = new FilterState("tell banned", author, new PwnFilterCommandListener(mockPlugin));
         rs.apply(testState2);
-        assertEquals("tell banned", testState2.getModifiedMessage().getPlainString());
+        assertEquals("tell banned", testState2.getModifiedMessage().toString());
     }
 
     @After

@@ -13,8 +13,10 @@ package com.pwn9.PwnFilter;
 import com.pwn9.PwnFilter.api.FilterClient;
 import com.pwn9.PwnFilter.api.MessageAuthor;
 import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
-import com.pwn9.PwnFilter.rules.Rule;
 import com.pwn9.PwnFilter.bukkit.util.ColoredString;
+import com.pwn9.PwnFilter.rules.Rule;
+import com.pwn9.PwnFilter.util.EnhancedString;
+import com.pwn9.PwnFilter.util.SimpleString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,9 +45,9 @@ import java.util.regex.Pattern;
 
 @SuppressWarnings("UnusedDeclaration")
 public class FilterState {
-    private final ColoredString originalMessage; // Original message
-    private ColoredString modifiedMessage; // Modified message string
-    private ColoredString unfilteredMessage; // message string for "raw" messages.
+    private final EnhancedString originalMessage; // Original message
+    private EnhancedString modifiedMessage; // Modified message string
+    private EnhancedString unfilteredMessage; // message string for "raw" messages.
     private final MessageAuthor author; // Player that this event is connected to.
     public final FilterClient listener;
     final int messageLen; // New message can't be longer than original.
@@ -67,12 +69,22 @@ public class FilterState {
      * @param a  a {@link MessageAuthor} object.
      * @param l a {@link FilterClient} object.
      */
-    public FilterState(String m, MessageAuthor a, FilterClient l) {
-        originalMessage = new ColoredString(m);
-        modifiedMessage = new ColoredString(m);
+    public FilterState(EnhancedString m, MessageAuthor a, FilterClient l) {
+        originalMessage = m;
+        modifiedMessage = m;
         messageLen = originalMessage.length();
         author = a;
         listener = l;
+    }
+
+    /**
+     * A convenience Constructor that wraps a plain String
+     * @param s A String containing the original text to run rules on.
+     * @param a The {@link MessageAuthor } of this message
+     * @param l The {@link FilterClient } that generated this message
+     */
+    public FilterState(String s, MessageAuthor a, FilterClient l) {
+        this(new SimpleString(s), a, l);
     }
 
     /**
@@ -81,9 +93,9 @@ public class FilterState {
      * @param uuid Unique ID of the Author
      * @param l Listener that is calling.
      */
-    public FilterState(String m, UUID uuid, FilterClient l) {
-        originalMessage = new ColoredString(m);
-        modifiedMessage = new ColoredString(m);
+    public FilterState(EnhancedString m, UUID uuid, FilterClient l) {
+        originalMessage = m;
+        modifiedMessage = m;
         messageLen = originalMessage.length();
         listener = l;
         author = PwnFilterPlugin.getBukkitAPI().getAuthor(uuid);
@@ -114,7 +126,7 @@ public class FilterState {
      * @return true if the modified message is different than the original.
      */
     public boolean messageChanged() {
-        return !originalMessage.getColoredString().equals(modifiedMessage.getColoredString());
+        return !originalMessage.equals(modifiedMessage);
     }
 
     /**
@@ -166,8 +178,8 @@ public class FilterState {
      *
      * @return a new Instance of ColouredString with a copy of the originalMessage.
      */
-    public ColoredString getOriginalMessage() {
-        return new ColoredString(originalMessage);
+    public EnhancedString getOriginalMessage() {
+        return originalMessage;
     }
 
     /**
@@ -175,8 +187,8 @@ public class FilterState {
      *
      * @return a {@link ColoredString} object.
      */
-    public ColoredString getModifiedMessage() {
-        return new ColoredString(modifiedMessage);
+    public EnhancedString getModifiedMessage() {
+        return modifiedMessage;
     }
 
     /**
@@ -184,7 +196,7 @@ public class FilterState {
      *
      * @param newMessage a {@link ColoredString} object.
      */
-    public void setModifiedMessage(ColoredString newMessage) {
+    public void setModifiedMessage(EnhancedString newMessage) {
         modifiedMessage = newMessage;
     }
 
@@ -193,7 +205,7 @@ public class FilterState {
      *
      * @return a {@link ColoredString} object.
      */
-    public ColoredString getUnfilteredMessage() {
+    public EnhancedString getUnfilteredMessage() {
         return unfilteredMessage;
     }
 
@@ -202,7 +214,7 @@ public class FilterState {
      *
      * @param newMessage a {@link ColoredString} object.
      */
-    public void setUnfilteredMessage(ColoredString newMessage) {
+    public void setUnfilteredMessage(EnhancedString newMessage) {
         unfilteredMessage = newMessage;
     }
 

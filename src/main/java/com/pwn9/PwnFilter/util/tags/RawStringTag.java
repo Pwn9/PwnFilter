@@ -20,6 +20,6 @@ public class RawStringTag implements Tag {
 
     @Override
     public String getValue(FilterState state) {
-        return state.getOriginalMessage().getColoredString();
+        return state.getOriginalMessage().getRaw();
     }
 }

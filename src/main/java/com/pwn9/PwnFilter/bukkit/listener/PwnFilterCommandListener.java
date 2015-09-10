@@ -14,6 +14,7 @@ package com.pwn9.PwnFilter.bukkit.listener;
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.bukkit.BukkitPlayer;
 import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
+import com.pwn9.PwnFilter.bukkit.util.ColoredString;
 import com.pwn9.PwnFilter.rules.RuleChain;
 import com.pwn9.PwnFilter.rules.RuleManager;
 import com.pwn9.PwnFilter.util.LogManager;
@@ -109,7 +110,7 @@ public class PwnFilterCommandListener extends BaseListener {
         //Gets the actual command as a string
         String cmdmessage = message.substring(1).split(" ")[0];
 
-        FilterState state = new FilterState(message, BukkitPlayer.getInstance(player, plugin), this);
+        FilterState state = new FilterState(new ColoredString(message), BukkitPlayer.getInstance(player, plugin), this);
 
         // Check to see if we should treat this command as chat (eg: /tell)
         if (cmdchat.contains(cmdmessage)) {
@@ -144,11 +145,11 @@ public class PwnFilterCommandListener extends BaseListener {
 
         // Only update the message if it has been changed.
         if (state.messageChanged()){
-            if (state.getModifiedMessage().getPlainString().isEmpty()) {
+            if (state.getModifiedMessage().toString().isEmpty()) {
                 event.setCancelled(true);
                 return;
             }
-            event.setMessage(state.getModifiedMessage().getColoredString());
+            event.setMessage(state.getModifiedMessage().getRaw());
         }
 
         if (state.cancel) event.setCancelled(true);

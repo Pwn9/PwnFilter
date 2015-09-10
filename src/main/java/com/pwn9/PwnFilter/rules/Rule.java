@@ -148,10 +148,10 @@ public class Rule implements ChainEntry {
         // Check if action matches the current state of the message
 
         if (LogManager.debugMode.compareTo(LogManager.DebugModes.high) >= 0) {
-            LogManager.logger.info("Testing Pattern: '" + pattern.toString() + "' on string: '" + state.getModifiedMessage().getPlainString()+"'");
+            LogManager.logger.info("Testing Pattern: '" + pattern.toString() + "' on string: '" + state.getModifiedMessage().toString()+"'");
         }
 
-            LimitedRegexCharSequence limitedRegexCharSequence = new LimitedRegexCharSequence(state.getModifiedMessage().getPlainString(),100);
+            LimitedRegexCharSequence limitedRegexCharSequence = new LimitedRegexCharSequence(state.getModifiedMessage().toString(),100);
             final Matcher matcher = pattern.matcher(limitedRegexCharSequence);
         // If we don't match, return immediately with the original message
         try {
@@ -169,7 +169,7 @@ public class Rule implements ChainEntry {
         state.addLogMessage("|" + state.listener.getShortName() +  "| MATCH " +
                 (id.isEmpty()?"":"("+id+")") +
                 " <" +
-                state.getAuthor().getName() + "> " + state.getModifiedMessage().getPlainString());
+                state.getAuthor().getName() + "> " + state.getModifiedMessage().toString());
         LogManager.getInstance().debugLow("Match String: " + matcher.group());
 
 

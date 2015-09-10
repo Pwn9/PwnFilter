@@ -41,7 +41,7 @@ public class Command implements Action {
             if (!command.isEmpty()) {
                 cmd = TagRegistry.replaceTags(command, state);
             } else {
-                cmd = state.getModifiedMessage().getColoredString();
+                cmd = state.getModifiedMessage().getRaw();
             }
             state.addLogMessage("Helped " + player.getName() + " execute command: " + cmd);
             player.executeCommand(cmd);

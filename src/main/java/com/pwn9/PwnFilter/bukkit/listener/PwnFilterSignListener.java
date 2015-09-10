@@ -13,6 +13,7 @@ package com.pwn9.PwnFilter.bukkit.listener;
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.bukkit.BukkitPlayer;
 import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
+import com.pwn9.PwnFilter.bukkit.util.ColoredString;
 import com.pwn9.PwnFilter.rules.RuleManager;
 import com.pwn9.PwnFilter.util.LogManager;
 import org.bukkit.Bukkit;
@@ -74,7 +75,7 @@ public class PwnFilterSignListener extends BaseListener {
         }
         String signLines = builder.toString().trim();
 
-        FilterState state = new FilterState(signLines,
+        FilterState state = new FilterState(new ColoredString(signLines),
                 BukkitPlayer.getInstance(event.getPlayer(),plugin), this);
 
         ruleChain.execute(state);
@@ -86,9 +87,9 @@ public class PwnFilterSignListener extends BaseListener {
 
             // Global decolor
             if ((PwnFilterPlugin.decolor) && !(PwnFilterPlugin.getBukkitAPI().getAuthor(event.getPlayer().getUniqueId()).hasPermission("pwnfilter.color"))) {
-                Collections.addAll(newLines,state.getModifiedMessage().getPlainString().split("\t"));
+                Collections.addAll(newLines,state.getModifiedMessage().toString().split("\t"));
             } else {
-                Collections.addAll(newLines,state.getModifiedMessage().getColoredString().split("\t"));
+                Collections.addAll(newLines,state.getModifiedMessage().getRaw().split("\t"));
             }
 
             String[] outputLines = new String[4];
@@ -116,7 +117,7 @@ public class PwnFilterSignListener extends BaseListener {
             event.setCancelled(true);
             state.getAuthor().sendMessage("Your sign broke, there must be something wrong with it.");
             state.addLogMessage("SIGN " + state.getAuthor().getName() + " sign text: "
-                    + state.getOriginalMessage().getColoredString());
+                    + state.getOriginalMessage().getRaw());
         }
 
     }
