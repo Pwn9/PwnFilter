@@ -8,7 +8,6 @@ import com.pwn9.PwnFilter.bukkit.listener.PwnFilterCommandListener;
 import com.pwn9.PwnFilter.bukkit.listener.PwnFilterPlayerListener;
 import com.pwn9.PwnFilter.rules.action.RegisterActions;
 import com.pwn9.PwnFilter.util.LogManager;
-import org.bukkit.configuration.Configuration;
 import org.easymock.EasyMock;
 import org.jetbrains.annotations.NotNull;
 import org.junit.After;
@@ -37,7 +36,7 @@ public class ConditionTest {
         public String getShortName() { return "CONDITIONTEST"; }
         public RuleChain getRuleChain() { return ruleManager.getRuleChain("conditionTests.txt");}
         public boolean isActive() { return true; }
-        public void activate(Configuration config) {}
+        public void activate() {}
         public void shutdown() {}
     };
     MessageAuthor author = new MessageAuthor() {

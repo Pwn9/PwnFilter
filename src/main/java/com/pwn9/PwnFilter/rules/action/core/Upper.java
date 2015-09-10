@@ -12,7 +12,7 @@ package com.pwn9.PwnFilter.rules.action.core;
 
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.rules.action.Action;
-import com.pwn9.PwnFilter.util.ColoredString;
+import com.pwn9.PwnFilter.bukkit.util.ColoredString;
 
 /**
  * Convert the matched text to uppercase.

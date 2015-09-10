@@ -14,7 +14,7 @@ import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.api.MessageAuthor;
 import com.pwn9.PwnFilter.bukkit.BukkitPlayer;
 import com.pwn9.PwnFilter.rules.action.Action;
-import com.pwn9.PwnFilter.util.DefaultMessages;
+import com.pwn9.PwnFilter.bukkit.util.DefaultMessages;
 
 /**
  * Burns a player to death.

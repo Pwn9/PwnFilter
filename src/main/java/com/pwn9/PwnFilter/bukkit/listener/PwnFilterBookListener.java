@@ -17,7 +17,6 @@ import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
 import com.pwn9.PwnFilter.rules.RuleManager;
 import com.pwn9.PwnFilter.util.LogManager;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
@@ -123,16 +122,16 @@ public class PwnFilterBookListener extends BaseListener {
      * they could just enable / disable the use of the filter.
      */
     @Override
-    public void activate(Configuration config) {
+    public void activate() {
         if (isActive()) return;
 
         setRuleChain(RuleManager.getInstance().getRuleChain("book.txt"));
 
 
         PluginManager pm = Bukkit.getPluginManager();
-        EventPriority priority = EventPriority.valueOf(config.getString("bookpriority", "LOWEST").toUpperCase());
+        EventPriority priority = EventPriority.valueOf(plugin.getConfig().getString("bookpriority", "LOWEST").toUpperCase());
 
-        if (!active && config.getBoolean("bookfilter")) {
+        if (!active && plugin.getConfig().getBoolean("bookfilter")) {
             // Now register the listener with the appropriate priority
             pm.registerEvent(PlayerEditBookEvent.class, this, priority,
                     new EventExecutor() {

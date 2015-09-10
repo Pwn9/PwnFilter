@@ -11,7 +11,7 @@
 package com.pwn9.PwnFilter.rules;
 
 import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
-import com.pwn9.PwnFilter.util.FileUtil;
+import com.pwn9.PwnFilter.bukkit.util.FileUtil;
 import com.pwn9.PwnFilter.util.LogManager;
 
 import java.io.File;

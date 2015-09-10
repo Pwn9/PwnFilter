@@ -16,7 +16,6 @@ import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
 import com.pwn9.PwnFilter.rules.RuleManager;
 import com.pwn9.PwnFilter.util.LogManager;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
@@ -114,14 +113,14 @@ public class PwnFilterPlayerListener extends BaseListener {
      * they could just enable / disable the use of the filter.
      */
     @Override
-    public void activate(Configuration config) {
+    public void activate() {
 
         if (isActive()) return;
 
         setRuleChain(RuleManager.getInstance().getRuleChain("chat.txt"));
 
         PluginManager pm = Bukkit.getServer().getPluginManager();
-        EventPriority priority = EventPriority.valueOf(config.getString("chatpriority", "LOWEST").toUpperCase());
+        EventPriority priority = EventPriority.valueOf(plugin.getConfig().getString("chatpriority", "LOWEST").toUpperCase());
 
         /* Hook up the Listener for PlayerChat events */
         pm.registerEvent(AsyncPlayerChatEvent.class, this, priority,

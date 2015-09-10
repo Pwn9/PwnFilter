@@ -18,7 +18,6 @@ import com.pwn9.PwnFilter.rules.RuleChain;
 import com.pwn9.PwnFilter.rules.RuleManager;
 import com.pwn9.PwnFilter.util.LogManager;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
@@ -59,7 +58,7 @@ public class PwnFilterCommandListener extends BaseListener {
     }
 
     /** {@inheritDoc} */
-    public void activate(Configuration config) {
+    public void activate() {
         if (isActive()) return;
 
         cmdlist = plugin.getConfig().getStringList("cmdlist");
@@ -69,8 +68,8 @@ public class PwnFilterCommandListener extends BaseListener {
         setRuleChain(RuleManager.getInstance().getRuleChain("command.txt"));
         chatRuleChain = RuleManager.getInstance().getRuleChain("chat.txt");
 
-        EventPriority priority = EventPriority.valueOf(config.getString("cmdpriority", "LOWEST").toUpperCase());
-        if (config.getBoolean("commandfilter")) {
+        EventPriority priority = EventPriority.valueOf(plugin.getConfig().getString("cmdpriority", "LOWEST").toUpperCase());
+        if (plugin.getConfig().getBoolean("commandfilter")) {
             PluginManager pm = Bukkit.getPluginManager();
             pm.registerEvent(PlayerCommandPreprocessEvent.class, this, priority,
                     new EventExecutor() {

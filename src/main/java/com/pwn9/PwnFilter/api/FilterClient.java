@@ -12,7 +12,6 @@
 package com.pwn9.PwnFilter.api;
 
 import com.pwn9.PwnFilter.rules.RuleChain;
-import org.bukkit.configuration.Configuration;
 import org.bukkit.event.Listener;
 
 /**
@@ -59,10 +58,8 @@ public interface FilterClient extends Listener {
      * These methods could either register / deregister the listener with Bukkit, or
      * they could just enable / disable the use of the filter.
      *
-     * @param config PwnFilter Configuration object, which the plugin can read for configuration
-     *               information. (eg: config.getString("ruledir")
      */
-    void activate(Configuration config);
+    void activate();
 
     /**
      * Shutdown this listener.  This method can be called either by the owning plugin

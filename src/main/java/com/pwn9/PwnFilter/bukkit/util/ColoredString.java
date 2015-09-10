@@ -8,7 +8,9 @@
  * of the License, or (at your option) any later version.
  */
 
-package com.pwn9.PwnFilter.util;
+package com.pwn9.PwnFilter.bukkit.util;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.regex.Matcher;
@@ -86,7 +88,7 @@ public final class ColoredString implements CharSequence {
     /**
      * <p>Constructor for ColoredString.</p>
      *
-     * @param c a {@link com.pwn9.PwnFilter.util.ColoredString} object.
+     * @param c a {@link ColoredString} object.
      */
     public ColoredString(ColoredString c) {
         // Create a copy of the original array.
@@ -129,8 +131,9 @@ public final class ColoredString implements CharSequence {
 
     /** {@inheritDoc} */
     @Override
+    @NotNull
     public String toString() {
-        return getColoredString();
+        return getPlainString();
     }
 
 
@@ -138,7 +141,7 @@ public final class ColoredString implements CharSequence {
     /**
      * <p>decolor.</p>
      *
-     * @return a {@link com.pwn9.PwnFilter.util.ColoredString} object.
+     * @return a {@link ColoredString} object.
      */
     public ColoredString decolor() {
         return new ColoredString(new String(plain));
@@ -205,7 +208,7 @@ public final class ColoredString implements CharSequence {
      *
      * @param p Regex Pattern
      * @param rText Replacement Text
-     * @return a {@link com.pwn9.PwnFilter.util.ColoredString} object.
+     * @return a {@link ColoredString} object.
      */
     public ColoredString replaceText(Pattern p, String rText) {
         Matcher m = p.matcher(new String(plain));
@@ -294,7 +297,7 @@ public final class ColoredString implements CharSequence {
      * <p>patternToLower.</p>
      *
      * @param p a {@link java.util.regex.Pattern} object.
-     * @return a {@link com.pwn9.PwnFilter.util.ColoredString} object.
+     * @return a {@link ColoredString} object.
      */
     public ColoredString patternToLower (Pattern p) {
         Matcher m = p.matcher(new String(plain));
@@ -311,7 +314,7 @@ public final class ColoredString implements CharSequence {
      * <p>patternToUpper.</p>
      *
      * @param p a {@link java.util.regex.Pattern} object.
-     * @return a {@link com.pwn9.PwnFilter.util.ColoredString} object.
+     * @return a {@link ColoredString} object.
      */
     public ColoredString patternToUpper (Pattern p) {
         Matcher m = p.matcher(new String(plain));

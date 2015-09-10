@@ -16,7 +16,6 @@ import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
 import com.pwn9.PwnFilter.rules.RuleManager;
 import com.pwn9.PwnFilter.util.LogManager;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.Configuration;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -98,7 +97,7 @@ public class PwnFilterServerCommandListener extends BaseListener {
      * they could just enable / disable the use of the filter.
      */
     @Override
-    public void activate(Configuration config) {
+    public void activate() {
         if (isActive()) return;
 
         cmdlist = plugin.getConfig().getStringList("cmdlist");
@@ -106,10 +105,10 @@ public class PwnFilterServerCommandListener extends BaseListener {
 
         setRuleChain(RuleManager.getInstance().getRuleChain("console.txt"));
 
-        if (config.getBoolean("consolefilter")) {
+        if (plugin.getConfig().getBoolean("consolefilter")) {
 
             PluginManager pm = Bukkit.getPluginManager();
-            EventPriority priority = EventPriority.valueOf(config.getString("cmdpriority", "LOWEST").toUpperCase());
+            EventPriority priority = EventPriority.valueOf(plugin.getConfig().getString("cmdpriority", "LOWEST").toUpperCase());
 
             pm.registerEvent(ServerCommandEvent.class, this, priority,
                     new EventExecutor() {

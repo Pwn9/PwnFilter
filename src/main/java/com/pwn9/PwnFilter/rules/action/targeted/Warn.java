@@ -13,7 +13,7 @@ package com.pwn9.PwnFilter.rules.action.targeted;
 import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.bukkit.BukkitPlayer;
 import com.pwn9.PwnFilter.rules.action.Action;
-import com.pwn9.PwnFilter.util.DefaultMessages;
+import com.pwn9.PwnFilter.bukkit.util.DefaultMessages;
 import com.pwn9.PwnFilter.util.tags.TagRegistry;
 
 /**

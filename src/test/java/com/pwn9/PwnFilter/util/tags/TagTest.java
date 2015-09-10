@@ -16,7 +16,6 @@ import com.pwn9.PwnFilter.api.MessageAuthor;
 import com.pwn9.PwnFilter.bukkit.tag.PlayerTag;
 import com.pwn9.PwnFilter.rules.RuleChain;
 import junit.framework.Assert;
-import org.bukkit.configuration.Configuration;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
@@ -50,7 +49,7 @@ public class TagTest {
             }
 
             @Override
-            public void activate(Configuration config) {
+            public void activate() {
 
             }
 

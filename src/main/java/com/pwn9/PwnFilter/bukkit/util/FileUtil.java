@@ -1,6 +1,7 @@
-package com.pwn9.PwnFilter.util;
+package com.pwn9.PwnFilter.bukkit.util;
 
 import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
+import com.pwn9.PwnFilter.util.LogManager;
 import org.bukkit.plugin.Plugin;
 
 import java.io.*;

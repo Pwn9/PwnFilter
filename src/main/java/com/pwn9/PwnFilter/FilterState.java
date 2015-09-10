@@ -14,7 +14,7 @@ import com.pwn9.PwnFilter.api.FilterClient;
 import com.pwn9.PwnFilter.api.MessageAuthor;
 import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
 import com.pwn9.PwnFilter.rules.Rule;
-import com.pwn9.PwnFilter.util.ColoredString;
+import com.pwn9.PwnFilter.bukkit.util.ColoredString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -114,7 +114,7 @@ public class FilterState {
      * @return true if the modified message is different than the original.
      */
     public boolean messageChanged() {
-        return !originalMessage.toString().equals(modifiedMessage.toString());
+        return !originalMessage.getColoredString().equals(modifiedMessage.getColoredString());
     }
 
     /**
@@ -173,7 +173,7 @@ public class FilterState {
     /**
      * <p>Getter for the field <code>modifiedMessage</code>.</p>
      *
-     * @return a {@link com.pwn9.PwnFilter.util.ColoredString} object.
+     * @return a {@link ColoredString} object.
      */
     public ColoredString getModifiedMessage() {
         return new ColoredString(modifiedMessage);
@@ -182,7 +182,7 @@ public class FilterState {
     /**
      * <p>Setter for the field <code>modifiedMessage</code>.</p>
      *
-     * @param newMessage a {@link com.pwn9.PwnFilter.util.ColoredString} object.
+     * @param newMessage a {@link ColoredString} object.
      */
     public void setModifiedMessage(ColoredString newMessage) {
         modifiedMessage = newMessage;
@@ -191,7 +191,7 @@ public class FilterState {
     /**
      * <p>Getter for the field <code>unfilteredMessage</code>.</p>
      *
-     * @return a {@link com.pwn9.PwnFilter.util.ColoredString} object.
+     * @return a {@link ColoredString} object.
      */
     public ColoredString getUnfilteredMessage() {
         return unfilteredMessage;
@@ -200,7 +200,7 @@ public class FilterState {
     /**
      * <p>Setter for the field <code>unfilteredMessage</code>.</p>
      *
-     * @param newMessage a {@link com.pwn9.PwnFilter.util.ColoredString} object.
+     * @param newMessage a {@link ColoredString} object.
      */
     public void setUnfilteredMessage(ColoredString newMessage) {
         unfilteredMessage = newMessage;

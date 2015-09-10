@@ -8,7 +8,7 @@
  * of the License, or (at your option) any later version.
  */
 
-package com.pwn9.PwnFilter.util;
+package com.pwn9.PwnFilter.bukkit.util;
 
 import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
 import org.bukkit.ChatColor;

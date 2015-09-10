@@ -82,10 +82,9 @@ public class ClientManager {
      * <p>enableClients.</p>
      */
     public void enableClients() {
-        Configuration config = plugin.getConfig();
 
         for (FilterClient f : registeredClients.keySet()) {
-            f.activate(config);
+            f.activate();
         }
 
     }

@@ -1,5 +1,6 @@
 package com.pwn9.PwnFilter.util;
 
+import com.pwn9.PwnFilter.bukkit.util.ColoredString;
 import junit.framework.TestCase;
 
 import java.util.logging.Logger;
@@ -42,7 +43,7 @@ public class ColoredStringTest extends TestCase {
         assertEquals(plainString, cs.getPlainString());
         assertArrayEquals(codeArray, cs.getCodeArray());
         assertEquals(testString, cs.getColoredString());
-        assertEquals(testString, cs.toString());
+        assertEquals(plainString, cs.toString());
 
 
         // Replace with plain text

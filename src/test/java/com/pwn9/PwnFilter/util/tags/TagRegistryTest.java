@@ -15,7 +15,6 @@ import com.pwn9.PwnFilter.api.FilterClient;
 import com.pwn9.PwnFilter.api.MessageAuthor;
 import com.pwn9.PwnFilter.rules.RuleChain;
 import junit.framework.Assert;
-import org.bukkit.configuration.Configuration;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
@@ -76,7 +75,7 @@ public class TagRegistryTest {
             }
 
             @Override
-            public void activate(Configuration config) {
+            public void activate() {
 
             }
 

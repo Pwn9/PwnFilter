@@ -15,7 +15,6 @@ import com.pwn9.PwnFilter.api.FilterClient;
 import com.pwn9.PwnFilter.api.MessageAuthor;
 import com.pwn9.PwnFilter.rules.RuleChain;
 import com.pwn9.PwnFilter.rules.action.Action;
-import org.bukkit.configuration.Configuration;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -303,7 +302,7 @@ public class PointManager implements FilterClient {
 
     /** {@inheritDoc} */
     @Override
-    public void activate(Configuration config) {
+    public void activate() {
     }
 
     /** {@inheritDoc} */

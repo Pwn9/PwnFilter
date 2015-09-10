@@ -16,7 +16,6 @@ import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
 import com.pwn9.PwnFilter.rules.RuleManager;
 import com.pwn9.PwnFilter.util.LogManager;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.Configuration;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -133,14 +132,14 @@ public class PwnFilterSignListener extends BaseListener {
      * they could just enable / disable the use of the filter.
      */
     @Override
-    public void activate(Configuration config) {
+    public void activate() {
         if (isActive()) return;
         setRuleChain(RuleManager.getInstance().getRuleChain("sign.txt"));
 
         PluginManager pm = Bukkit.getPluginManager();
-        EventPriority priority = EventPriority.valueOf(config.getString("signpriority", "LOWEST").toUpperCase());
+        EventPriority priority = EventPriority.valueOf(plugin.getConfig().getString("signpriority", "LOWEST").toUpperCase());
 
-        if (config.getBoolean("signfilter")) {
+        if (plugin.getConfig().getBoolean("signfilter")) {
             // Now register the listener with the appropriate priority
             pm.registerEvent(SignChangeEvent.class, this, priority,
                     new EventExecutor() {

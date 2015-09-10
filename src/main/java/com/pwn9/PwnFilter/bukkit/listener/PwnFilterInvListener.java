@@ -17,7 +17,6 @@ import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
 import com.pwn9.PwnFilter.rules.RuleManager;
 import com.pwn9.PwnFilter.util.LogManager;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -116,15 +115,15 @@ public class PwnFilterInvListener extends BaseListener {
      * they could just enable / disable the use of the filter.
      */
     @Override
-    public void activate(Configuration config) {
+    public void activate() {
         if (isActive()) return;
 
         setRuleChain(RuleManager.getInstance().getRuleChain("item.txt"));
 
         PluginManager pm = Bukkit.getPluginManager();
-        EventPriority priority = EventPriority.valueOf(config.getString("itempriority", "LOWEST").toUpperCase());
+        EventPriority priority = EventPriority.valueOf(plugin.getConfig().getString("itempriority", "LOWEST").toUpperCase());
 
-        if (!active && config.getBoolean("itemfilter")) {
+        if (!active && plugin.getConfig().getBoolean("itemfilter")) {
             // Now register the listener with the appropriate priority
             pm.registerEvent(InventoryClickEvent.class, this, priority,
                     new EventExecutor() {
