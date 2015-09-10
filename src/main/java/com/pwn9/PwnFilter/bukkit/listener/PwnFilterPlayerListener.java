@@ -10,7 +10,7 @@
 
 package com.pwn9.PwnFilter.bukkit.listener;
 
-import com.pwn9.PwnFilter.FilterState;
+import com.pwn9.PwnFilter.FilterTask;
 import com.pwn9.PwnFilter.bukkit.BukkitPlayer;
 import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
 import com.pwn9.PwnFilter.bukkit.util.ColoredString;
@@ -84,7 +84,7 @@ public class PwnFilterPlayerListener extends BaseListener {
 
         }
 
-        FilterState state = new FilterState(new ColoredString(message),
+        FilterTask state = new FilterTask(new ColoredString(message),
                 BukkitPlayer.getInstance(event.getPlayer(),plugin), this);
 
         // Global decolor
@@ -101,7 +101,7 @@ public class PwnFilterPlayerListener extends BaseListener {
         if (state.messageChanged()){
             event.setMessage(state.getModifiedMessage().getRaw());
         }
-        if (state.cancel) event.setCancelled(true);
+        if (state.isCancelled()) event.setCancelled(true);
     }
 
     /**

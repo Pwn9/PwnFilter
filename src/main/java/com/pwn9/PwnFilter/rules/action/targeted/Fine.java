@@ -10,7 +10,7 @@
 
 package com.pwn9.PwnFilter.rules.action.targeted;
 
-import com.pwn9.PwnFilter.FilterState;
+import com.pwn9.PwnFilter.FilterTask;
 import com.pwn9.PwnFilter.bukkit.BukkitPlayer;
 import com.pwn9.PwnFilter.rules.action.Action;
 import com.pwn9.PwnFilter.bukkit.util.DefaultMessages;
@@ -43,17 +43,17 @@ public class Fine implements Action {
     }
 
     /** {@inheritDoc} */
-    public boolean execute(final FilterState state ) {
+    public boolean execute(final FilterTask filterTask ) {
 
-        if (state.getAuthor() instanceof BukkitPlayer) {
+        if (filterTask.getAuthor() instanceof BukkitPlayer) {
 
-            BukkitPlayer p = (BukkitPlayer)state.getAuthor();
+            BukkitPlayer p = (BukkitPlayer)filterTask.getAuthor();
             if (p.withdrawMoney(fineAmount, messageString)) {
-                state.addLogMessage(String.format("Fined %s : %f",state.getAuthor().getName(),fineAmount));
+                filterTask.addLogMessage(String.format("Fined %s : %f", filterTask.getAuthor().getName(), fineAmount));
                 return true;
             } else {
-                state.addLogMessage(String.format("Failed to fine %s.",
-                state.getAuthor().getName()));
+                filterTask.addLogMessage(String.format("Failed to fine %s.",
+                        filterTask.getAuthor().getName()));
                 return false;
             }
 

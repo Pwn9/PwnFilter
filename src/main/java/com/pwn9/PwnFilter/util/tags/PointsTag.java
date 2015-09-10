@@ -10,7 +10,7 @@
 
 package com.pwn9.PwnFilter.util.tags;
 
-import com.pwn9.PwnFilter.FilterState;
+import com.pwn9.PwnFilter.FilterTask;
 import com.pwn9.PwnFilter.util.PointManager;
 
 import java.text.DecimalFormat;
@@ -25,9 +25,9 @@ public class PointsTag implements Tag {
     static final DecimalFormat df = new DecimalFormat("0.00##");
 
     @Override
-    public String getValue(FilterState state) {
+    public String getValue(FilterTask filterTask) {
         return (PointManager.isEnabled()) ?
-                df.format(PointManager.getInstance().getPoints(state.getAuthor())) :
+                df.format(PointManager.getInstance().getPoints(filterTask.getAuthor())) :
                 "-";
     }
 }

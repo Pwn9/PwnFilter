@@ -10,7 +10,7 @@
 
 package com.pwn9.PwnFilter.util.tags;
 
-import com.pwn9.PwnFilter.FilterState;
+import com.pwn9.PwnFilter.FilterTask;
 
 /**
  * During message processing, a rule can specify a %tag%, which will be replaced
@@ -22,6 +22,6 @@ import com.pwn9.PwnFilter.FilterState;
  */
 public interface Tag {
 
-    String getValue(FilterState state);
+    String getValue(FilterTask filterTask);
 
 }

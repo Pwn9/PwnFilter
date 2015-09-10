@@ -10,7 +10,7 @@
 
 package com.pwn9.PwnFilter.rules.action.targeted;
 
-import com.pwn9.PwnFilter.FilterState;
+import com.pwn9.PwnFilter.FilterTask;
 import com.pwn9.PwnFilter.bukkit.BukkitPlayer;
 import com.pwn9.PwnFilter.rules.action.Action;
 import com.pwn9.PwnFilter.bukkit.util.DefaultMessages;
@@ -33,12 +33,12 @@ public class Kill implements Action {
     }
 
     /** {@inheritDoc} */
-    public boolean execute(final FilterState state ) {
+    public boolean execute(final FilterTask filterTask ) {
 
-        if (state.getAuthor() instanceof BukkitPlayer) {
+        if (filterTask.getAuthor() instanceof BukkitPlayer) {
 
-            ((BukkitPlayer) state.getAuthor()).kill(messageString);
-            state.addLogMessage("Killed by Filter: " + state.getAuthor().getName() + " " + messageString);
+            ((BukkitPlayer) filterTask.getAuthor()).kill(messageString);
+            filterTask.addLogMessage("Killed by Filter: " + filterTask.getAuthor().getName() + " " + messageString);
 
             return true;
         }

@@ -10,7 +10,7 @@
 
 package com.pwn9.PwnFilter.rules.action.minecraft;
 
-import com.pwn9.PwnFilter.FilterState;
+import com.pwn9.PwnFilter.FilterTask;
 import com.pwn9.PwnFilter.bukkit.BukkitConsole;
 import com.pwn9.PwnFilter.rules.action.Action;
 import com.pwn9.PwnFilter.util.tags.TagRegistry;
@@ -35,14 +35,14 @@ public class ConsoleChain implements Action {
     }
 
     /** {@inheritDoc} */
-    public boolean execute(final FilterState state ) {
+    public boolean execute(final FilterTask filterTask ) {
         final ArrayList<String> parsedCommands = new ArrayList<String>();
 
         for (String cmd : commands)
-            parsedCommands.add(TagRegistry.replaceTags(cmd, state));
+            parsedCommands.add(TagRegistry.replaceTags(cmd, filterTask));
 
         for (final String cmd : parsedCommands) {
-            state.addLogMessage("Sending console command: " + cmd);
+            filterTask.addLogMessage("Sending console command: " + cmd);
             BukkitConsole.getInstance().executeCommand(cmd);
         }
 

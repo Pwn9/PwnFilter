@@ -10,7 +10,7 @@
 
 package com.pwn9.PwnFilter.util.tags;
 
-import com.pwn9.PwnFilter.FilterState;
+import com.pwn9.PwnFilter.FilterTask;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -48,10 +48,10 @@ public class TagRegistry {
      * <p>replaceTags.</p>
      *
      * @param line a {@link StringTag} object.
-     * @param state a {@link com.pwn9.PwnFilter.FilterState} object.
+     * @param filterTask a {@link FilterTask} object.
      * @return a {@link StringTag} object.
      */
-    public static String replaceTags(String line, FilterState state) {
+    public static String replaceTags(String line, FilterTask filterTask) {
 
         Matcher tagMatcher = Pattern.compile("%(\\w+)%", Pattern.CASE_INSENSITIVE).matcher(line);
 
@@ -64,7 +64,7 @@ public class TagRegistry {
             Tag tag = getTag(tagMatcher.group(1));
 
             if (tag != null) {
-                tagMatcher.appendReplacement(sb, wrapReplacement(tag.getValue(state)));
+                tagMatcher.appendReplacement(sb, wrapReplacement(tag.getValue(filterTask)));
             } else {
                 tagMatcher.appendReplacement(sb, tagMatcher.group());
             }

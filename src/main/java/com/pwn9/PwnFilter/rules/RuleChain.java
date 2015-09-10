@@ -12,7 +12,7 @@ package com.pwn9.PwnFilter.rules;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import com.pwn9.PwnFilter.FilterState;
+import com.pwn9.PwnFilter.FilterTask;
 import com.pwn9.PwnFilter.rules.action.Action;
 import com.pwn9.PwnFilter.rules.parser.FileParser;
 import com.pwn9.PwnFilter.util.LogManager;
@@ -114,54 +114,52 @@ public class RuleChain implements Chain,ChainEntry {
      * Iterate over the chain in order, checking the Rule pattern against the
      * current message.  If the text pattern matches, test the rule conditions, to
      * ensure they are all met.  If all of the conditions are met, execute the Rule's
-     * actions in sequential order.  If the Rule sets the stop=true of the FilterState,
+     * actions in sequential order.  If the Rule sets the stop=true of the FilterTask,
      * stop processing rules.  If not, continue along the rule chain, checking the
      * (possibly modified) message against subsequent rules.
      */
-    public void apply(FilterState state) throws IllegalStateException {
+    public void apply(FilterTask filterTask) throws IllegalStateException {
 
         if (chain == null) {
             throw new IllegalStateException("Chain is empty: " + configName);
         }
 
         for (ChainEntry entry : chain) {
-            entry.apply(state);
-            if (state.stop) {
-                break;
-            }
+            if (filterTask.isAborted()) break;
+            entry.apply(filterTask);
         }
     }
 
     /**
      * <p>execute.</p>
      *
-     * @param state a {@link com.pwn9.PwnFilter.FilterState} object.
+     * @param state a {@link FilterTask} object.
      */
-    public void execute(FilterState state ) {
+    public void execute(FilterTask state ) {
 
         LogManager logManager = LogManager.getInstance();
 
         apply(state);
 
-        if (state.pattern != null) {
-            logManager.debugHigh("Debug last match: " + state.pattern.pattern());
+        if (state.getPattern() != null) {
+            logManager.debugHigh("Debug last match: " + state.getPattern().pattern());
             logManager.debugHigh("Debug original: " + state.getOriginalMessage().getRaw());
             logManager.debugHigh("Debug current: " + state.getModifiedMessage().getRaw());
-            logManager.debugHigh("Debug log: " + (state.log ? "yes" : "no"));
-            logManager.debugHigh("Debug deny: " + (state.cancel ? "yes" : "no"));
+            logManager.debugHigh("Debug log: " + (state.loggingOn() ? "yes" : "no"));
+            logManager.debugHigh("Debug deny: " + (state.isCancelled() ? "yes" : "no"));
         } else {
             logManager.debugHigh("[PwnFilter] Debug no match: " + state.getOriginalMessage().getRaw());
         }
 
-        if (state.cancel){
+        if (state.isCancelled()){
             state.addLogMessage("<"+state.getAuthor().getName() + "> Original message cancelled.");
-        } else if (state.pattern != null) {
-            state.addLogMessage("|" + state.listener.getShortName() + "| SENT <" +
+        } else if (state.getPattern() != null) {
+            state.addLogMessage("|" + state.getListenerName() + "| SENT <" +
                     state.getAuthor().getName() + "> " + state.getModifiedMessage().toString());
         }
 
         for (String s : state.getLogMessages()) {
-            if (state.log) {
+            if (state.loggingOn()) {
                 LogManager.logger.info(s);
             } else {
                 LogManager.logger.log(LogManager.getRuleLogLevel(),s);

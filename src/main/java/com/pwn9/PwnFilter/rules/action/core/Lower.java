@@ -10,7 +10,7 @@
 
 package com.pwn9.PwnFilter.rules.action.core;
 
-import com.pwn9.PwnFilter.FilterState;
+import com.pwn9.PwnFilter.FilterTask;
 import com.pwn9.PwnFilter.rules.action.Action;
 import com.pwn9.PwnFilter.util.EnhancedString;
 
@@ -30,11 +30,10 @@ public class Lower implements Action {
     }
 
     /** {@inheritDoc} */
-    public boolean execute(final FilterState state ) {
-        EnhancedString cs = state.getModifiedMessage();
-        state.addLogMessage("Converting to lowercase.");
-        state.setModifiedMessage(cs.patternToLower(state.pattern));
-
+    public boolean execute(final FilterTask filterTask ) {
+        EnhancedString cs = filterTask.getModifiedMessage();
+        filterTask.addLogMessage("Converting to lowercase.");
+        filterTask.setModifiedMessage(cs.patternToLower(filterTask.getPattern()));
         return true;
     }
 }

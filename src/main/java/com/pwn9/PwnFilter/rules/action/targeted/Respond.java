@@ -10,7 +10,7 @@
 
 package com.pwn9.PwnFilter.rules.action.targeted;
 
-import com.pwn9.PwnFilter.FilterState;
+import com.pwn9.PwnFilter.FilterTask;
 import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
 import com.pwn9.PwnFilter.rules.action.Action;
 import com.pwn9.PwnFilter.util.tags.TagRegistry;
@@ -41,16 +41,16 @@ public class Respond implements Action {
     /**
      * {@inheritDoc}
      */
-    public boolean execute(final FilterState state) {
-        if (state.getAuthor() == null) return false;
+    public boolean execute(final FilterTask filterTask) {
+        if (filterTask.getAuthor() == null) return false;
 
         final ArrayList<String> preparedMessages = new ArrayList<String>();
 
         for (String message : messageStrings) {
-            preparedMessages.add(TagRegistry.replaceTags(message, state));
+            preparedMessages.add(TagRegistry.replaceTags(message, filterTask));
         }
 
-        state.addLogMessage("Responded to " + state.getAuthor().getName()
+        filterTask.addLogMessage("Responded to " + filterTask.getAuthor().getName()
                 + " with: " + preparedMessages.get(0) + "...");
 
         PwnFilterPlugin.getBukkitAPI().safeBukkitDispatch(
@@ -58,7 +58,7 @@ public class Respond implements Action {
                     @Override
                     public void run() {
                         for (String m : preparedMessages) {
-                            state.getAuthor().sendMessage(m);
+                            filterTask.getAuthor().sendMessage(m);
                         }
                     }
                 });

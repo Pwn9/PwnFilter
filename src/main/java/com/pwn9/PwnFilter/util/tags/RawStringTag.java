@@ -10,7 +10,7 @@
 
 package com.pwn9.PwnFilter.util.tags;
 
-import com.pwn9.PwnFilter.FilterState;
+import com.pwn9.PwnFilter.FilterTask;
 
 /**
  * Return the original Message
@@ -19,7 +19,7 @@ import com.pwn9.PwnFilter.FilterState;
 public class RawStringTag implements Tag {
 
     @Override
-    public String getValue(FilterState state) {
-        return state.getOriginalMessage().getRaw();
+    public String getValue(FilterTask filterTask) {
+        return filterTask.getOriginalMessage().getRaw();
     }
 }

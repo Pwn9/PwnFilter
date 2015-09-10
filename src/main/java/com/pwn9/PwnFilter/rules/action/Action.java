@@ -10,7 +10,7 @@
 
 package com.pwn9.PwnFilter.rules.action;
 
-import com.pwn9.PwnFilter.FilterState;
+import com.pwn9.PwnFilter.FilterTask;
 
 /**
  * Actions are triggered by Rules when they match.
@@ -29,8 +29,8 @@ public interface Action {
     /**
      * <p>execute.</p>
      *
-     * @param state a {@link com.pwn9.PwnFilter.FilterState} object.
+     * @param state a {@link FilterTask} object.
      * @return a boolean.
      */
-    boolean execute(FilterState state );
+    boolean execute(FilterTask state );
 }

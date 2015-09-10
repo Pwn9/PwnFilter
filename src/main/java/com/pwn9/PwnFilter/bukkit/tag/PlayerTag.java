@@ -10,7 +10,7 @@
 
 package com.pwn9.PwnFilter.bukkit.tag;
 
-import com.pwn9.PwnFilter.FilterState;
+import com.pwn9.PwnFilter.FilterTask;
 import com.pwn9.PwnFilter.util.tags.Tag;
 
 /**
@@ -19,7 +19,7 @@ import com.pwn9.PwnFilter.util.tags.Tag;
  */
 public class PlayerTag implements Tag {
     @Override
-    public String getValue(FilterState state) {
-       return state.getAuthor().getName();
+    public String getValue(FilterTask filterTask) {
+       return filterTask.getAuthor().getName();
     }
 }

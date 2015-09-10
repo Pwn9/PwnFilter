@@ -10,7 +10,7 @@
 
 package com.pwn9.PwnFilter.bukkit.tag;
 
-import com.pwn9.PwnFilter.FilterState;
+import com.pwn9.PwnFilter.FilterTask;
 import com.pwn9.PwnFilter.api.MessageAuthor;
 import com.pwn9.PwnFilter.bukkit.BukkitPlayer;
 import com.pwn9.PwnFilter.util.tags.Tag;
@@ -22,8 +22,8 @@ import com.pwn9.PwnFilter.util.tags.Tag;
 public class WorldTag implements Tag {
 
     @Override
-    public String getValue(FilterState state) {
-        MessageAuthor author = state.getAuthor();
+    public String getValue(FilterTask filterTask) {
+        MessageAuthor author = filterTask.getAuthor();
         if (author instanceof BukkitPlayer) {
             return ((BukkitPlayer) author).getWorldName();
         }

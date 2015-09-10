@@ -10,7 +10,7 @@
 
 package com.pwn9.PwnFilter.bukkit.listener;
 
-import com.pwn9.PwnFilter.FilterState;
+import com.pwn9.PwnFilter.FilterTask;
 import com.pwn9.PwnFilter.bukkit.BukkitPlayer;
 import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
 import com.pwn9.PwnFilter.bukkit.util.ColoredString;
@@ -75,21 +75,21 @@ public class PwnFilterSignListener extends BaseListener {
         }
         String signLines = builder.toString().trim();
 
-        FilterState state = new FilterState(new ColoredString(signLines),
+        FilterTask filterTask = new FilterTask(new ColoredString(signLines),
                 BukkitPlayer.getInstance(event.getPlayer(),plugin), this);
 
-        ruleChain.execute(state);
+        ruleChain.execute(filterTask);
 
-        if (state.messageChanged()){
+        if (filterTask.messageChanged()){
             // TODO: Can colors be placed on signs?  Wasn't working. Find out why.
             // Break the changed string into new Lines
             List<String> newLines = new ArrayList<String>();
 
             // Global decolor
             if ((PwnFilterPlugin.decolor) && !(PwnFilterPlugin.getBukkitAPI().getAuthor(event.getPlayer().getUniqueId()).hasPermission("pwnfilter.color"))) {
-                Collections.addAll(newLines,state.getModifiedMessage().toString().split("\t"));
+                Collections.addAll(newLines,filterTask.getModifiedMessage().toString().split("\t"));
             } else {
-                Collections.addAll(newLines,state.getModifiedMessage().getRaw().split("\t"));
+                Collections.addAll(newLines,filterTask.getModifiedMessage().getRaw().split("\t"));
             }
 
             String[] outputLines = new String[4];
@@ -113,11 +113,11 @@ public class PwnFilterSignListener extends BaseListener {
             }
         }
 
-        if (state.cancel) {
+        if (filterTask.isCancelled()) {
             event.setCancelled(true);
-            state.getAuthor().sendMessage("Your sign broke, there must be something wrong with it.");
-            state.addLogMessage("SIGN " + state.getAuthor().getName() + " sign text: "
-                    + state.getOriginalMessage().getRaw());
+            filterTask.getAuthor().sendMessage("Your sign broke, there must be something wrong with it.");
+            filterTask.addLogMessage("SIGN " + filterTask.getAuthor().getName() + " sign text: "
+                    + filterTask.getOriginalMessage().getRaw());
         }
 
     }

@@ -11,7 +11,7 @@
 
 package com.pwn9.PwnFilter.bukkit.listener;
 
-import com.pwn9.PwnFilter.FilterState;
+import com.pwn9.PwnFilter.FilterTask;
 import com.pwn9.PwnFilter.bukkit.BukkitPlayer;
 import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
 import com.pwn9.PwnFilter.bukkit.util.ColoredString;
@@ -110,7 +110,7 @@ public class PwnFilterCommandListener extends BaseListener {
         //Gets the actual command as a string
         String cmdmessage = message.substring(1).split(" ")[0];
 
-        FilterState state = new FilterState(new ColoredString(message), BukkitPlayer.getInstance(player, plugin), this);
+        FilterTask filterTask = new FilterTask(new ColoredString(message), BukkitPlayer.getInstance(player, plugin), this);
 
         // Check to see if we should treat this command as chat (eg: /tell)
         if (cmdchat.contains(cmdmessage)) {
@@ -130,7 +130,7 @@ public class PwnFilterCommandListener extends BaseListener {
                 PwnFilterPlugin.lastMessage.put(player.getUniqueId(), message);
             }
 
-            chatRuleChain.execute(state);
+            chatRuleChain.execute(filterTask);
 
         } else {
 
@@ -139,20 +139,20 @@ public class PwnFilterCommandListener extends BaseListener {
 
             // Take the message from the Command Event and send it through the filter.
 
-            ruleChain.execute(state);
+            ruleChain.execute(filterTask);
 
         }
 
         // Only update the message if it has been changed.
-        if (state.messageChanged()){
-            if (state.getModifiedMessage().toString().isEmpty()) {
+        if (filterTask.messageChanged()){
+            if (filterTask.getModifiedMessage().toString().isEmpty()) {
                 event.setCancelled(true);
                 return;
             }
-            event.setMessage(state.getModifiedMessage().getRaw());
+            event.setMessage(filterTask.getModifiedMessage().getRaw());
         }
 
-        if (state.cancel) event.setCancelled(true);
+        if (filterTask.isCancelled()) event.setCancelled(true);
 
     }
 

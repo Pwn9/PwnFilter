@@ -23,39 +23,26 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 /**
- * Filterstate
+ * FilterTask
  *
- * An object to keep track of the state of a filter event through execution
+ * An object to keep track of the state of a filter task through execution
  * of the rules.
- * <p>
  *
- * In addition to the public methods, it is possible to modify state by writing directly
- * to the following attributes:
- *
- * log: If true, actions will be logged to the file/console
- * stop: If true, no further rules will be processed
- * cancel: If true, this event will be set Cancelled (if possible)
- *
- * @author ptoal
- * @version $Id: $Id
  */
 
 //TODO: Make all this stuff private and create getters/setters
 
-@SuppressWarnings("UnusedDeclaration")
-public class FilterState {
+public class FilterTask {
     private final EnhancedString originalMessage; // Original message
     private EnhancedString modifiedMessage; // Modified message string
-    private EnhancedString unfilteredMessage; // message string for "raw" messages.
-    private final MessageAuthor author; // Player that this event is connected to.
-    public final FilterClient listener;
-    final int messageLen; // New message can't be longer than original.
+    private final MessageAuthor author; // Author that this event is connected to.
+    private final FilterClient listener;
     private List<String> logMessages = new ArrayList<String>(); // Rules can add strings to this array.  They will be output to log if log=true
-    public boolean log = false;  // If true, actions will be logged
-    public boolean stop = false; // If set true by a rule, will stop further processing.
-    public boolean cancel = false; // If set true, will cancel this event.
-    public Rule rule; // Rule we currently match
-    public Pattern pattern; // Pattern that we currently matched.
+    private boolean logging = false;  // If true, actions will be logged
+    private boolean aborted = false; // If set true by a rule, will stop further processing.
+    private boolean cancelled = false; // If set true, will cancel this event.
+    private Rule rule; // Rule we currently match
+    private Pattern pattern; // Pattern that we currently matched.
 
     // NOTE: pattern should always match originalMessage, but may not match
     // the new message, if another rule has modified it.
@@ -68,10 +55,9 @@ public class FilterState {
      * @param a  a {@link MessageAuthor} object.
      * @param l a {@link FilterClient} object.
      */
-    public FilterState(EnhancedString m, MessageAuthor a, FilterClient l) {
+    public FilterTask(EnhancedString m, MessageAuthor a, FilterClient l) {
         originalMessage = m;
         modifiedMessage = m;
-        messageLen = originalMessage.length();
         author = a;
         listener = l;
     }
@@ -82,20 +68,19 @@ public class FilterState {
      * @param a The {@link MessageAuthor } of this message
      * @param l The {@link FilterClient } that generated this message
      */
-    public FilterState(String s, MessageAuthor a, FilterClient l) {
+    public FilterTask(String s, MessageAuthor a, FilterClient l) {
         this(new SimpleString(s), a, l);
     }
 
     /**
-     * A FilterState object from a UUID, instead of an Author Object.
+     * A FilterTask object from a UUID, instead of an Author Object.
      *  @param m String message to process
      * @param uuid Unique ID of the Author
      * @param l Listener that is calling.
      */
-    public FilterState(EnhancedString m, UUID uuid, FilterClient l) {
+    public FilterTask(EnhancedString m, UUID uuid, FilterClient l) {
         originalMessage = m;
         modifiedMessage = m;
-        messageLen = originalMessage.length();
         listener = l;
         //TODO: Abstract this into a generic MessageAuthor lookup?
         author = PwnFilterPlugin.getBukkitAPI().getAuthor(uuid);
@@ -154,15 +139,15 @@ public class FilterState {
      * @return a boolean.
      */
     public boolean isCancelled() {
-        return cancel;
+        return cancelled;
     }
 
     /**
      * <p>setCancelled.</p>
      *
      */
-    public void setCancelled() {
-        this.cancel = true;
+    public void setCancelled(boolean cancelled) {
+        this.cancelled = cancelled;
     }
 
     /**
@@ -200,22 +185,35 @@ public class FilterState {
         modifiedMessage = newMessage;
     }
 
-    /**
-     * <p>Getter for the field <code>unfilteredMessage</code>.</p>
-     *
-     * @return a {@link EnhancedString} object.
-     */
-    public EnhancedString getUnfilteredMessage() {
-        return unfilteredMessage;
+    public boolean loggingOn() {
+        return logging;
     }
 
-    /**
-     * <p>Setter for the field <code>unfilteredMessage</code>.</p>
-     *
-     * @param newMessage a {@link EnhancedString} object.
-     */
-    public void setUnfilteredMessage(EnhancedString newMessage) {
-        unfilteredMessage = newMessage;
+    public void setLogging(boolean log) {
+        this.logging = log;
     }
 
+    public boolean isAborted() {
+        return aborted;
+    }
+
+    public void setAborted(boolean aborted) {
+        this.aborted = aborted;
+    }
+
+    public Rule getRule() {
+        return rule;
+    }
+
+    public void setRule(Rule rule) {
+        this.rule = rule;
+    }
+
+    public Pattern getPattern() {
+        return pattern;
+    }
+
+    public void setPattern(Pattern pattern) {
+        this.pattern = pattern;
+    }
 }

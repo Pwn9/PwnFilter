@@ -10,7 +10,7 @@
 
 package com.pwn9.PwnFilter.rules.action.core;
 
-import com.pwn9.PwnFilter.FilterState;
+import com.pwn9.PwnFilter.FilterTask;
 import com.pwn9.PwnFilter.api.MessageAuthor;
 import com.pwn9.PwnFilter.rules.action.Action;
 import com.pwn9.PwnFilter.util.LogManager;
@@ -44,8 +44,8 @@ public class Points implements Action {
     }
 
     /** {@inheritDoc} */
-    public boolean execute(final FilterState state ) {
-        MessageAuthor p = state.getAuthor();
+    public boolean execute(final FilterTask filterTask ) {
+        MessageAuthor p = filterTask.getAuthor();
 
         if (p == null) return false;
 
@@ -53,7 +53,7 @@ public class Points implements Action {
         try {
             pm = PointManager.getInstance();
         } catch (IllegalStateException ex) {
-            LogManager.getInstance().debugLow(String.format("Rule: %s has 'then points', but PointManager is disabled in config.yml",state.rule.getId()));
+            LogManager.getInstance().debugLow(String.format("Rule: %s has 'then points', but PointManager is disabled in config.yml", filterTask.getRule().getId()));
             return false;
         }
 
@@ -61,7 +61,7 @@ public class Points implements Action {
 
         pm.addPoints(p.getID(), pointsAmount);
 
-        state.addLogMessage(String.format("Points Accumulated %s : %f. Total: %f",p.getName(),pointsAmount, pm.getPoints(p)));
+        filterTask.addLogMessage(String.format("Points Accumulated %s : %f. Total: %f", p.getName(), pointsAmount, pm.getPoints(p)));
 
         if (!messageString.isEmpty()) {
           p.sendMessage(messageString);

@@ -10,7 +10,7 @@
 
 package com.pwn9.PwnFilter.rules;
 
-import com.pwn9.PwnFilter.FilterState;
+import com.pwn9.PwnFilter.FilterTask;
 import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
 import com.pwn9.PwnFilter.rules.action.Action;
 import com.pwn9.PwnFilter.util.LimitedRegexCharSequence;
@@ -142,15 +142,15 @@ public class Rule implements ChainEntry {
      *
      * apply this action to the current message / event.  May trigger other bukkit events.
      */
-    public void apply(FilterState state) {
+    public void apply(FilterTask filterTask) {
 
         // Check if action matches the current state of the message
 
         if (LogManager.debugMode.compareTo(LogManager.DebugModes.high) >= 0) {
-            LogManager.logger.info("Testing Pattern: '" + pattern.toString() + "' on string: '" + state.getModifiedMessage().toString()+"'");
+            LogManager.logger.info("Testing Pattern: '" + pattern.toString() + "' on string: '" + filterTask.getModifiedMessage().toString()+"'");
         }
 
-            LimitedRegexCharSequence limitedRegexCharSequence = new LimitedRegexCharSequence(state.getModifiedMessage().toString(),100);
+            LimitedRegexCharSequence limitedRegexCharSequence = new LimitedRegexCharSequence(filterTask.getModifiedMessage().toString(),100);
             final Matcher matcher = pattern.matcher(limitedRegexCharSequence);
         // If we don't match, return immediately with the original message
         try {
@@ -161,22 +161,22 @@ public class Rule implements ChainEntry {
             return;
         }
 
-        state.pattern = pattern;
-        state.rule = this;
+        filterTask.setPattern(pattern);
+        filterTask.setRule(this);
 
         // If Match, log it and then check any conditions.
-        state.addLogMessage("|" + state.listener.getShortName() +  "| MATCH " +
-                (id.isEmpty()?"":"("+id+")") +
+        filterTask.addLogMessage("|" + filterTask.getListenerName() + "| MATCH " +
+                (id.isEmpty() ? "" : "(" + id + ")") +
                 " <" +
-                state.getAuthor().getName() + "> " + state.getModifiedMessage().toString());
+                filterTask.getAuthor().getName() + "> " + filterTask.getModifiedMessage().toString());
         LogManager.getInstance().debugLow("Match String: " + matcher.group());
 
 
         for (Condition c : conditions) {
             // This checks that EVERY condition is met (conditions are AND)
-            if (!c.check(state)) {
-                state.addLogMessage("CONDITION not met <"+ c.flag.toString()+
-                        " " + c.type.toString()+" " + c.parameters + "> " + state.getOriginalMessage());
+            if (!c.check(filterTask)) {
+                filterTask.addLogMessage("CONDITION not met <" + c.flag.toString() +
+                        " " + c.type.toString() + " " + c.parameters + "> " + filterTask.getOriginalMessage());
                 return;
             }
 
@@ -190,7 +190,7 @@ public class Rule implements ChainEntry {
 
         // If we get this far, execute the actions
         for (Action a : actions) {
-            a.execute(state);
+            a.execute(filterTask);
         }
 
     }

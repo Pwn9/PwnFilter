@@ -10,7 +10,7 @@
 
 package com.pwn9.PwnFilter.rules.action.targeted;
 
-import com.pwn9.PwnFilter.FilterState;
+import com.pwn9.PwnFilter.FilterTask;
 import com.pwn9.PwnFilter.api.MessageAuthor;
 import com.pwn9.PwnFilter.bukkit.BukkitPlayer;
 import com.pwn9.PwnFilter.rules.action.Action;
@@ -37,12 +37,12 @@ public class Burn implements Action {
     }
 
     /** {@inheritDoc} */
-    public boolean execute(final FilterState state ) {
-        MessageAuthor target = state.getAuthor();
+    public boolean execute(final FilterTask filterTask ) {
+        MessageAuthor target = filterTask.getAuthor();
 
         if (target instanceof BukkitPlayer) {
             if (((BukkitPlayer) target).burn(5000, messageString)) {
-                state.addLogMessage("Burned " + target.getName() + ": " + messageString);
+                filterTask.addLogMessage("Burned " + target.getName() + ": " + messageString);
             }
         }
 

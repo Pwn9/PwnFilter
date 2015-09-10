@@ -10,7 +10,7 @@
 
 package com.pwn9.PwnFilter.rules.action.core;
 
-import com.pwn9.PwnFilter.FilterState;
+import com.pwn9.PwnFilter.FilterTask;
 import com.pwn9.PwnFilter.rules.action.Action;
 
 /**
@@ -29,8 +29,8 @@ public class Deny implements Action {
     }
 
     /** {@inheritDoc} */
-    public boolean execute(final FilterState state ) {
-        state.setCancelled();
+    public boolean execute(final FilterTask filterTask ) {
+        filterTask.setCancelled(true);
         return true;
     }
 }

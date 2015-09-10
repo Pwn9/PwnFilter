@@ -11,7 +11,7 @@
 
 package com.pwn9.PwnFilter.bukkit.listener;
 
-import com.pwn9.PwnFilter.FilterState;
+import com.pwn9.PwnFilter.FilterTask;
 import com.pwn9.PwnFilter.bukkit.BukkitPlayer;
 import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
 import com.pwn9.PwnFilter.bukkit.util.ColoredString;
@@ -76,12 +76,12 @@ public class PwnFilterBookListener extends BaseListener {
         if (bookMeta.hasTitle()) {
             // Run title through filter.
             message = bookMeta.getTitle();
-            FilterState state = new FilterState(new ColoredString(message),
+            FilterTask filterTask = new FilterTask(new ColoredString(message),
                     BukkitPlayer.getInstance(player,plugin), this);
-            ruleChain.execute(state);
-            if (state.cancel) event.setCancelled(true);
-            if (state.messageChanged()) {
-                bookMeta.setTitle(state.getModifiedMessage().getRaw());
+            ruleChain.execute(filterTask);
+            if (filterTask.isCancelled()) event.setCancelled(true);
+            if (filterTask.messageChanged()) {
+                bookMeta.setTitle(filterTask.getModifiedMessage().getRaw());
                 event.setNewBookMeta(bookMeta);
             }
         }
@@ -91,7 +91,7 @@ public class PwnFilterBookListener extends BaseListener {
             List<String> newPages = new ArrayList<String>();
             boolean modified = false;
             for (String page : bookMeta.getPages()) {
-                FilterState state = new FilterState(new ColoredString(page),
+                FilterTask state = new FilterTask(new ColoredString(page),
                         BukkitPlayer.getInstance(player.getUniqueId(), plugin), this);
                 ruleChain.execute(state);
                 if (state.isCancelled()) {

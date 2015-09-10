@@ -10,7 +10,7 @@
 
 package com.pwn9.PwnFilter.rules.action.minecraft;
 
-import com.pwn9.PwnFilter.FilterState;
+import com.pwn9.PwnFilter.FilterTask;
 import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
 import com.pwn9.PwnFilter.rules.action.Action;
 import com.pwn9.PwnFilter.bukkit.util.FileUtil;
@@ -55,14 +55,14 @@ public class BroadcastFile implements Action {
     }
 
     /** {@inheritDoc} */
-    public boolean execute(final FilterState state ) {
+    public boolean execute(final FilterTask filterTask ) {
         final ArrayList<String> preparedMessages = new ArrayList<String>();
 
         for (String message : messageStrings) {
-            preparedMessages.add(TagRegistry.replaceTags(message, state));
+            preparedMessages.add(TagRegistry.replaceTags(message, filterTask));
         }
 
-        state.addLogMessage("Broadcasted: "+preparedMessages.get(0) + (preparedMessages.size()>1?"...":""));
+        filterTask.addLogMessage("Broadcasted: " + preparedMessages.get(0) + (preparedMessages.size() > 1 ? "..." : ""));
 
         PwnFilterPlugin.sendBroadcast(preparedMessages);
         return true;

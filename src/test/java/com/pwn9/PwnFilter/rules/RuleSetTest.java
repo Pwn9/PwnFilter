@@ -1,6 +1,6 @@
 package com.pwn9.PwnFilter.rules;
 
-import com.pwn9.PwnFilter.FilterState;
+import com.pwn9.PwnFilter.FilterTask;
 import com.pwn9.PwnFilter.api.FilterClient;
 import com.pwn9.PwnFilter.api.MessageAuthor;
 import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
@@ -93,7 +93,7 @@ public class RuleSetTest {
     @Test
     public void testApplyRules() {
         rs.loadConfigFile();
-        FilterState testState = new FilterState("This is a test", author, mockClient);
+        FilterTask testState = new FilterTask("This is a test", author, mockClient);
         rs.apply(testState);
         assertEquals("This WAS a test", testState.getModifiedMessage().toString());
     }
@@ -101,7 +101,7 @@ public class RuleSetTest {
     @Test
     public void testDollarSignInMessage() {
         rs.loadConfigFile();
-        FilterState testState = new FilterState("notATestPerson {test] $ (test 2}",author,mockClient);
+        FilterTask testState = new FilterTask("notATestPerson {test] $ (test 2}",author,mockClient);
         rs.apply(testState);
     }
 
@@ -110,7 +110,7 @@ public class RuleSetTest {
     public void testBackslashAtEndOfLine() {
         try {
             rs.loadConfigFile();
-            FilterState testState = new FilterState("Message that ends with \\",author,mockClient);
+            FilterTask testState = new FilterTask("Message that ends with \\",author,mockClient);
             rs.apply(testState);
         } catch (StringIndexOutOfBoundsException ex) {
             Assert.fail(ex.getMessage());
@@ -121,7 +121,7 @@ public class RuleSetTest {
     public void testShortcuts() {
         RuleChain ruleChain = ruleManager.getRuleChain("shortcutTest.txt");
         ruleChain.loadConfigFile();
-        FilterState testState = new FilterState("ShortCutPattern",author,mockClient);
+        FilterTask testState = new FilterTask("ShortCutPattern",author,mockClient);
         ruleChain.apply(testState);
         Assert.assertEquals("Replaced", testState.getModifiedMessage().toString());
     }

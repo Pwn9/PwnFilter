@@ -1,6 +1,6 @@
 package com.pwn9.PwnFilter.rules;
 
-import com.pwn9.PwnFilter.FilterState;
+import com.pwn9.PwnFilter.FilterTask;
 import com.pwn9.PwnFilter.api.FilterClient;
 import com.pwn9.PwnFilter.api.MessageAuthor;
 import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
@@ -79,14 +79,14 @@ public class ActionTest {
 
     @Test
     public void testAbort() {
-        FilterState testState = new FilterState("abort", author, mockClient);
+        FilterTask testState = new FilterTask("abort", author, mockClient);
         rs.apply(testState);
-        assertTrue(testState.stop);
+        assertTrue(testState.isAborted());
     }
 
     @Test
     public void testRandRep() {
-        FilterState testState = new FilterState("randrep", author, mockClient);
+        FilterTask testState = new FilterTask("randrep", author, mockClient);
         rs.apply(testState);
         System.out.println(testState.getModifiedMessage().toString());
         assertTrue(testState.getModifiedMessage().toString().matches("(random|replace)"));
@@ -94,7 +94,7 @@ public class ActionTest {
 
     @Test
     public void testBurn() {
-        FilterState testState = new FilterState("burn", author, mockClient);
+        FilterTask testState = new FilterTask("burn", author, mockClient);
         rs.apply(testState);
     }
 

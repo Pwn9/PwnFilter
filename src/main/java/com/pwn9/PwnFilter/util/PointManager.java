@@ -10,7 +10,7 @@
 
 package com.pwn9.PwnFilter.util;
 
-import com.pwn9.PwnFilter.FilterState;
+import com.pwn9.PwnFilter.FilterTask;
 import com.pwn9.PwnFilter.api.FilterClient;
 import com.pwn9.PwnFilter.api.MessageAuthor;
 import com.pwn9.PwnFilter.rules.RuleChain;
@@ -261,14 +261,14 @@ public class PointManager implements FilterClient {
         }
 
         public void executeAscending(UUID id) {
-            FilterState state = new FilterState(new SimpleString(""), id, _instance );
+            FilterTask state = new FilterTask(new SimpleString(""), id, _instance );
             for (Action a : actionsAscending ) {
                 a.execute(state);
             }
         }
 
         public void executeDescending(UUID id) {
-            FilterState state = new FilterState(new SimpleString(""), id, _instance );
+            FilterTask state = new FilterTask(new SimpleString(""), id, _instance );
             for (Action a : actionsDescending ) {
                 a.execute(state);
             }
@@ -279,7 +279,7 @@ public class PointManager implements FilterClient {
     /**
      * {@inheritDoc}
      *
-     * Setup as a Client, so we can create a FilterState object, and execute actions.
+     * Setup as a Client, so we can create a FilterTask object, and execute actions.
      * Really, the only thing we implement is the getShortName() call.  This is hackish.
      * Should really re-think this implementation.
      */

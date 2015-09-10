@@ -10,7 +10,7 @@
 
 package com.pwn9.PwnFilter.rules.action.core;
 
-import com.pwn9.PwnFilter.FilterState;
+import com.pwn9.PwnFilter.FilterTask;
 import com.pwn9.PwnFilter.rules.action.Action;
 import com.pwn9.PwnFilter.util.EnhancedString;
 
@@ -30,10 +30,10 @@ public class Upper implements Action {
     }
 
     /** {@inheritDoc} */
-    public boolean execute(final FilterState state ) {
-        EnhancedString cs = state.getModifiedMessage();
-        state.addLogMessage("Converting to uppercase.");
-        state.setModifiedMessage(cs.patternToUpper(state.pattern));
+    public boolean execute(final FilterTask filterTask ) {
+        EnhancedString cs = filterTask.getModifiedMessage();
+        filterTask.addLogMessage("Converting to uppercase.");
+        filterTask.setModifiedMessage(cs.patternToUpper(filterTask.getPattern()));
 
         return true;
     }

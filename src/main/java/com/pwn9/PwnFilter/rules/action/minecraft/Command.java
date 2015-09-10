@@ -10,7 +10,7 @@
 
 package com.pwn9.PwnFilter.rules.action.minecraft;
 
-import com.pwn9.PwnFilter.FilterState;
+import com.pwn9.PwnFilter.FilterTask;
 import com.pwn9.PwnFilter.bukkit.BukkitPlayer;
 import com.pwn9.PwnFilter.rules.action.Action;
 import com.pwn9.PwnFilter.util.tags.TagRegistry;
@@ -32,24 +32,24 @@ public class Command implements Action {
     }
 
     /** {@inheritDoc} */
-    public boolean execute(final FilterState state ) {
-        state.cancel = true;
+    public boolean execute(final FilterTask filterTask ) {
+        filterTask.setCancelled(true);
         final String cmd;
-        if (state.getAuthor() instanceof BukkitPlayer ) {
-            BukkitPlayer player = (BukkitPlayer)state.getAuthor();
+        if (filterTask.getAuthor() instanceof BukkitPlayer ) {
+            BukkitPlayer player = (BukkitPlayer)filterTask.getAuthor();
 
             if (!command.isEmpty()) {
-                cmd = TagRegistry.replaceTags(command, state);
+                cmd = TagRegistry.replaceTags(command, filterTask);
             } else {
-                cmd = state.getModifiedMessage().getRaw();
+                cmd = filterTask.getModifiedMessage().getRaw();
             }
-            state.addLogMessage("Helped " + player.getName() + " execute command: " + cmd);
+            filterTask.addLogMessage("Helped " + player.getName() + " execute command: " + cmd);
             player.executeCommand(cmd);
 
             return true;
         } else {
-            state.addLogMessage("Could not execute command as non-player.");
-            state.setCancelled();
+            filterTask.addLogMessage("Could not execute command as non-player.");
+            filterTask.setCancelled(true);
             return false;
         }
     }

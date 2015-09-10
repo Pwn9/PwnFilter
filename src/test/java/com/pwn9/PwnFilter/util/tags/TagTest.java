@@ -10,7 +10,7 @@
 
 package com.pwn9.PwnFilter.util.tags;
 
-import com.pwn9.PwnFilter.FilterState;
+import com.pwn9.PwnFilter.FilterTask;
 import com.pwn9.PwnFilter.api.FilterClient;
 import com.pwn9.PwnFilter.api.MessageAuthor;
 import com.pwn9.PwnFilter.bukkit.tag.PlayerTag;
@@ -90,7 +90,7 @@ public class TagTest {
     @Test
     public void testBuiltinTags() throws Exception {
         String input = "Test %player% tag";
-        FilterState testState = new FilterState(input, testAuthor , testClient );
+        FilterTask testState = new FilterTask(input, testAuthor , testClient );
         TagRegistry.addTag("player",new PlayerTag());
         Assert.assertEquals(TagRegistry.replaceTags(input, testState), "Test TESTPLAYER tag");
 

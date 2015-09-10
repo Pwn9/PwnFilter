@@ -10,7 +10,7 @@
 
 package com.pwn9.PwnFilter.rules;
 
-import com.pwn9.PwnFilter.FilterState;
+import com.pwn9.PwnFilter.FilterTask;
 
 import java.util.Set;
 
@@ -43,9 +43,9 @@ public interface ChainEntry {
     /**
      * <p>apply.</p>
      *
-     * @param state a {@link com.pwn9.PwnFilter.FilterState} object.
+     * @param state a {@link FilterTask} object.
      */
-    void apply(FilterState state);
+    void apply(FilterTask state);
 
     /**
      * <p>getPermissionList.</p>

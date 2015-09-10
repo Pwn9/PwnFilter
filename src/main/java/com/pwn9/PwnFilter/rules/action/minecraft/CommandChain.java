@@ -10,7 +10,7 @@
 
 package com.pwn9.PwnFilter.rules.action.minecraft;
 
-import com.pwn9.PwnFilter.FilterState;
+import com.pwn9.PwnFilter.FilterTask;
 import com.pwn9.PwnFilter.api.MessageAuthor;
 import com.pwn9.PwnFilter.bukkit.BukkitPlayer;
 import com.pwn9.PwnFilter.rules.action.Action;
@@ -38,24 +38,24 @@ public class CommandChain implements Action {
     }
 
     /** {@inheritDoc} */
-    public boolean execute(final FilterState state ) {
-        state.cancel = true;
+    public boolean execute(final FilterTask filterTask ) {
+        filterTask.setCancelled(true);
         final ArrayList<String> parsedCommands = new ArrayList<String>();
 
         for (String cmd : commands)
-            parsedCommands.add(TagRegistry.replaceTags(cmd, state));
+            parsedCommands.add(TagRegistry.replaceTags(cmd, filterTask));
 
-        MessageAuthor author = state.getAuthor();
+        MessageAuthor author = filterTask.getAuthor();
         if (author instanceof BukkitPlayer ) {
             BukkitPlayer player = (BukkitPlayer)author;
             for (String cmd : parsedCommands) {
                 player.executeCommand(cmd);
-                state.addLogMessage("Helped " + author.getName() + " execute command: " + cmd);
+                filterTask.addLogMessage("Helped " + author.getName() + " execute command: " + cmd);
             }
             return true;
         } else {
-            state.addLogMessage("Could not execute cmdchain on non-player.");
-            state.setCancelled();
+            filterTask.addLogMessage("Could not execute cmdchain on non-player.");
+            filterTask.setCancelled(true);
             return false;
         }
     }

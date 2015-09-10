@@ -10,7 +10,7 @@
 
 package com.pwn9.PwnFilter.rules.action.minecraft;
 
-import com.pwn9.PwnFilter.FilterState;
+import com.pwn9.PwnFilter.FilterTask;
 import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
 import com.pwn9.PwnFilter.rules.action.Action;
 import com.pwn9.PwnFilter.util.tags.TagRegistry;
@@ -49,10 +49,10 @@ public class Notify implements Action {
     }
 
     /** {@inheritDoc} */
-    public boolean execute(final FilterState state ) {
+    public boolean execute(final FilterTask filterTask ) {
 
         // Create the message to send
-        final String sendString = TagRegistry.replaceTags(messageString, state);
+        final String sendString = TagRegistry.replaceTags(messageString, filterTask);
 
         if (Bukkit.isPrimaryThread()) {
             // We are in the main thread, just execute API calls directly.

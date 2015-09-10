@@ -10,7 +10,7 @@
 
 package com.pwn9.PwnFilter.rules.action.core;
 
-import com.pwn9.PwnFilter.FilterState;
+import com.pwn9.PwnFilter.FilterTask;
 import com.pwn9.PwnFilter.rules.action.Action;
 
 import java.util.Random;
@@ -36,9 +36,9 @@ public class RandomReplace implements Action {
     }
 
     /** {@inheritDoc} */
-    public boolean execute(final FilterState state ) {
+    public boolean execute(final FilterTask filterTask ) {
         int randomInt = random.nextInt(toRand.length);
-        state.setModifiedMessage(state.getModifiedMessage().replaceText(state.pattern,toRand[randomInt]));
+        filterTask.setModifiedMessage(filterTask.getModifiedMessage().replaceText(filterTask.getPattern(),toRand[randomInt]));
         return true;
     }
 }

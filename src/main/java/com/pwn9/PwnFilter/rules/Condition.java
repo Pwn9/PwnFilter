@@ -10,7 +10,7 @@
 
 package com.pwn9.PwnFilter.rules;
 
-import com.pwn9.PwnFilter.FilterState;
+import com.pwn9.PwnFilter.FilterTask;
 
 
 /**
@@ -120,7 +120,7 @@ public class Condition {
      * @param state The MessageState
      * @return true if this condition is met, false otherwise
      */
-    public boolean check(FilterState state) {
+    public boolean check(FilterTask state) {
         boolean matched = false;
         switch (type) {
             case user:

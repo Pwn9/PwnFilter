@@ -10,7 +10,7 @@
 
 package com.pwn9.PwnFilter.util.tags;
 
-import com.pwn9.PwnFilter.FilterState;
+import com.pwn9.PwnFilter.FilterTask;
 
 /**
  * Return the current (edited) Message text
@@ -19,7 +19,7 @@ import com.pwn9.PwnFilter.FilterState;
 public class StringTag implements Tag {
 
     @Override
-    public java.lang.String getValue(FilterState state) {
-        return state.getModifiedMessage().getRaw();
+    public java.lang.String getValue(FilterTask filterTask) {
+        return filterTask.getModifiedMessage().getRaw();
     }
 }

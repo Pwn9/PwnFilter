@@ -10,7 +10,7 @@
 
 package com.pwn9.PwnFilter.rules.action.core;
 
-import com.pwn9.PwnFilter.FilterState;
+import com.pwn9.PwnFilter.FilterTask;
 import com.pwn9.PwnFilter.rules.action.Action;
 import com.pwn9.PwnFilter.util.SimpleString;
 import org.bukkit.ChatColor;
@@ -34,8 +34,8 @@ public class Replace implements Action {
     }
 
     /** {@inheritDoc} */
-    public boolean execute(final FilterState state ) {
-        state.setModifiedMessage(new SimpleString(state.getModifiedMessage().toString()).replaceText(state.pattern, messageString));
+    public boolean execute(final FilterTask filterTask ) {
+        filterTask.setModifiedMessage(new SimpleString(filterTask.getModifiedMessage().toString()).replaceText(filterTask.getPattern(), messageString));
         return true;
     }
 }

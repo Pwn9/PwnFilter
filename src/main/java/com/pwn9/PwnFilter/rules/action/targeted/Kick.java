@@ -10,7 +10,7 @@
 
 package com.pwn9.PwnFilter.rules.action.targeted;
 
-import com.pwn9.PwnFilter.FilterState;
+import com.pwn9.PwnFilter.FilterTask;
 import com.pwn9.PwnFilter.bukkit.BukkitPlayer;
 import com.pwn9.PwnFilter.rules.action.Action;
 import com.pwn9.PwnFilter.bukkit.util.DefaultMessages;
@@ -35,13 +35,13 @@ public class Kick implements Action {
     }
 
     /** {@inheritDoc} */
-    public boolean execute(final FilterState state ) {
+    public boolean execute(final FilterTask filterTask ) {
 
-        if (state.getAuthor() instanceof BukkitPlayer ) {
+        if (filterTask.getAuthor() instanceof BukkitPlayer ) {
 
-            String outMessage = replaceTags(messageString, state);
-            ((BukkitPlayer) state.getAuthor()).kick(messageString);
-            state.addLogMessage("Kicked " + state.getAuthor().getName() + ": " + messageString);
+            String outMessage = replaceTags(messageString, filterTask);
+            ((BukkitPlayer) filterTask.getAuthor()).kick(messageString);
+            filterTask.addLogMessage("Kicked " + filterTask.getAuthor().getName() + ": " + messageString);
             return true;
         }
         return false;

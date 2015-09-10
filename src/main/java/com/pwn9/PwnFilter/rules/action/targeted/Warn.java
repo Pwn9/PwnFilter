@@ -10,7 +10,7 @@
 
 package com.pwn9.PwnFilter.rules.action.targeted;
 
-import com.pwn9.PwnFilter.FilterState;
+import com.pwn9.PwnFilter.FilterTask;
 import com.pwn9.PwnFilter.bukkit.BukkitPlayer;
 import com.pwn9.PwnFilter.rules.action.Action;
 import com.pwn9.PwnFilter.bukkit.util.DefaultMessages;
@@ -34,12 +34,12 @@ public class Warn implements Action {
     }
 
     /** {@inheritDoc} */
-    public boolean execute(final FilterState state ) {
-        if ( state.getAuthor() instanceof BukkitPlayer) {
+    public boolean execute(final FilterTask filterTask ) {
+        if ( filterTask.getAuthor() instanceof BukkitPlayer) {
 
-            final String message = TagRegistry.replaceTags(messageString, state);
-            state.getAuthor().sendMessage(messageString);
-            state.addLogMessage("Warned " + state.getAuthor().getName() + ": " + message);
+            final String message = TagRegistry.replaceTags(messageString, filterTask);
+            filterTask.getAuthor().sendMessage(messageString);
+            filterTask.addLogMessage("Warned " + filterTask.getAuthor().getName() + ": " + message);
             return true;
         }
         return false;
