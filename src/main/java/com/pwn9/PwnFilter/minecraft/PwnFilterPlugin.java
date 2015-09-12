@@ -12,7 +12,6 @@ package com.pwn9.PwnFilter.minecraft;
 
 import com.google.common.collect.MapMaker;
 import com.pwn9.PwnFilter.FilterEngine;
-import com.pwn9.PwnFilter.api.ClientManager;
 import com.pwn9.PwnFilter.api.FilterClient;
 import com.pwn9.PwnFilter.config.BukkitConfig;
 import com.pwn9.PwnFilter.minecraft.api.BukkitAPI;
@@ -85,9 +84,6 @@ public class PwnFilterPlugin extends JavaPlugin {
         // Set up the Log manager.
         LogManager.getInstance(getLogger(), getDataFolder());
 
-        // Initialize Filter Engine
-        FilterEngine.getInstance();
-
         // We're all Bukkit here, so let's set the API appropriately
         MinecraftServer.setAPI(BukkitAPI.getInstance(this));
 
@@ -111,13 +107,13 @@ public class PwnFilterPlugin extends JavaPlugin {
         activateMetrics();
 
         //Load up our listeners
-        ClientManager clientManager = ClientManager.getInstance();
-        clientManager.registerClient(new PwnFilterCommandListener(), this);
-        clientManager.registerClient(new PwnFilterInvListener(), this);
-        clientManager.registerClient(new PwnFilterPlayerListener(), this);
-        clientManager.registerClient(new PwnFilterServerCommandListener(), this);
-        clientManager.registerClient(new PwnFilterSignListener(), this);
-        clientManager.registerClient(new PwnFilterBookListener(), this);
+        FilterEngine filterEngine = FilterEngine.getInstance();
+        filterEngine.registerClient(new PwnFilterCommandListener(), this);
+        filterEngine.registerClient(new PwnFilterInvListener(), this);
+        filterEngine.registerClient(new PwnFilterPlayerListener(), this);
+        filterEngine.registerClient(new PwnFilterServerCommandListener(), this);
+        filterEngine.registerClient(new PwnFilterSignListener(), this);
+        filterEngine.registerClient(new PwnFilterBookListener(), this);
 
 
         // The Entity Death handler, for custom death messages.
@@ -126,7 +122,7 @@ public class PwnFilterPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerCacheListener(), this);
 
         // Enable the listeners
-        clientManager.enableClients();
+        filterEngine.enableClients();
 
         // Set up Command Handlers
         getCommand("pfreload").setExecutor(new pfreload());
@@ -141,7 +137,7 @@ public class PwnFilterPlugin extends JavaPlugin {
      */
     public void onDisable() {
 
-        ClientManager.getInstance().unregisterClients();
+        FilterEngine.getInstance().unregisterClients();
 
         HandlerList.unregisterAll(this); // Unregister all remaining handlers.
 
@@ -181,7 +177,7 @@ public class PwnFilterPlugin extends JavaPlugin {
     public void updateMetrics() {
 
         ArrayList<String> activeListenerNames = new ArrayList<String>();
-        for (FilterClient f : ClientManager.getInstance().getActiveClients()) {
+        for (FilterClient f : FilterEngine.getInstance().getActiveClients()) {
             activeListenerNames.add(f.getShortName());
         }
 
@@ -193,7 +189,7 @@ public class PwnFilterPlugin extends JavaPlugin {
         }
 
         // Add new plotters
-        for (final FilterClient f : ClientManager.getInstance().getActiveClients()) {
+        for (final FilterClient f : FilterEngine.getInstance().getActiveClients()) {
             final String eventName = f.getShortName();
             eventGraph.addPlotter(new Metrics.Plotter(eventName) {
                 @Override
