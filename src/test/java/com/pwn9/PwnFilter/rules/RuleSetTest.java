@@ -3,23 +3,20 @@ package com.pwn9.PwnFilter.rules;
 import com.pwn9.PwnFilter.FilterTask;
 import com.pwn9.PwnFilter.api.FilterClient;
 import com.pwn9.PwnFilter.api.MessageAuthor;
-import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
+import com.pwn9.PwnFilter.minecraft.PwnFilterPlugin;
+import com.pwn9.PwnFilter.config.FilterConfig;
 import com.pwn9.PwnFilter.rules.action.RegisterActions;
 import com.pwn9.PwnFilter.util.LogManager;
 import junit.framework.Assert;
-import org.easymock.EasyMock;
 import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.powermock.api.easymock.PowerMock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.StringReader;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -38,7 +35,6 @@ public class RuleSetTest {
 
     RuleManager ruleManager;
     RuleChain rs;
-    PwnFilterPlugin mockPlugin;
     LogManager pwnLogger;
     FilterClient mockClient = new FilterClient() {
         public String getShortName() { return "TEST"; }
@@ -80,16 +76,10 @@ public class RuleSetTest {
     public void setUp() throws Exception {
         RegisterActions.all();
         //TODO: Remove this, and add a FilterEngine initialization call.
-        PowerMock.mockStatic(PwnFilterPlugin.class);
-        mockPlugin = PowerMock.createMock(PwnFilterPlugin.class);
-        EasyMock.expect(PwnFilterPlugin.getInstance()).andReturn(mockPlugin).anyTimes();
-        EasyMock.expect(mockPlugin.getBufferedReader("testfile.txt"))
-                .andReturn(new BufferedReader(new StringReader("test"))).anyTimes();
-        PowerMock.replay(PwnFilterPlugin.class);
-        PowerMock.replay(mockPlugin);
-        ruleManager = RuleManager.init(mockPlugin);
+        ruleManager = RuleManager.getInstance();
         File testFile = new File(getClass().getResource("/testrules.txt").getFile());
-        ruleManager.setRuleDir(testFile.getParent());
+        FilterConfig.getInstance().setRulesDir(testFile.getParentFile());
+        FilterConfig.getInstance().setTextDir(testFile.getParentFile());
         rs = ruleManager.getRuleChain("testrules.txt");
         Logger logger = Logger.getAnonymousLogger();
         pwnLogger = LogManager.getInstance(logger, new File("/tmp/"));

@@ -39,11 +39,12 @@ public class LimitedRegexCharSequenceTest {
         Matcher matcher = pattern.matcher(timedString);
 
         try {
-            System.out.println(matcher.matches());
+            //noinspection ResultOfMethodCallIgnored
+            matcher.matches();
             Assert.fail("Shouldn't get here!");
         } catch (RuntimeException ex) {
-            System.out.println(timedString.getAccessCount());
-            System.out.println("PASS: " + ex.getMessage());
+//            System.out.println(timedString.getAccessCount());
+//            System.out.println("PASS: " + ex.getMessage());
         }
     }
 }

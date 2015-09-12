@@ -12,7 +12,7 @@ package com.pwn9.PwnFilter;
 
 import com.pwn9.PwnFilter.api.FilterClient;
 import com.pwn9.PwnFilter.api.MessageAuthor;
-import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
+import com.pwn9.PwnFilter.minecraft.api.MinecraftServer;
 import com.pwn9.PwnFilter.rules.Rule;
 import com.pwn9.PwnFilter.util.EnhancedString;
 import com.pwn9.PwnFilter.util.SimpleString;
@@ -83,7 +83,7 @@ public class FilterTask {
         modifiedMessage = m;
         filterClient = l;
         //TODO: Abstract this into a generic MessageAuthor lookup?
-        author = PwnFilterPlugin.getBukkitAPI().getAuthor(uuid);
+        author = MinecraftServer.getAPI().getAuthor(uuid);
     }
 
     /**

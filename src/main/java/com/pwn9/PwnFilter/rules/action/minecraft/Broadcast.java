@@ -11,7 +11,7 @@
 package com.pwn9.PwnFilter.rules.action.minecraft;
 
 import com.pwn9.PwnFilter.FilterTask;
-import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
+import com.pwn9.PwnFilter.minecraft.api.MinecraftConsole;
 import com.pwn9.PwnFilter.rules.action.Action;
 import com.pwn9.PwnFilter.util.tags.TagRegistry;
 import org.bukkit.ChatColor;
@@ -52,7 +52,7 @@ public class Broadcast implements Action {
 
         filterTask.addLogMessage("Broadcasted: " + preparedMessages.get(0) + (preparedMessages.size() > 1 ? "..." : ""));
 
-        PwnFilterPlugin.sendBroadcast(preparedMessages);
+        MinecraftConsole.getInstance().sendBroadcast(preparedMessages);
 
         return true;
     }

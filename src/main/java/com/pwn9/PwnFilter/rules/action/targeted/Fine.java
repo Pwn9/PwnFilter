@@ -11,8 +11,8 @@
 package com.pwn9.PwnFilter.rules.action.targeted;
 
 import com.pwn9.PwnFilter.FilterTask;
-import com.pwn9.PwnFilter.api.MinecraftPlayer;
-import com.pwn9.PwnFilter.bukkit.util.DefaultMessages;
+import com.pwn9.PwnFilter.minecraft.api.MinecraftPlayer;
+import com.pwn9.PwnFilter.minecraft.util.DefaultMessages;
 import com.pwn9.PwnFilter.rules.action.Action;
 
 /**

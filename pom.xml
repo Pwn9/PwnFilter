@@ -261,6 +261,6 @@
 
     <properties>
         <powermock.version>1.5</powermock.version>
-        <easymock.version>3.1</easymock.version>
+        <easymock.version>3.3</easymock.version>
     </properties>
 </project>

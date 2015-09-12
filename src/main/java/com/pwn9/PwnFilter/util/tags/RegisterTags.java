@@ -10,8 +10,8 @@
 
 package com.pwn9.PwnFilter.util.tags;
 
-import com.pwn9.PwnFilter.bukkit.tag.PlayerTag;
-import com.pwn9.PwnFilter.bukkit.tag.WorldTag;
+import com.pwn9.PwnFilter.minecraft.tag.PlayerTag;
+import com.pwn9.PwnFilter.minecraft.tag.WorldTag;
 
 /**
  * Register Built-in Tags

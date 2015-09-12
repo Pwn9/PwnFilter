@@ -1,6 +1,6 @@
 package com.pwn9.PwnFilter.util;
 
-import com.pwn9.PwnFilter.bukkit.util.ColoredString;
+import com.pwn9.PwnFilter.minecraft.util.ColoredString;
 import junit.framework.TestCase;
 
 import java.util.logging.Logger;

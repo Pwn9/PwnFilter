@@ -3,12 +3,12 @@ package com.pwn9.PwnFilter.rules;
 import com.pwn9.PwnFilter.FilterTask;
 import com.pwn9.PwnFilter.api.FilterClient;
 import com.pwn9.PwnFilter.api.MessageAuthor;
-import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
-import com.pwn9.PwnFilter.bukkit.listener.PwnFilterCommandListener;
-import com.pwn9.PwnFilter.bukkit.listener.PwnFilterPlayerListener;
+import com.pwn9.PwnFilter.minecraft.PwnFilterPlugin;
+import com.pwn9.PwnFilter.minecraft.listener.PwnFilterCommandListener;
+import com.pwn9.PwnFilter.minecraft.listener.PwnFilterPlayerListener;
+import com.pwn9.PwnFilter.config.FilterConfig;
 import com.pwn9.PwnFilter.rules.action.RegisterActions;
 import com.pwn9.PwnFilter.util.LogManager;
-import org.easymock.EasyMock;
 import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Before;
@@ -73,10 +73,9 @@ public class ConditionTest {
     public void setUp() throws Exception {
         RegisterActions.all();
         //TODO: Remove this, and add a FilterEngine initialization call.
-        mockPlugin = EasyMock.createMock(PwnFilterPlugin.class);
-        ruleManager = RuleManager.init(mockPlugin);
+        ruleManager = RuleManager.getInstance();
         File testFile = new File(getClass().getResource("/conditionTests.txt").getFile());
-        ruleManager.setRuleDir(testFile.getParent());
+        FilterConfig.getInstance().setRulesDir(testFile.getParentFile());
         rs = ruleManager.getRuleChain("conditionTests.txt");
         Logger logger = Logger.getAnonymousLogger();
         pwnLogger = LogManager.getInstance(logger, new File("/tmp/"));
@@ -96,11 +95,11 @@ public class ConditionTest {
 
     @Test
     public void testIgnoreCommand() {
-        FilterTask testState1 = new FilterTask("Ignore baseline command test", author, new PwnFilterCommandListener(mockPlugin));
+        FilterTask testState1 = new FilterTask("Ignore baseline command test", author, new PwnFilterCommandListener());
         rs.apply(testState1);
         assertEquals("Ignore baseline replace command", testState1.getModifiedMessage().toString());
 
-        FilterTask testState2 = new FilterTask("/tell Ignore command test", author, new PwnFilterCommandListener(mockPlugin));
+        FilterTask testState2 = new FilterTask("/tell Ignore command test", author, new PwnFilterCommandListener());
         rs.apply(testState2);
         assertEquals("/tell Ignore command test",testState2.getModifiedMessage().toString());
     }
@@ -114,10 +113,10 @@ public class ConditionTest {
 
     @Test
     public void testComandConditionOnlyMatchesCommandHandler() {
-        FilterTask testState = new FilterTask("tell banned", author, new PwnFilterPlayerListener(mockPlugin));
+        FilterTask testState = new FilterTask("tell banned", author, new PwnFilterPlayerListener());
         rs.apply(testState);
         assertEquals("tell matched",testState.getModifiedMessage().toString());
-        FilterTask testState2 = new FilterTask("tell banned", author, new PwnFilterCommandListener(mockPlugin));
+        FilterTask testState2 = new FilterTask("tell banned", author, new PwnFilterCommandListener());
         rs.apply(testState2);
         assertEquals("tell banned", testState2.getModifiedMessage().toString());
     }

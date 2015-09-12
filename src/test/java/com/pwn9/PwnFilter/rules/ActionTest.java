@@ -3,10 +3,9 @@ package com.pwn9.PwnFilter.rules;
 import com.pwn9.PwnFilter.FilterTask;
 import com.pwn9.PwnFilter.api.FilterClient;
 import com.pwn9.PwnFilter.api.MessageAuthor;
-import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
+import com.pwn9.PwnFilter.config.FilterConfig;
 import com.pwn9.PwnFilter.rules.action.RegisterActions;
 import com.pwn9.PwnFilter.util.LogManager;
-import org.easymock.EasyMock;
 import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Before;
@@ -30,7 +29,6 @@ public class ActionTest {
 
     RuleManager ruleManager;
     RuleChain rs;
-    PwnFilterPlugin mockPlugin;
     LogManager pwnLogger;
     FilterClient mockClient = new FilterClient() {
         public String getShortName() { return "ACTIONTEST"; }
@@ -72,14 +70,11 @@ public class ActionTest {
     @Before
     public void setUp() throws Exception {
         RegisterActions.all();
-        //TODO: Remove this, and add a FilterEngine initialization call.
-        mockPlugin = EasyMock.createMock(PwnFilterPlugin.class);
-        ruleManager = RuleManager.init(mockPlugin);
+        ruleManager = RuleManager.getInstance();
         File testFile = new File(getClass().getResource("/actionTests.txt").getFile());
-        ruleManager.setRuleDir(testFile.getParent());
+        FilterConfig.getInstance().setRulesDir(testFile.getParentFile());
         rs = ruleManager.getRuleChain("actionTests.txt");
-        Logger logger = Logger.getAnonymousLogger();
-        pwnLogger = LogManager.getInstance(logger, new File("/tmp/"));
+        pwnLogger = LogManager.getInstance(Logger.getAnonymousLogger(), new File("/tmp/"));
         rs.loadConfigFile();
     }
 
@@ -94,7 +89,6 @@ public class ActionTest {
     public void testRandRep() {
         FilterTask testState = new FilterTask("randrep", author, mockClient);
         rs.apply(testState);
-        System.out.println(testState.getModifiedMessage().toString());
         assertTrue(testState.getModifiedMessage().toString().matches("(random|replace)"));
     }
 

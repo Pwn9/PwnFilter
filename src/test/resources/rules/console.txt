@@ -1,0 +1,4 @@
+# This is a base file for you to configure.
+# By default, we don't include any rules for the console filter.  Please specify your own.
+# Be careful with the console filter.  You could cause really bad things to happen.
+# You're best bet is not to use this, unless you really know what you're doing. :)

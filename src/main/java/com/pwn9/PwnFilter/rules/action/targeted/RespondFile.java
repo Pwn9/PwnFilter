@@ -11,12 +11,12 @@
 package com.pwn9.PwnFilter.rules.action.targeted;
 
 import com.pwn9.PwnFilter.FilterTask;
-import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
+import com.pwn9.PwnFilter.config.FilterConfig;
+import com.pwn9.PwnFilter.minecraft.util.FileUtil;
 import com.pwn9.PwnFilter.rules.action.Action;
 import com.pwn9.PwnFilter.util.LogManager;
 import com.pwn9.PwnFilter.util.tags.TagRegistry;
 import org.bukkit.ChatColor;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -38,7 +38,7 @@ public class RespondFile implements Action {
      */
     public void init(String s) {
         try {
-            BufferedReader br = PwnFilterPlugin.getInstance().getBufferedReader(s);
+            BufferedReader br = FileUtil.getBufferedReader(FilterConfig.getInstance().getTextDir(),s);
             String message;
             while ((message = br.readLine()) != null) {
                 messageStrings.add(ChatColor.translateAlternateColorCodes('&', message));
@@ -62,18 +62,9 @@ public class RespondFile implements Action {
             preparedMessages.add(TagRegistry.replaceTags(message, filterTask));
         }
 
+        filterTask.getAuthor().sendMessages(preparedMessages);
+
         filterTask.addLogMessage("Responded to " + filterTask.getAuthor().getName() + " with: " + preparedMessages.get(0) + "...");
-
-        PwnFilterPlugin.getBukkitAPI().safeBukkitDispatch(
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        for (String m : preparedMessages) {
-                            filterTask.getAuthor().sendMessage(m);
-                        }
-                    }
-                });
-
 
         return true;
     }

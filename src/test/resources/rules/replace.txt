@@ -1,0 +1,11 @@
+# This is a base file for you to configure.
+# To maintain backward compatibility with PwnFilter 3.1.x this just
+# points to the main rules.txt, which was moved from the plugin directory.
+# Please refer to http://dev.bukkit.org/bukkit-plugins/pwnfilter
+# for more documentation on how to configure these files.
+
+####### HATE SPEECH - INSTABAN #######
+
+match replaceme
+rule R1 replacetest
+then replace PASS

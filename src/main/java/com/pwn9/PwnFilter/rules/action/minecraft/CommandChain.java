@@ -12,7 +12,7 @@ package com.pwn9.PwnFilter.rules.action.minecraft;
 
 import com.pwn9.PwnFilter.FilterTask;
 import com.pwn9.PwnFilter.api.MessageAuthor;
-import com.pwn9.PwnFilter.bukkit.api.BukkitPlayer;
+import com.pwn9.PwnFilter.minecraft.api.MinecraftPlayer;
 import com.pwn9.PwnFilter.rules.action.Action;
 import com.pwn9.PwnFilter.util.tags.TagRegistry;
 
@@ -46,8 +46,8 @@ public class CommandChain implements Action {
             parsedCommands.add(TagRegistry.replaceTags(cmd, filterTask));
 
         MessageAuthor author = filterTask.getAuthor();
-        if (author instanceof BukkitPlayer ) {
-            BukkitPlayer player = (BukkitPlayer)author;
+        if (author instanceof MinecraftPlayer) {
+            MinecraftPlayer player = (MinecraftPlayer)author;
             for (String cmd : parsedCommands) {
                 player.executeCommand(cmd);
                 filterTask.addLogMessage("Helped " + author.getName() + " execute command: " + cmd);

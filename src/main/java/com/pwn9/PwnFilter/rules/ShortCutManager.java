@@ -10,6 +10,7 @@
 
 package com.pwn9.PwnFilter.rules;
 
+import com.pwn9.PwnFilter.config.FilterConfig;
 import com.pwn9.PwnFilter.util.LogManager;
 import com.pwn9.PwnFilter.util.Patterns;
 
@@ -34,7 +35,6 @@ public class ShortCutManager {
     // TODO: Create a "ShortCuts" object to pass around, instead of HashMaps.
     private static ShortCutManager _instance;
     private static Map<String, Map<String,String>> shortcutFiles = new HashMap<String, Map<String, String>>();
-    private static File shortcutDir;
 
     private ShortCutManager() {}
 
@@ -48,19 +48,6 @@ public class ShortCutManager {
             _instance = new ShortCutManager();
         }
         return _instance;
-    }
-
-    /**
-     * <p>Setter for the field <code>shortcutDir</code>.</p>
-     *
-     * @param dir a {@link java.io.File} object.
-     * @return a boolean.
-     */
-    public boolean setShortcutDir(File dir) {
-        if (dir.exists()) {
-            shortcutDir = dir;
-            return true;
-        } else return false;
     }
 
     /**
@@ -171,8 +158,9 @@ public class ShortCutManager {
      * @return a {@link java.io.File} object.
      */
     public File getFile(String fileName) {
-        if (shortcutDir.exists()) {
-            File shortcutFile = new File(shortcutDir,fileName);
+        File shortcutdir = FilterConfig.getInstance().getRulesDir();
+        if (shortcutdir.exists()) {
+            File shortcutFile = new File(shortcutdir,fileName);
             if (shortcutFile.exists()) {
                 return shortcutFile;
             } else {

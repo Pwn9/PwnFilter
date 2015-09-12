@@ -11,7 +11,7 @@
 package com.pwn9.PwnFilter.rules.action.minecraft;
 
 import com.pwn9.PwnFilter.FilterTask;
-import com.pwn9.PwnFilter.bukkit.api.BukkitServer;
+import com.pwn9.PwnFilter.minecraft.api.MinecraftConsole;
 import com.pwn9.PwnFilter.rules.action.Action;
 import com.pwn9.PwnFilter.util.tags.TagRegistry;
 import org.bukkit.ChatColor;
@@ -52,7 +52,7 @@ public class Notify implements Action {
         // Create the message to send
         final String sendString = TagRegistry.replaceTags(messageString, filterTask);
 
-        return BukkitServer.getInstance().notifyWithPerm(permissionString, sendString);
+        return MinecraftConsole.getInstance().notifyWithPerm(permissionString, sendString);
 
     }
 

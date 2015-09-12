@@ -11,9 +11,9 @@
 package com.pwn9.PwnFilter.rules.action.targeted;
 
 import com.pwn9.PwnFilter.FilterTask;
-import com.pwn9.PwnFilter.bukkit.api.BukkitPlayer;
+import com.pwn9.PwnFilter.minecraft.api.MinecraftPlayer;
 import com.pwn9.PwnFilter.rules.action.Action;
-import com.pwn9.PwnFilter.bukkit.util.DefaultMessages;
+import com.pwn9.PwnFilter.minecraft.util.DefaultMessages;
 import com.pwn9.PwnFilter.util.tags.TagRegistry;
 
 /**
@@ -35,7 +35,7 @@ public class Warn implements Action {
 
     /** {@inheritDoc} */
     public boolean execute(final FilterTask filterTask ) {
-        if ( filterTask.getAuthor() instanceof BukkitPlayer) {
+        if ( filterTask.getAuthor() instanceof MinecraftPlayer) {
 
             final String message = TagRegistry.replaceTags(messageString, filterTask);
             filterTask.getAuthor().sendMessage(messageString);

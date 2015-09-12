@@ -11,7 +11,7 @@
 package com.pwn9.PwnFilter.rules.action.minecraft;
 
 import com.pwn9.PwnFilter.FilterTask;
-import com.pwn9.PwnFilter.bukkit.api.BukkitServer;
+import com.pwn9.PwnFilter.minecraft.api.MinecraftConsole;
 import com.pwn9.PwnFilter.rules.action.Action;
 import com.pwn9.PwnFilter.util.tags.TagRegistry;
 
@@ -43,7 +43,7 @@ public class ConsoleChain implements Action {
 
         for (final String cmd : parsedCommands) {
             filterTask.addLogMessage("Sending console command: " + cmd);
-            BukkitServer.getInstance().executeCommand(cmd);
+            MinecraftConsole.getInstance().executeCommand(cmd);
         }
 
         return true;

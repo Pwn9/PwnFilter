@@ -11,9 +11,10 @@
 package com.pwn9.PwnFilter.rules.action.minecraft;
 
 import com.pwn9.PwnFilter.FilterTask;
-import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
+import com.pwn9.PwnFilter.minecraft.api.MinecraftConsole;
+import com.pwn9.PwnFilter.minecraft.util.FileUtil;
+import com.pwn9.PwnFilter.config.FilterConfig;
 import com.pwn9.PwnFilter.rules.action.Action;
-import com.pwn9.PwnFilter.bukkit.util.FileUtil;
 import com.pwn9.PwnFilter.util.LogManager;
 import com.pwn9.PwnFilter.util.tags.TagRegistry;
 import org.bukkit.ChatColor;
@@ -34,17 +35,8 @@ public class BroadcastFile implements Action {
     /** {@inheritDoc} */
     public void init(String s)
     {
-        File textDir = PwnFilterPlugin.getInstance().getTextDir();
-        if (textDir == null) {
-            return; // Er... Probably should return something, or at least log...
-        }
-
-        File textfile = FileUtil.getFile(textDir,s,false);
-        if (textfile == null) return;
-
         try {
-            FileInputStream fs  = new FileInputStream(textfile);
-            BufferedReader br = new BufferedReader(new InputStreamReader(fs));
+            BufferedReader br = FileUtil.getBufferedReader(FilterConfig.getInstance().getTextDir(),s);
             String message;
             while ( (message = br.readLine()) != null ) {
                 messageStrings.add(ChatColor.translateAlternateColorCodes('&',message));
@@ -52,7 +44,7 @@ public class BroadcastFile implements Action {
         } catch (FileNotFoundException ex) {
             LogManager.logger.warning("File not found while trying to add Action: " + ex.getMessage());
         } catch (IOException ex) {
-            LogManager.logger.warning("Error reading: " + textfile.getName());
+            LogManager.logger.warning("Error reading: " + s);
         }
     }
 
@@ -66,7 +58,7 @@ public class BroadcastFile implements Action {
 
         filterTask.addLogMessage("Broadcasted: " + preparedMessages.get(0) + (preparedMessages.size() > 1 ? "..." : ""));
 
-        PwnFilterPlugin.sendBroadcast(preparedMessages);
+        MinecraftConsole.getInstance().sendBroadcast(preparedMessages);
         return true;
     }
 }

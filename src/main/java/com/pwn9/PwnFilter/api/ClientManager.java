@@ -12,8 +12,7 @@
 
 package com.pwn9.PwnFilter.api;
 
-import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
-import org.bukkit.configuration.Configuration;
+import com.pwn9.PwnFilter.minecraft.PwnFilterPlugin;
 import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;

@@ -10,7 +10,12 @@
 
 package com.pwn9.PwnFilter.rules.parser;
 
-import com.pwn9.PwnFilter.rules.*;
+import com.pwn9.PwnFilter.minecraft.util.FileUtil;
+import com.pwn9.PwnFilter.config.FilterConfig;
+import com.pwn9.PwnFilter.rules.Chain;
+import com.pwn9.PwnFilter.rules.Condition;
+import com.pwn9.PwnFilter.rules.Rule;
+import com.pwn9.PwnFilter.rules.ShortCutManager;
 import com.pwn9.PwnFilter.rules.action.Action;
 import com.pwn9.PwnFilter.rules.action.ActionFactory;
 import com.pwn9.PwnFilter.util.LogManager;
@@ -114,7 +119,7 @@ public class FileParser {
         }
 
         // Open the file for reading.
-        File ruleFile = RuleManager.getInstance().getFile(filename, createFile);
+        File ruleFile = FileUtil.getFile(FilterConfig.getInstance().getRulesDir(), filename, createFile);
         if(ruleFile == null) {
             LogManager.logger.warning("File not found: " + filename + ". Aborting parsing.");
             return false;

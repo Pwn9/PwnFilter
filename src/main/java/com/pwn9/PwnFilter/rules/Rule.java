@@ -11,7 +11,7 @@
 package com.pwn9.PwnFilter.rules;
 
 import com.pwn9.PwnFilter.FilterTask;
-import com.pwn9.PwnFilter.bukkit.PwnFilterPlugin;
+import com.pwn9.PwnFilter.minecraft.PwnFilterPlugin;
 import com.pwn9.PwnFilter.rules.action.Action;
 import com.pwn9.PwnFilter.util.LimitedRegexCharSequence;
 import com.pwn9.PwnFilter.util.LogManager;
