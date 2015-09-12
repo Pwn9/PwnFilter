@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 
 /**
@@ -96,6 +97,20 @@ public class ActionTest {
     public void testBurn() {
         FilterTask testState = new FilterTask("burn", author, mockClient);
         rs.apply(testState);
+    }
+
+    @Test
+    public void testUpper() {
+        FilterTask testState = new FilterTask("upper", author, mockClient);
+        rs.apply(testState);
+        assertEquals("UPPER", testState.getModifiedMessage().toString());
+    }
+
+    @Test
+    public void testLower() {
+        FilterTask testState = new FilterTask("LOWER", author, mockClient);
+        rs.apply(testState);
+        assertEquals("lower", testState.getModifiedMessage().toString());
     }
 
     @After

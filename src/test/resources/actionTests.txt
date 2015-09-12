@@ -21,3 +21,8 @@ then burn Don't be bad.
 match randrep
 then randrep random|replace
 
+match upper
+then upper
+
+match LOWER
+then lower

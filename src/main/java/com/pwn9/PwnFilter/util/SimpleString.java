@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 
 /**
  * A Simple wrapper around a String object.
- *
+ * <p/>
  * Created by ptoal on 15-09-09.
  */
 public class SimpleString implements EnhancedString {
@@ -29,18 +29,18 @@ public class SimpleString implements EnhancedString {
     }
 
     @Override
-    public EnhancedString replaceText(Pattern p, String rText) {
+    public SimpleString replaceText(Pattern p, String rText) {
         Matcher m = p.matcher(value);
         return new SimpleString(m.replaceAll(rText));
     }
 
     @Override
-    public EnhancedString patternToLower(Pattern p) {
+    public SimpleString patternToLower(Pattern p) {
         Matcher m = p.matcher(value);
 
         StringBuffer buf = new StringBuffer();
         while (m.find()) {
-            m.appendReplacement(buf, m.group().toUpperCase());
+            m.appendReplacement(buf, m.group().toLowerCase());
         }
         m.appendTail(buf);
         return new SimpleString(buf.toString());
@@ -48,12 +48,12 @@ public class SimpleString implements EnhancedString {
 
 
     @Override
-    public EnhancedString patternToUpper(Pattern p) {
+    public SimpleString patternToUpper(Pattern p) {
         Matcher m = p.matcher(value);
 
         StringBuffer buf = new StringBuffer();
         while (m.find()) {
-            m.appendReplacement(buf, m.group().toLowerCase());
+            m.appendReplacement(buf, m.group().toUpperCase());
         }
         m.appendTail(buf);
         return new SimpleString(buf.toString());
@@ -76,8 +76,12 @@ public class SimpleString implements EnhancedString {
 
     @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
     @Override
-    public boolean equals(Object o) {
-        return this == o || value.equals(o);
+    public boolean equals(Object obj) {
+        if (obj instanceof SimpleString) {
+            return ((SimpleString) obj).getRaw().equals(getRaw());
+        } else {
+            return getRaw().equals(obj);
+        }
     }
 
     @Override

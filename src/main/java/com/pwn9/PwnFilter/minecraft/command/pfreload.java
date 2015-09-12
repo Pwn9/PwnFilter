@@ -10,7 +10,7 @@
 
 package com.pwn9.PwnFilter.minecraft.command;
 
-import com.pwn9.PwnFilter.api.ClientManager;
+import com.pwn9.PwnFilter.FilterEngine;
 import com.pwn9.PwnFilter.minecraft.PwnFilterPlugin;
 import com.pwn9.PwnFilter.rules.RuleManager;
 import com.pwn9.PwnFilter.util.LogManager;
@@ -42,7 +42,7 @@ public class pfreload implements CommandExecutor {
         sender.sendMessage(ChatColor.RED + "Reloading config.yml and rules/*.txt files.");
 
         LogManager.logger.info("Disabling all listeners");
-        ClientManager.getInstance().disableClients();
+        FilterEngine.getInstance().disableClients();
 
         PwnFilterPlugin.getInstance().reloadConfig();
         PwnFilterPlugin.getInstance().configurePlugin();
@@ -53,7 +53,7 @@ public class pfreload implements CommandExecutor {
         LogManager.logger.config("All rules reloaded by " + sender.getName());
 
         // Re-register our listeners
-        ClientManager.getInstance().enableClients();
+        FilterEngine.getInstance().enableClients();
         LogManager.logger.info("All listeners re-enabled");
 
         return true;
