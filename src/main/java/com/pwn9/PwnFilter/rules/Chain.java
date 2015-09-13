@@ -11,7 +11,7 @@
 package com.pwn9.PwnFilter.rules;
 
 import com.google.common.collect.Multimap;
-import com.pwn9.PwnFilter.rules.action.Action;
+import com.pwn9.PwnFilter.api.Action;
 
 import java.util.List;
 

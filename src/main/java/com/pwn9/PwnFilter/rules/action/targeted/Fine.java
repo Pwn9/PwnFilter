@@ -13,7 +13,7 @@ package com.pwn9.PwnFilter.rules.action.targeted;
 import com.pwn9.PwnFilter.FilterTask;
 import com.pwn9.PwnFilter.minecraft.api.MinecraftPlayer;
 import com.pwn9.PwnFilter.minecraft.util.DefaultMessages;
-import com.pwn9.PwnFilter.rules.action.Action;
+import com.pwn9.PwnFilter.api.Action;
 
 /**
  * Fine the user by extracting money from his economy account.

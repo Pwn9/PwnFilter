@@ -13,7 +13,7 @@ package com.pwn9.PwnFilter.rules;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.pwn9.PwnFilter.FilterTask;
-import com.pwn9.PwnFilter.rules.action.Action;
+import com.pwn9.PwnFilter.api.Action;
 import com.pwn9.PwnFilter.rules.parser.FileParser;
 import com.pwn9.PwnFilter.util.LogManager;
 

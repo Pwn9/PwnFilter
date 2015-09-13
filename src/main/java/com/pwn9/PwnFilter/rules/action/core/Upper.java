@@ -11,7 +11,7 @@
 package com.pwn9.PwnFilter.rules.action.core;
 
 import com.pwn9.PwnFilter.FilterTask;
-import com.pwn9.PwnFilter.rules.action.Action;
+import com.pwn9.PwnFilter.api.Action;
 import com.pwn9.PwnFilter.util.EnhancedString;
 
 /**

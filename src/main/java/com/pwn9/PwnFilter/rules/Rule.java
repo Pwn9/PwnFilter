@@ -12,7 +12,7 @@ package com.pwn9.PwnFilter.rules;
 
 import com.pwn9.PwnFilter.FilterTask;
 import com.pwn9.PwnFilter.minecraft.PwnFilterPlugin;
-import com.pwn9.PwnFilter.rules.action.Action;
+import com.pwn9.PwnFilter.api.Action;
 import com.pwn9.PwnFilter.util.LimitedRegexCharSequence;
 import com.pwn9.PwnFilter.util.LogManager;
 import com.pwn9.PwnFilter.util.Patterns;
@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
 /**
  * Rule object
  * <p/>
- * <P>Each Rule has a single match Pattern, an ArrayList of {@link com.pwn9.PwnFilter.rules.Condition}'s and an ArrayList of {@link com.pwn9.PwnFilter.rules.action.Action}'s</P>
+ * <P>Each Rule has a single match Pattern, an ArrayList of {@link com.pwn9.PwnFilter.rules.Condition}'s and an ArrayList of {@link Action}'s</P>
  *
  * @author ptoal
  * @version $Id: $Id
@@ -245,7 +245,7 @@ public class Rule implements ChainEntry {
     /**
      * <p>add.</p>
      *
-     * @param a a {@link com.pwn9.PwnFilter.rules.action.Action} object.
+     * @param a a {@link Action} object.
      * @return a boolean.
      */
     public boolean addAction(Action a) {

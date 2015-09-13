@@ -16,7 +16,7 @@ import com.pwn9.PwnFilter.rules.Chain;
 import com.pwn9.PwnFilter.rules.Condition;
 import com.pwn9.PwnFilter.rules.Rule;
 import com.pwn9.PwnFilter.rules.ShortCutManager;
-import com.pwn9.PwnFilter.rules.action.Action;
+import com.pwn9.PwnFilter.api.Action;
 import com.pwn9.PwnFilter.rules.action.ActionFactory;
 import com.pwn9.PwnFilter.util.LogManager;
 

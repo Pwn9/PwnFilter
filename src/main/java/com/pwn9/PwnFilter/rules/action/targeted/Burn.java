@@ -14,7 +14,7 @@ import com.pwn9.PwnFilter.FilterTask;
 import com.pwn9.PwnFilter.api.MessageAuthor;
 import com.pwn9.PwnFilter.minecraft.api.MinecraftPlayer;
 import com.pwn9.PwnFilter.minecraft.util.DefaultMessages;
-import com.pwn9.PwnFilter.rules.action.Action;
+import com.pwn9.PwnFilter.api.Action;
 
 /**
  * Burns a player to death.

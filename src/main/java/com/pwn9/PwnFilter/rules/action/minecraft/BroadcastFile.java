@@ -14,7 +14,7 @@ import com.pwn9.PwnFilter.FilterTask;
 import com.pwn9.PwnFilter.minecraft.api.MinecraftConsole;
 import com.pwn9.PwnFilter.minecraft.util.FileUtil;
 import com.pwn9.PwnFilter.config.FilterConfig;
-import com.pwn9.PwnFilter.rules.action.Action;
+import com.pwn9.PwnFilter.api.Action;
 import com.pwn9.PwnFilter.util.LogManager;
 import com.pwn9.PwnFilter.util.tags.TagRegistry;
 import org.bukkit.ChatColor;

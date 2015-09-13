@@ -10,6 +10,8 @@
 
 package com.pwn9.PwnFilter.rules.action;
 
+import com.pwn9.PwnFilter.api.Action;
+
 import java.util.HashMap;
 
 /**
@@ -29,7 +31,7 @@ public final class ActionFactory {
      * <p>getActionFromString.</p>
      *
      * @param s a {@link java.lang.String} object.
-     * @return a {@link com.pwn9.PwnFilter.rules.action.Action} object.
+     * @return a {@link Action} object.
      */
     public static Action getActionFromString(String s) {
         String[] parts = s.split("\\s", 2);
@@ -45,7 +47,7 @@ public final class ActionFactory {
      *
      * @param actionName a {@link java.lang.String} object.
      * @param actionData a {@link java.lang.String} object.
-     * @return a {@link com.pwn9.PwnFilter.rules.action.Action} object.
+     * @return a {@link Action} object.
      */
     public static Action getAction(final String actionName, final String actionData) {
         // Return a subclass instance based on actionName.

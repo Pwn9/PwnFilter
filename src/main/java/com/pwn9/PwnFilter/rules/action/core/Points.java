@@ -12,7 +12,7 @@ package com.pwn9.PwnFilter.rules.action.core;
 
 import com.pwn9.PwnFilter.FilterTask;
 import com.pwn9.PwnFilter.api.MessageAuthor;
-import com.pwn9.PwnFilter.rules.action.Action;
+import com.pwn9.PwnFilter.api.Action;
 import com.pwn9.PwnFilter.util.LogManager;
 import com.pwn9.PwnFilter.util.PointManager;
 import org.bukkit.ChatColor;

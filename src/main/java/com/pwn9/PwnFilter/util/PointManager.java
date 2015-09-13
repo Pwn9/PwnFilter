@@ -14,7 +14,7 @@ import com.pwn9.PwnFilter.FilterTask;
 import com.pwn9.PwnFilter.api.FilterClient;
 import com.pwn9.PwnFilter.api.MessageAuthor;
 import com.pwn9.PwnFilter.rules.RuleChain;
-import com.pwn9.PwnFilter.rules.action.Action;
+import com.pwn9.PwnFilter.api.Action;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;

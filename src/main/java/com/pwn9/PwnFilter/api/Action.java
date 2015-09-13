@@ -8,7 +8,7 @@
  * of the License, or (at your option) any later version.
  */
 
-package com.pwn9.PwnFilter.rules.action;
+package com.pwn9.PwnFilter.api;
 
 import com.pwn9.PwnFilter.FilterTask;
 
@@ -29,7 +29,7 @@ public interface Action {
     /**
      * <p>execute.</p>
      *
-     * @param state a {@link FilterTask} object.
+     * @param task a {@link FilterTask} object.
      */
-    void execute(FilterTask state);
+    void execute(FilterTask task);
 }
