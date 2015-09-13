@@ -19,6 +19,7 @@ import com.pwn9.PwnFilter.rules.RuleManager;
 import com.pwn9.PwnFilter.util.LogManager;
 import com.pwn9.PwnFilter.util.SimpleString;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -57,34 +58,36 @@ public class PwnFilterPlayerListener extends BaseListener {
 
         if (event.isCancelled()) return;
 
-        MinecraftPlayer bukkitPlayer = MinecraftPlayer.getInstance(event.getPlayer());
+        MinecraftPlayer minecraftPlayer = MinecraftPlayer.getInstance(event.getPlayer());
 
 
         // Permissions Check, if player has bypass permissions, then skip everything.
-        if (bukkitPlayer.hasPermission("pwnfilter.bypass.chat")) return;
+        if (minecraftPlayer.hasPermission("pwnfilter.bypass.chat")) return;
 
         String message = event.getMessage();
 
         // Global mute
-        if ((BukkitConfig.isGlobalMute()) && (!bukkitPlayer.hasPermission("pwnfilter.bypass.mute"))) {
+        if ((BukkitConfig.isGlobalMute()) && (!minecraftPlayer.hasPermission("pwnfilter.bypass.mute"))) {
             event.setCancelled(true);
             return; // No point in continuing.
         }
 
-        if (BukkitConfig.spamfilterEnabled() && !bukkitPlayer.hasPermission("pwnfilter.bypass.spam")) {
+        if (BukkitConfig.spamfilterEnabled() && !minecraftPlayer.hasPermission("pwnfilter.bypass.spam")) {
             // Keep a log of the last message sent by this player.  If it's the same as the current message, cancel.
-            if (PwnFilterPlugin.lastMessage.containsKey(bukkitPlayer.getID()) && PwnFilterPlugin.lastMessage.get(bukkitPlayer.getID()).equals(message)) {
+            if (PwnFilterPlugin.lastMessage.containsKey(minecraftPlayer.getID()) && PwnFilterPlugin.lastMessage.get(minecraftPlayer.getID()).equals(message)) {
                 event.setCancelled(true);
+                minecraftPlayer.sendMessage(ChatColor.DARK_RED + "[PwnFilter]" + ChatColor.RED + " Repeated command blocked by spam filter.");
+
                 return;
             }
-            PwnFilterPlugin.lastMessage.put(bukkitPlayer.getID(), message);
+            PwnFilterPlugin.lastMessage.put(minecraftPlayer.getID(), message);
 
         }
 
-        FilterTask state = new FilterTask(new ColoredString(message), bukkitPlayer, this);
+        FilterTask state = new FilterTask(new ColoredString(message), minecraftPlayer, this);
 
         // Global decolor
-        if ((BukkitConfig.decolor()) && !(bukkitPlayer.hasPermission("pwnfilter.color"))) {
+        if ((BukkitConfig.decolor()) && !(minecraftPlayer.hasPermission("pwnfilter.color"))) {
             // We are changing the state of the message.  Let's do that before any rules processing.
             state.setModifiedMessage(new SimpleString(state.getModifiedMessage().toString()));
         }

@@ -20,6 +20,7 @@ import com.pwn9.PwnFilter.rules.RuleChain;
 import com.pwn9.PwnFilter.rules.RuleManager;
 import com.pwn9.PwnFilter.util.LogManager;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -118,6 +119,7 @@ public class PwnFilterCommandListener extends BaseListener {
                 // Keep a log of the last message sent by this player.  If it's the same as the current message, cancel.
                 if (PwnFilterPlugin.lastMessage.containsKey(minecraftPlayer.getID()) && PwnFilterPlugin.lastMessage.get(minecraftPlayer.getID()).equals(message)) {
                     event.setCancelled(true);
+                    minecraftPlayer.sendMessage(ChatColor.DARK_RED + "[PwnFilter]" + ChatColor.RED + " Repeated command blocked by spam filter.");
                     return;
                 }
                 PwnFilterPlugin.lastMessage.put(minecraftPlayer.getID(), message);
