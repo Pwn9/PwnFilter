@@ -60,7 +60,7 @@ public class PwnFilterPlayerListenerTest {
 
     @Before
     public void setUp() throws Exception {
-        RegisterActions.builtin();
+        RegisterActions.all();
         LogManager.getInstance(Logger.getAnonymousLogger(), new File("/pwnfiltertest.log"));
         File rulesDir = new File(getClass().getResource("/rules").getFile());
         FilterConfig.getInstance().setRulesDir(rulesDir);
@@ -113,14 +113,32 @@ public class PwnFilterPlayerListenerTest {
         ruleChain.loadConfigFile();
 
         String input = "Test&4 Message";
-        testConfig.set("decolor",true);
+        testConfig.set("decolor", true);
+        BukkitConfig.loadConfiguration(testConfig, resourcesDir);
+
+        chatEvent = new AsyncPlayerChatEvent(true, mockPlayer, input, new HashSet<Player>());
+        playerListener.setRuleChain(ruleChain);
+        playerListener.onPlayerChat(chatEvent);
+        assertEquals(chatEvent.getMessage(), "Test Message");
+        testConfig.set("decolor", false);
+    }
+
+    // https://github.com/Pwn9/PwnFilter/issues/13
+    @Test
+    public void testLowerMessage() throws Exception {
+        RuleChain ruleChain = new RuleChain("actionTests.txt");
+        ruleChain.loadConfigFile();
+
+        String input = "HEY! THIS SHOULD ALL GET LOWERED.";
         BukkitConfig.loadConfiguration(testConfig, resourcesDir);
 
         chatEvent = new AsyncPlayerChatEvent(true, mockPlayer, input, new HashSet<Player>());
         playerListener.setRuleChain(ruleChain);
         playerListener.onPlayerChat(chatEvent);
         assertTrue(!chatEvent.isCancelled());
-        assertEquals(chatEvent.getMessage(), "Test Message");
+        assertEquals(chatEvent.getMessage(), "HEY! this should all get lowered.");
     }
+
+
 
 }

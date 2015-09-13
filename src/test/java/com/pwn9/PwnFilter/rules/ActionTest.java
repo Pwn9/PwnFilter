@@ -33,7 +33,7 @@ public class ActionTest {
     LogManager pwnLogger;
     FilterClient mockClient = new FilterClient() {
         public String getShortName() { return "ACTIONTEST"; }
-        public RuleChain getRuleChain() { return ruleManager.getRuleChain("actionTests.txt");}
+        public RuleChain getRuleChain() { return ruleManager.getRuleChain("rules/actionTests.txt");}
         public boolean isActive() { return true; }
         public void activate() {}
         public void shutdown() {}
@@ -72,8 +72,8 @@ public class ActionTest {
     public void setUp() throws Exception {
         RegisterActions.all();
         ruleManager = RuleManager.getInstance();
-        File testFile = new File(getClass().getResource("/actionTests.txt").getFile());
-        FilterConfig.getInstance().setRulesDir(testFile.getParentFile());
+        File rulesDir = new File(getClass().getResource("/rules").getFile());
+        FilterConfig.getInstance().setRulesDir(rulesDir);
         rs = ruleManager.getRuleChain("actionTests.txt");
         pwnLogger = LogManager.getInstance(Logger.getAnonymousLogger(), new File("/tmp/"));
         rs.loadConfigFile();
@@ -111,6 +111,10 @@ public class ActionTest {
         FilterTask testState = new FilterTask("LOWER", author, mockClient);
         rs.apply(testState);
         assertEquals("lower", testState.getModifiedMessage().toString());
+
+        FilterTask test2 = new FilterTask("LOWERCASE ALL THIS STUFF!", author, mockClient);
+        rs.apply((test2));
+        assertEquals("lowercase all this stuff!", test2.getModifiedMessage().toString());
     }
 
     @After

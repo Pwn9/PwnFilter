@@ -170,14 +170,14 @@ public class ColoredStringTest {
 
     @Test
     public void testPatternToLower() throws Exception {
-        assertEquals(testCs.patternToLower(Pattern.compile("This")),
-                new ColoredString("this&0 is the string &8to test"));
+        assertEquals(new ColoredString("this&0 is the string &8to test"),
+                testCs.patternToLower(Pattern.compile("This")));
     }
 
     @Test
     public void testPatternToUpper() throws Exception {
-        assertEquals(testCs.patternToUpper(Pattern.compile("This")),
-                new ColoredString("THIS&0 is the string &8to test"));
+        assertEquals(new ColoredString("THIS&0 is the string &8to test"),
+                testCs.patternToUpper(Pattern.compile("This")));
     }
 
     @Test

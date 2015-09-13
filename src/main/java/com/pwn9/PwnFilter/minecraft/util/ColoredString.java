@@ -281,14 +281,16 @@ public final class ColoredString implements EnhancedString {
      * @return a {@link ColoredString} object.
      */
     public ColoredString patternToLower (Pattern p) {
+        char[] modified = plain.clone();
+
         Matcher m = p.matcher(new String(plain));
 
         while (m.find()) {
-            for (int i = m.start() ; i < m.end() ; i++ ) {
-                plain[i] = Character.toLowerCase(plain[i]);
+            for (int i = m.start(); i < m.end(); i++) {
+                modified[i] = Character.toLowerCase(modified[i]);
             }
         }
-        return new ColoredString(this);
+        return new ColoredString(modified, codes, formatPrefix);
     }
     
     /**
@@ -298,14 +300,16 @@ public final class ColoredString implements EnhancedString {
      * @return a {@link ColoredString} object.
      */
     public ColoredString patternToUpper (Pattern p) {
+        char[] modified = plain.clone();
+
         Matcher m = p.matcher(new String(plain));
 
         while (m.find()) {
-            for (int i = m.start() ; i < m.end() ; i++ ) {
-                plain[i] = Character.toUpperCase(plain[i]);
+            for (int i = m.start(); i < m.end(); i++) {
+                modified[i] = Character.toUpperCase(modified[i]);
             }
         }
-        return new ColoredString(this);
+        return new ColoredString(modified, codes, formatPrefix);
     }    
 
     /**

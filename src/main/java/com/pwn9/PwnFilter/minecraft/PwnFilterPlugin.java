@@ -68,6 +68,7 @@ public class PwnFilterPlugin extends JavaPlugin {
 
     }
 
+
     /**
      * <p>getInstance.</p>
      *
@@ -237,6 +238,7 @@ public class PwnFilterPlugin extends JavaPlugin {
         }
         LogManager.logger.info("Vault dependency not found.  Disabling actions requiring Vault");
     }
+
 
 
 }
