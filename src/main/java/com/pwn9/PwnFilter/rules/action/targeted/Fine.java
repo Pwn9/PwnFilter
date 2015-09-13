@@ -43,22 +43,18 @@ public class Fine implements Action {
     }
 
     /** {@inheritDoc} */
-    public boolean execute(final FilterTask filterTask ) {
+    public void execute(final FilterTask filterTask) {
 
         if (filterTask.getAuthor() instanceof MinecraftPlayer) {
 
             MinecraftPlayer p = (MinecraftPlayer)filterTask.getAuthor();
             if (p.withdrawMoney(fineAmount, messageString)) {
                 filterTask.addLogMessage(String.format("Fined %s : %f", filterTask.getAuthor().getName(), fineAmount));
-                return true;
             } else {
                 filterTask.addLogMessage(String.format("Failed to fine %s.",
                         filterTask.getAuthor().getName()));
-                return false;
             }
 
-        } else {
-            return false;
         }
     }
 

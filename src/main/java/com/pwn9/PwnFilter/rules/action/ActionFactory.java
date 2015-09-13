@@ -22,7 +22,7 @@ import java.util.HashMap;
 @SuppressWarnings("UnusedDeclaration")
 public final class ActionFactory {
 
-    public static HashMap<String, Class<? extends Action>> actionClassMap =
+    public static final HashMap<String, Class<? extends Action>> actionClassMap =
             new HashMap<String, Class<? extends Action>>();
 
     /**

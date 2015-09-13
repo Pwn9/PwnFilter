@@ -31,7 +31,7 @@ import java.util.ArrayList;
  */
 @SuppressWarnings("UnusedDeclaration")
 public class RespondFile implements Action {
-    ArrayList<String> messageStrings = new ArrayList<String>();
+    final ArrayList<String> messageStrings = new ArrayList<String>();
 
     /**
      * {@inheritDoc}
@@ -55,7 +55,7 @@ public class RespondFile implements Action {
     /**
      * {@inheritDoc}
      */
-    public boolean execute(final FilterTask filterTask) {
+    public void execute(final FilterTask filterTask) {
         final ArrayList<String> preparedMessages = new ArrayList<String>();
 
         for (String message : messageStrings) {
@@ -66,7 +66,6 @@ public class RespondFile implements Action {
 
         filterTask.addLogMessage("Responded to " + filterTask.getAuthor().getName() + " with: " + preparedMessages.get(0) + "...");
 
-        return true;
     }
 }
 

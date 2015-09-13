@@ -57,7 +57,7 @@ public class PwnFilterPlugin extends JavaPlugin {
     private Metrics.Graph eventGraph;
     public static Economy economy = null;
 
-    public static ConcurrentMap<UUID, String> lastMessage = new MapMaker().concurrencyLevel(2).weakKeys().makeMap();
+    public static final ConcurrentMap<UUID, String> lastMessage = new MapMaker().concurrencyLevel(2).weakKeys().makeMap();
 
     /**
      * <p>Constructor for PwnFilter.</p>

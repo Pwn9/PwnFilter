@@ -34,8 +34,7 @@ public class Replace implements Action {
     }
 
     /** {@inheritDoc} */
-    public boolean execute(final FilterTask filterTask ) {
+    public void execute(final FilterTask filterTask) {
         filterTask.setModifiedMessage(new SimpleString(filterTask.getModifiedMessage().toString()).replaceText(filterTask.getPattern(), messageString));
-        return true;
     }
 }

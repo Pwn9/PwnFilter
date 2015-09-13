@@ -7,7 +7,6 @@ import com.pwn9.PwnFilter.config.FilterConfig;
 import com.pwn9.PwnFilter.rules.action.RegisterActions;
 import com.pwn9.PwnFilter.util.LogManager;
 import org.jetbrains.annotations.NotNull;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -28,10 +27,9 @@ import static junit.framework.Assert.assertTrue;
 
 public class ActionTest {
 
-    RuleManager ruleManager;
+    private RuleManager ruleManager;
     RuleChain rs;
-    LogManager pwnLogger;
-    FilterClient mockClient = new FilterClient() {
+    final FilterClient mockClient = new FilterClient() {
         public String getShortName() { return "ACTIONTEST"; }
         public RuleChain getRuleChain() { return ruleManager.getRuleChain("rules/actionTests.txt");}
         public boolean isActive() { return true; }
@@ -39,7 +37,7 @@ public class ActionTest {
         public void shutdown() {}
     };
 
-    MessageAuthor author = new MessageAuthor() {
+    private final MessageAuthor author = new MessageAuthor() {
         @Override
         public boolean hasPermission(String permString) {
             return false;
@@ -69,13 +67,13 @@ public class ActionTest {
     };
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         RegisterActions.all();
         ruleManager = RuleManager.getInstance();
         File rulesDir = new File(getClass().getResource("/rules").getFile());
         FilterConfig.getInstance().setRulesDir(rulesDir);
         rs = ruleManager.getRuleChain("actionTests.txt");
-        pwnLogger = LogManager.getInstance(Logger.getAnonymousLogger(), new File("/tmp/"));
+        LogManager.getInstance(Logger.getAnonymousLogger(), new File("/tmp/"));
         rs.loadConfigFile();
     }
 
@@ -115,10 +113,6 @@ public class ActionTest {
         FilterTask test2 = new FilterTask("LOWERCASE ALL THIS STUFF!", author, mockClient);
         rs.apply((test2));
         assertEquals("lowercase all this stuff!", test2.getModifiedMessage().toString());
-    }
-
-    @After
-    public void tearDown() throws Exception {
     }
 
 

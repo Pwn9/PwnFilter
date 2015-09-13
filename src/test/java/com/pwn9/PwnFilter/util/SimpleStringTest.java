@@ -23,8 +23,8 @@ import static junit.framework.Assert.assertTrue;
  * Created by ptoal on 15-09-12.
  */
 public class SimpleStringTest {
-    String original = "This is the string under test";
-    SimpleString testSs = new SimpleString(original);
+    final String original = "This is the string under test";
+    final SimpleString testSs = new SimpleString(original);
 
     @Test
     public void testReplaceText() throws Exception {

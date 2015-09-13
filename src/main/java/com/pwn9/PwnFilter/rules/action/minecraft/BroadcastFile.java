@@ -30,7 +30,7 @@ import java.util.ArrayList;
  */
 @SuppressWarnings("UnusedDeclaration")
 public class BroadcastFile implements Action {
-    ArrayList<String> messageStrings = new ArrayList<String>();
+    final ArrayList<String> messageStrings = new ArrayList<String>();
 
     /** {@inheritDoc} */
     public void init(String s)
@@ -49,7 +49,7 @@ public class BroadcastFile implements Action {
     }
 
     /** {@inheritDoc} */
-    public boolean execute(final FilterTask filterTask ) {
+    public void execute(final FilterTask filterTask) {
         final ArrayList<String> preparedMessages = new ArrayList<String>();
 
         for (String message : messageStrings) {
@@ -59,7 +59,6 @@ public class BroadcastFile implements Action {
         filterTask.addLogMessage("Broadcasted: " + preparedMessages.get(0) + (preparedMessages.size() > 1 ? "..." : ""));
 
         MinecraftConsole.getInstance().sendBroadcast(preparedMessages);
-        return true;
     }
 }
 

@@ -30,11 +30,10 @@ public class Upper implements Action {
     }
 
     /** {@inheritDoc} */
-    public boolean execute(final FilterTask filterTask ) {
+    public void execute(final FilterTask filterTask) {
         EnhancedString cs = filterTask.getModifiedMessage();
         filterTask.addLogMessage("Converting to uppercase.");
         filterTask.setModifiedMessage(cs.patternToUpper(filterTask.getPattern()));
 
-        return true;
     }
 }

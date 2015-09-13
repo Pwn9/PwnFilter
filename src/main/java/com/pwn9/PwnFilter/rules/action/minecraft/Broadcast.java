@@ -25,7 +25,7 @@ import java.util.ArrayList;
  */
 @SuppressWarnings("UnusedDeclaration")
 public class Broadcast implements Action {
-    ArrayList<String> messageStrings = new ArrayList<String>();
+    final ArrayList<String> messageStrings = new ArrayList<String>();
 
     /** {@inheritDoc} */
     public void init(String s)
@@ -37,7 +37,7 @@ public class Broadcast implements Action {
     }
 
     /** {@inheritDoc} */
-    public boolean execute(final FilterTask filterTask ) {
+    public void execute(final FilterTask filterTask) {
 
         /*
         TODO: Abstract out to a BroadcastDestination object, so that broadcasts
@@ -54,7 +54,6 @@ public class Broadcast implements Action {
 
         MinecraftConsole.getInstance().sendBroadcast(preparedMessages);
 
-        return true;
     }
 }
 

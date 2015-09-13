@@ -28,7 +28,7 @@ import java.util.logging.SimpleFormatter;
  */
 public class LogManager {
     /** Constant <code>ruleLogLevel</code> */
-    public static Level ruleLogLevel;
+    private static Level ruleLogLevel;
     // Logging variables
     /** Constant <code>debugMode</code> */
     public static DebugModes debugMode = DebugModes.off;

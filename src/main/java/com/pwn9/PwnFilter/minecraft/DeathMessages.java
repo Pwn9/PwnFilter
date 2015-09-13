@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentMap;
  * Created by ptoal on 15-09-08.
  */
 public class DeathMessages {
-    public static ConcurrentMap<UUID, String> killedPlayers = new MapMaker().concurrencyLevel(2).weakKeys().makeMap();
+    public static final ConcurrentMap<UUID, String> killedPlayers = new MapMaker().concurrencyLevel(2).weakKeys().makeMap();
 
     /**
      * <p>addKilledPlayer.</p>

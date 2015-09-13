@@ -36,10 +36,9 @@ public interface Chain {
     /**
      * <p>append.</p>
      *
-     * @param r a {@link com.pwn9.PwnFilter.rules.ChainEntry} object.
-     * @return a boolean.
+     * @param r a {@link ChainEntry} object.
      */
-    boolean append(ChainEntry r);
+    void append(ChainEntry r);
 
     /**
      * <p>isValid.</p>

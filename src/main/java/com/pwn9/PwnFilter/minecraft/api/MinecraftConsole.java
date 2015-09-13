@@ -22,7 +22,7 @@ import java.util.UUID;
  */
 public class MinecraftConsole implements MessageAuthor {
 
-    private static MinecraftConsole ourInstance = new MinecraftConsole();
+    private static final MinecraftConsole ourInstance = new MinecraftConsole();
 
     public static MinecraftConsole getInstance() {
         return ourInstance;
@@ -72,7 +72,7 @@ public class MinecraftConsole implements MessageAuthor {
         MinecraftServer.getAPI().executeCommand(command);
     }
 
-    public boolean notifyWithPerm(final String permissionString, final String sendString) {
-        return MinecraftServer.getAPI().notifyWithPerm(permissionString, sendString);
+    public void notifyWithPerm(final String permissionString, final String sendString) {
+        MinecraftServer.getAPI().notifyWithPerm(permissionString, sendString);
     }
 }

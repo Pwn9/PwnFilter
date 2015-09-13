@@ -25,9 +25,9 @@ import static org.junit.Assert.assertArrayEquals;
  * Created by ptoal on 15-09-12.
  */
 public class ColoredStringTest {
-    String original = "This&0 is the string &8to test";
-    String plain = "This is the string to test";
-    ColoredString testCs = new ColoredString(original);
+    final String original = "This&0 is the string &8to test";
+    final String plain = "This is the string to test";
+    final ColoredString testCs = new ColoredString(original);
 
     @Test
     public void testLength() throws Exception {

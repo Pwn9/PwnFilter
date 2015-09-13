@@ -37,7 +37,7 @@ public class FilterTask {
     private EnhancedString modifiedMessage; // Modified message string
     private final MessageAuthor author; // Author that this event is connected to.
     private final FilterClient filterClient;
-    private List<String> logMessages = new ArrayList<String>(); // Rules can add strings to this array.  They will be output to log if log=true
+    private final List<String> logMessages = new ArrayList<String>(); // Rules can add strings to this array.  They will be output to log if log=true
     private boolean logging = false;  // If true, actions will be logged
     private boolean aborted = false; // If set true by a rule, will stop further processing.
     private boolean cancelled = false; // If set true, will cancel this event.
@@ -146,8 +146,8 @@ public class FilterTask {
      * <p>setCancelled.</p>
      *
      */
-    public void setCancelled(boolean cancelled) {
-        this.cancelled = cancelled;
+    public void setCancelled() {
+        this.cancelled = true;
     }
 
     /**
@@ -189,16 +189,16 @@ public class FilterTask {
         return logging;
     }
 
-    public void setLogging(boolean log) {
-        this.logging = log;
+    public void setLogging() {
+        this.logging = true;
     }
 
     public boolean isAborted() {
         return aborted;
     }
 
-    public void setAborted(boolean aborted) {
-        this.aborted = aborted;
+    public void setAborted() {
+        this.aborted = true;
     }
 
     public Rule getRule() {

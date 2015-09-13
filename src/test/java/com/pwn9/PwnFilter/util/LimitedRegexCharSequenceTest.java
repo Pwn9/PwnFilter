@@ -1,7 +1,6 @@
 package com.pwn9.PwnFilter.util;
 
 import junit.framework.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.regex.Matcher;
@@ -16,12 +15,8 @@ import java.util.regex.Pattern;
 
 public class LimitedRegexCharSequenceTest {
 
-    final static String simpleString = "This is a pretty simple test string.";
+    private final static String simpleString = "This is a pretty simple test string.";
 
-    @Before
-    public void setUp() throws Exception {
-
-    }
 
     @Test
     public void testCharAt() throws Exception {

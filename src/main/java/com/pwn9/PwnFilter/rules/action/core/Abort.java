@@ -19,10 +19,7 @@ import com.pwn9.PwnFilter.rules.action.Action;
  * @author ptoal
  * @version $Id: $Id
  */
-@SuppressWarnings("UnusedDeclaration")
 public class Abort implements Action {
-
-    public static String keyword = "action";
 
     /** {@inheritDoc} */
     public void init(String s) {
@@ -30,9 +27,8 @@ public class Abort implements Action {
     }
 
     /** {@inheritDoc} */
-    public boolean execute(final FilterTask filterTask ) {
-        filterTask.setAborted(true);
+    public void execute(final FilterTask filterTask) {
+        filterTask.setAborted();
         filterTask.addLogMessage("<Abort> Not processing more rules.");
-        return true;
     }
 }

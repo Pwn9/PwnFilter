@@ -47,12 +47,12 @@ public class Notify implements Action {
     }
 
     /** {@inheritDoc} */
-    public boolean execute(final FilterTask filterTask ) {
+    public void execute(final FilterTask filterTask) {
 
         // Create the message to send
         final String sendString = TagRegistry.replaceTags(messageString, filterTask);
 
-        return MinecraftConsole.getInstance().notifyWithPerm(permissionString, sendString);
+        MinecraftConsole.getInstance().notifyWithPerm(permissionString, sendString);
 
     }
 

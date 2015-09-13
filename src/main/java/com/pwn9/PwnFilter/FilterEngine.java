@@ -38,7 +38,7 @@ public class FilterEngine {
 
     private static FilterEngine _instance;
 
-    private ConcurrentHashMap<FilterClient,Plugin> registeredClients = new ConcurrentHashMap<FilterClient, Plugin>();
+    private final ConcurrentHashMap<FilterClient,Plugin> registeredClients = new ConcurrentHashMap<FilterClient, Plugin>();
 
     private final PwnFilterPlugin plugin;
 
@@ -113,15 +113,13 @@ public class FilterEngine {
      *
      * @param f FilterListener instance
      * @param p Plugin that the listener belongs to.
-     * @return True if the listener was added, false if it was already registered.
      */
-    public boolean registerClient(FilterClient f, Plugin p) {
+    public void registerClient(FilterClient f, Plugin p) {
         if (registeredClients.containsKey(f)) {
-            return false; // Already Registered
+            return;
         }
         registeredClients.put(f, p);
         plugin.updateMetrics();
-        return true;
     }
 
     /**

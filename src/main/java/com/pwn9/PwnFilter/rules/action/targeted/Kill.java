@@ -33,15 +33,13 @@ public class Kill implements Action {
     }
 
     /** {@inheritDoc} */
-    public boolean execute(final FilterTask filterTask ) {
+    public void execute(final FilterTask filterTask) {
 
         if (filterTask.getAuthor() instanceof MinecraftPlayer) {
 
             ((MinecraftPlayer) filterTask.getAuthor()).kill(messageString);
             filterTask.addLogMessage("Killed by Filter: " + filterTask.getAuthor().getName() + " " + messageString);
 
-            return true;
         }
-        return false;
     }
 }

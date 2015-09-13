@@ -30,7 +30,6 @@ public interface Action {
      * <p>execute.</p>
      *
      * @param state a {@link FilterTask} object.
-     * @return a boolean.
      */
-    boolean execute(FilterTask state );
+    void execute(FilterTask state);
 }

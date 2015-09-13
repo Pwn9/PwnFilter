@@ -33,8 +33,8 @@ public class Command implements Action {
     }
 
     /** {@inheritDoc} */
-    public boolean execute(final FilterTask filterTask ) {
-        filterTask.setCancelled(true);
+    public void execute(final FilterTask filterTask) {
+        filterTask.setCancelled();
         final String cmd;
         if (filterTask.getAuthor() instanceof MinecraftPlayer) {
             MinecraftPlayer player = (MinecraftPlayer)filterTask.getAuthor();
@@ -47,11 +47,9 @@ public class Command implements Action {
             filterTask.addLogMessage("Helped " + filterTask.getAuthor().getName() + " execute command: " + cmd);
             player.executeCommand(cmd);
 
-            return true;
         } else {
             filterTask.addLogMessage("Could not execute command as non-player.");
-            filterTask.setCancelled(true);
-            return false;
+            filterTask.setCancelled();
         }
     }
 }

@@ -3,14 +3,13 @@ package com.pwn9.PwnFilter.rules;
 import com.pwn9.PwnFilter.FilterTask;
 import com.pwn9.PwnFilter.api.FilterClient;
 import com.pwn9.PwnFilter.api.MessageAuthor;
+import com.pwn9.PwnFilter.config.FilterConfig;
 import com.pwn9.PwnFilter.minecraft.PwnFilterPlugin;
 import com.pwn9.PwnFilter.minecraft.listener.PwnFilterCommandListener;
 import com.pwn9.PwnFilter.minecraft.listener.PwnFilterPlayerListener;
-import com.pwn9.PwnFilter.config.FilterConfig;
 import com.pwn9.PwnFilter.rules.action.RegisterActions;
 import com.pwn9.PwnFilter.util.LogManager;
 import org.jetbrains.annotations.NotNull;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -33,14 +32,14 @@ public class ConditionTest {
     RuleChain rs;
     PwnFilterPlugin mockPlugin;
     LogManager pwnLogger;
-    FilterClient mockClient = new FilterClient() {
+    final FilterClient mockClient = new FilterClient() {
         public String getShortName() { return "CONDITIONTEST"; }
         public RuleChain getRuleChain() { return ruleManager.getRuleChain("conditionTests.txt");}
         public boolean isActive() { return true; }
         public void activate() {}
         public void shutdown() {}
     };
-    MessageAuthor author = new MessageAuthor() {
+    final MessageAuthor author = new MessageAuthor() {
         @Override
         public boolean hasPermission(String permString) {
             return false;
@@ -70,7 +69,7 @@ public class ConditionTest {
     };
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         RegisterActions.all();
         //TODO: Remove this, and add a FilterEngine initialization call.
         ruleManager = RuleManager.getInstance();
@@ -121,9 +120,6 @@ public class ConditionTest {
         assertEquals("tell banned", testState2.getModifiedMessage().toString());
     }
 
-    @After
-    public void tearDown() throws Exception {
-    }
 
 
 }

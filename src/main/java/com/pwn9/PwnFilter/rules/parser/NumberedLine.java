@@ -16,7 +16,7 @@ package com.pwn9.PwnFilter.rules.parser;
  * @author ptoal
  * @version $Id: $Id
  */
-public class NumberedLine {
+class NumberedLine {
     public final Integer number;
     public final String string;
 

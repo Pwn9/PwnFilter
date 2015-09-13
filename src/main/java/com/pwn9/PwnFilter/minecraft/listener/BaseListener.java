@@ -27,14 +27,14 @@ import org.bukkit.event.Listener;
  * @version $Id: $Id
  */
 public abstract class BaseListener implements FilterClient,RuleChainListener, Listener {
-    protected boolean active;
-    protected RuleChain ruleChain;
+    boolean active;
+    RuleChain ruleChain;
 
     /**
      * <p>Constructor for BaseListener.</p>
      *
      */
-    public BaseListener() {
+    BaseListener() {
     }
 
 
@@ -69,7 +69,7 @@ public abstract class BaseListener implements FilterClient,RuleChainListener, Li
     /**
      * <p>Setter for the field <code>active</code>.</p>
      */
-    protected void setActive() {
+    void setActive() {
         active = true;
     }
 

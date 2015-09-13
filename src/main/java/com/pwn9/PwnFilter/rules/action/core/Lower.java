@@ -30,10 +30,9 @@ public class Lower implements Action {
     }
 
     /** {@inheritDoc} */
-    public boolean execute(final FilterTask filterTask ) {
+    public void execute(final FilterTask filterTask) {
         EnhancedString cs = filterTask.getModifiedMessage();
         filterTask.addLogMessage("Converting to lowercase.");
         filterTask.setModifiedMessage(cs.patternToLower(filterTask.getPattern()));
-        return true;
     }
 }

@@ -25,7 +25,7 @@ import java.util.concurrent.ExecutionException;
  */
 public class TestMinecraftAPI implements MinecraftAPI {
 
-    Set<String> permSet = new HashSet<String>();
+    final Set<String> permSet = new HashSet<String>();
 
     @Override
     public void reset() {

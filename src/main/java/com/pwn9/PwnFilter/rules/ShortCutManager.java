@@ -34,7 +34,7 @@ import java.util.regex.Pattern;
 public class ShortCutManager {
     // TODO: Create a "ShortCuts" object to pass around, instead of HashMaps.
     private static ShortCutManager _instance;
-    private static Map<String, Map<String,String>> shortcutFiles = new HashMap<String, Map<String, String>>();
+    private static final Map<String, Map<String,String>> shortcutFiles = new HashMap<String, Map<String, String>>();
 
     private ShortCutManager() {}
 
@@ -112,14 +112,18 @@ public class ShortCutManager {
     /**
      * <p>loadFile.</p>
      *
-     * @param fileName a {@link java.lang.String} object.
-     * @return a boolean.
+     * @param fileName a {@link String} object.
      */
-    public boolean loadFile(String fileName) {
+    private void loadFile(String fileName) {
 
         Map<String,String> varset = new HashMap<String, String>();
 
         File shortcutFile = getFile(fileName);
+
+        if (shortcutFile == null ) {
+            LogManager.logger.info("Shortcut File not found: " + fileName);
+            return;
+        }
 
         BufferedReader reader;
         try {
@@ -144,11 +148,10 @@ public class ShortCutManager {
             }
 
         } catch (Exception e) {
-            return false;
+            return;
         }
 
         shortcutFiles.put(fileName,varset);
-        return true;
     }
 
     /**
@@ -157,7 +160,7 @@ public class ShortCutManager {
      * @param fileName a {@link java.lang.String} object.
      * @return a {@link java.io.File} object.
      */
-    public File getFile(String fileName) {
+    private File getFile(String fileName) {
         File shortcutdir = FilterConfig.getInstance().getRulesDir();
         if (shortcutdir.exists()) {
             File shortcutFile = new File(shortcutdir,fileName);

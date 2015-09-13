@@ -33,9 +33,9 @@ public class TagRegistryTest {
 
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         testAuthor = new MessageAuthor() {
-            UUID testId = UUID.randomUUID();
+            final UUID testId = UUID.randomUUID();
 
             public boolean hasPermission(String permString) {
                 return false;

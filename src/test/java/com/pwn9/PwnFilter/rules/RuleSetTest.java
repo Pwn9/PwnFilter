@@ -3,13 +3,12 @@ package com.pwn9.PwnFilter.rules;
 import com.pwn9.PwnFilter.FilterTask;
 import com.pwn9.PwnFilter.api.FilterClient;
 import com.pwn9.PwnFilter.api.MessageAuthor;
-import com.pwn9.PwnFilter.minecraft.PwnFilterPlugin;
 import com.pwn9.PwnFilter.config.FilterConfig;
+import com.pwn9.PwnFilter.minecraft.PwnFilterPlugin;
 import com.pwn9.PwnFilter.rules.action.RegisterActions;
 import com.pwn9.PwnFilter.util.LogManager;
 import junit.framework.Assert;
 import org.jetbrains.annotations.NotNull;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,14 +35,14 @@ public class RuleSetTest {
     RuleManager ruleManager;
     RuleChain rs;
     LogManager pwnLogger;
-    FilterClient mockClient = new FilterClient() {
+    final FilterClient mockClient = new FilterClient() {
         public String getShortName() { return "TEST"; }
         public RuleChain getRuleChain() { return ruleManager.getRuleChain("testrules.txt");}
         public boolean isActive() { return true; }
         public void activate() {}
         public void shutdown() {}
     };
-    MessageAuthor author = new MessageAuthor() {
+    final MessageAuthor author = new MessageAuthor() {
         @Override
         public boolean hasPermission(String permString) {
             return false;
@@ -73,7 +72,7 @@ public class RuleSetTest {
     };
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         RegisterActions.all();
         //TODO: Remove this, and add a FilterEngine initialization call.
         ruleManager = RuleManager.getInstance();
@@ -120,10 +119,6 @@ public class RuleSetTest {
         FilterTask testState = new FilterTask("ShortCutPattern",author,mockClient);
         ruleChain.apply(testState);
         Assert.assertEquals("Replaced", testState.getModifiedMessage().toString());
-    }
-
-    @After
-    public void tearDown() throws Exception {
     }
 
 

@@ -38,8 +38,8 @@ public class CommandChain implements Action {
     }
 
     /** {@inheritDoc} */
-    public boolean execute(final FilterTask filterTask ) {
-        filterTask.setCancelled(true);
+    public void execute(final FilterTask filterTask) {
+        filterTask.setCancelled();
         final ArrayList<String> parsedCommands = new ArrayList<String>();
 
         for (String cmd : commands)
@@ -52,11 +52,9 @@ public class CommandChain implements Action {
                 player.executeCommand(cmd);
                 filterTask.addLogMessage("Helped " + author.getName() + " execute command: " + cmd);
             }
-            return true;
         } else {
             filterTask.addLogMessage("Could not execute cmdchain on non-player.");
-            filterTask.setCancelled(true);
-            return false;
+            filterTask.setCancelled();
         }
     }
 }

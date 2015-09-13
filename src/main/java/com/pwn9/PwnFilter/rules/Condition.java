@@ -42,7 +42,7 @@ public class Condition {
      * @param f a {@link com.pwn9.PwnFilter.rules.Condition.CondFlag} object.
      * @param p a {@link java.lang.String} object.
      */
-    public Condition(CondType t, CondFlag f, String p) {
+    private Condition(CondType t, CondFlag f, String p) {
         type = t;
         flag = f;
         parameters = p;

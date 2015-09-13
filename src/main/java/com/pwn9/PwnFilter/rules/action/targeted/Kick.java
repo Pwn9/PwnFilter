@@ -35,15 +35,13 @@ public class Kick implements Action {
     }
 
     /** {@inheritDoc} */
-    public boolean execute(final FilterTask filterTask ) {
+    public void execute(final FilterTask filterTask) {
 
         if (filterTask.getAuthor() instanceof MinecraftPlayer) {
 
             String outMessage = replaceTags(messageString, filterTask);
-            ((MinecraftPlayer) filterTask.getAuthor()).kick(messageString);
+            ((MinecraftPlayer) filterTask.getAuthor()).kick(outMessage);
             filterTask.addLogMessage("Kicked " + filterTask.getAuthor().getName() + ": " + messageString);
-            return true;
         }
-        return false;
     }
 }

@@ -195,7 +195,7 @@ public class FileParser {
 
     /* Private Parser Methods */
 
-    private boolean parseRule(Rule rule, List<NumberedLine> lines) throws IOException, ParserException {
+    private void parseRule(Rule rule, List<NumberedLine> lines) throws ParserException {
 
         for (NumberedLine line : lines) {
             TokenString tokenString = new TokenString(line.string);
@@ -263,7 +263,7 @@ public class FileParser {
         }
         if (rule != null && rule.isValid()) {
             chain.append(rule);
-            return true;
+            return;
         }
 
         throw new ParserException(lineNo,"Unable to parse a valid rule.");
@@ -275,10 +275,8 @@ public class FileParser {
      *
      * @param groupName A String containing the name of the group
      * @param lines A list of Strings containing the actions to parse.
-     * @return true if at least one action is successfully parsed
-     * @throws IOException
      */
-    private boolean parseActionGroup(String groupName, List<NumberedLine> lines) throws IOException, ParserException {
+    private void parseActionGroup(String groupName, List<NumberedLine> lines) throws ParserException {
 
         ArrayList<Action> actionGroup = new ArrayList<Action>();
 
@@ -300,7 +298,6 @@ public class FileParser {
             throw new ParserException(lineNo,"Empty actionGroup found: " + groupName);
         } else {
             chain.addActionGroup(groupName,actionGroup);
-            return true;
         }
 
     }
@@ -310,10 +307,8 @@ public class FileParser {
      *
      * @param groupName A String containing the name of the group
      * @param lines A list of Strings containing the Conditions to parse.
-     * @return true if at least one action is successfully parsed
-     * @throws IOException
      */
-    private boolean parseConditionGroup(String groupName, List<NumberedLine> lines) throws IOException, ParserException {
+    private void parseConditionGroup(String groupName, List<NumberedLine> lines) throws ParserException {
 
         ArrayList<Condition> conditionGroup = new ArrayList<Condition>();
 
@@ -334,7 +329,6 @@ public class FileParser {
             throw new ParserException(lineNo,"Empty Condition Group found: " + groupName);
         } else {
             chain.addConditionGroup(groupName,conditionGroup);
-            return true;
         }
 
     }

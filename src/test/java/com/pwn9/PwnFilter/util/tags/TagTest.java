@@ -61,7 +61,7 @@ public class TagTest {
         };
 
         testAuthor = new MessageAuthor() {
-            private UUID testUUID = UUID.randomUUID();
+            private final UUID testUUID = UUID.randomUUID();
 
             @Override
             public boolean hasPermission(String permString) {

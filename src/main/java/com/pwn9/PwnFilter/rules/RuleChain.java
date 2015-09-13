@@ -45,10 +45,10 @@ public class RuleChain implements Chain,ChainEntry {
     }
 
     private ChainState chainState;
-    private List<ChainEntry> chain = new ArrayList<ChainEntry>();
-    private Multimap<String, Action> actionGroups = ArrayListMultimap.create();
-    private Multimap<String, Condition> conditionGroups = ArrayListMultimap.create();
-    private Set<RuleChainListener> listeners = new HashSet<RuleChainListener>();
+    private final List<ChainEntry> chain = new ArrayList<ChainEntry>();
+    private final Multimap<String, Action> actionGroups = ArrayListMultimap.create();
+    private final Multimap<String, Condition> conditionGroups = ArrayListMultimap.create();
+    private final Set<RuleChainListener> listeners = new HashSet<RuleChainListener>();
 
     private final String configName;
 
@@ -168,11 +168,10 @@ public class RuleChain implements Chain,ChainEntry {
     }
 
     /** {@inheritDoc} */
-    public boolean append(ChainEntry r) {
+    public void append(ChainEntry r) {
         if (r.isValid()) {
             chain.add(r); // Add the Rule to this chain
-            return true;
-        } else return false;
+        }
     }
 
     /**

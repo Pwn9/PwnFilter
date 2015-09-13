@@ -22,7 +22,7 @@ package com.pwn9.PwnFilter.rules.parser;
  * @author ptoal
  * @version $Id: $Id
  */
-public class TokenString {
+class TokenString {
 
     final private String originalString;
     private String string;

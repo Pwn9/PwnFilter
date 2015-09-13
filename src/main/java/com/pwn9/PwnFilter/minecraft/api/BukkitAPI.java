@@ -47,7 +47,7 @@ import java.util.concurrent.TimeUnit;
 @SuppressWarnings("UnusedDeclaration")
 public class BukkitAPI implements MinecraftAPI {
 
-    private LoadingCache<UUID, PlayerData> playerDataMap = CacheBuilder.newBuilder()
+    private final LoadingCache<UUID, PlayerData> playerDataMap = CacheBuilder.newBuilder()
             .maximumSize(100)
             .expireAfterWrite(10, TimeUnit.SECONDS)
             .build(

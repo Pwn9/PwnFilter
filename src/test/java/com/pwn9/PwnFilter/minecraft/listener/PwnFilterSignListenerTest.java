@@ -54,13 +54,13 @@ public class PwnFilterSignListenerTest {
 
     SignChangeEvent signChangeEvent;
     Configuration testConfig;
-    File resourcesDir = new File(getClass().getResource("/config.yml").getFile()).getParentFile();
-    PwnFilterSignListener signListener = new PwnFilterSignListener();
-    MinecraftAPI minecraftAPI = new TestMinecraftAPI();
+    final File resourcesDir = new File(getClass().getResource("/config.yml").getFile()).getParentFile();
+    final PwnFilterSignListener signListener = new PwnFilterSignListener();
+    final MinecraftAPI minecraftAPI = new TestMinecraftAPI();
 
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         RegisterActions.builtin();
         LogManager.getInstance(Logger.getAnonymousLogger(), new File("/pwnfiltertest.log"));
         File rulesDir = new File(getClass().getResource("/rules").getFile());

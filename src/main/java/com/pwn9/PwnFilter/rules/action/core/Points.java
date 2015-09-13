@@ -44,17 +44,17 @@ public class Points implements Action {
     }
 
     /** {@inheritDoc} */
-    public boolean execute(final FilterTask filterTask ) {
+    public void execute(final FilterTask filterTask) {
         MessageAuthor p = filterTask.getAuthor();
 
-        if (p == null) return false;
+        if (p == null) return;
 
         PointManager pm;
         try {
             pm = PointManager.getInstance();
         } catch (IllegalStateException ex) {
             LogManager.getInstance().debugLow(String.format("Rule: %s has 'then points', but PointManager is disabled in config.yml", filterTask.getRule().getId()));
-            return false;
+            return;
         }
 
         // TODO: Add more comprehensive messaging, as well as details about thresholds.
@@ -66,8 +66,6 @@ public class Points implements Action {
         if (!messageString.isEmpty()) {
           p.sendMessage(messageString);
         }
-
-        return true;
 
     }
 }

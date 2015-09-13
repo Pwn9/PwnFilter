@@ -23,7 +23,7 @@ import java.util.Random;
  */
 @SuppressWarnings("UnusedDeclaration")
 public class RandomReplace implements Action {
-    private static Random random = new Random();
+    private static final Random random = new Random();
 
     // toRand is a String array of options to chose from for replacement.
     String[] toRand;
@@ -36,9 +36,8 @@ public class RandomReplace implements Action {
     }
 
     /** {@inheritDoc} */
-    public boolean execute(final FilterTask filterTask ) {
+    public void execute(final FilterTask filterTask) {
         int randomInt = random.nextInt(toRand.length);
         filterTask.setModifiedMessage(filterTask.getModifiedMessage().replaceText(filterTask.getPattern(),toRand[randomInt]));
-        return true;
     }
 }

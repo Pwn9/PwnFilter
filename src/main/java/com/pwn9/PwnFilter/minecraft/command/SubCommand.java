@@ -12,7 +12,7 @@ import org.bukkit.command.Command;
  * @author ptoal
  * @version $Id: $Id
  */
-public abstract class SubCommand extends Command {
+abstract class SubCommand extends Command {
 
     /**
      * <p>Constructor for SubCommand.</p>

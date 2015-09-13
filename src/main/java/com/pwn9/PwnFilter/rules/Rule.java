@@ -35,10 +35,10 @@ public class Rule implements ChainEntry {
     private String description = "";
     private String id = "";
 
-    List<Condition> conditions = new ArrayList<Condition>();
-    List<Action> actions = new ArrayList<Action>();
-    public List<String> includeEvents = new ArrayList<String>();
-    public List<String> excludeEvents = new ArrayList<String>();
+    final List<Condition> conditions = new ArrayList<Condition>();
+    final List<Action> actions = new ArrayList<Action>();
+    public final List<String> includeEvents = new ArrayList<String>();
+    public final List<String> excludeEvents = new ArrayList<String>();
 
         /* Constructors */
 

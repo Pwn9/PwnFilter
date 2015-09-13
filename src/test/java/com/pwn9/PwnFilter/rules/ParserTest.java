@@ -10,15 +10,14 @@
 
 package com.pwn9.PwnFilter.rules;
 
-import com.pwn9.PwnFilter.minecraft.PwnFilterPlugin;
 import com.pwn9.PwnFilter.config.FilterConfig;
+import com.pwn9.PwnFilter.minecraft.PwnFilterPlugin;
 import com.pwn9.PwnFilter.rules.action.Action;
 import com.pwn9.PwnFilter.rules.action.RegisterActions;
 import com.pwn9.PwnFilter.rules.action.core.Deny;
 import com.pwn9.PwnFilter.rules.action.targeted.Respond;
 import com.pwn9.PwnFilter.util.LogManager;
 import junit.framework.Assert;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,7 +50,7 @@ public class ParserTest {
     PwnFilterPlugin mockPlugin;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         RegisterActions.all();
         //TODO: Remove this, and add a FilterEngine initialization call.
         ruleManager = RuleManager.getInstance();
@@ -130,10 +129,6 @@ public class ParserTest {
         assertEquals(cTest.parameters, "me");
     }
 
-    @After
-    public void tearDown() throws Exception {
-     // Anything?  Probably not.
-    }
 
 
 }

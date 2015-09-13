@@ -37,7 +37,7 @@ public class Burn implements Action {
     }
 
     /** {@inheritDoc} */
-    public boolean execute(final FilterTask filterTask ) {
+    public void execute(final FilterTask filterTask) {
         MessageAuthor target = filterTask.getAuthor();
 
         if (target instanceof MinecraftPlayer) {
@@ -47,8 +47,6 @@ public class Burn implements Action {
         } else {
             filterTask.addLogMessage("Target not flamable: " + target.getName());
         }
-
-        return false;
 
     }
 }

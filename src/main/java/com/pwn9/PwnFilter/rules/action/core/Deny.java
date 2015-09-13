@@ -29,8 +29,7 @@ public class Deny implements Action {
     }
 
     /** {@inheritDoc} */
-    public boolean execute(final FilterTask filterTask ) {
-        filterTask.setCancelled(true);
-        return true;
+    public void execute(final FilterTask filterTask) {
+        filterTask.setCancelled();
     }
 }

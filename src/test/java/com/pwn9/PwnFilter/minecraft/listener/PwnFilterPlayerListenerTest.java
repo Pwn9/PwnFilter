@@ -52,14 +52,14 @@ public class PwnFilterPlayerListenerTest {
 
     AsyncPlayerChatEvent chatEvent;
     Configuration testConfig;
-    File resourcesDir = new File(getClass().getResource("/config.yml").getFile()).getParentFile();
-    PwnFilterPlayerListener playerListener = new PwnFilterPlayerListener();
-    MinecraftAPI minecraftAPI = new TestMinecraftAPI();
+    final File resourcesDir = new File(getClass().getResource("/config.yml").getFile()).getParentFile();
+    final PwnFilterPlayerListener playerListener = new PwnFilterPlayerListener();
+    final MinecraftAPI minecraftAPI = new TestMinecraftAPI();
 
 
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         RegisterActions.all();
         LogManager.getInstance(Logger.getAnonymousLogger(), new File("/pwnfiltertest.log"));
         File rulesDir = new File(getClass().getResource("/rules").getFile());

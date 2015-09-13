@@ -29,8 +29,7 @@ public class Log implements Action {
     }
 
     /** {@inheritDoc} */
-    public boolean execute(final FilterTask filterTask ) {
-        filterTask.setLogging(true);
-        return true;
+    public void execute(final FilterTask filterTask) {
+        filterTask.setLogging();
     }
 }

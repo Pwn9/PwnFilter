@@ -78,11 +78,10 @@ public class BaseCommandExecutor implements TabExecutor {
     /**
      * <p>sendHelpMsg.</p>
      *
-     * @param sender a {@link org.bukkit.command.CommandSender} object.
-     * @param alias a {@link java.lang.String} object.
-     * @return a boolean.
+     * @param sender a {@link CommandSender} object.
+     * @param alias a {@link String} object.
      */
-    public boolean sendHelpMsg(CommandSender sender, String alias) {
+    public void sendHelpMsg(CommandSender sender, String alias) {
 
         ArrayList<SubCommand> availableCommands = new ArrayList<SubCommand>();
 
@@ -102,7 +101,6 @@ public class BaseCommandExecutor implements TabExecutor {
             }
         }
 
-        return true;
     }
 
     /**

@@ -35,7 +35,7 @@ public class ConsoleChain implements Action {
     }
 
     /** {@inheritDoc} */
-    public boolean execute(final FilterTask filterTask ) {
+    public void execute(final FilterTask filterTask) {
         final ArrayList<String> parsedCommands = new ArrayList<String>();
 
         for (String cmd : commands)
@@ -45,8 +45,6 @@ public class ConsoleChain implements Action {
             filterTask.addLogMessage("Sending console command: " + cmd);
             MinecraftConsole.getInstance().executeCommand(cmd);
         }
-
-        return true;
 
     }
 

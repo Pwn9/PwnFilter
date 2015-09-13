@@ -53,12 +53,8 @@ public class PointManager implements FilterClient {
 
     private PointManager() {}
 
-    /**
-     * <p>setup.</p>
-     *
-     * @return a {@link com.pwn9.PwnFilter.util.PointManager} object.
-     */
-    public static PointManager setup(Double leakPoints, Integer leakInterval) {
+
+    public static void setup(Double leakPoints, Integer leakInterval) {
 
         if (_instance == null) {
             _instance = new PointManager();
@@ -71,7 +67,6 @@ public class PointManager implements FilterClient {
 
         _instance.startLeaking();
 
-        return _instance;
     }
 
     /**
@@ -243,10 +238,10 @@ public class PointManager implements FilterClient {
     }
 
     class Threshold implements Comparable<Threshold> {
-        String name;
-        Double points;
-        List<Action> actionsAscending;
-        List<Action> actionsDescending;
+        final String name;
+        final Double points;
+        final List<Action> actionsAscending;
+        final List<Action> actionsDescending;
 
         protected Threshold(String name, Double points, List<Action> ascending, List<Action> descending) {
             this.name = name;

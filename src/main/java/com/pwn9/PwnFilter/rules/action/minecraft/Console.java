@@ -33,10 +33,9 @@ public class Console implements Action {
     }
 
     /** {@inheritDoc} */
-    public boolean execute(final FilterTask filterTask ) {
+    public void execute(final FilterTask filterTask) {
         final String cmd = TagRegistry.replaceTags(command, filterTask);
         filterTask.addLogMessage("Sending console command: " + cmd);
         MinecraftConsole.getInstance().executeCommand(cmd);
-        return true;
     }
 }

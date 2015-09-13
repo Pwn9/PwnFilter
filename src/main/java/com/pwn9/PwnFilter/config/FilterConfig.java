@@ -23,7 +23,7 @@ public class FilterConfig {
     private File textDir;
     private File rulesDir;
 
-    private static FilterConfig _instance = new FilterConfig();
+    private static final FilterConfig _instance = new FilterConfig();
 
     // Global Plugin switches
     public static boolean decolor = false;

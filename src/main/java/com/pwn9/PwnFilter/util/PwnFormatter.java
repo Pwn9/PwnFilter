@@ -22,7 +22,7 @@ import java.util.logging.SimpleFormatter;
  * @author ptoal
  * @version $Id: $Id
  */
-public class PwnFormatter extends SimpleFormatter {
+class PwnFormatter extends SimpleFormatter {
 
     /** {@inheritDoc} */
     @Override
