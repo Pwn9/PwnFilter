@@ -141,8 +141,13 @@ public class RuleChain implements Chain,ChainEntry {
 
         apply(state);
 
-        if (state.getPattern() != null) {
-            logManager.debugHigh("Debug last match: " + state.getPattern().pattern());
+        if (!state.getMatchedRules().isEmpty()) {
+            StringBuilder sb = new StringBuilder();
+            for (Rule r : state.getMatchedRules()) {
+                sb.append(" ");
+                sb.append(r.getId());
+            }
+            logManager.debugHigh("Debug matched rules: " + sb.toString());
             logManager.debugHigh("Debug original: " + state.getOriginalMessage().getRaw());
             logManager.debugHigh("Debug current: " + state.getModifiedMessage().getRaw());
             logManager.debugHigh("Debug log: " + (state.loggingOn() ? "yes" : "no"));

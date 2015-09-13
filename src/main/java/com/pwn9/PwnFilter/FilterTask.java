@@ -30,14 +30,13 @@ import java.util.regex.Pattern;
  *
  */
 
-//TODO: Make all this stuff private and create getters/setters
-
 public class FilterTask {
     private final EnhancedString originalMessage; // Original message
     private EnhancedString modifiedMessage; // Modified message string
     private final MessageAuthor author; // Author that this event is connected to.
     private final FilterClient filterClient;
     private final List<String> logMessages = new ArrayList<String>(); // Rules can add strings to this array.  They will be output to log if log=true
+    private final List<Rule> matchedRules = new ArrayList<Rule>(); // An array containing all the rules we matched.
     private boolean logging = false;  // If true, actions will be logged
     private boolean aborted = false; // If set true by a rule, will stop further processing.
     private boolean cancelled = false; // If set true, will cancel this event.
@@ -207,6 +206,7 @@ public class FilterTask {
 
     public void setRule(Rule rule) {
         this.rule = rule;
+        matchedRules.add(rule);
     }
 
     public Pattern getPattern() {
@@ -215,6 +215,10 @@ public class FilterTask {
 
     public void setPattern(Pattern pattern) {
         this.pattern = pattern;
+    }
+
+    public List<Rule> getMatchedRules() {
+        return matchedRules;
     }
 
     public FilterClient getFilterClient() {

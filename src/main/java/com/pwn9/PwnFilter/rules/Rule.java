@@ -161,6 +161,7 @@ public class Rule implements ChainEntry {
             return;
         }
 
+        // If we do match, update the pattern and rule in the filter.
         filterTask.setPattern(pattern);
         filterTask.setRule(this);
 
