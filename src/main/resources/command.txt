@@ -28,7 +28,7 @@ then warn &aPlugins (1): AwesomeSauce.
 
 match ^/\?
 rule A4
-require command ?
+require command \?
 then deny
 
 match ^/seed
