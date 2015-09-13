@@ -18,7 +18,7 @@ Both the title and the pages will be filtered.
 New Actions
 -----------
 
-then broadcast <string>|<<END
+then broadcast <string>|<<EOF
 
 This action is the same as "then respond", but instead of sending the message
 to the player, it is broadcast to all players on the server.
@@ -135,17 +135,17 @@ A sample configuration for thresholds is below::
 Respond Multiline
 -----------------
 Enhance "then respond" action, by allowing a "here" tag function, to permit a
-multi-line response. Use "then respond <<END" to start the multiline message,
+multi-line response. Use "then respond <<EOF" to start the multiline message,
 and Terminate the response with a single line that has only 'END' (no quotes).
 Eg::
 
   match ^/grue$
-  then respond <<END
+  then respond <<EOF
   The grue is a sinister, lurking presence in the dark places of the earth. Its
   favorite diet is adventurers, but its insatiable appetite is tempered by its
   fear of light. No grue has ever been seen by the light of day, and few have
   survived its fearsome jaws to tell the tale.
-  END
+  EOF
 
 Behavioural Changes in Command Filter
 -------------------------------------
