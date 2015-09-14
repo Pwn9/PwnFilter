@@ -1,4 +1,4 @@
-main: com.pwn9.PwnFilter.minecraft.PwnFilterPlugin
+main: com.pwn9.BukkitFilter.PwnFilterPlugin
 name: PwnFilter
 version: ${pwnfilter.version}
 author: tremor77

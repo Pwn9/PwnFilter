@@ -13,7 +13,7 @@
 package com.pwn9.PwnFilter;
 
 import com.pwn9.PwnFilter.api.FilterClient;
-import com.pwn9.PwnFilter.minecraft.PwnFilterPlugin;
+import com.pwn9.BukkitFilter.PwnFilterPlugin;
 import com.pwn9.PwnFilter.rules.action.RegisterActions;
 import com.pwn9.PwnFilter.util.tags.RegisterTags;
 import org.bukkit.plugin.Plugin;

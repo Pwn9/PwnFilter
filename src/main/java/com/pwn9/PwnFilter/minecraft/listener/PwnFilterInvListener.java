@@ -13,9 +13,9 @@ package com.pwn9.PwnFilter.minecraft.listener;
 
 import com.pwn9.PwnFilter.FilterTask;
 import com.pwn9.PwnFilter.minecraft.api.MinecraftPlayer;
-import com.pwn9.PwnFilter.minecraft.PwnFilterPlugin;
+import com.pwn9.BukkitFilter.PwnFilterPlugin;
 import com.pwn9.PwnFilter.minecraft.util.ColoredString;
-import com.pwn9.PwnFilter.config.BukkitConfig;
+import com.pwn9.BukkitFilter.config.BukkitConfig;
 import com.pwn9.PwnFilter.rules.RuleManager;
 import com.pwn9.PwnFilter.util.LogManager;
 import org.bukkit.Bukkit;

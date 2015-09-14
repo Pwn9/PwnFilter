@@ -8,9 +8,10 @@
  * of the License, or (at your option) any later version.
  */
 
-package com.pwn9.PwnFilter.config;
+package com.pwn9.BukkitFilter.config;
 
 import com.pwn9.PwnFilter.api.Action;
+import com.pwn9.PwnFilter.config.FilterConfig;
 import com.pwn9.PwnFilter.rules.action.ActionFactory;
 import com.pwn9.PwnFilter.util.LogManager;
 import com.pwn9.PwnFilter.util.PointManager;

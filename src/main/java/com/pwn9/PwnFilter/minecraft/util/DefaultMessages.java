@@ -10,7 +10,7 @@
 
 package com.pwn9.PwnFilter.minecraft.util;
 
-import com.pwn9.PwnFilter.minecraft.PwnFilterPlugin;
+import com.pwn9.BukkitFilter.PwnFilterPlugin;
 import org.bukkit.ChatColor;
 
 /**

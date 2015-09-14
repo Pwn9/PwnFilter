@@ -8,14 +8,16 @@
  * of the License, or (at your option) any later version.
  */
 
-package com.pwn9.PwnFilter.minecraft.api;
+package com.pwn9.BukkitFilter;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.pwn9.PwnFilter.api.MessageAuthor;
 import com.pwn9.PwnFilter.minecraft.DeathMessages;
-import com.pwn9.PwnFilter.minecraft.PwnFilterPlugin;
+import com.pwn9.PwnFilter.minecraft.api.MinecraftAPI;
+import com.pwn9.PwnFilter.minecraft.api.MinecraftPlayer;
+import com.pwn9.PwnFilter.minecraft.api.PlayerData;
 import com.pwn9.PwnFilter.util.LogManager;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;

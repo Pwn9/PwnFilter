@@ -11,7 +11,7 @@
 package com.pwn9.PwnFilter.minecraft.listener;
 
 import com.pwn9.PwnFilter.TestMinecraftAPI;
-import com.pwn9.PwnFilter.config.BukkitConfig;
+import com.pwn9.BukkitFilter.config.BukkitConfig;
 import com.pwn9.PwnFilter.config.FilterConfig;
 import com.pwn9.PwnFilter.minecraft.api.MinecraftAPI;
 import com.pwn9.PwnFilter.minecraft.api.MinecraftServer;

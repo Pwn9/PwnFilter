@@ -1,6 +1,6 @@
 package com.pwn9.PwnFilter.minecraft.listener;
 
-import com.pwn9.PwnFilter.minecraft.PwnFilterPlugin;
+import com.pwn9.BukkitFilter.PwnFilterPlugin;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;

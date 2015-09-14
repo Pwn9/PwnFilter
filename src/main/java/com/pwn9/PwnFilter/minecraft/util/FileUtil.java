@@ -1,6 +1,6 @@
 package com.pwn9.PwnFilter.minecraft.util;
 
-import com.pwn9.PwnFilter.minecraft.PwnFilterPlugin;
+import com.pwn9.BukkitFilter.PwnFilterPlugin;
 import com.pwn9.PwnFilter.util.LogManager;
 import org.bukkit.plugin.Plugin;
 

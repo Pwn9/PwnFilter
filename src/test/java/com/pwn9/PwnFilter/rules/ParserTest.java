@@ -11,7 +11,7 @@
 package com.pwn9.PwnFilter.rules;
 
 import com.pwn9.PwnFilter.config.FilterConfig;
-import com.pwn9.PwnFilter.minecraft.PwnFilterPlugin;
+import com.pwn9.BukkitFilter.PwnFilterPlugin;
 import com.pwn9.PwnFilter.api.Action;
 import com.pwn9.PwnFilter.rules.action.RegisterActions;
 import com.pwn9.PwnFilter.rules.action.core.Deny;

@@ -11,7 +11,7 @@
 package com.pwn9.PwnFilter.rules;
 
 import com.pwn9.PwnFilter.FilterTask;
-import com.pwn9.PwnFilter.minecraft.PwnFilterPlugin;
+import com.pwn9.BukkitFilter.PwnFilterPlugin;
 import com.pwn9.PwnFilter.api.Action;
 import com.pwn9.PwnFilter.util.LimitedRegexCharSequence;
 import com.pwn9.PwnFilter.util.LogManager;
@@ -34,6 +34,7 @@ public class Rule implements ChainEntry {
     private Pattern pattern;
     private String description = "";
     private String id = "";
+    public static int matches = 0;
 
     final List<Condition> conditions = new ArrayList<Condition>();
     final List<Action> actions = new ArrayList<Action>();
@@ -185,9 +186,7 @@ public class Rule implements ChainEntry {
 
         //TODO: Abstract statistics counters from mcstats
         //TODO: Make internal stats tracker on matches per hour, etc?
-        if(PwnFilterPlugin.matchTracker != null) {
-            PwnFilterPlugin.matchTracker.increment(); // Update Match Statistics
-        }
+        matches++;
 
         // If we get this far, execute the actions
         for (Action a : actions) {

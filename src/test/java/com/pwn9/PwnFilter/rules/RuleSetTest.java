@@ -4,7 +4,7 @@ import com.pwn9.PwnFilter.FilterTask;
 import com.pwn9.PwnFilter.api.FilterClient;
 import com.pwn9.PwnFilter.api.MessageAuthor;
 import com.pwn9.PwnFilter.config.FilterConfig;
-import com.pwn9.PwnFilter.minecraft.PwnFilterPlugin;
+import com.pwn9.BukkitFilter.PwnFilterPlugin;
 import com.pwn9.PwnFilter.rules.action.RegisterActions;
 import com.pwn9.PwnFilter.util.LogManager;
 import junit.framework.Assert;

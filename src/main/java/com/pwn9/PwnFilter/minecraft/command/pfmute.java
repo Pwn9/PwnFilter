@@ -11,7 +11,7 @@
 package com.pwn9.PwnFilter.minecraft.command;
 
 import com.pwn9.PwnFilter.minecraft.api.MinecraftConsole;
-import com.pwn9.PwnFilter.config.BukkitConfig;
+import com.pwn9.BukkitFilter.config.BukkitConfig;
 import com.pwn9.PwnFilter.util.LogManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;

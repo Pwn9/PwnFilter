@@ -8,13 +8,12 @@
  * of the License, or (at your option) any later version.
  */
 
-package com.pwn9.PwnFilter.minecraft;
+package com.pwn9.BukkitFilter;
 
 import com.google.common.collect.MapMaker;
+import com.pwn9.BukkitFilter.config.BukkitConfig;
 import com.pwn9.PwnFilter.FilterEngine;
 import com.pwn9.PwnFilter.api.FilterClient;
-import com.pwn9.PwnFilter.config.BukkitConfig;
-import com.pwn9.PwnFilter.minecraft.api.BukkitAPI;
 import com.pwn9.PwnFilter.minecraft.api.MinecraftAPI;
 import com.pwn9.PwnFilter.minecraft.api.MinecraftServer;
 import com.pwn9.PwnFilter.minecraft.command.pfcls;
@@ -22,7 +21,6 @@ import com.pwn9.PwnFilter.minecraft.command.pfdumpcache;
 import com.pwn9.PwnFilter.minecraft.command.pfmute;
 import com.pwn9.PwnFilter.minecraft.command.pfreload;
 import com.pwn9.PwnFilter.minecraft.listener.*;
-import com.pwn9.PwnFilter.minecraft.util.Tracker;
 import com.pwn9.PwnFilter.rules.RuleChain;
 import com.pwn9.PwnFilter.util.LogManager;
 import net.milkbowl.vault.economy.Economy;
@@ -53,7 +51,7 @@ public class PwnFilterPlugin extends JavaPlugin {
     private static PwnFilterPlugin _instance;
     private static MinecraftAPI minecraftAPI;
     private Metrics metrics;
-    public static Tracker matchTracker;
+//    public static Tracker matchTracker;
     private Metrics.Graph eventGraph;
     public static Economy economy = null;
 
@@ -158,10 +156,10 @@ public class PwnFilterPlugin extends JavaPlugin {
                 eventGraph = metrics.createGraph("Rules by Event");
                 updateMetrics();
 
-                Metrics.Graph matchGraph = metrics.createGraph("Matches");
-                matchTracker = new Tracker("Matches");
+//                Metrics.Graph matchGraph = metrics.createGraph("Matches");
+//                matchTracker = new Tracker("Matches");
 
-                matchGraph.addPlotter(matchTracker);
+//                matchGraph.addPlotter(matchTracker);
             }
             metrics.start();
 
