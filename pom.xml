@@ -218,7 +218,7 @@
                     <relocations>
                         <relocation>
                             <pattern>org.mcstats</pattern>
-                            <shadedPattern>com.pwn9.PwnFilter.mcstats</shadedPattern>
+                            <shadedPattern>com.pwn9.filter.mcstats</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
