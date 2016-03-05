@@ -213,7 +213,7 @@ public class DataCache {
      */
     public synchronized void removePlayer(Player p) {
         onlinePlayers.remove(p);
-        playerPermissions.get(p).clear();
+        playerPermissions.removeAll(p);
     }
 
     private synchronized void updateCache() {
@@ -237,7 +237,7 @@ public class DataCache {
                 Player p = it.next();
                 if (!p.isOnline()) {
                     LogManager.logger.warning("Removing cached, but offline player: " + p.getName());
-                    playerPermissions.get(p).clear();
+                    playerPermissions.removeAll(p);
                     it.remove();
                 }
             }
