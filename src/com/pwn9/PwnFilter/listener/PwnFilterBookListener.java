@@ -63,6 +63,7 @@ public class PwnFilterBookListener extends BaseListener {
     public void onBookEdit(PlayerEditBookEvent event) {
         Player player;
         String message;
+
         // Don't process already cancelled events.
         if (event.isCancelled()) return;
 
@@ -88,9 +89,14 @@ public class PwnFilterBookListener extends BaseListener {
         // Process Book Text
         if (bookMeta.hasPages()) {
             List<String> newPages = new ArrayList<String>();
+
             boolean modified = false;
             for (String page : bookMeta.getPages()) {
-                FilterState state = new FilterState(plugin, page, player, this);
+                // Space-pad the page and replace §0 with a space
+                // (separate lines of a book's page are separated with §0)
+                String scrubbedPage = " " + page.replace("§0", " ") + " ";
+
+                FilterState state = new FilterState(plugin, scrubbedPage, player, this);
                 ruleChain.execute(state);
                 if (state.isCancelled()) {
                     event.setCancelled(true);
@@ -123,23 +129,23 @@ public class PwnFilterBookListener extends BaseListener {
     @Override
     public void activate(Configuration config) {
         if (isActive()) return;
-
         setRuleChain(RuleManager.getInstance().getRuleChain("book.txt"));
 
         PluginManager pm = Bukkit.getPluginManager();
         EventPriority priority = EventPriority.valueOf(config.getString("bookpriority", "LOWEST").toUpperCase());
 
-        if (!active && config.getBoolean("bookfilter")) {
+        if (config.getBoolean("bookfilter")) {
             // Now register the listener with the appropriate priority
             pm.registerEvent(PlayerEditBookEvent.class, this, priority,
                     new EventExecutor() {
-                        public void execute(Listener l, Event e) { onBookEdit((PlayerEditBookEvent) e); }
+                        public void execute(Listener l, Event e) { onBookEdit((PlayerEditBookEvent)e); }
                     },
                     plugin);
-            setActive();
+
             LogManager.logger.info("Activated BookListener with Priority Setting: " + priority.toString()
                     + " Rule Count: " + getRuleChain().ruleCount() );
 
+            setActive();
         }
     }
 }
