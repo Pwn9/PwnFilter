@@ -90,19 +90,22 @@ public class PwnFilterBookListener extends BaseListener {
         if (bookMeta.hasPages()) {
             List<String> newPages = new ArrayList<String>();
 
+            final String EOL_TOKEN = "§0 ";
+
             boolean modified = false;
             for (String page : bookMeta.getPages()) {
-                // Space-pad the page and replace §0 with a space
-                // (separate lines of a book's page are separated with §0)
-                String scrubbedPage = " " + page.replace("§0", " ") + " ";
+                // Replace §0 with a token ending in a space to allow RegEx \b matching to work properly
+                // (lines of a book are in the form §0line text§0)
+                String pageText = page.replace("§0", EOL_TOKEN);
 
-                FilterState state = new FilterState(plugin, scrubbedPage, player, this);
+                FilterState state = new FilterState(plugin, pageText, player, this);
                 ruleChain.execute(state);
                 if (state.isCancelled()) {
                     event.setCancelled(true);
                 }
                 if (state.messageChanged()) {
-                    page = state.getModifiedMessage().getColoredString();
+                    // Get the filtered message; replace the tokens with §0
+                    page = state.getModifiedMessage().getPlainString().replace(EOL_TOKEN, "§0");
                     modified = true;
                 }
                 newPages.add(page);
