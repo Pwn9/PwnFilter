@@ -16,6 +16,7 @@ import com.pwn9.PwnFilter.FilterState;
 import com.pwn9.PwnFilter.PwnFilter;
 import com.pwn9.PwnFilter.rules.RuleManager;
 import com.pwn9.PwnFilter.util.LogManager;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.Player;
@@ -90,27 +91,57 @@ public class PwnFilterBookListener extends BaseListener {
         if (bookMeta.hasPages()) {
             List<String> newPages = new ArrayList<String>();
 
-            final String EOL_TOKEN = "§0 ";
+            final String lineEdgeToken = "§0";
+            boolean bookModified = false;
 
-            boolean modified = false;
             for (String page : bookMeta.getPages()) {
-                // Replace §0 with a token ending in a space to allow RegEx \b matching to work properly
-                // (lines of a book are in the form §0line text§0)
-                String pageText = page.replace("§0", EOL_TOKEN);
+                // Lines on a page are separated by §0\n§0, for example:
+                // Line 1 text§0\n§0Line 2 text§0\n§0Line 3 text§0\n§0Line 4 text
 
-                FilterState state = new FilterState(plugin, pageText, player, this);
-                ruleChain.execute(state);
-                if (state.isCancelled()) {
-                    event.setCancelled(true);
+                // Split on §0 and process the split text one line at a time
+                // Store the line (either original or modified) in a string builder
+
+                boolean pageModified = false;
+
+                String[] pageSections = page.split(lineEdgeToken);
+
+                StringBuilder modifiedPageText = new StringBuilder();
+                int sectionNumber = 0;
+
+                for (String section : pageSections) {
+                    sectionNumber++;
+
+                    if (StringUtils.isBlank(section)) {
+                        modifiedPageText.append(section);
+                    } else {
+                        FilterState state = new FilterState(plugin, section, player, this);
+                        ruleChain.execute(state);
+                        if (state.isCancelled()) {
+                            event.setCancelled(true);
+                        }
+                        if (state.messageChanged()) {
+                            // Filter rule matched; store the filtered message
+                            modifiedPageText.append(state.getModifiedMessage().getColoredString());
+                            bookModified = true;
+                            pageModified = true;
+                        } else {
+                            // No rules were matched
+                            modifiedPageText.append(section);
+                        }
+                    }
+
+                    if (sectionNumber < pageSections.length)
+                        modifiedPageText.append(lineEdgeToken);
                 }
-                if (state.messageChanged()) {
-                    // Get the filtered message; replace the tokens with §0
-                    page = state.getModifiedMessage().getPlainString().replace(EOL_TOKEN, "§0");
-                    modified = true;
+
+                if (pageModified) {
+                    newPages.add(modifiedPageText.toString());
+                } else {
+                    newPages.add(page);
                 }
-                newPages.add(page);
             }
-            if (modified)  {
+
+            if (bookModified)  {
                 bookMeta.setPages(newPages);
                 event.setNewBookMeta(bookMeta);
             }
