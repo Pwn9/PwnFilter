@@ -14,11 +14,11 @@ package com.pwn9.filter.minecraft.command;
  * This executor is designed to handle commands which have sub-commands.
  * It provides command completion and help from sub-commands.
  *
- * User: ptoal
+ * User: Sage905
  * Date: 13-07-01
  * Time: 4:19 PM
  *
- * @author ptoal
+ * @author Sage905
  * @version $Id: $Id
  */
 

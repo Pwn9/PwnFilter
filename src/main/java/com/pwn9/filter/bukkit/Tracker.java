@@ -15,7 +15,7 @@ import org.mcstats.Metrics;
 /**
  * Plugin Metrics Tracker class (courtesy of mbaxter)
  *
- * @author ptoal
+ * @author Sage905
  * @version $Id: $Id
  */
 public class Tracker extends Metrics.Plotter {

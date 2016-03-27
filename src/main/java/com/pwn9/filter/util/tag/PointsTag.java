@@ -8,26 +8,27 @@
  * of the License, or (at your option) any later version.
  */
 
-package com.pwn9.filter.util.tags;
+package com.pwn9.filter.util.tag;
 
-import com.pwn9.filter.engine.api.FilterTask;
-import com.pwn9.filter.util.PointManager;
+import com.pwn9.filter.engine.api.FilterContext;
+import com.pwn9.filter.engine.PointManager;
 
 import java.text.DecimalFormat;
 
 /**
  * Return the current points level a player has, if the PointManager is enabled.
  *
- * Created by ptoal on 15-09-04.
+ * Created by Sage905 on 15-09-04.
  */
 public class PointsTag implements Tag {
 
     private static final DecimalFormat df = new DecimalFormat("0.00##");
 
     @Override
-    public String getValue(FilterTask filterTask) {
-        return (PointManager.isEnabled()) ?
-                df.format(PointManager.getInstance().getPoints(filterTask.getAuthor())) :
+    public String getValue(FilterContext filterTask) {
+        PointManager pointManager = filterTask.getFilterClient().getFilterService().getPointManager();
+        return (pointManager.isEnabled()) ?
+                df.format(pointManager.getPoints(filterTask.getAuthor())) :
                 "-";
     }
 }

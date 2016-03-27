@@ -11,28 +11,19 @@
 package com.pwn9.filter.engine.config;
 
 import java.io.File;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
 
 /**
  * Object to hold the configuration of the PwnFilter Engine
  *
- * Created by ptoal on 15-09-10.
+ * Created by Sage905 on 15-09-10.
  */
 
 public class FilterConfig {
 
-    private File textDir;
-    private File rulesDir;
-
-    private static final FilterConfig _instance = new FilterConfig();
-
-    // Global Plugin switches
-    public static boolean decolor = false;
-    public static boolean globalMute = false;
-
-    public static FilterConfig getInstance() {
-        return _instance;
-    }
-
+    private volatile File textDir;
+    private volatile File rulesDir;
 
     /* Getters and Setters */
 
@@ -50,6 +41,25 @@ public class FilterConfig {
 
     public void setRulesDir(File rulesDir) {
         this.rulesDir = rulesDir;
+    }
+
+    private Level ruleLogLevel;
+    // Logging variables
+
+    private File logFile;
+
+    private FileHandler logfileHandler;
+
+    public void setRuleLogLevel(String level) {
+        try {
+            ruleLogLevel = Level.parse(level.toUpperCase());
+        } catch (IllegalArgumentException e ) {
+            ruleLogLevel = Level.INFO;
+        }
+    }
+
+    public Level getRuleLogLevel() {
+        return ruleLogLevel;
     }
 
 }

@@ -8,13 +8,13 @@
  * of the License, or (at your option) any later version.
  */
 
-package com.pwn9.filter.util.tags;
+package com.pwn9.filter.util.tag;
 
-import com.pwn9.filter.engine.api.FilterTask;
+import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.api.FilterClient;
 import com.pwn9.filter.engine.api.MessageAuthor;
 import com.pwn9.filter.minecraft.tag.PlayerTag;
-import com.pwn9.filter.engine.rules.RuleChain;
+import com.pwn9.filter.engine.rules.chain.RuleChain;
 import junit.framework.Assert;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
@@ -25,7 +25,7 @@ import java.util.UUID;
 
 /**
  * Test Tags
- * Created by ptoal on 15-09-07.
+ * Created by Sage905 on 15-09-07.
  */
 public class TagTest {
     FilterClient testClient;
@@ -96,7 +96,7 @@ public class TagTest {
     @Test
     public void testBuiltinTags() throws Exception {
         String input = "Test %player% tag";
-        FilterTask testState = new FilterTask(input, testAuthor , testClient );
+        FilterContext testState = new FilterContext(input, testAuthor , testClient );
         TagRegistry.addTag("player",new PlayerTag());
         Assert.assertEquals(TagRegistry.replaceTags(input, testState), "Test TESTPLAYER tag");
 

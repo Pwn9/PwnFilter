@@ -10,26 +10,27 @@
 
 package com.pwn9.filter.bukkit.listener;
 
-import com.pwn9.filter.engine.api.FilterTask;
 import com.pwn9.filter.bukkit.PwnFilterPlugin;
+import com.pwn9.filter.bukkit.config.BukkitConfig;
+import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.minecraft.api.MinecraftPlayer;
 import com.pwn9.filter.minecraft.util.ColoredString;
-import com.pwn9.filter.bukkit.config.BukkitConfig;
-import com.pwn9.filter.engine.rules.RuleManager;
-import com.pwn9.filter.util.LogManager;
 import com.pwn9.filter.util.SimpleString;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.PluginManager;
 
+import java.io.InvalidObjectException;
+
 /**
  * Listen for Chat events and apply the filter.
  *
- * @author ptoal
+ * @author Sage905
  * @version $Id: $Id
  */
 public class PwnFilterPlayerListener extends BaseListener {
@@ -47,7 +48,8 @@ public class PwnFilterPlayerListener extends BaseListener {
 	 * <p>Constructor for PwnFilterPlayerListener.</p>
 	 *
 	 */
-	public PwnFilterPlayerListener(){}
+	public PwnFilterPlayerListener(PwnFilterPlugin plugin){
+        super(plugin);}
 
     /**
      * <p>onPlayerChat.</p>
@@ -67,7 +69,7 @@ public class PwnFilterPlayerListener extends BaseListener {
         String message = event.getMessage();
 
         // Global mute
-        if ((BukkitConfig.isGlobalMute()) && (!minecraftPlayer.hasPermission("pwnfilter.bypass.mute"))) {
+        if ((BukkitConfig.globalMute()) && (!minecraftPlayer.hasPermission("pwnfilter.bypass.mute"))) {
             event.setCancelled(true);
             return; // No point in continuing.
         }
@@ -84,7 +86,7 @@ public class PwnFilterPlayerListener extends BaseListener {
 
         }
 
-        FilterTask state = new FilterTask(new ColoredString(message), minecraftPlayer, this);
+        FilterContext state = new FilterContext(new ColoredString(message), minecraftPlayer, this);
 
         // Global decolor
         if ((BukkitConfig.decolor()) && !(minecraftPlayer.hasPermission("pwnfilter.color"))) {
@@ -93,8 +95,8 @@ public class PwnFilterPlayerListener extends BaseListener {
         }
 
         // Take the message from the ChatEvent and send it through the filter.
-        LogManager.getInstance().debugHigh("Applying '" + ruleChain.getConfigName() + "' to message: " + state.getModifiedMessage());
-        ruleChain.execute(state);
+        plugin.getLogger().finer("Applying '" + ruleChain.getConfigName() + "' to message: " + state.getModifiedMessage());
+        ruleChain.execute(state, plugin.getLogger());
 
         // Only update the message if it has been changed.
         if (state.messageChanged()){
@@ -118,23 +120,27 @@ public class PwnFilterPlayerListener extends BaseListener {
 
         if (isActive()) return;
 
-        setRuleChain(RuleManager.getInstance().getRuleChain("chat.txt"));
+        try {
+            ruleChain = getCompiledChain("chat.txt");
 
-        PluginManager pm = Bukkit.getServer().getPluginManager();
+            PluginManager pm = Bukkit.getServer().getPluginManager();
 
-        /* Hook up the Listener for PlayerChat events */
-        pm.registerEvent(AsyncPlayerChatEvent.class, this, BukkitConfig.getChatpriority(),
-                new EventExecutor() {
-                    public void execute(Listener l, Event e) {
-                        onPlayerChat((AsyncPlayerChatEvent) e);
-                    }
-                }, PwnFilterPlugin.getInstance());
+            /* Hook up the Listener for PlayerChat events */
+            pm.registerEvent(AsyncPlayerChatEvent.class, this, BukkitConfig.getChatpriority(),
+                    new EventExecutor() {
+                        public void execute(Listener l, Event e) {
+                            onPlayerChat((AsyncPlayerChatEvent) e);
+                        }
+                    }, PwnFilterPlugin.getInstance());
 
-        LogManager.logger.info("Activated PlayerListener with Priority Setting: " + BukkitConfig.getChatpriority().toString()
-                + " Rule Count: " + getRuleChain().ruleCount() );
+            plugin.getLogger().info("Activated PlayerListener with Priority Setting: " + BukkitConfig.getChatpriority().toString()
+                    + " Rule Count: " + getRuleChain().ruleCount() );
 
-        setActive();
-
+            setActive();
+        } catch (InvalidObjectException | InvalidConfigurationException e) {
+            plugin.getLogger().severe("Unable to activate PlayerListener.  Error: " + e.getMessage());
+            setInactive();
+        }
     }
 
 }

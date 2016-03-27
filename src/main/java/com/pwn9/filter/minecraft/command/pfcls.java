@@ -11,7 +11,6 @@
 package com.pwn9.filter.minecraft.command;
 
 import com.pwn9.filter.minecraft.api.MinecraftConsole;
-import com.pwn9.filter.util.LogManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -19,29 +18,31 @@ import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Reload the PwnFilter config.
- * User: ptoal
+ * User: Sage905
  * Date: 13-08-10
  * Time: 9:23 AM
  *
- * @author ptoal
+ * @author Sage905
  * @version $Id: $Id
  */
 public class pfcls implements CommandExecutor {
-
+    private final Logger logger;
     /**
      * <p>Constructor for pfcls.</p>
      *
      */
-    public pfcls() {}
+    public pfcls(Logger logger) {
+        this.logger = logger;}
 
     /** {@inheritDoc} */
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         sender.sendMessage(ChatColor.RED + "Clearing chat screen");
-        LogManager.logger.info("chat screen cleared by " + sender.getName());
+        logger.info("chat screen cleared by " + sender.getName());
         int i = 0;
         List<String> messages = new ArrayList<String>();
         while (i <= 120) {

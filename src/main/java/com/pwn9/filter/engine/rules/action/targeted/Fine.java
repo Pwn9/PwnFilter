@@ -10,7 +10,8 @@
 
 package com.pwn9.filter.engine.rules.action.targeted;
 
-import com.pwn9.filter.engine.api.FilterTask;
+import com.pwn9.filter.engine.api.FilterContext;
+import com.pwn9.filter.engine.rules.action.InvalidActionException;
 import com.pwn9.filter.minecraft.api.MinecraftPlayer;
 import com.pwn9.filter.minecraft.util.DefaultMessages;
 import com.pwn9.filter.engine.api.Action;
@@ -18,32 +19,38 @@ import com.pwn9.filter.engine.api.Action;
 /**
  * Fine the user by extracting money from his economy account.
  *
- * @author ptoal
+ * @author Sage905
  * @version $Id: $Id
  */
 @SuppressWarnings("UnusedDeclaration")
 public class Fine implements Action {
 
-    String messageString; // Message to apply to this action
-    double fineAmount; // How much to fine the player.
+    private final String messageString; // Message to apply to this action
+    private final double fineAmount; // How much to fine the player.
+
+    private Fine(String message, double fineAmount) {
+        this.messageString = message;
+        this.fineAmount = fineAmount;
+    }
 
     /** {@inheritDoc} */
-    public void init(String s)
+    public static Action getAction(String s) throws InvalidActionException
     {
         String[] parts;
+        Double fineAmount;
 
         parts = s.split("\\s",2);
         try {
             fineAmount = Double.parseDouble(parts[0]);
         } catch (NumberFormatException e ) {
-            throw new IllegalArgumentException("'fine' action did not have a valid amount.");
+            throw new InvalidActionException("'fine' action did not have a valid amount.");
         }
 
-        messageString = DefaultMessages.prepareMessage((parts.length > 1)?parts[1]:"", "finemsg");
+        return new Fine(DefaultMessages.prepareMessage((parts.length > 1) ? parts[1] : "", "finemsg"), fineAmount);
     }
 
     /** {@inheritDoc} */
-    public void execute(final FilterTask filterTask) {
+    public void execute(final FilterContext filterTask) {
 
         if (filterTask.getAuthor() instanceof MinecraftPlayer) {
 

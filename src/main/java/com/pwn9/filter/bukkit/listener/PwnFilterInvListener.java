@@ -11,31 +11,29 @@
 
 package com.pwn9.filter.bukkit.listener;
 
-import com.pwn9.filter.engine.api.FilterTask;
-import com.pwn9.filter.minecraft.api.MinecraftPlayer;
 import com.pwn9.filter.bukkit.PwnFilterPlugin;
-import com.pwn9.filter.minecraft.util.ColoredString;
 import com.pwn9.filter.bukkit.config.BukkitConfig;
-import com.pwn9.filter.engine.rules.RuleManager;
-import com.pwn9.filter.util.LogManager;
+import com.pwn9.filter.engine.api.FilterContext;
+import com.pwn9.filter.minecraft.api.MinecraftPlayer;
+import com.pwn9.filter.minecraft.util.ColoredString;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.PluginManager;
+
+import java.io.InvalidObjectException;
 
 
 /**
  * Listen for Sign Change events and apply the filter to the text.
  *
- * @author ptoal
+ * @author Sage905
  * @version $Id: $Id
  */
 public class PwnFilterInvListener extends BaseListener {
@@ -43,8 +41,8 @@ public class PwnFilterInvListener extends BaseListener {
     /**
      * <p>Constructor for PwnFilterInvListener.</p>
      **/
-    public PwnFilterInvListener() {
-        super();
+    public PwnFilterInvListener(PwnFilterPlugin plugin) {
+        super(plugin);
     }
 
     /** {@inheritDoc} */
@@ -83,9 +81,9 @@ public class PwnFilterInvListener extends BaseListener {
         if (itemMeta != null && itemMeta.hasDisplayName()) {
             message = itemMeta.getDisplayName();
 
-            FilterTask filterTask = new FilterTask(new ColoredString(message), MinecraftPlayer.getInstance(player), this);
+            FilterContext filterTask = new FilterContext(new ColoredString(message), MinecraftPlayer.getInstance(player), this);
 
-            ruleChain.execute(filterTask);
+            ruleChain.execute(filterTask, plugin.getLogger());
             if (filterTask.isCancelled()) event.setCancelled(true);
 
             // Only update the message if it has been changed.
@@ -118,22 +116,23 @@ public class PwnFilterInvListener extends BaseListener {
     public void activate() {
         if (isActive()) return;
 
-        setRuleChain(RuleManager.getInstance().getRuleChain("item.txt"));
-
         PluginManager pm = Bukkit.getPluginManager();
         EventPriority priority = BukkitConfig.getItempriority();
 
         if (!active && BukkitConfig.itemFilterEnabled()) {
-            // Now register the listener with the appropriate priority
-            pm.registerEvent(InventoryClickEvent.class, this, priority,
-                    new EventExecutor() {
-                        public void execute(Listener l, Event e) { onInventoryEvent((InventoryClickEvent) e); }
-                    },
-                    PwnFilterPlugin.getInstance());
-            setActive();
-            LogManager.logger.info("Activated ItemListener with Priority Setting: " + priority.toString()
-                    + " Rule Count: " + getRuleChain().ruleCount() );
-
+            try {
+                ruleChain = getCompiledChain("item.txt");
+                // Now register the listener with the appropriate priority
+                pm.registerEvent(InventoryClickEvent.class, this, priority,
+                        (l, e) -> onInventoryEvent((InventoryClickEvent) e),
+                        PwnFilterPlugin.getInstance());
+                setActive();
+                plugin.getLogger().info("Activated ItemListener with Priority Setting: " + priority.toString()
+                        + " Rule Count: " + getRuleChain().ruleCount());
+            } catch (InvalidObjectException | InvalidConfigurationException e) {
+                plugin.getLogger().severe("Unable to activate ItemListener.  Error: " + e.getMessage());
+                setInactive();
+            }
         }
     }
 }

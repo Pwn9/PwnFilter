@@ -8,14 +8,14 @@
  * of the License, or (at your option) any later version.
  */
 
-package com.pwn9.filter.util.tags;
+package com.pwn9.filter.util.tag;
 
 import com.pwn9.filter.minecraft.tag.PlayerTag;
 import com.pwn9.filter.minecraft.tag.WorldTag;
 
 /**
  * Register Built-in Tags
- * Created by ptoal on 15-09-08.
+ * Created by Sage905 on 15-09-08.
  */
 public class RegisterTags {
 

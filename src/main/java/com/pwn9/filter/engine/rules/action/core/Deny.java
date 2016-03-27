@@ -10,26 +10,25 @@
 
 package com.pwn9.filter.engine.rules.action.core;
 
-import com.pwn9.filter.engine.api.FilterTask;
+import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.api.Action;
 
 /**
- * Deny this event by cancelling it.
+ * Deny this event from propagating by cancelling it (i.e.: throw the message
+ * in the trash)
  *
- * @author ptoal
+ * Deny is a singleton, because it does not have any parameters and always
+ * performs the same action on a FilterContext ( calls setCancelled())
+ *
+ * @author Sage905
  * @version $Id: $Id
  */
-@SuppressWarnings("UnusedDeclaration")
-public class Deny implements Action {
+public enum Deny implements Action {
 
-    /** {@inheritDoc} */
-    public void init(String s)
-    {
-        // Do nothing with a string, if one is provided.
-    }
+    INSTANCE;
 
-    /** {@inheritDoc} */
-    public void execute(final FilterTask filterTask) {
+    @Override
+    public void execute(final FilterContext filterTask) {
         filterTask.setCancelled();
     }
 }

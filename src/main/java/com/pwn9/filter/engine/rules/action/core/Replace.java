@@ -10,31 +10,37 @@
 
 package com.pwn9.filter.engine.rules.action.core;
 
-import com.pwn9.filter.engine.api.FilterTask;
+import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.util.SimpleString;
 import org.bukkit.ChatColor;
 
 /**
- * Decolor the whole string and replace the matched text with the replacement string.
+ * De-color the whole string and replace the matched text with the replacement string.
  *
- * @author ptoal
+ * @author Sage905
  * @version $Id: $Id
  */
-@SuppressWarnings("UnusedDeclaration")
 public class Replace implements Action {
+
     // messageString is what we will use to replace any matched text.
-    String messageString = "";
+    private final String messageString;
 
-
-    /** {@inheritDoc} */
-    public void init(String s)
-    {
-        messageString = ChatColor.translateAlternateColorCodes('&',s).replaceAll("\"","");
+    private Replace(String message) {
+        this.messageString = message;
     }
 
-    /** {@inheritDoc} */
-    public void execute(final FilterTask filterTask) {
-        filterTask.setModifiedMessage(new SimpleString(filterTask.getModifiedMessage().toString()).replaceText(filterTask.getPattern(), messageString));
+    static Action getAction(String s)
+    {
+        String message = ChatColor.translateAlternateColorCodes('&',s).
+                replaceAll("\"","");
+        return new Replace(message);
+    }
+
+    @Override
+    public void execute(final FilterContext filterTask) {
+        filterTask.setModifiedMessage(new SimpleString(filterTask.
+                getModifiedMessage().toString()).
+                replaceText(filterTask.getPattern(), messageString));
     }
 }

@@ -10,13 +10,14 @@
 
 package com.pwn9.filter.engine.rules;
 
-import com.pwn9.filter.engine.api.FilterTask;
 import com.pwn9.filter.engine.api.Action;
+import com.pwn9.filter.engine.api.FilterContext;
+import com.pwn9.filter.engine.rules.chain.Chain;
+import com.pwn9.filter.engine.rules.chain.ChainEntry;
 import com.pwn9.filter.util.LimitedRegexCharSequence;
-import com.pwn9.filter.util.LogManager;
-import com.pwn9.filter.util.Patterns;
 
 import java.util.*;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,20 +26,19 @@ import java.util.regex.Pattern;
  * <p/>
  * <P>Each Rule has a single match Pattern, an ArrayList of {@link com.pwn9.filter.engine.rules.Condition}'s and an ArrayList of {@link Action}'s</P>
  *
- * @author ptoal
+ * @author Sage905
  * @version $Id: $Id
  */
-@SuppressWarnings("UnusedDeclaration")
 public class Rule implements ChainEntry {
     private Pattern pattern;
     private String description = "";
     private String id = "";
     public static int matches = 0;
 
-    final List<Condition> conditions = new ArrayList<Condition>();
-    final List<Action> actions = new ArrayList<Action>();
-    public final List<String> includeEvents = new ArrayList<String>();
-    public final List<String> excludeEvents = new ArrayList<String>();
+    private final List<Condition> conditions = new ArrayList<>();
+    private final List<Action> actions = new ArrayList<>();
+    public final List<String> includeEvents = new ArrayList<>();
+    public final List<String> excludeEvents = new ArrayList<>();
 
         /* Constructors */
 
@@ -53,7 +53,7 @@ public class Rule implements ChainEntry {
      * @param matchStr a {@link java.lang.String} object.
      */
     public Rule(String matchStr) {
-        this.pattern = Patterns.compilePattern(matchStr);
+        this.pattern = Pattern.compile(matchStr, Pattern.CASE_INSENSITIVE);;
     }
 
     /**
@@ -100,7 +100,7 @@ public class Rule implements ChainEntry {
      * @param pattern a {@link java.lang.String} object.
      */
     public void setPattern(String pattern) {
-        this.pattern = Patterns.compilePattern(pattern);
+        this.pattern = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
     }
 
     /**
@@ -123,16 +123,20 @@ public class Rule implements ChainEntry {
 
     /** {@inheritDoc} */
     @Override
-    public Set<String> getPermissionList() {
-        Set<String> permList = new HashSet<String>();
+    public Set<String> getConditionsMatching(String matchString) {
+        Set<String> retVal = new HashSet<>();
+        Condition.CondType matchType;
 
-        for (Condition c : conditions) {
-            if (c.type == Condition.CondType.permission) {
-                Collections.addAll(permList, c.parameters.split("\\|"));
-            }
+        try {
+            matchType = Condition.CondType.valueOf(matchString);
+        } catch (IllegalArgumentException e) {
+            return retVal;
         }
 
-        return permList;
+        conditions.stream().filter(c -> c.type == matchType).
+                forEach(c -> Collections.addAll(retVal, c.parameters.split("\\|")));
+
+        return retVal;
     }
 
     /* Methods */
@@ -141,43 +145,46 @@ public class Rule implements ChainEntry {
      * {@inheritDoc}
      *
      * apply this action to the current message / event.  May trigger other bukkit events.
+     *
      */
-    public void apply(FilterTask filterTask) {
+    public void apply(FilterContext filterContext, Chain parent, Logger logger ) {
+
+        // If finest logging is set, then generate our logging info. (This is a
+        // lambda + Supplier pattern.)
+        logger.finest(() -> "Testing Pattern: '" + pattern.toString() + "' on string: '" +
+                filterContext.getModifiedMessage().toString()+"'");
 
         // Check if action matches the current state of the message
+        LimitedRegexCharSequence limitedRegexCharSequence =
+                new LimitedRegexCharSequence(filterContext.getModifiedMessage().toString(),100);
+        final Matcher matcher = pattern.matcher(limitedRegexCharSequence);
 
-        if (LogManager.debugMode.compareTo(LogManager.DebugModes.high) >= 0) {
-            LogManager.logger.info("Testing Pattern: '" + pattern.toString() + "' on string: '" + filterTask.getModifiedMessage().toString()+"'");
-        }
-
-            LimitedRegexCharSequence limitedRegexCharSequence = new LimitedRegexCharSequence(filterTask.getModifiedMessage().toString(),100);
-            final Matcher matcher = pattern.matcher(limitedRegexCharSequence);
         // If we don't match, return immediately with the original message
         try {
             if (!matcher.find()) return;
         } catch (RuntimeException ex) {
-            LogManager.logger.severe("Regex match timed out! Regex: " + pattern.toString());
-            LogManager.logger.severe("Failed string was: " + limitedRegexCharSequence);
+            logger.severe("Regex match timed out! Regex: " + pattern.toString());
+            logger.severe("Failed string was: " + limitedRegexCharSequence);
             return;
         }
 
         // If we do match, update the pattern and rule in the filter.
-        filterTask.setPattern(pattern);
-        filterTask.setRule(this);
+        filterContext.setPattern(pattern);
+        filterContext.setRule(this);
 
         // If Match, log it and then check any conditions.
-        filterTask.addLogMessage("|" + filterTask.getListenerName() + "| MATCH " +
+        filterContext.addLogMessage("|" + filterContext.getListenerName() + "| MATCH " +
                 (id.isEmpty() ? "" : "(" + id + ")") +
                 " <" +
-                filterTask.getAuthor().getName() + "> " + filterTask.getModifiedMessage().toString());
-        LogManager.getInstance().debugLow("Match String: " + matcher.group());
+                filterContext.getAuthor().getName() + "> " + filterContext.getModifiedMessage().toString());
 
+        logger.fine(() -> "Match String: " + matcher.group());
 
         for (Condition c : conditions) {
             // This checks that EVERY condition is met (conditions are AND)
-            if (!c.check(filterTask)) {
-                filterTask.addLogMessage("CONDITION not met <" + c.flag.toString() +
-                        " " + c.type.toString() + " " + c.parameters + "> " + filterTask.getOriginalMessage());
+            if (!c.check(filterContext)) {
+                filterContext.addLogMessage("CONDITION not met <" + c.flag.toString() +
+                        " " + c.type.toString() + " " + c.parameters + "> " + filterContext.getOriginalMessage());
                 return;
             }
 
@@ -185,7 +192,7 @@ public class Rule implements ChainEntry {
 
         // If we get this far, execute the actions
         for (Action a : actions) {
-            a.execute(filterTask);
+            a.execute(filterContext);
         }
 
     }

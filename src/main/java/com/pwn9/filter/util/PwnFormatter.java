@@ -19,15 +19,13 @@ import java.util.logging.SimpleFormatter;
 /**
  * <p>PwnFormatter class.</p>
  *
- * @author ptoal
+ * @author Sage905
  * @version $Id: $Id
  */
-class PwnFormatter extends SimpleFormatter {
+public class PwnFormatter extends SimpleFormatter {
 
-    /** {@inheritDoc} */
     @Override
     public synchronized String format(LogRecord record) {
-
         String dateStr;
         Format formatter;
         Date date = new Date(record.getMillis());

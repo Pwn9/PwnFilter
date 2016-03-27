@@ -10,32 +10,36 @@
 
 package com.pwn9.filter.engine.rules.action.targeted;
 
-import com.pwn9.filter.engine.api.FilterTask;
+import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.minecraft.api.MinecraftPlayer;
 import com.pwn9.filter.minecraft.util.DefaultMessages;
 import com.pwn9.filter.engine.api.Action;
 
-import static com.pwn9.filter.util.tags.TagRegistry.replaceTags;
+import static com.pwn9.filter.util.tag.TagRegistry.replaceTags;
 
 /**
  * Kick the user with a customized message.
  *
- * @author ptoal
+ * @author Sage905
  * @version $Id: $Id
  */
 @SuppressWarnings("UnusedDeclaration")
 public class Kick implements Action {
     // Message to apply to this kick action
-    String messageString;
+    private final String messageString;
 
-    /** {@inheritDoc} */
-    public void init(String s)
-    {
-        messageString = DefaultMessages.prepareMessage(s, "burnmsg");
+    private Kick(String messageString) {
+        this.messageString = messageString;
     }
 
     /** {@inheritDoc} */
-    public void execute(final FilterTask filterTask) {
+    public static Action getAction(String s)
+    {
+        return new Kick(DefaultMessages.prepareMessage(s, "burnmsg"));
+    }
+
+    /** {@inheritDoc} */
+    public void execute(final FilterContext filterTask) {
 
         if (filterTask.getAuthor() instanceof MinecraftPlayer) {
 

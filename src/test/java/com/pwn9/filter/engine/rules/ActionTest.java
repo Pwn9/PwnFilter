@@ -1,11 +1,12 @@
 package com.pwn9.filter.engine.rules;
 
-import com.pwn9.filter.engine.api.FilterTask;
+import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.api.FilterClient;
 import com.pwn9.filter.engine.api.MessageAuthor;
 import com.pwn9.filter.engine.config.FilterConfig;
 import com.pwn9.filter.engine.rules.action.RegisterActions;
-import com.pwn9.filter.util.LogManager;
+import com.pwn9.filter.engine.rules.chain.RuleChain;
+import com.pwn9.filter.util.FileLogger;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +21,7 @@ import static junit.framework.Assert.assertTrue;
 
 /**
  * Tests for Actions
- * User: ptoal
+ * User: Sage905
  * Date: 13-05-04
  * Time: 11:28 AM
  */
@@ -73,44 +74,44 @@ public class ActionTest {
         File rulesDir = new File(getClass().getResource("/rules").getFile());
         FilterConfig.getInstance().setRulesDir(rulesDir);
         rs = ruleManager.getRuleChain("actionTests.txt");
-        LogManager.getInstance(Logger.getAnonymousLogger(), new File("/tmp/"));
-        rs.loadConfigFile();
+        FileLogger.getInstance(Logger.getAnonymousLogger(), new File("/tmp/"));
+        rs.load();
     }
 
     @Test
     public void testAbort() {
-        FilterTask testState = new FilterTask("abort", author, mockClient);
+        FilterContext testState = new FilterContext("abort", author, mockClient);
         rs.apply(testState);
         assertTrue(testState.isAborted());
     }
 
     @Test
     public void testRandRep() {
-        FilterTask testState = new FilterTask("randrep", author, mockClient);
+        FilterContext testState = new FilterContext("randrep", author, mockClient);
         rs.apply(testState);
         assertTrue(testState.getModifiedMessage().toString().matches("(random|replace)"));
     }
 
     @Test
     public void testBurn() {
-        FilterTask testState = new FilterTask("burn", author, mockClient);
+        FilterContext testState = new FilterContext("burn", author, mockClient);
         rs.apply(testState);
     }
 
     @Test
     public void testUpper() {
-        FilterTask testState = new FilterTask("upper", author, mockClient);
+        FilterContext testState = new FilterContext("upper", author, mockClient);
         rs.apply(testState);
         assertEquals("UPPER", testState.getModifiedMessage().toString());
     }
 
     @Test
     public void testLower() {
-        FilterTask testState = new FilterTask("LOWER", author, mockClient);
+        FilterContext testState = new FilterContext("LOWER", author, mockClient);
         rs.apply(testState);
         assertEquals("lower", testState.getModifiedMessage().toString());
 
-        FilterTask test2 = new FilterTask("LOWERCASE ALL THIS STUFF!", author, mockClient);
+        FilterContext test2 = new FilterContext("LOWERCASE ALL THIS STUFF!", author, mockClient);
         rs.apply((test2));
         assertEquals("lowercase all this stuff!", test2.getModifiedMessage().toString());
     }

@@ -13,7 +13,7 @@ package com.pwn9.filter.engine.rules.parser;
 /**
  * <p>NumberedLine class.</p>
  *
- * @author ptoal
+ * @author Sage905
  * @version $Id: $Id
  */
 class NumberedLine {

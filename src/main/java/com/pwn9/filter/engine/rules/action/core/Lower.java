@@ -10,27 +10,26 @@
 
 package com.pwn9.filter.engine.rules.action.core;
 
-import com.pwn9.filter.engine.api.FilterTask;
+import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.api.Action;
-import com.pwn9.filter.util.EnhancedString;
+import com.pwn9.filter.engine.api.EnhancedString;
 
 /**
  * Convert the matched text to lowercase.
  *
- * @author ptoal
+ * Lower is a singleton, because it does not have any parameters and always
+ * performs the same action on a FilterContext.
+ *
+ * @author Sage905
  * @version $Id: $Id
  */
 @SuppressWarnings("UnusedDeclaration")
-public class Lower implements Action {
+public enum Lower implements Action {
+
+    INSTANCE;
 
     /** {@inheritDoc} */
-    public void init(String s)
-    {
-        // Do nothing with a string, if one is provided.
-    }
-
-    /** {@inheritDoc} */
-    public void execute(final FilterTask filterTask) {
+    public void execute(final FilterContext filterTask) {
         EnhancedString cs = filterTask.getModifiedMessage();
         filterTask.addLogMessage("Converting to lowercase.");
         filterTask.setModifiedMessage(cs.patternToLower(filterTask.getPattern()));

@@ -10,30 +10,34 @@
 
 package com.pwn9.filter.engine.rules.action.core;
 
-import com.pwn9.filter.engine.api.FilterTask;
+import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.api.Action;
 import org.bukkit.ChatColor;
 
 /**
  * Rewrite the string by replacing the matched text with the provided string.
  *
- * @author ptoal
+ * @author Sage905
  * @version $Id: $Id
  */
-@SuppressWarnings("UnusedDeclaration")
 public class Rewrite implements Action {
-    // messageString is what we will use to replace any matched text.
-    String messageString = "";
 
-    /** {@inheritDoc} */
-    public void init(String s)
-    {
-        messageString = ChatColor.translateAlternateColorCodes('&',s);
+    // messageString is what we will use to replace any matched text.
+    private final String messageString;
+
+    private Rewrite(String message) {
+        messageString = message;
     }
 
-    /** {@inheritDoc} */
-    public void execute(final FilterTask filterTask) {
-        filterTask.setModifiedMessage(filterTask.getModifiedMessage().replaceText(filterTask.getPattern(), messageString));
+    static Action getAction(String s)
+    {
+        return new Rewrite(ChatColor.translateAlternateColorCodes('&',s));
+    }
+
+    @Override
+    public void execute(final FilterContext filterTask) {
+        filterTask.setModifiedMessage(filterTask.getModifiedMessage().
+                replaceText(filterTask.getPattern(), messageString));
 
     }
 }

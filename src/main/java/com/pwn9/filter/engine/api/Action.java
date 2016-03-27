@@ -11,23 +11,19 @@
 package com.pwn9.filter.engine.api;
 
 /**
- * Actions are triggered by Rules when they match.
+ * Actions are compiled into RuleChains for execution when matched by a rule.
  *
- * @author ptoal
+ * Actions must be immutable, and only created by the newAction() method.
+ *
+ * @author Sage905
  * @version $Id: $Id
  */
 public interface Action {
 
     /**
-     * <p>init.</p>
+     * <p>Execute this action on a FilterContext</p>
      *
-     * @param s a {@link java.lang.String} object.
+     * @param task a {@link FilterContext} object.
      */
-    void init(String s);
-    /**
-     * <p>execute.</p>
-     *
-     * @param task a {@link FilterTask} object.
-     */
-    void execute(FilterTask task);
+    void execute(FilterContext task);
 }

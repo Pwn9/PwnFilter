@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentMap;
 
 /**
  * Simple Singleton to track Player Death Messages
- * Created by ptoal on 15-09-08.
+ * Created by Sage905 on 15-09-08.
  */
 public class DeathMessages {
     public static final ConcurrentMap<UUID, String> killedPlayers = new MapMaker().concurrencyLevel(2).weakKeys().makeMap();

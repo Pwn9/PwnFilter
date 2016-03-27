@@ -8,9 +8,9 @@
  * of the License, or (at your option) any later version.
  */
 
-package com.pwn9.filter.util.tags;
+package com.pwn9.filter.util.tag;
 
-import com.pwn9.filter.engine.api.FilterTask;
+import com.pwn9.filter.engine.api.FilterContext;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
  * every time this rule matches, a broadcast message will be sent which reads:
  *   Joe has just pooped their self
  *
- * Created by ptoal on 15-09-04.
+ * Created by Sage905 on 15-09-04.
  */
 public class TagRegistry {
 
@@ -48,10 +48,10 @@ public class TagRegistry {
      * <p>replaceTags.</p>
      *
      * @param line a {@link StringTag} object.
-     * @param filterTask a {@link FilterTask} object.
+     * @param filterTask a {@link FilterContext} object.
      * @return a {@link StringTag} object.
      */
-    public static String replaceTags(String line, FilterTask filterTask) {
+    public static String replaceTags(String line, FilterContext filterTask) {
 
         Matcher tagMatcher = Pattern.compile("%(\\w+)%", Pattern.CASE_INSENSITIVE).matcher(line);
 

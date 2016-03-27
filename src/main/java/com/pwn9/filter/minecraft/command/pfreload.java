@@ -10,10 +10,8 @@
 
 package com.pwn9.filter.minecraft.command;
 
-import com.pwn9.filter.engine.FilterEngine;
 import com.pwn9.filter.bukkit.PwnFilterPlugin;
-import com.pwn9.filter.engine.rules.RuleManager;
-import com.pwn9.filter.util.LogManager;
+import com.pwn9.filter.engine.FilterService;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -21,21 +19,21 @@ import org.bukkit.command.CommandSender;
 
 /**
  * Reload the PwnFilter config.
- * User: ptoal
+ * User: Sage905
  * Date: 13-08-10
  * Time: 9:23 AM
  *
- * @author ptoal
+ * @author Sage905
  * @version $Id: $Id
  */
 public class pfreload implements CommandExecutor {
-    private final FilterEngine filterEngine;
+    private final FilterService filterService;
     /**
      * <p>Constructor for pfreload.</p>
      *
      */
-    public pfreload(FilterEngine filterEngine) {
-        this.filterEngine = filterEngine;
+    public pfreload(FilterService filterService) {
+        this.filterService = filterService;
     }
 
     /** {@inheritDoc} */
@@ -43,20 +41,23 @@ public class pfreload implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         sender.sendMessage(ChatColor.RED + "Reloading config.yml and rules/*.txt files.");
 
-        LogManager.logger.info("Disabling all listeners");
-        filterEngine.disableClients();
+        filterService.getLogger().info("Disabling all listeners");
+        filterService.disableClients();
 
         PwnFilterPlugin.getInstance().reloadConfig();
         PwnFilterPlugin.getInstance().configurePlugin();
 
-        LogManager.logger.config("Reloaded config.yml as requested by " + sender.getName());
+        filterService.getLogger().config("Reloaded config.yml as requested by " + sender.getName());
 
-        RuleManager.getInstance().reloadAllConfigs();
-        LogManager.logger.config("All rules reloaded by " + sender.getName());
+        //TODO: MAKE THIS COMMAND WORK AGAIN!
+        //
+        // reloadAllConfigs();
+
+        filterService.getLogger().config("All rules reloaded by " + sender.getName());
 
         // Re-register our listeners
-        filterEngine.enableClients();
-        LogManager.logger.info("All listeners re-enabled");
+        filterService.enableClients();
+        filterService.getLogger().info("All listeners re-enabled");
 
         return true;
 

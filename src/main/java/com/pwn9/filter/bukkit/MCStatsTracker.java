@@ -10,21 +10,21 @@
 
 package com.pwn9.filter.bukkit;
 
-import com.pwn9.filter.engine.api.StatsTracker;
 import com.pwn9.filter.engine.api.FilterClient;
-import com.pwn9.filter.engine.rules.RuleChain;
-import com.pwn9.filter.util.LogManager;
+import com.pwn9.filter.engine.api.StatsTracker;
+import com.pwn9.filter.engine.rules.chain.RuleChain;
 import org.bukkit.plugin.Plugin;
 import org.mcstats.Metrics;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * An MCStats implementation of statistics tracking.
  * <p/>
- * Created by ptoal on 15-09-13.
+ * Created by Sage905 on 15-09-13.
  */
 public class MCStatsTracker implements StatsTracker {
     private Metrics metrics;
@@ -58,7 +58,7 @@ public class MCStatsTracker implements StatsTracker {
 
 
         } catch (IOException e) {
-            LogManager.logger.fine(e.getMessage());
+            plugin.getLogger().fine(e.getMessage());
         }
     }
 
@@ -73,19 +73,16 @@ public class MCStatsTracker implements StatsTracker {
      * @param filterClientSet A list of filterclients to update.
      */
     @Override
-    public void updateClients(List<FilterClient> filterClientSet) {
+    public void updateClients(Set<FilterClient> filterClientSet) {
 
-        ArrayList<String> activeListenerNames = new ArrayList<String>();
-        for (FilterClient f : filterClientSet) {
-            activeListenerNames.add(f.getShortName());
-        }
+        ArrayList<String> activeListenerNames =
+                filterClientSet.stream().map(FilterClient::getShortName).
+                        collect(Collectors.toCollection(ArrayList::new));
 
         // Remove old plotters
-        for (Metrics.Plotter p : eventGraph.getPlotters()) {
-            if (!activeListenerNames.contains(p.getColumnName())) {
-                eventGraph.removePlotter(p);
-            }
-        }
+        eventGraph.getPlotters().stream().
+                filter(p -> !activeListenerNames.contains(p.getColumnName())).
+                forEach(p -> eventGraph.removePlotter(p));
 
         // Add new plotters
         for (final FilterClient f : filterClientSet) {

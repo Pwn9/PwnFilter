@@ -10,43 +10,46 @@
 
 package com.pwn9.filter.minecraft.command;
 
-import com.pwn9.filter.minecraft.api.MinecraftConsole;
 import com.pwn9.filter.bukkit.config.BukkitConfig;
-import com.pwn9.filter.util.LogManager;
+import com.pwn9.filter.minecraft.api.MinecraftConsole;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
+import java.util.logging.Logger;
+
 /**
  * Reload the PwnFilter config.
- * User: ptoal
+ * User: Sage905
  * Date: 13-08-10
  * Time: 9:23 AM
  *
- * @author ptoal
+ * @author Sage905
  * @version $Id: $Id
  */
 public class pfmute implements CommandExecutor {
+    private final Logger logger;
 
     /**
      * <p>Constructor for pfmute.</p>
      *
      */
-    public pfmute() {
+    public pfmute(Logger logger) {
+        this.logger = logger;
     }
 
     /** {@inheritDoc} */
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (BukkitConfig.isGlobalMute()) {
+        if (BukkitConfig.globalMute()) {
             MinecraftConsole.getInstance().sendBroadcast(ChatColor.RED + "Global mute cancelled by " + sender.getName());
-            LogManager.logger.info("global mute cancelled by " + sender.getName());
+            logger.info("global mute cancelled by " + sender.getName());
             BukkitConfig.setGlobalMute(false);
         }
         else {
             MinecraftConsole.getInstance().sendBroadcast(ChatColor.RED + "Global mute initiated by " + sender.getName());
-            LogManager.logger.info("global mute initiated by " + sender.getName());
+            logger.info("global mute initiated by " + sender.getName());
             BukkitConfig.setGlobalMute(true);
         }
         return true;

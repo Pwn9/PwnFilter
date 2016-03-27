@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 /**
  * Tests the LimitedRegexCharSequence
- * User: ptoal
+ * User: Sage905
  * Date: 13-09-13
  * Time: 8:19 PM
  */

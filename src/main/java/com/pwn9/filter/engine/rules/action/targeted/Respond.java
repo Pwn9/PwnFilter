@@ -10,36 +10,45 @@
 
 package com.pwn9.filter.engine.rules.action.targeted;
 
-import com.pwn9.filter.engine.api.FilterTask;
+import com.google.common.collect.ImmutableList;
 import com.pwn9.filter.engine.api.Action;
-import com.pwn9.filter.util.tags.TagRegistry;
+import com.pwn9.filter.engine.api.FilterContext;
+import com.pwn9.filter.util.tag.TagRegistry;
 import org.bukkit.ChatColor;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Responds to the user with the string provided.
  *
- * @author ptoal
+ * @author Sage905
  * @version $Id: $Id
  */
 @SuppressWarnings("UnusedDeclaration")
 public class Respond implements Action {
-    final ArrayList<String> messageStrings = new ArrayList<String>();
+    private final List<String> messageStrings;
 
-    /**
-     * {@inheritDoc}
-     */
-    public void init(String s) {
-        for (String message : s.split("\n")) {
-            messageStrings.add(ChatColor.translateAlternateColorCodes('&', message));
-        }
+    private Respond(List<String> messageStrings) {
+        this.messageStrings = messageStrings;
     }
 
     /**
      * {@inheritDoc}
      */
-    public void execute(final FilterTask filterTask) {
+    public static Action getAction(String s) {
+        ArrayList<String> messageStrings = new ArrayList<>();
+
+        for (String message : s.split("\n")) {
+            messageStrings.add(ChatColor.translateAlternateColorCodes('&', message));
+        }
+        return new Respond(ImmutableList.copyOf(messageStrings));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void execute(final FilterContext filterTask) {
         if (filterTask.getAuthor() == null) return;
 
         final ArrayList<String> preparedMessages = new ArrayList<String>();

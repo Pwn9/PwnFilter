@@ -8,7 +8,7 @@
  * of the License, or (at your option) any later version.
  */
 
-package com.pwn9.filter.util;
+package com.pwn9.filter.engine.api;
 
 import java.util.regex.Pattern;
 
@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
  * matches and replacements on the text content, independent of any embedded
  * encoding.
  *
- * Created by ptoal on 15-09-09.
+ * Created by Sage905 on 15-09-09.
  */
 public interface EnhancedString extends CharSequence {
 

@@ -8,18 +8,21 @@
  * of the License, or (at your option) any later version.
  */
 
-package com.pwn9.filter.util.tags;
+package com.pwn9.filter.engine.rules.parser;
 
-import com.pwn9.filter.engine.api.FilterTask;
+import com.pwn9.filter.engine.rules.chain.Chain;
+
+import java.io.File;
+import java.util.List;
 
 /**
- * Return the original Message
- * Created by ptoal on 15-09-04.
+ * Parser takes an inputStream, and uses a RuleChainBuilder object to build
+ * a RuleChain
+ *
+ * Created by Sage905 on 15-10-04.
  */
-public class RawStringTag implements Tag {
+public interface FilterConfigParser {
 
-    @Override
-    public String getValue(FilterTask filterTask) {
-        return filterTask.getOriginalMessage().getRaw();
-    }
+    Chain parse(File source,
+                List<File> parents);
 }

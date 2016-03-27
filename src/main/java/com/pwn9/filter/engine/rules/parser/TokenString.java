@@ -15,11 +15,11 @@ package com.pwn9.filter.engine.rules.parser;
  * and provides the popToken() method for removing the first word of the
  * string and returning it.
  *
- * User: ptoal
+ * User: Sage905
  * Date: 13-11-20
  * Time: 8:20 AM
  *
- * @author ptoal
+ * @author Sage905
  * @version $Id: $Id
  */
 class TokenString {

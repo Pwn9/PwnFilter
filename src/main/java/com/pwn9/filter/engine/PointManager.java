@@ -8,13 +8,14 @@
  * of the License, or (at your option) any later version.
  */
 
-package com.pwn9.filter.util;
+package com.pwn9.filter.engine;
 
-import com.pwn9.filter.engine.api.FilterTask;
-import com.pwn9.filter.engine.api.FilterClient;
-import com.pwn9.filter.engine.api.MessageAuthor;
-import com.pwn9.filter.engine.rules.RuleChain;
 import com.pwn9.filter.engine.api.Action;
+import com.pwn9.filter.engine.api.FilterClient;
+import com.pwn9.filter.engine.api.FilterContext;
+import com.pwn9.filter.engine.api.MessageAuthor;
+import com.pwn9.filter.engine.rules.chain.RuleChain;
+import com.pwn9.filter.util.SimpleString;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -29,58 +30,49 @@ import java.util.concurrent.*;
  * TODO: Refactor to remove the FilterClient implementation. (IoC, instead?)
  * TODO: Remove Dependency on BukkitTask to leak points.
  *
- * User: ptoal
+ * User: Sage905
  * Date: 13-10-31
  * Time: 3:49 PM
  *
- * @author ptoal
+ * @author Sage905
  * @version $Id: $Id
  */
 @SuppressWarnings("UnusedDeclaration")
 public class PointManager implements FilterClient {
 
-    private static PointManager _instance;
-
     private final Map<UUID,Double> pointsMap = new ConcurrentHashMap<UUID, Double>(8, 0.75f, 2);
     private final TreeMap<Double, Threshold> thresholds = new TreeMap<Double,Threshold>();
 
-    private int leakInterval;
-    private Double leakPoints;
-    private ScheduledFuture<?> leakHandle;
+    private int leakInterval = 0;
 
+    private Double leakPoints = 0.0;
+    private ScheduledFuture<?> scheduledFuture;
     private final ScheduledExecutorService scheduler =
             Executors.newScheduledThreadPool(1);
 
-    private PointManager() {}
+    PointManager() {}
 
-
-    public static void setup(Double leakPoints, Integer leakInterval) {
-
-        if (_instance == null) {
-            _instance = new PointManager();
-        }
-
-        _instance.leakPoints = leakPoints;
-        _instance.leakInterval = leakInterval;
-
-        _instance.clearThresholds();
-
-        _instance.startLeaking();
-
+    public void reset() {
+        stop();
+        // Reset all player points.
+        pointsMap.clear();
+        start();
     }
 
-    /**
-     * <p>reset.</p>
-     */
-    public void reset() {
-        stopLeaking();
+    public int getLeakInterval() {
+        return leakInterval;
+    }
 
-        // Reset all player points.
-        for (UUID id : pointsMap.keySet()) {
-            setPoints(id, 0.0);
-        }
+    public void setLeakInterval(int leakInterval) {
+        this.leakInterval = leakInterval;
+    }
 
-        startLeaking();
+    public Double getLeakPoints() {
+        return leakPoints;
+    }
+
+    public void setLeakPoints(Double leakPoints) {
+        this.leakPoints = leakPoints;
     }
 
     public void clearThresholds() {
@@ -90,8 +82,9 @@ public class PointManager implements FilterClient {
     }
 
 
-    private void startLeaking() {
-        final PointManager pointManager = this;
+    public void start() {
+        if (scheduledFuture == null) {
+            final PointManager pointManager = this;
 
             final Runnable leakTask = new Runnable() {
                 @Override
@@ -103,31 +96,18 @@ public class PointManager implements FilterClient {
                     }
                 }
             };
-        if (leakHandle == null) {
-            leakHandle = scheduler.scheduleAtFixedRate(leakTask, 1, leakInterval, TimeUnit.SECONDS);
+            scheduledFuture = scheduler.scheduleAtFixedRate(leakTask, 1, leakInterval, TimeUnit.SECONDS);
         }
     }
 
 
-    private void stopLeaking() {
-        if (leakHandle != null) {
-            leakHandle.cancel(true);
-            leakHandle = null;
+    private void stop() {
+        if (scheduledFuture != null) {
+            scheduledFuture.cancel(true);
+            scheduledFuture = null;
         }
     }
 
-    /**
-     * <p>getInstance.</p>
-     *
-     * @return a {@link com.pwn9.filter.util.PointManager} object.
-     * @throws java.lang.IllegalStateException if any.
-     */
-    public static PointManager getInstance() throws IllegalStateException {
-        if (_instance == null ) {
-            throw new IllegalStateException("Point Manager Not initialized.");
-        }
-        return _instance;
-    }
 
     /**
      * <p>getPointsMap.</p>
@@ -188,8 +168,8 @@ public class PointManager implements FilterClient {
      *
      * @return a boolean.
      */
-    public static boolean isEnabled() {
-        return _instance != null;
+    public boolean isEnabled() {
+        return scheduledFuture != null;
     }
 
     private void executeActions(final Double fromValue, final Double toValue, final UUID id) {
@@ -204,11 +184,11 @@ public class PointManager implements FilterClient {
             // execute the actions for that crossing.
 
             for (Map.Entry<Double, Threshold> entry : thresholds.subMap(oldKey, false, newKey, true).entrySet())
-                entry.getValue().executeAscending(id);
+                entry.getValue().executeAscending(id, this);
 
         } else {
             for (Map.Entry<Double, Threshold> entry : thresholds.subMap(newKey, false, oldKey, true).descendingMap().entrySet())
-                entry.getValue().executeDescending(id);
+                entry.getValue().executeDescending(id, this);
         }
 
     }
@@ -255,15 +235,15 @@ public class PointManager implements FilterClient {
             return Double.compare(this.points, o.points);
         }
 
-        public void executeAscending(UUID id) {
-            FilterTask state = new FilterTask(new SimpleString(""), id, _instance );
+        public void executeAscending(UUID id, FilterClient client) {
+            FilterContext state = new FilterContext(new SimpleString(""), id, client );
             for (Action a : actionsAscending ) {
                 a.execute(state);
             }
         }
 
-        public void executeDescending(UUID id) {
-            FilterTask state = new FilterTask(new SimpleString(""), id, _instance );
+        public void executeDescending(UUID id, FilterClient client) {
+            FilterContext state = new FilterContext(new SimpleString(""), id, client );
             for (Action a : actionsDescending ) {
                 a.execute(state);
             }
@@ -281,6 +261,11 @@ public class PointManager implements FilterClient {
     @Override
     public String getShortName() {
         return "POINTS";
+    }
+
+    @Override
+    public FilterService getFilterService() {
+        return null;
     }
 
     /** {@inheritDoc} */
@@ -303,7 +288,6 @@ public class PointManager implements FilterClient {
     /** {@inheritDoc} */
     @Override
     public void shutdown() {
-        stopLeaking();
-        _instance = null;
+        stop();
     }
 }

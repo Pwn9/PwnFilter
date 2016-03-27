@@ -13,15 +13,15 @@ package com.pwn9.filter.bukkit;
 import com.google.common.collect.MapMaker;
 import com.pwn9.filter.bukkit.config.BukkitConfig;
 import com.pwn9.filter.bukkit.listener.*;
-import com.pwn9.filter.engine.FilterEngine;
+import com.pwn9.filter.engine.FilterService;
+import com.pwn9.filter.engine.rules.action.minecraft.MinecraftAction;
+import com.pwn9.filter.engine.rules.action.targeted.TargetedAction;
 import com.pwn9.filter.minecraft.api.MinecraftAPI;
 import com.pwn9.filter.minecraft.api.MinecraftServer;
 import com.pwn9.filter.minecraft.command.pfcls;
-import com.pwn9.filter.minecraft.command.pfdumpcache;
 import com.pwn9.filter.minecraft.command.pfmute;
 import com.pwn9.filter.minecraft.command.pfreload;
-import com.pwn9.filter.util.LogManager;
-import com.pwn9.filter.util.tags.RegisterTags;
+import com.pwn9.filter.util.tag.RegisterTags;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -29,6 +29,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.UUID;
 import java.util.concurrent.ConcurrentMap;
+
 
 /**
  * A Regular Expression (REGEX) Chat Filter For Bukkit with many great features
@@ -38,12 +39,12 @@ import java.util.concurrent.ConcurrentMap;
  */
 
 public class PwnFilterPlugin extends JavaPlugin {
-
     private static PwnFilterPlugin _instance;
     private static MinecraftAPI minecraftAPI;
+
     private MCStatsTracker statsTracker;
-    public static Economy economy = null;
-    private FilterEngine filterEngine;
+    static Economy economy = null;
+    private FilterService filterService;
 
     public static final ConcurrentMap<UUID, String> lastMessage = new MapMaker().concurrencyLevel(2).weakKeys().makeMap();
 
@@ -51,19 +52,14 @@ public class PwnFilterPlugin extends JavaPlugin {
      * <p>Constructor for PwnFilter.</p>
      */
     public PwnFilterPlugin() {
+
         if (_instance == null) {
             _instance = this;
         } else {
             throw new IllegalStateException("Only one instance of PwnFilter can be run per server");
         }
-        minecraftAPI = new BukkitAPI(this);
-        statsTracker = new MCStatsTracker(this);
-        filterEngine = new FilterEngine(statsTracker);
-        MinecraftServer.setAPI(minecraftAPI);
-        RegisterTags.all();
 
     }
-
 
     /**
      * <p>getInstance.</p>
@@ -80,11 +76,11 @@ public class PwnFilterPlugin extends JavaPlugin {
     @Override
     public void onLoad() {
 
-        // Set up the Log manager.
-        LogManager.getInstance(getLogger(), getDataFolder());
-
-        // We're all Bukkit here, so let's set the API appropriately
-
+        minecraftAPI = new BukkitAPI(this);
+        statsTracker = new MCStatsTracker(this);
+        filterService = new FilterService(statsTracker);
+        MinecraftServer.setAPI(minecraftAPI);
+        RegisterTags.all();
     }
 
     /**
@@ -105,14 +101,14 @@ public class PwnFilterPlugin extends JavaPlugin {
         statsTracker.startTracking();
 
         //Load up our listeners
-        BaseListener.setAPI(minecraftAPI);
+//        BaseListener.setAPI(minecraftAPI);
 
-        filterEngine.registerClient(new PwnFilterCommandListener());
-        filterEngine.registerClient(new PwnFilterInvListener());
-        filterEngine.registerClient(new PwnFilterPlayerListener());
-        filterEngine.registerClient(new PwnFilterServerCommandListener());
-        filterEngine.registerClient(new PwnFilterSignListener());
-        filterEngine.registerClient(new PwnFilterBookListener());
+        filterService.registerClient(new PwnFilterCommandListener(this));
+        filterService.registerClient(new PwnFilterInvListener(this));
+        filterService.registerClient(new PwnFilterPlayerListener(this));
+        filterService.registerClient(new PwnFilterServerCommandListener(this));
+        filterService.registerClient(new PwnFilterSignListener(this));
+        filterService.registerClient(new PwnFilterBookListener(this));
 
 
         // The Entity Death handler, for custom death messages.
@@ -121,25 +117,20 @@ public class PwnFilterPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerCacheListener(), this);
 
         // Enable the listeners
-        filterEngine.enableClients();
+        filterService.enableClients();
 
         // Set up Command Handlers
-        getCommand("pfreload").setExecutor(new pfreload(filterEngine));
-        getCommand("pfcls").setExecutor(new pfcls());
-        getCommand("pfmute").setExecutor(new pfmute());
-        getCommand("pfdumpcache").setExecutor(new pfdumpcache());
-
+        getCommand("pfreload").setExecutor(new pfreload(filterService));
+        getCommand("pfcls").setExecutor(new pfcls(getLogger()));
+        getCommand("pfmute").setExecutor(new pfmute(getLogger()));
     }
 
     /**
      * <p>onDisable.</p>
      */
     public void onDisable() {
-
-        filterEngine.unregisterAllClients();
-        HandlerList.unregisterAll(this); // Unregister all remaining handlers.
-        LogManager.getInstance().stop();
-
+        filterService.shutdown();
+        HandlerList.unregisterAll(this); // Unregister all Bukkit Event handlers.
     }
 
 
@@ -154,27 +145,40 @@ public class PwnFilterPlugin extends JavaPlugin {
         minecraftAPI.addCachedPermissions(getDescription().getPermissions());
 
         try {
-            BukkitConfig.loadConfiguration(getConfig(), getDataFolder());
+            BukkitConfig.loadConfiguration(getConfig(), getDataFolder(), filterService);
         } catch (RuntimeException ex) {
-            LogManager.logger.severe("Fatal configuration failure: " + ex.getMessage());
-            LogManager.logger.severe("PwnFilter disabled.");
+            filterService.getLogger().severe("Fatal configuration failure: " + ex.getMessage());
+            filterService.getLogger().severe("PwnFilter disabled.");
             getPluginLoader().disablePlugin(this);
         }
 
     }
 
+    private void configureMinecraftActions() {
+        MinecraftAction.setFilterConfig(filterService.getConfig());
+        TargetedAction.setFilterConfig(filterService.getConfig());
+        filterService.getActionFactory().addActionTokens(MinecraftAction.class);
+
+    }
     private void setupEconomy() {
 
         if (getServer().getPluginManager().getPlugin("Vault") != null) {
             RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
             if (rsp != null) {
                 economy = rsp.getProvider();
-                LogManager.logger.info("Vault found. Enabling actions requiring Vault");
+                filterService.getLogger().info("Vault found. Enabling actions requiring Vault");
                 return;
             }
         }
-        LogManager.logger.info("Vault dependency not found.  Disabling actions requiring Vault");
+        filterService.getLogger().info("Vault dependency not found.  Disabling actions requiring Vault");
     }
 
+    public static MinecraftAPI getMinecraftAPI() {
+        return minecraftAPI;
+    }
+
+    public FilterService getFilterService() {
+        return filterService;
+    }
 }
 

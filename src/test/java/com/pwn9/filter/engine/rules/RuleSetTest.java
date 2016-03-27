@@ -1,12 +1,13 @@
 package com.pwn9.filter.engine.rules;
 
-import com.pwn9.filter.engine.api.FilterTask;
+import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.api.FilterClient;
 import com.pwn9.filter.engine.api.MessageAuthor;
 import com.pwn9.filter.engine.config.FilterConfig;
 import com.pwn9.filter.bukkit.PwnFilterPlugin;
 import com.pwn9.filter.engine.rules.action.RegisterActions;
-import com.pwn9.filter.util.LogManager;
+import com.pwn9.filter.engine.rules.chain.RuleChain;
+import com.pwn9.filter.util.FileLogger;
 import junit.framework.Assert;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
@@ -24,7 +25,7 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * Tests for RuleSets
- * User: ptoal
+ * User: Sage905
  * Date: 13-05-04
  * Time: 11:28 AM
  */
@@ -34,7 +35,7 @@ public class RuleSetTest {
 
     RuleManager ruleManager;
     RuleChain rs;
-    LogManager pwnLogger;
+    FilterLogger pwnLogger;
     final FilterClient mockClient = new FilterClient() {
         public String getShortName() { return "TEST"; }
         public RuleChain getRuleChain() { return ruleManager.getRuleChain("testrules.txt");}
@@ -74,29 +75,29 @@ public class RuleSetTest {
     @Before
     public void setUp() {
         RegisterActions.all();
-        //TODO: Remove this, and add a FilterEngine initialization call.
+        //TODO: Remove this, and add a FilterService initialization call.
         ruleManager = RuleManager.getInstance();
         File testFile = new File(getClass().getResource("/testrules.txt").getFile());
         FilterConfig.getInstance().setRulesDir(testFile.getParentFile());
         FilterConfig.getInstance().setTextDir(testFile.getParentFile());
         rs = ruleManager.getRuleChain("testrules.txt");
         Logger logger = Logger.getAnonymousLogger();
-        pwnLogger = LogManager.getInstance(logger, new File("/tmp/"));
-        rs.loadConfigFile();
+        pwnLogger = FileLogger.getInstance(logger, new File("/tmp/"));
+        rs.load();
     }
 
     @Test
     public void testApplyRules() {
-        rs.loadConfigFile();
-        FilterTask testState = new FilterTask("This is a test", author, mockClient);
+        rs.load();
+        FilterContext testState = new FilterContext("This is a test", author, mockClient);
         rs.apply(testState);
         assertEquals("This WAS a test", testState.getModifiedMessage().toString());
     }
 
     @Test
     public void testDollarSignInMessage() {
-        rs.loadConfigFile();
-        FilterTask testState = new FilterTask("notATestPerson {test] $ (test 2}",author,mockClient);
+        rs.load();
+        FilterContext testState = new FilterContext("notATestPerson {test] $ (test 2}",author,mockClient);
         rs.apply(testState);
     }
 
@@ -104,8 +105,8 @@ public class RuleSetTest {
     @Test
     public void testBackslashAtEndOfLine() {
         try {
-            rs.loadConfigFile();
-            FilterTask testState = new FilterTask("Message that ends with \\",author,mockClient);
+            rs.load();
+            FilterContext testState = new FilterContext("Message that ends with \\",author,mockClient);
             rs.apply(testState);
         } catch (StringIndexOutOfBoundsException ex) {
             Assert.fail(ex.getMessage());
@@ -115,8 +116,8 @@ public class RuleSetTest {
     @Test
     public void testShortcuts() {
         RuleChain ruleChain = ruleManager.getRuleChain("shortcutTest.txt");
-        ruleChain.loadConfigFile();
-        FilterTask testState = new FilterTask("ShortCutPattern",author,mockClient);
+        ruleChain.load();
+        FilterContext testState = new FilterContext("ShortCutPattern",author,mockClient);
         ruleChain.apply(testState);
         Assert.assertEquals("Replaced", testState.getModifiedMessage().toString());
     }

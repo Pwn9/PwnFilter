@@ -14,11 +14,11 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * Create a Timed Regex match.
- * User: ptoal
+ * User: Sage905
  * Date: 13-07-26
  * Time: 4:35 PM
  *
- * @author ptoal
+ * @author Sage905
  * @version $Id: $Id
  */
 

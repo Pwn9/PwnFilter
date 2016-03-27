@@ -18,7 +18,6 @@ import com.pwn9.filter.minecraft.DeathMessages;
 import com.pwn9.filter.minecraft.api.MinecraftAPI;
 import com.pwn9.filter.minecraft.api.MinecraftPlayer;
 import com.pwn9.filter.minecraft.api.PlayerData;
-import com.pwn9.filter.util.LogManager;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -122,12 +121,6 @@ public class BukkitAPI implements MinecraftAPI {
         }
     }
 
-    /**
-     * <p>addCachedPermissions.</p>
-     *
-     * @param permissions a {@link java.util.Set} object.
-     */
-    @Override
     public synchronized void addCachedPermissions(Set<String> permissions) {
         permSet.addAll(permissions);
     }
@@ -167,7 +160,7 @@ public class BukkitAPI implements MinecraftAPI {
                 // This will block the current thread for up to 3s
                 return task.get(3, TimeUnit.SECONDS);
             } catch (Exception e) {
-                LogManager.getInstance().debugLow("Bukkit API call timed out (>3s).");
+                plugin.getLogger().fine("Bukkit API call timed out (>3s).");
                 return null;
             }
 

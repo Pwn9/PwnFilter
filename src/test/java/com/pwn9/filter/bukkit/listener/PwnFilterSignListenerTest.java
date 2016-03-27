@@ -15,9 +15,9 @@ import com.pwn9.filter.bukkit.config.BukkitConfig;
 import com.pwn9.filter.engine.config.FilterConfig;
 import com.pwn9.filter.minecraft.api.MinecraftAPI;
 import com.pwn9.filter.minecraft.api.MinecraftServer;
-import com.pwn9.filter.engine.rules.RuleChain;
+import com.pwn9.filter.engine.rules.chain.RuleChain;
 import com.pwn9.filter.engine.rules.action.RegisterActions;
-import com.pwn9.filter.util.LogManager;
+import com.pwn9.filter.util.FileLogger;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -40,7 +40,7 @@ import static junit.framework.Assert.assertEquals;
  * This is more of a smoke test than a Unit test.  It's difficult to test the
  * listener without testing a lot of the other components upon which it depends.
  *
- * Created by ptoal on 15-09-10.
+ * Created by Sage905 on 15-09-10.
  */
 
 @RunWith(EasyMockRunner.class)
@@ -62,7 +62,7 @@ public class PwnFilterSignListenerTest {
     @Before
     public void setUp() {
         RegisterActions.builtin();
-        LogManager.getInstance(Logger.getAnonymousLogger(), new File("/pwnfiltertest.log"));
+        FileLogger.getInstance(Logger.getAnonymousLogger(), new File("/pwnfiltertest.log"));
         File rulesDir = new File(getClass().getResource("/rules").getFile());
         FilterConfig.getInstance().setRulesDir(rulesDir);
         testConfig = YamlConfiguration.loadConfiguration(new File(getClass().getResource("/config.yml").getFile()));
@@ -74,14 +74,14 @@ public class PwnFilterSignListenerTest {
     @Test
     public void testBasicFunctionWorks() throws Exception {
         RuleChain ruleChain = new RuleChain("blank.txt");
-        ruleChain.loadConfigFile();
+        ruleChain.load();
 
         final String[] input = new String[]{"Test", "chat", "message", ""};
 
         signChangeEvent = new SignChangeEvent(mockBlock, mockPlayer,
                 input);
 
-        signListener.setRuleChain(ruleChain);
+        signListener.getCompiledChain(ruleChain);
         signListener.onSignChange(signChangeEvent);
 
         for (int i=0 ; i < 4 ; i++) {
@@ -93,7 +93,7 @@ public class PwnFilterSignListenerTest {
     @Test
     public void testOneLineReplacement() throws Exception {
         RuleChain ruleChain = new RuleChain("replace.txt");
-        ruleChain.loadConfigFile();
+        ruleChain.load();
 
         String[] input = new String[]{"replaceme", "test", "message", ""};
         String[] output = new String[]{"PASS", "test", "message", ""};
@@ -101,7 +101,7 @@ public class PwnFilterSignListenerTest {
         signChangeEvent = new SignChangeEvent(mockBlock, mockPlayer,
                 input.clone());
 
-        signListener.setRuleChain(ruleChain);
+        signListener.getCompiledChain(ruleChain);
         signListener.onSignChange(signChangeEvent);
 
         String[] changedLines = signChangeEvent.getLines();

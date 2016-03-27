@@ -10,7 +10,7 @@
 
 package com.pwn9.filter.minecraft.util;
 
-import com.pwn9.filter.util.EnhancedString;
+import com.pwn9.filter.engine.api.EnhancedString;
 import org.junit.Test;
 
 import java.util.regex.Pattern;
@@ -22,7 +22,7 @@ import static org.junit.Assert.assertArrayEquals;
 /**
  * Extended tests for the ColoredString object.
  *
- * Created by ptoal on 15-09-12.
+ * Created by Sage905 on 15-09-12.
  */
 public class ColoredStringTest {
     final String original = "This&0 is the string &8to test";

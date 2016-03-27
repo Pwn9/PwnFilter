@@ -10,16 +10,16 @@
 
 package com.pwn9.filter.engine.api;
 
-import java.util.List;
+import java.util.Set;
 
 /**
- * An interface for tracking statistics about FilterEngine parameters
+ * An interface for tracking statistics about FilterService parameters
  *
- * Created by ptoal on 15-09-13.
+ * Created by Sage905 on 15-09-13.
  */
 public interface StatsTracker {
 
-    void updateClients(List<FilterClient> filterClientSet);
+    void updateClients(Set<FilterClient> filterClientSet);
 
     void startTracking();
 

@@ -10,34 +10,45 @@
 
 package com.pwn9.filter.engine.rules.action.core;
 
-import com.pwn9.filter.engine.api.FilterTask;
+import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.api.Action;
+import com.pwn9.filter.engine.rules.action.InvalidActionException;
 
 import java.util.Random;
 
 /**
- * Replace the matched text with a random selection from a | seperated list of text.
+ * Replace the matched text with a random selection from a | seperated
+ * list of text.
  *
- * @author ptoal
+ * @author Sage905
  * @version $Id: $Id
  */
-@SuppressWarnings("UnusedDeclaration")
+
 public class RandomReplace implements Action {
     private static final Random random = new Random();
 
-    // toRand is a String array of options to chose from for replacement.
-    String[] toRand;
+    // a String array of options to chose from for replacement.
+    private final String[] replacementArray;
 
-    /** {@inheritDoc} */
-    public void init(String s)
-    {
-        toRand = s.split("\\|");
-        if (toRand[0].isEmpty()) throw new IllegalArgumentException("'randrep' requires at least one replacement string.");
+    private RandomReplace(String[] replaceArray) {
+        replacementArray = replaceArray;
     }
 
-    /** {@inheritDoc} */
-    public void execute(final FilterTask filterTask) {
-        int randomInt = random.nextInt(toRand.length);
-        filterTask.setModifiedMessage(filterTask.getModifiedMessage().replaceText(filterTask.getPattern(),toRand[randomInt]));
+    static Action getAction(String s) throws InvalidActionException
+    {
+        String[] toRand = s.split("\\|");
+        if (toRand[0].isEmpty())
+            throw new InvalidActionException(
+                    "'randrep' requires at least one replacement string."
+            );
+        return new RandomReplace(toRand);
+    }
+
+    @Override
+    public void execute(final FilterContext filterTask) {
+        int randomInt = random.nextInt(replacementArray.length);
+        filterTask.setModifiedMessage(filterTask.getModifiedMessage().
+                replaceText(filterTask.getPattern(),
+                        replacementArray[randomInt]));
     }
 }

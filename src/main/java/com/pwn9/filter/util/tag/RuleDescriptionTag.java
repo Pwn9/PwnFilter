@@ -8,18 +8,17 @@
  * of the License, or (at your option) any later version.
  */
 
-package com.pwn9.filter.util.tags;
+package com.pwn9.filter.util.tag;
 
-import com.pwn9.filter.engine.api.FilterTask;
+import com.pwn9.filter.engine.api.FilterContext;
 
 /**
- * Return the current (edited) Message text
- * Created by ptoal on 15-09-04.
+ * Player Display Name Tag
+ * Created by Sage905 on 15-09-04.
  */
-public class StringTag implements Tag {
-
+public class RuleDescriptionTag implements Tag {
     @Override
-    public java.lang.String getValue(FilterTask filterTask) {
-        return filterTask.getModifiedMessage().getRaw();
+    public String getValue(FilterContext filterTask) {
+        return filterTask.getRule().getDescription();
     }
 }

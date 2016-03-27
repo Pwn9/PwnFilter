@@ -21,7 +21,7 @@ import java.util.concurrent.ExecutionException;
 /**
  *
  * Stubbed out MinecraftAPI for our tests.
- * Created by ptoal on 15-09-11.
+ * Created by Sage905 on 15-09-11.
  */
 public class TestMinecraftAPI implements MinecraftAPI {
 

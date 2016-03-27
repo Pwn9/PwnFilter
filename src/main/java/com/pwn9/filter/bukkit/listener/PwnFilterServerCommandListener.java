@@ -10,14 +10,13 @@
 
 package com.pwn9.filter.bukkit.listener;
 
-import com.pwn9.filter.engine.api.FilterTask;
 import com.pwn9.filter.bukkit.PwnFilterPlugin;
+import com.pwn9.filter.bukkit.config.BukkitConfig;
+import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.minecraft.api.MinecraftConsole;
 import com.pwn9.filter.minecraft.util.ColoredString;
-import com.pwn9.filter.bukkit.config.BukkitConfig;
-import com.pwn9.filter.engine.rules.RuleManager;
-import com.pwn9.filter.util.LogManager;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -25,10 +24,12 @@ import org.bukkit.event.server.ServerCommandEvent;
 import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.PluginManager;
 
+import java.io.InvalidObjectException;
+
 /**
  * Apply the filter to commands.
  *
- * @author ptoal
+ * @author Sage905
  * @version $Id: $Id
  */
 public class PwnFilterServerCommandListener extends BaseListener {
@@ -37,8 +38,8 @@ public class PwnFilterServerCommandListener extends BaseListener {
      * <p>Constructor for PwnFilterServerCommandListener.</p>
      *
      */
-    public PwnFilterServerCommandListener() {
-	    super();
+    public PwnFilterServerCommandListener(PwnFilterPlugin plugin) {
+	    super(plugin);
     }
 
     /** {@inheritDoc} */
@@ -67,11 +68,11 @@ public class PwnFilterServerCommandListener extends BaseListener {
         if (!BukkitConfig.getCmdlist().isEmpty() && !BukkitConfig.getCmdlist().contains(cmdmessage)) return;
         if (BukkitConfig.getCmdblist().contains(cmdmessage)) return;
 
-        FilterTask state = new FilterTask(new ColoredString(command), MinecraftConsole.getInstance(), this);
+        FilterContext state = new FilterContext(new ColoredString(command), MinecraftConsole.getInstance(), this);
 
         // Take the message from the Command Event and send it through the filter.
 
-        ruleChain.execute(state);
+        ruleChain.execute(state, plugin.getLogger());
 
         // Only update the message if it has been changed.
         if (state.messageChanged()){
@@ -96,22 +97,30 @@ public class PwnFilterServerCommandListener extends BaseListener {
     public void activate() {
         if (isActive()) return;
 
-        setRuleChain(RuleManager.getInstance().getRuleChain("console.txt"));
 
-        if (BukkitConfig.consolefilterEnabled()) {
+        try {
+            ruleChain = getCompiledChain("console.txt");
 
-            PluginManager pm = Bukkit.getPluginManager();
-            EventPriority priority = BukkitConfig.getCmdpriority();
+            if (BukkitConfig.consolefilterEnabled()) {
 
-            pm.registerEvent(ServerCommandEvent.class, this, priority,
-                    new EventExecutor() {
-                        public void execute(Listener l, Event e) { onServerCommandEvent((ServerCommandEvent) e); }
-                    },
-                    PwnFilterPlugin.getInstance());
-            LogManager.logger.info("Activated ServerCommandListener with Priority Setting: " + priority.toString()
-                    + " Rule Count: " + getRuleChain().ruleCount() );
+                PluginManager pm = Bukkit.getPluginManager();
+                EventPriority priority = BukkitConfig.getCmdpriority();
 
-            setActive();
+                pm.registerEvent(ServerCommandEvent.class, this, priority,
+                        new EventExecutor() {
+                            public void execute(Listener l, Event e) {
+                                onServerCommandEvent((ServerCommandEvent) e);
+                            }
+                        },
+                        PwnFilterPlugin.getInstance());
+                plugin.getLogger().info("Activated ServerCommandListener with Priority Setting: " + priority.toString()
+                        + " Rule Count: " + getRuleChain().ruleCount());
+
+                setActive();
+            }
+        } catch (InvalidObjectException | InvalidConfigurationException e) {
+            plugin.getLogger().severe("Unable to activate ServerCommandListener.  Error: " + e.getMessage());
+            setInactive();
         }
     }
 

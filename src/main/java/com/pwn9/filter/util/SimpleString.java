@@ -10,6 +10,7 @@
 
 package com.pwn9.filter.util;
 
+import com.pwn9.filter.engine.api.EnhancedString;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.regex.Matcher;
@@ -18,7 +19,7 @@ import java.util.regex.Pattern;
 /**
  * A Simple wrapper around a String object.
  * <p/>
- * Created by ptoal on 15-09-09.
+ * Created by Sage905 on 15-09-09.
  */
 public class SimpleString implements EnhancedString {
 

@@ -10,31 +10,34 @@
 
 package com.pwn9.filter.engine.rules.action.targeted;
 
-import com.pwn9.filter.engine.api.FilterTask;
+import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.minecraft.api.MinecraftPlayer;
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.minecraft.util.DefaultMessages;
-import com.pwn9.filter.util.tags.TagRegistry;
+import com.pwn9.filter.util.tag.TagRegistry;
 
 /**
  * Warn the user with the string provided.
  *
- * @author ptoal
+ * @author Sage905
  * @version $Id: $Id
  */
 @SuppressWarnings("UnusedDeclaration")
 public class Warn implements Action {
     // Message to apply to this warn action
-    String messageString;
+    private final String messageString;
 
-    /** {@inheritDoc} */
-    public void init(String s)
+    private Warn(String messageString) {
+        this.messageString = messageString;
+    }
+
+    public static Action getAction(String s)
     {
-        messageString = DefaultMessages.prepareMessage(s, "warnmsg");
+        return new Warn(DefaultMessages.prepareMessage(s, "warnmsg"));
     }
 
     /** {@inheritDoc} */
-    public void execute(final FilterTask filterTask) {
+    public void execute(final FilterContext filterTask) {
         if ( filterTask.getAuthor() instanceof MinecraftPlayer) {
 
             final String message = TagRegistry.replaceTags(messageString, filterTask);

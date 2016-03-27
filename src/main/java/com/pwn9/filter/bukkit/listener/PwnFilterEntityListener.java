@@ -22,7 +22,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 /**
  * Catch Death events to rewrite them with a custom message.
  *
- * @author ptoal
+ * @author Sage905
  * @version $Id: $Id
  */
 public class PwnFilterEntityListener implements Listener {

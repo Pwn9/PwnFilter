@@ -10,32 +10,39 @@
 
 package com.pwn9.filter.engine.rules.action.minecraft;
 
-import com.pwn9.filter.engine.api.FilterTask;
-import com.pwn9.filter.minecraft.api.MinecraftConsole;
 import com.pwn9.filter.engine.api.Action;
-import com.pwn9.filter.util.tags.TagRegistry;
+import com.pwn9.filter.engine.api.FilterContext;
+import com.pwn9.filter.engine.rules.action.InvalidActionException;
+import com.pwn9.filter.minecraft.api.MinecraftConsole;
+import com.pwn9.filter.util.tag.TagRegistry;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Execute a chain of console commands
  *
- * @author ptoal
+ * @author Sage905
  * @version $Id: $Id
  */
 @SuppressWarnings("UnusedDeclaration")
 public class ConsoleChain implements Action {
-    String[] commands;
 
-    /** {@inheritDoc} */
-    public void init(String s)
+    private List<String> commands;
+
+    private ConsoleChain(List<String> cmds) {
+        this.commands = cmds;
+    }
+
+    public static Action getAction(String s) throws InvalidActionException
     {
-        commands = s.split("\\|");
-        if (commands[0].isEmpty()) throw new IllegalArgumentException("No commands were provided to 'conchain'");
+        if (s.isEmpty()) throw new InvalidActionException("No commands were provided to 'conchain'");
+        return new ConsoleChain(Arrays.asList(s.split("\\|")));
     }
 
     /** {@inheritDoc} */
-    public void execute(final FilterTask filterTask) {
+    public void execute(final FilterContext filterTask) {
         final ArrayList<String> parsedCommands = new ArrayList<String>();
 
         for (String cmd : commands)

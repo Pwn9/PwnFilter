@@ -4,12 +4,12 @@ import org.bukkit.command.Command;
 
 /**
  * SubCommand adds the plugin to the instance of Command.
- * User: ptoal
+ * User: Sage905
  * Date: 13-08-16
  * Time: 10:37 AM
  * To change this template use File | Settings | File Templates.
  *
- * @author ptoal
+ * @author Sage905
  * @version $Id: $Id
  */
 abstract class SubCommand extends Command {

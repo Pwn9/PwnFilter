@@ -19,7 +19,7 @@ import java.util.Set;
  * Simple storage for cached Bukkit Player Data.
  *
  * <p/>
- * Created by ptoal on 15-09-06.
+ * Created by Sage905 on 15-09-06.
  */
 public class PlayerData {
     // Store cached data about players.

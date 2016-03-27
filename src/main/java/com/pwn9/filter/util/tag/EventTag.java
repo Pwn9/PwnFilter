@@ -8,20 +8,17 @@
  * of the License, or (at your option) any later version.
  */
 
-package com.pwn9.filter.util.tags;
+package com.pwn9.filter.util.tag;
 
-import com.pwn9.filter.engine.api.FilterTask;
+import com.pwn9.filter.engine.api.FilterContext;
 
 /**
- * During message processing, a rule can specify a %tag%, which will be replaced
- * with the content of a Tag object.
- *
- * Tags are registered by calling RegisterTags.addTag("keyword", Tag )
- *
- * Created by ptoal on 15-09-04.
+ * Player Display Name Tag
+ * Created by Sage905 on 15-09-04.
  */
-public interface Tag {
-
-    String getValue(FilterTask filterTask);
-
+public class EventTag implements Tag {
+    @Override
+    public String getValue(FilterContext filterTask) {
+       return filterTask.getListenerName();
+    }
 }

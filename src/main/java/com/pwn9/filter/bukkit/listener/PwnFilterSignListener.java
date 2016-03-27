@@ -10,14 +10,13 @@
 
 package com.pwn9.filter.bukkit.listener;
 
-import com.pwn9.filter.engine.api.FilterTask;
-import com.pwn9.filter.minecraft.api.MinecraftPlayer;
 import com.pwn9.filter.bukkit.PwnFilterPlugin;
-import com.pwn9.filter.minecraft.util.ColoredString;
 import com.pwn9.filter.bukkit.config.BukkitConfig;
-import com.pwn9.filter.engine.rules.RuleManager;
-import com.pwn9.filter.util.LogManager;
+import com.pwn9.filter.engine.api.FilterContext;
+import com.pwn9.filter.minecraft.api.MinecraftPlayer;
+import com.pwn9.filter.minecraft.util.ColoredString;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -25,6 +24,7 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.PluginManager;
 
+import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -33,7 +33,7 @@ import java.util.List;
 /**
  * Listen for Sign Change events and apply the filter to the text.
  *
- * @author ptoal
+ * @author Sage905
  * @version $Id: $Id
  */
 public class PwnFilterSignListener extends BaseListener {
@@ -42,8 +42,8 @@ public class PwnFilterSignListener extends BaseListener {
      * <p>Constructor for PwnFilterSignListener.</p>
      *
      */
-    public PwnFilterSignListener() {
-        super();
+    public PwnFilterSignListener(PwnFilterPlugin plugin) {
+        super(plugin);
     }
 
     /** {@inheritDoc} */
@@ -77,10 +77,10 @@ public class PwnFilterSignListener extends BaseListener {
         }
         String signLines = builder.toString().trim();
 
-        FilterTask filterTask = new FilterTask(new ColoredString(signLines),
+        FilterContext filterTask = new FilterContext(new ColoredString(signLines),
                 bukkitPlayer, this);
 
-        ruleChain.execute(filterTask);
+        ruleChain.execute(filterTask, plugin.getLogger());
 
         if (filterTask.messageChanged()){
             // TODO: Can colors be placed on signs?  Wasn't working. Find out why.
@@ -137,23 +137,29 @@ public class PwnFilterSignListener extends BaseListener {
     @Override
     public void activate() {
         if (isActive()) return;
-        setRuleChain(RuleManager.getInstance().getRuleChain("sign.txt"));
 
-        PluginManager pm = Bukkit.getPluginManager();
-        EventPriority priority = BukkitConfig.getSignpriority();
+        try {
+            ruleChain = getCompiledChain("sign.txt");
 
-        if (BukkitConfig.signfilterEnabled()) {
-            // Now register the listener with the appropriate priority
-            pm.registerEvent(SignChangeEvent.class, this, priority,
-                    new EventExecutor() {
-                        public void execute(Listener l, Event e) { onSignChange((SignChangeEvent)e); }
-                    },
-                    PwnFilterPlugin.getInstance());
+            PluginManager pm = Bukkit.getPluginManager();
+            EventPriority priority = BukkitConfig.getSignpriority();
 
-            LogManager.logger.info("Activated SignListener with Priority Setting: " + priority.toString()
-                    + " Rule Count: " + getRuleChain().ruleCount());
+            if (BukkitConfig.signfilterEnabled()) {
+                // Now register the listener with the appropriate priority
+                pm.registerEvent(SignChangeEvent.class, this, priority,
+                        new EventExecutor() {
+                            public void execute(Listener l, Event e) { onSignChange((SignChangeEvent)e); }
+                        },
+                        PwnFilterPlugin.getInstance());
 
-            setActive();
+                plugin.getLogger().info("Activated SignListener with Priority Setting: " + priority.toString()
+                        + " Rule Count: " + getRuleChain().ruleCount());
+
+                setActive();
+            }
+        } catch (InvalidObjectException | InvalidConfigurationException e) {
+            plugin.getLogger().severe("Unable to activate SignListener.  Error: " + e.getMessage());
+            setInactive();
         }
     }
 

@@ -15,9 +15,9 @@ import com.pwn9.filter.bukkit.config.BukkitConfig;
 import com.pwn9.filter.engine.config.FilterConfig;
 import com.pwn9.filter.minecraft.api.MinecraftAPI;
 import com.pwn9.filter.minecraft.api.MinecraftServer;
-import com.pwn9.filter.engine.rules.RuleChain;
+import com.pwn9.filter.engine.rules.chain.RuleChain;
 import com.pwn9.filter.engine.rules.action.RegisterActions;
-import com.pwn9.filter.util.LogManager;
+import com.pwn9.filter.util.FileLogger;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -41,7 +41,7 @@ import static junit.framework.Assert.assertTrue;
  * This is more of a smoke test than a Unit test.  It's difficult to test the
  * listener without testing a lot of the other components upon which it depends.
  *
- * Created by ptoal on 15-09-10.
+ * Created by Sage905 on 15-09-10.
  */
 
 @RunWith(EasyMockRunner.class)
@@ -61,7 +61,7 @@ public class PwnFilterPlayerListenerTest {
     @Before
     public void setUp() {
         RegisterActions.all();
-        LogManager.getInstance(Logger.getAnonymousLogger(), new File("/pwnfiltertest.log"));
+        FileLogger.getInstance(Logger.getAnonymousLogger(), new File("/pwnfiltertest.log"));
         File rulesDir = new File(getClass().getResource("/rules").getFile());
         FilterConfig.getInstance().setRulesDir(rulesDir);
         testConfig = YamlConfiguration.loadConfiguration(new File(getClass().getResource("/config.yml").getFile()));
@@ -73,11 +73,11 @@ public class PwnFilterPlayerListenerTest {
     @Test
     public void testBasicFunctionWorks() throws Exception {
         RuleChain ruleChain = new RuleChain("blank.txt");
-        ruleChain.loadConfigFile();
+        ruleChain.load();
 
         String input = "Test Chat Message";
         chatEvent = new AsyncPlayerChatEvent(true, mockPlayer, input, new HashSet<Player>());
-        playerListener.setRuleChain(ruleChain);
+        playerListener.getCompiledChain(ruleChain);
         playerListener.onPlayerChat(chatEvent);
         assertEquals(chatEvent.getMessage(), input);
     }
@@ -85,11 +85,11 @@ public class PwnFilterPlayerListenerTest {
     @Test
     public void testExecutesRules() throws Exception {
         RuleChain ruleChain = new RuleChain("replace.txt");
-        ruleChain.loadConfigFile();
+        ruleChain.load();
 
         String input = "Test replaceme Message";
         chatEvent = new AsyncPlayerChatEvent(true, mockPlayer, input, new HashSet<Player>());
-        playerListener.setRuleChain(ruleChain);
+        playerListener.getCompiledChain(ruleChain);
         playerListener.onPlayerChat(chatEvent);
         assertEquals(chatEvent.getMessage(), "Test PASS Message");
     }
@@ -97,12 +97,12 @@ public class PwnFilterPlayerListenerTest {
     @Test
     public void testGlobalMuteCancelsMessage() throws Exception {
         RuleChain ruleChain = new RuleChain("blank.txt");
-        ruleChain.loadConfigFile();
+        ruleChain.load();
 
         String input = "Test Message";
         BukkitConfig.setGlobalMute(true);
         chatEvent = new AsyncPlayerChatEvent(true, mockPlayer, input, new HashSet<Player>());
-        playerListener.setRuleChain(ruleChain);
+        playerListener.getCompiledChain(ruleChain);
         playerListener.onPlayerChat(chatEvent);
         assertTrue(chatEvent.isCancelled());
     }
@@ -110,14 +110,14 @@ public class PwnFilterPlayerListenerTest {
     @Test
     public void testDecolorMessage() throws Exception {
         RuleChain ruleChain = new RuleChain("blank.txt");
-        ruleChain.loadConfigFile();
+        ruleChain.load();
 
         String input = "Test&4 Message";
         testConfig.set("decolor", true);
         BukkitConfig.loadConfiguration(testConfig, resourcesDir);
 
         chatEvent = new AsyncPlayerChatEvent(true, mockPlayer, input, new HashSet<Player>());
-        playerListener.setRuleChain(ruleChain);
+        playerListener.getCompiledChain(ruleChain);
         playerListener.onPlayerChat(chatEvent);
         assertEquals(chatEvent.getMessage(), "Test Message");
         testConfig.set("decolor", false);
@@ -127,13 +127,13 @@ public class PwnFilterPlayerListenerTest {
     @Test
     public void testLowerMessage() throws Exception {
         RuleChain ruleChain = new RuleChain("actionTests.txt");
-        ruleChain.loadConfigFile();
+        ruleChain.load();
 
         String input = "HEY! THIS SHOULD ALL GET LOWERED.";
         BukkitConfig.loadConfiguration(testConfig, resourcesDir);
 
         chatEvent = new AsyncPlayerChatEvent(true, mockPlayer, input, new HashSet<Player>());
-        playerListener.setRuleChain(ruleChain);
+        playerListener.getCompiledChain(ruleChain);
         playerListener.onPlayerChat(chatEvent);
         assertTrue(!chatEvent.isCancelled());
         assertEquals(chatEvent.getMessage(), "HEY! this should all get lowered.");

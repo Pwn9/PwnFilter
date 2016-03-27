@@ -10,13 +10,13 @@
 
 package com.pwn9.filter.engine.rules;
 
-import com.pwn9.filter.engine.api.FilterTask;
+import com.pwn9.filter.engine.api.FilterContext;
 
 
 /**
  * <p>Condition class.</p>
  *
- * @author ptoal
+ * @author Sage905
  * @version $Id: $Id
  */
 public class Condition {
@@ -120,7 +120,7 @@ public class Condition {
      * @param state The MessageState
      * @return true if this condition is met, false otherwise
      */
-    public boolean check(FilterTask state) {
+    public boolean check(FilterContext state) {
         boolean matched = false;
         switch (type) {
             case user:

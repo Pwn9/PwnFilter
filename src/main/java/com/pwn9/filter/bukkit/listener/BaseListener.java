@@ -11,53 +11,58 @@
 
 package com.pwn9.filter.bukkit.listener;
 
+import com.pwn9.filter.bukkit.PwnFilterPlugin;
+import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.FilterClient;
-import com.pwn9.filter.minecraft.api.MinecraftAPI;
-import com.pwn9.filter.engine.rules.RuleChain;
-import com.pwn9.filter.engine.rules.RuleChainListener;
+import com.pwn9.filter.engine.rules.chain.Chain;
+import com.pwn9.filter.engine.rules.chain.InvalidChain;
+import com.pwn9.filter.engine.rules.chain.RuleChain;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
+import java.io.File;
+import java.io.InvalidObjectException;
+
 /**
- * User: ptoal
+ * User: Sage905
  * Date: 13-10-02
  * Time: 2:04 PM
  *
- * @author ptoal
+ * @author Sage905
  * @version $Id: $Id
  */
-public abstract class BaseListener implements FilterClient,RuleChainListener, Listener {
+public abstract class BaseListener implements FilterClient, Listener {
     boolean active;
-    RuleChain ruleChain;
-    private static MinecraftAPI minecraftAPI;
+    protected final PwnFilterPlugin plugin;
+    protected volatile RuleChain ruleChain;
+
 
     /**
      * <p>Constructor for BaseListener.</p>
      *
      */
-    BaseListener() {
+    BaseListener(PwnFilterPlugin plugin) {
+        this.plugin = plugin;
     }
 
-    public static void setAPI(MinecraftAPI minecraftAPI) {
-        BaseListener.minecraftAPI = minecraftAPI;
-    }
-    /**
-     * Get or prepare a rulechain for use by this listener.
-     *
-     * @param rc a {@link com.pwn9.filter.engine.rules.RuleChain} object.
-     */
-    public void setRuleChain(RuleChain rc) {
-        ruleChain = rc;
-        ruleChain.addListener(this);
-        rc.loadConfigFile();
+    RuleChain getCompiledChain(String path) throws InvalidConfigurationException, InvalidObjectException {
+        Chain newChain = plugin.getFilterService().parseRules(new File(path));
+
+        if (newChain instanceof RuleChain) {
+            return (RuleChain) newChain;
+        } else if (newChain instanceof InvalidChain) {
+            throw new InvalidConfigurationException(
+                    ((InvalidChain) newChain).getErrorMessage());
+        } else
+            throw new InvalidObjectException("Unknown Chain returned from Parser");
     }
 
-    public void clearRuleChain() {
-        ruleChain.removeListener(this);
-        ruleChain = null;
+    @Override
+    public FilterService getFilterService() {
+        return plugin.getFilterService();
     }
 
-    /** {@inheritDoc} */
     @Override
     public RuleChain getRuleChain() {
         return ruleChain;
@@ -98,19 +103,6 @@ public abstract class BaseListener implements FilterClient,RuleChainListener, Li
         if (active) {
             HandlerList.unregisterAll(this);
             setInactive();
-            clearRuleChain();
-        }
-    }
-
-    /**
-     * Handler for RuleChain update notifications.  When the chain is updated,
-     * Bukkit Listeners have to update the information they are interested in
-     * caching about a player.
-     */
-    @Override
-    public void ruleChainUpdated(RuleChain ruleChain) {
-        if (minecraftAPI != null) {
-            minecraftAPI.addCachedPermissions(ruleChain.getPermissionList());
         }
     }
 

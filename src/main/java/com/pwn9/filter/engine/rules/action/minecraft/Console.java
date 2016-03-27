@@ -10,30 +10,36 @@
 
 package com.pwn9.filter.engine.rules.action.minecraft;
 
-import com.pwn9.filter.engine.api.FilterTask;
+import com.pwn9.filter.engine.api.FilterContext;
+import com.pwn9.filter.engine.rules.action.InvalidActionException;
 import com.pwn9.filter.minecraft.api.MinecraftConsole;
 import com.pwn9.filter.engine.api.Action;
-import com.pwn9.filter.util.tags.TagRegistry;
+import com.pwn9.filter.util.tag.TagRegistry;
 
 /**
  * Execute a console command
  *
- * @author ptoal
+ * @author Sage905
  * @version $Id: $Id
  */
 @SuppressWarnings("UnusedDeclaration")
 public class Console implements Action {
-    String command;
+    private final String command;
+
+    private Console(String s) {
+        this.command = s;
+    }
 
     /** {@inheritDoc} */
-    public void init(String s)
+    public static Action getAction(String s) throws InvalidActionException
     {
-        if ((command = s).isEmpty()) throw new IllegalArgumentException("No command was provided to 'console'");
+        if (s.isEmpty()) throw new InvalidActionException("No command was provided to 'console'");
+        return new Console(s);
 
     }
 
     /** {@inheritDoc} */
-    public void execute(final FilterTask filterTask) {
+    public void execute(final FilterContext filterTask) {
         final String cmd = TagRegistry.replaceTags(command, filterTask);
         filterTask.addLogMessage("Sending console command: " + cmd);
         MinecraftConsole.getInstance().executeCommand(cmd);

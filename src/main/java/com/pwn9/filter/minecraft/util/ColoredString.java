@@ -10,7 +10,7 @@
 
 package com.pwn9.filter.minecraft.util;
 
-import com.pwn9.filter.util.EnhancedString;
+import com.pwn9.filter.engine.api.EnhancedString;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
  *
  * In any string modification action, the codes will be updated to reflect the new string.
  *
- * @author ptoal
+ * @author Sage905
  * @version $Id: $Id
  */
 public final class ColoredString implements EnhancedString {

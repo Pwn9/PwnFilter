@@ -10,52 +10,51 @@
 
 package com.pwn9.filter.engine.rules.action.targeted;
 
-import com.pwn9.filter.engine.api.FilterTask;
-import com.pwn9.filter.engine.config.FilterConfig;
-import com.pwn9.filter.minecraft.util.FileUtil;
+import com.google.common.collect.ImmutableList;
 import com.pwn9.filter.engine.api.Action;
-import com.pwn9.filter.util.LogManager;
-import com.pwn9.filter.util.tags.TagRegistry;
+import com.pwn9.filter.engine.api.FilterContext;
+import com.pwn9.filter.engine.rules.action.InvalidActionException;
+import com.pwn9.filter.util.tag.TagRegistry;
 import org.bukkit.ChatColor;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Responds to the user with the string provided.
  *
- * @author ptoal
+ * @author Sage905
  * @version $Id: $Id
  */
 @SuppressWarnings("UnusedDeclaration")
 public class RespondFile implements Action {
-    final ArrayList<String> messageStrings = new ArrayList<String>();
+    private final List<String> messageStrings;
 
-    /**
-     * {@inheritDoc}
-     */
-    public void init(String s) {
+    private RespondFile(List<String> messageStrings) {
+        this.messageStrings = messageStrings;
+    }
+
+    public static Action getAction(String s, File sourceDir ) throws InvalidActionException {
+        ArrayList<String> messageStrings = new ArrayList<>();
         try {
-            BufferedReader br = FileUtil.getBufferedReader(FilterConfig.getInstance().getTextDir(),s);
+            BufferedReader br = new BufferedReader(new FileReader(new File(sourceDir, s)));
             String message;
             while ((message = br.readLine()) != null) {
                 messageStrings.add(ChatColor.translateAlternateColorCodes('&', message));
             }
         } catch (FileNotFoundException ex) {
-            LogManager.logger.warning("File not found while trying to add Action: " + ex.getMessage());
-            messageStrings.add("[PwnFilter] Configuration error: file not found.");
+            throw new InvalidActionException("File not found while trying to add Action: " + ex.getMessage());
         } catch (IOException ex) {
-            LogManager.logger.warning("Error reading file: " + s);
-            messageStrings.add("[PwnFilter] Error: respondfile IO.  Please notify admins.");
+            throw new InvalidActionException("Error reading file: " + s);
         }
+        return new RespondFile(ImmutableList.copyOf(messageStrings));
     }
 
     /**
      * {@inheritDoc}
      */
-    public void execute(final FilterTask filterTask) {
+    public void execute(final FilterContext filterTask) {
         final ArrayList<String> preparedMessages = new ArrayList<String>();
 
         for (String message : messageStrings) {

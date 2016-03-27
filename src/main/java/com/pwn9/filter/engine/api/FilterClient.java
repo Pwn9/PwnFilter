@@ -11,16 +11,17 @@
 
 package com.pwn9.filter.engine.api;
 
-import com.pwn9.filter.engine.rules.RuleChain;
+import com.pwn9.filter.engine.FilterService;
+import com.pwn9.filter.engine.rules.chain.RuleChain;
 
 /**
  * Listeners that can call PwnFilter
- * User: ptoal
+ * User: Sage905
  * Date: 13-09-28
  * Time: 12:15 PM
  * To change this template use File | Settings | File Templates.
  *
- * @author ptoal
+ * @author Sage905
  * @version $Id: $Id
  */
 public interface FilterClient {
@@ -34,13 +35,14 @@ public interface FilterClient {
     String getShortName();
 
 
+    FilterService getFilterService();
+
     /**
      * <p>getRuleChain.</p>
      *
      * @return The primary rulechain for this filter
      */
     RuleChain getRuleChain();
-
 
     /**
      * <p>isActive.</p>

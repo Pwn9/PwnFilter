@@ -8,11 +8,11 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 /**
  * Listeners for the DataCache
- * User: ptoal
+ * User: Sage905
  * Date: 13-11-13
  * Time: 10:34 AM
  *
- * @author ptoal
+ * @author Sage905
  * @version $Id: $Id
  */
 public class PlayerCacheListener implements Listener {

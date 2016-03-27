@@ -8,15 +8,18 @@
  * of the License, or (at your option) any later version.
  */
 
-package com.pwn9.filter.engine.rules;
+package com.pwn9.filter.util.tag;
+
+import com.pwn9.filter.engine.api.FilterContext;
 
 /**
- * Subscriber interface for RuleChain updates
- *
- * Created by ptoal on 15-09-07.
+ * Return the current (edited) Message text
+ * Created by Sage905 on 15-09-04.
  */
-public interface RuleChainListener {
+public class StringTag implements Tag {
 
-    void ruleChainUpdated(RuleChain ruleChain);
-
+    @Override
+    public java.lang.String getValue(FilterContext filterTask) {
+        return filterTask.getModifiedMessage().getRaw();
+    }
 }

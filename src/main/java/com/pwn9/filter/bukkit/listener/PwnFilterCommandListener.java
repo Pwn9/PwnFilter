@@ -11,16 +11,15 @@
 
 package com.pwn9.filter.bukkit.listener;
 
-import com.pwn9.filter.engine.api.FilterTask;
 import com.pwn9.filter.bukkit.PwnFilterPlugin;
+import com.pwn9.filter.bukkit.config.BukkitConfig;
+import com.pwn9.filter.engine.api.FilterContext;
+import com.pwn9.filter.engine.rules.chain.RuleChain;
 import com.pwn9.filter.minecraft.api.MinecraftPlayer;
 import com.pwn9.filter.minecraft.util.ColoredString;
-import com.pwn9.filter.bukkit.config.BukkitConfig;
-import com.pwn9.filter.engine.rules.RuleChain;
-import com.pwn9.filter.engine.rules.RuleManager;
-import com.pwn9.filter.util.LogManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -28,10 +27,12 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.PluginManager;
 
+import java.io.InvalidObjectException;
+
 /**
  * Apply the filter to commands.
  *
- * @author ptoal
+ * @author Sage905
  * @version $Id: $Id
  */
 public class PwnFilterCommandListener extends BaseListener {
@@ -49,37 +50,41 @@ public class PwnFilterCommandListener extends BaseListener {
      * <p>Constructor for PwnFilterCommandListener.</p>
      *
      */
-    public PwnFilterCommandListener() {
-	    super();
+    public PwnFilterCommandListener(PwnFilterPlugin plugin) {
+	    super(plugin);
     }
 
-    /** {@inheritDoc} */
+    @Override
     public void activate() {
         if (isActive()) return;
 
-        setRuleChain(RuleManager.getInstance().getRuleChain("command.txt"));
-        chatRuleChain = RuleManager.getInstance().getRuleChain("chat.txt");
-
-
+        PluginManager pm = Bukkit.getPluginManager();
         EventPriority priority = BukkitConfig.getCmdpriority();
         if (BukkitConfig.cmdfilterEnabled()) {
-            PluginManager pm = Bukkit.getPluginManager();
-            pm.registerEvent(PlayerCommandPreprocessEvent.class, this, priority,
-                    new EventExecutor() {
-                public void execute(Listener l, Event e) { eventProcessor((PlayerCommandPreprocessEvent) e); }
-            },
-            PwnFilterPlugin.getInstance());
-            setActive();
-            LogManager.logger.info("Activated CommandListener with Priority Setting: " + priority.toString()
-                    + " Rule Count: " + getRuleChain().ruleCount() );
+            try {
+                ruleChain = getCompiledChain("command.txt");
+                chatRuleChain = getCompiledChain("chat.txt");
 
-            StringBuilder sb = new StringBuilder("Commands to filter: ");
-            for (String command : BukkitConfig.getCmdlist()) sb.append(command).append(" ");
-            LogManager.getInstance().debugLow(sb.toString().trim());
+                pm.registerEvent(PlayerCommandPreprocessEvent.class, this, priority,
+                        new EventExecutor() {
+                            public void execute(Listener l, Event e) { eventProcessor((PlayerCommandPreprocessEvent) e); }
+                        },
+                        PwnFilterPlugin.getInstance());
+                setActive();
+                plugin.getLogger().info("Activated CommandListener with Priority Setting: " + priority.toString()
+                        + " Rule Count: " + getRuleChain().ruleCount() );
 
-            sb = new StringBuilder("Commands to never filter: ");
-            for (String command : BukkitConfig.getCmdblist()) sb.append(command).append(" ");
-            LogManager.getInstance().debugLow(sb.toString().trim());
+                StringBuilder sb = new StringBuilder("Commands to filter: ");
+                for (String command : BukkitConfig.getCmdlist()) sb.append(command).append(" ");
+                plugin.getLogger().finest(sb.toString().trim());
+
+                sb = new StringBuilder("Commands to never filter: ");
+                for (String command : BukkitConfig.getCmdblist()) sb.append(command).append(" ");
+                plugin.getLogger().finest(sb.toString().trim());
+            } catch (InvalidObjectException | InvalidConfigurationException e) {
+                plugin.getLogger().severe("Unable to activate CommandListener.  Error: " + e.getMessage());
+                setInactive();
+            }
         }
     }
 
@@ -104,12 +109,12 @@ public class PwnFilterCommandListener extends BaseListener {
         String cmdmessage = message.substring(1).split(" ")[0];
 
 
-        FilterTask filterTask = new FilterTask(new ColoredString(message), minecraftPlayer, this);
+        FilterContext filterTask = new FilterContext(new ColoredString(message), minecraftPlayer, this);
 
         // Check to see if we should treat this command as chat (eg: /tell)
         if (BukkitConfig.getCmdchat().contains(cmdmessage)) {
             // Global mute
-            if ((BukkitConfig.isGlobalMute()) && (!minecraftPlayer.hasPermission("pwnfilter.bypass.mute"))) {
+            if ((BukkitConfig.globalMute()) && (!minecraftPlayer.hasPermission("pwnfilter.bypass.mute"))) {
                 event.setCancelled(true);
                 return;
             }
@@ -125,7 +130,7 @@ public class PwnFilterCommandListener extends BaseListener {
                 PwnFilterPlugin.lastMessage.put(minecraftPlayer.getID(), message);
             }
 
-            chatRuleChain.execute(filterTask);
+            chatRuleChain.execute(filterTask, plugin.getLogger());
 
         } else {
 
@@ -134,7 +139,7 @@ public class PwnFilterCommandListener extends BaseListener {
 
             // Take the message from the Command Event and send it through the filter.
 
-            ruleChain.execute(filterTask);
+            ruleChain.execute(filterTask, plugin.getLogger());
 
         }
 

@@ -16,7 +16,9 @@ import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.rules.action.RegisterActions;
 import com.pwn9.filter.engine.rules.action.core.Deny;
 import com.pwn9.filter.engine.rules.action.targeted.Respond;
-import com.pwn9.filter.util.LogManager;
+import com.pwn9.filter.engine.rules.chain.ChainEntry;
+import com.pwn9.filter.engine.rules.chain.RuleChain;
+import com.pwn9.filter.util.FileLogger;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,7 +36,7 @@ import static org.junit.Assert.assertTrue;
 
 /**
  * Tests for RuleSets
- * User: ptoal
+ * User: Sage905
  * Date: 13-05-04
  * Time: 11:28 AM
  */
@@ -45,20 +47,20 @@ public class ParserTest {
 
     RuleManager ruleManager;
     RuleChain rs;
-    LogManager pwnLogger;
+    Logger logger;
 
     PwnFilterPlugin mockPlugin;
 
     @Before
     public void setUp() {
         RegisterActions.all();
-        //TODO: Remove this, and add a FilterEngine initialization call.
+        //TODO: Remove this, and add a FilterService initialization call.
         ruleManager = RuleManager.getInstance();
         File testFile = new File(getClass().getResource("/testrules.txt").getFile());
         FilterConfig.getInstance().setRulesDir(testFile.getParentFile());
         FilterConfig.getInstance().setTextDir(testFile.getParentFile());
         Logger logger = Logger.getLogger("PwnFilter");
-        pwnLogger = LogManager.getInstance(logger, new File("/tmp/"));
+        logger = FileLogger.getInstance(logger, new File("/tmp/"));
         //pwnLogger.start(); logger.setLevel(Level.FINEST);pwnLogger.debugMode = LogManager.DebugModes.high; // For debugging
 
     }
@@ -66,13 +68,13 @@ public class ParserTest {
     @Test
     public void testLoadRules() {
         rs = ruleManager.getRuleChain("testrules.txt");
-        assertTrue(rs.loadConfigFile());
+        assertTrue(rs.load());
     }
 
     @Test
     public void testShortcuts() {
         rs = ruleManager.getRuleChain("testrules.txt");
-        rs.loadConfigFile();
+        rs.load();
         List<ChainEntry> ruleChain = rs.getChain();
         for (ChainEntry e : ruleChain) {
             if(e.toString().equals("ShortCutPattern")) {
@@ -86,7 +88,7 @@ public class ParserTest {
     // Requires actiongroup.txt in the resources folder.
     public void testActionGroupParser() throws IOException {
         RuleChain ruleChain = ruleManager.getRuleChain("actiongroup.txt");
-        ruleChain.loadConfigFile();
+        ruleChain.load();
 
         assertTrue(ruleChain.getActionGroups().containsKey("aGroupTest"));
 
@@ -101,7 +103,7 @@ public class ParserTest {
     // Requires conditiongroup.txt in the resources folder.
     public void testConditionGroupParser() throws IOException {
         RuleChain ruleChain = ruleManager.getRuleChain("conditiongroup.txt");
-        ruleChain.loadConfigFile();
+        ruleChain.load();
 
         assertTrue(ruleChain.getConditionGroups().containsKey("cGroupTest"));
 

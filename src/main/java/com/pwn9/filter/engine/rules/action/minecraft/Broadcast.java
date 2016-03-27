@@ -10,34 +10,40 @@
 
 package com.pwn9.filter.engine.rules.action.minecraft;
 
-import com.pwn9.filter.engine.api.FilterTask;
+import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.minecraft.api.MinecraftConsole;
 import com.pwn9.filter.engine.api.Action;
-import com.pwn9.filter.util.tags.TagRegistry;
+import com.pwn9.filter.util.tag.TagRegistry;
 import org.bukkit.ChatColor;
 
 import java.util.ArrayList;
 
 /**
  * Responds to the user with the string provided.
- *
+ * <p>
  * TODO: Extract Broadcast actions from Minecraft to make them universal.
  */
 @SuppressWarnings("UnusedDeclaration")
 public class Broadcast implements Action {
-    final ArrayList<String> messageStrings = new ArrayList<String>();
+    private final String[] messageStrings;
 
-    /** {@inheritDoc} */
-    public void init(String s)
-    {
-        for ( String message : s.split("\n") ) {
-            //TODO: Handle chatcolors outside of FilterEngine?
-            messageStrings.add(ChatColor.translateAlternateColorCodes('&',message));
-        }
+    private Broadcast(String[] strings) {
+        this.messageStrings = strings;
     }
 
-    /** {@inheritDoc} */
-    public void execute(final FilterTask filterTask) {
+    /**
+     * {@inheritDoc}
+     */
+    static Action getAction(String s) {
+        //TODO: Handle chatcolors outside of FilterService?
+
+        return new Broadcast(ChatColor.translateAlternateColorCodes('&', s).split("\n"));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void execute(final FilterContext filterTask) {
 
         /*
         TODO: Abstract out to a BroadcastDestination object, so that broadcasts

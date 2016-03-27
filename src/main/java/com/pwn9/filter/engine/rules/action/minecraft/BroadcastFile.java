@@ -10,53 +10,59 @@
 
 package com.pwn9.filter.engine.rules.action.minecraft;
 
-import com.pwn9.filter.engine.api.FilterTask;
-import com.pwn9.filter.minecraft.api.MinecraftConsole;
-import com.pwn9.filter.minecraft.util.FileUtil;
-import com.pwn9.filter.engine.config.FilterConfig;
+import com.google.common.collect.ImmutableList;
 import com.pwn9.filter.engine.api.Action;
-import com.pwn9.filter.util.LogManager;
-import com.pwn9.filter.util.tags.TagRegistry;
+import com.pwn9.filter.engine.api.FilterContext;
+import com.pwn9.filter.engine.rules.action.InvalidActionException;
+import com.pwn9.filter.minecraft.api.MinecraftConsole;
+import com.pwn9.filter.util.tag.TagRegistry;
 import org.bukkit.ChatColor;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 /**
  * Broadcasts the contents of the named file to all users.
  *
- * @author ptoal
+ * @author Sage905
  * @version $Id: $Id
  */
 @SuppressWarnings("UnusedDeclaration")
 public class BroadcastFile implements Action {
-    final ArrayList<String> messageStrings = new ArrayList<String>();
+    private final ImmutableList<String> messageStrings;
 
-    /** {@inheritDoc} */
-    public void init(String s)
-    {
-        try {
-            BufferedReader br = FileUtil.getBufferedReader(FilterConfig.getInstance().getTextDir(),s);
-            String message;
-            while ( (message = br.readLine()) != null ) {
-                messageStrings.add(ChatColor.translateAlternateColorCodes('&',message));
-            }
-        } catch (FileNotFoundException ex) {
-            LogManager.logger.warning("File not found while trying to add Action: " + ex.getMessage());
-        } catch (IOException ex) {
-            LogManager.logger.warning("Error reading: " + s);
-        }
+    private BroadcastFile(ArrayList<String> s) {
+        messageStrings = ImmutableList.copyOf(s);
     }
 
     /** {@inheritDoc} */
-    public void execute(final FilterTask filterTask) {
-        final ArrayList<String> preparedMessages = new ArrayList<String>();
-
-        for (String message : messageStrings) {
-            preparedMessages.add(TagRegistry.replaceTags(message, filterTask));
+    static Action getAction(String s, File sourceDir) throws InvalidActionException
+    {
+        ArrayList<String> messages = new ArrayList<String>();
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(new File(sourceDir,s)));
+            String message;
+            while ( (message = br.readLine()) != null ) {
+                messages.add(ChatColor.translateAlternateColorCodes('&',message));
+            }
+        } catch (FileNotFoundException ex) {
+            throw new InvalidActionException("File not found while trying to add Action: " + ex.getMessage());
+        } catch (IOException ex) {
+            throw new InvalidActionException("Error reading: " + s);
         }
+        return new BroadcastFile(messages);
+    }
 
-        filterTask.addLogMessage("Broadcasted: " + preparedMessages.get(0) + (preparedMessages.size() > 1 ? "..." : ""));
+    /** {@inheritDoc} */
+    public void execute(final FilterContext filterTask) {
+        final ArrayList<String> preparedMessages = messageStrings.
+                stream().
+                map(message -> TagRegistry.replaceTags(message, filterTask)).
+                collect(Collectors.toCollection(ArrayList::new));
+
+        filterTask.addLogMessage("Broadcasted: " + preparedMessages.get(0) +
+                (preparedMessages.size() > 1 ? "..." : ""));
 
         MinecraftConsole.getInstance().sendBroadcast(preparedMessages);
     }

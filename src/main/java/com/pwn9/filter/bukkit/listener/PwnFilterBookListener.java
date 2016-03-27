@@ -11,15 +11,14 @@
 
 package com.pwn9.filter.bukkit.listener;
 
-import com.pwn9.filter.engine.api.FilterTask;
-import com.pwn9.filter.minecraft.api.MinecraftPlayer;
 import com.pwn9.filter.bukkit.PwnFilterPlugin;
+import com.pwn9.filter.bukkit.config.BukkitConfig;
+import com.pwn9.filter.engine.api.FilterContext;
+import com.pwn9.filter.minecraft.api.MinecraftPlayer;
 import com.pwn9.filter.minecraft.api.MinecraftServer;
 import com.pwn9.filter.minecraft.util.ColoredString;
-import com.pwn9.filter.bukkit.config.BukkitConfig;
-import com.pwn9.filter.engine.rules.RuleManager;
-import com.pwn9.filter.util.LogManager;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
@@ -29,6 +28,7 @@ import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.PluginManager;
 
+import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +36,7 @@ import java.util.List;
 /**
  * Listen for Book Change events and apply the filter to the text.
  *
- * @author ptoal
+ * @author Sage905
  * @version $Id: $Id
  */
 public class PwnFilterBookListener extends BaseListener {
@@ -45,8 +45,8 @@ public class PwnFilterBookListener extends BaseListener {
      * <p>Constructor for PwnFilterBookListener.</p>
      *
      */
-    public PwnFilterBookListener() {
-        super();
+    public PwnFilterBookListener(PwnFilterPlugin plugin) {
+        super(plugin);
     }
 
     /** {@inheritDoc} */
@@ -77,9 +77,9 @@ public class PwnFilterBookListener extends BaseListener {
         if (bookMeta.hasTitle()) {
             // Run title through filter.
             message = bookMeta.getTitle();
-            FilterTask filterTask = new FilterTask(new ColoredString(message),
+            FilterContext filterTask = new FilterContext(new ColoredString(message),
                     MinecraftPlayer.getInstance(player), this);
-            ruleChain.execute(filterTask);
+            ruleChain.execute(filterTask, plugin.getLogger());
             if (filterTask.isCancelled()) event.setCancelled(true);
             if (filterTask.messageChanged()) {
                 bookMeta.setTitle(filterTask.getModifiedMessage().getRaw());
@@ -92,9 +92,9 @@ public class PwnFilterBookListener extends BaseListener {
             List<String> newPages = new ArrayList<String>();
             boolean modified = false;
             for (String page : bookMeta.getPages()) {
-                FilterTask state = new FilterTask(new ColoredString(page),
+                FilterContext state = new FilterContext(new ColoredString(page),
                         MinecraftPlayer.getInstance(player.getUniqueId()), this);
-                ruleChain.execute(state);
+                ruleChain.execute(state, plugin.getLogger());
                 if (state.isCancelled()) {
                     event.setCancelled(true);
                 }
@@ -124,27 +124,30 @@ public class PwnFilterBookListener extends BaseListener {
      * they could just enable / disable the use of the filter.
      */
     @Override
+
     public void activate() {
         if (isActive()) return;
-
-        setRuleChain(RuleManager.getInstance().getRuleChain("book.txt"));
-
 
         PluginManager pm = Bukkit.getPluginManager();
         EventPriority priority = BukkitConfig.getBookpriority();
 
         if (!active && BukkitConfig.bookfilterEnabled()  ) {
-            // Now register the listener with the appropriate priority
-            pm.registerEvent(PlayerEditBookEvent.class, this, priority,
-                    new EventExecutor() {
-                        public void execute(Listener l, Event e) { onBookEdit((PlayerEditBookEvent) e); }
-                    },
-                    PwnFilterPlugin.getInstance());
-            setActive();
-            LogManager.logger.info("Activated BookListener with Priority Setting: " + priority.toString()
-                    + " Rule Count: " + getRuleChain().ruleCount() );
-
+            try {
+                ruleChain = getCompiledChain("book.txt");
+                pm.registerEvent(PlayerEditBookEvent.class, this, priority,
+                        new EventExecutor() {
+                            public void execute(Listener l, Event e) { onBookEdit((PlayerEditBookEvent) e); }
+                        },
+                        PwnFilterPlugin.getInstance());
+                setActive();
+                plugin.getLogger().info("Activated BookListener with Priority Setting: " + priority.toString()
+                        + " Rule Count: " + getRuleChain().ruleCount() );
+            } catch (InvalidObjectException | InvalidConfigurationException e) {
+                plugin.getLogger().severe("Unable to activate BookListener.  Error: " + e.getMessage());
+                setInactive();
+            }
         }
     }
+
 }
 

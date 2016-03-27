@@ -10,25 +10,25 @@
 
 package com.pwn9.filter.engine.rules.action.core;
 
-import com.pwn9.filter.engine.api.FilterTask;
 import com.pwn9.filter.engine.api.Action;
+import com.pwn9.filter.engine.api.FilterContext;
 
 /**
- * This Internal  action stops processing of any more rules.
+ * This Internal action stops processing of any more rules.
+ * Abort is a singleton, because it does not have any parameters and always
+ * performs the same action on a FilterContext ( calls setAborted())
  *
- * @author ptoal
+ * @author Sage905
  * @version $Id: $Id
  */
-public class Abort implements Action {
+public enum Abort implements Action {
 
-    /** {@inheritDoc} */
-    public void init(String s) {
-        // This action doesn't require any initialization.
-    }
+    INSTANCE;
 
-    /** {@inheritDoc} */
-    public void execute(final FilterTask filterTask) {
+    public void execute(final FilterContext filterTask) {
         filterTask.setAborted();
         filterTask.addLogMessage("<Abort> Not processing more rules.");
     }
 }
+
+

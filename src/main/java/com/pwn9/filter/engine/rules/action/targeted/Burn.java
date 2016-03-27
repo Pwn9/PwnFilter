@@ -10,11 +10,10 @@
 
 package com.pwn9.filter.engine.rules.action.targeted;
 
-import com.pwn9.filter.engine.api.FilterTask;
-import com.pwn9.filter.engine.api.MessageAuthor;
-import com.pwn9.filter.minecraft.api.MinecraftPlayer;
-import com.pwn9.filter.minecraft.util.DefaultMessages;
 import com.pwn9.filter.engine.api.Action;
+import com.pwn9.filter.engine.api.FilterContext;
+import com.pwn9.filter.engine.api.MessageAuthor;
+import com.pwn9.filter.minecraft.util.DefaultMessages;
 
 /**
  * Burns a player to death.
@@ -22,26 +21,30 @@ import com.pwn9.filter.engine.api.Action;
  * calls are NOT thread-safe.
  * TODO: Consider hooking this into the custom death message handler.
  *
- * @author ptoal
+ * @author Sage905
  * @version $Id: $Id
  */
 @SuppressWarnings("UnusedDeclaration")
 public class Burn implements Action {
     // Message to apply to this burn action
-    String messageString;
+    private final String messageString;
 
-    /** {@inheritDoc} */
-    public void init(String s)
+    private Burn(String messageString) {
+        this.messageString = messageString;
+    }
+
+    public static Action getAction(String s)
     {
-        messageString = DefaultMessages.prepareMessage(s, "burnmsg");
+        //TODO: Refactor DefaultMessages so it is non-static
+        return new Burn(DefaultMessages.prepareMessage(s, "burnmsg"));
     }
 
     /** {@inheritDoc} */
-    public void execute(final FilterTask filterTask) {
+    public void execute(final FilterContext filterTask) {
         MessageAuthor target = filterTask.getAuthor();
 
-        if (target instanceof MinecraftPlayer) {
-            if (((MinecraftPlayer)target).burn(5000, messageString)) {
+        if (target instanceof BurnTarget) {
+            if (((BurnTarget)target).burn(5000, messageString)) {
                 filterTask.addLogMessage("Burned " + target.getName() + ": " + messageString);
             }
         } else {

@@ -12,7 +12,6 @@ package com.pwn9.filter.engine.api;
 
 import com.pwn9.filter.AuthorService;
 import com.pwn9.filter.engine.rules.Rule;
-import com.pwn9.filter.util.EnhancedString;
 import com.pwn9.filter.util.SimpleString;
 
 import java.util.ArrayList;
@@ -28,7 +27,7 @@ import java.util.regex.Pattern;
  *
  */
 
-public class FilterTask {
+public class FilterContext {
     private final EnhancedString originalMessage; // Original message
     private EnhancedString modifiedMessage; // Modified message string
     private final MessageAuthor author; // Author that this event is connected to.
@@ -52,7 +51,7 @@ public class FilterTask {
      * @param a  a {@link MessageAuthor} object.
      * @param l a {@link FilterClient} object.
      */
-    public FilterTask(EnhancedString m, MessageAuthor a, FilterClient l) {
+    public FilterContext(EnhancedString m, MessageAuthor a, FilterClient l) {
         originalMessage = m;
         modifiedMessage = m;
         author = a;
@@ -65,7 +64,7 @@ public class FilterTask {
      * @param a The {@link MessageAuthor } of this message
      * @param l The {@link FilterClient } that generated this message
      */
-    public FilterTask(String s, MessageAuthor a, FilterClient l) {
+    public FilterContext(String s, MessageAuthor a, FilterClient l) {
         this(new SimpleString(s), a, l);
     }
 
@@ -75,7 +74,7 @@ public class FilterTask {
      * @param uuid Unique ID of the Author
      * @param l Listener that is calling.
      */
-    public FilterTask(EnhancedString m, UUID uuid, FilterClient l) {
+    public FilterContext(EnhancedString m, UUID uuid, FilterClient l) {
         originalMessage = m;
         modifiedMessage = m;
         filterClient = l;

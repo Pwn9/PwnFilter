@@ -18,7 +18,7 @@ import java.util.UUID;
 
 /**
  * A Bukkit Console Abstraction
- * Created by ptoal on 15-09-08.
+ * Created by Sage905 on 15-09-08.
  */
 public class MinecraftConsole implements MessageAuthor {
 

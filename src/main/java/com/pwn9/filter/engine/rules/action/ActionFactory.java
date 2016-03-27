@@ -11,29 +11,30 @@
 package com.pwn9.filter.engine.rules.action;
 
 import com.pwn9.filter.engine.api.Action;
+import com.pwn9.filter.engine.api.ActionToken;
+import com.pwn9.filter.engine.rules.action.core.CoreAction;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This factory returns an action object selected by the rules file.
  * eg: "then kick" would return the Actionkick object.
  *
- * @author ptoal
+ * @author Sage905
  * @version $Id: $Id
  */
-@SuppressWarnings("UnusedDeclaration")
 public final class ActionFactory {
 
-    public static final HashMap<String, Class<? extends Action>> actionClassMap =
-            new HashMap<String, Class<? extends Action>>();
+    private final List<Class<? extends ActionToken>> actionTokens =
+            new ArrayList<>();
 
-    /**
-     * <p>getActionFromString.</p>
-     *
-     * @param s a {@link java.lang.String} object.
-     * @return a {@link Action} object.
-     */
-    public static Action getActionFromString(String s) {
+    public ActionFactory() {
+        // Ensure that all instances get the Core Actions
+        actionTokens.add(CoreAction.class);
+    }
+
+    public Action getActionFromString(String s) throws InvalidActionException {
         String[] parts = s.split("\\s", 2);
         String actionName = parts[0];
         String actionData;
@@ -42,45 +43,23 @@ public final class ActionFactory {
         return getAction(actionName, actionData);
     }
 
-    /**
-     * <p>getAction.</p>
-     *
-     * @param actionName a {@link java.lang.String} object.
-     * @param actionData a {@link java.lang.String} object.
-     * @return a {@link Action} object.
-     */
-    public static Action getAction(final String actionName, final String actionData) {
-        // Return a subclass instance based on actionName.
+    public Action getAction(final String actionName, final String actionData)
+    throws InvalidActionException {
 
-        Class<? extends Action> actionClass = actionClassMap.get(actionName);
+        // Scan all tokens for a match
 
-        if (actionClass != null) {
-            Action newAction;
-            try {
-                newAction = actionClass.newInstance();
-            } catch (Exception e) {
-                return null;
+        for ( Class<? extends ActionToken> tokens : actionTokens ) {
+            for (ActionToken token : tokens.getEnumConstants() ) {
+                if (token.match(actionName.toUpperCase())) {
+                    return token.getAction(actionData);
+                }
             }
-            newAction.init(actionData);
-            return newAction;
         }
-
         return null;
-
     }
 
-    synchronized public static void add(String keyword, Class<? extends Action> actionClass) {
-
-        Class<? extends Action> current = actionClassMap.get(keyword);
-
-        if (current == null ) {
-            actionClassMap.put(keyword, actionClass);
-        } else if (current != actionClass ) {
-            throw new RuntimeException("Action Keyword already Registered: " +
-                keyword + "new class: " + actionClass.getName() +
-                ". current class: " + current.getName());
-        }
-
+    synchronized public void addActionTokens(Class<? extends ActionToken> tokenEnum) {
+        actionTokens.add(tokenEnum);
     }
 
 }

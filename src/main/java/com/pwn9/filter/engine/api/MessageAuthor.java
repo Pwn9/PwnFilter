@@ -19,7 +19,7 @@ import java.util.UUID;
  * MessageAuthors are the entities that write the message.  For example,
  * A Bukkit Player, an IRC user, etc.
  *
- * Created by ptoal on 15-08-31.
+ * Created by Sage905 on 15-08-31.
  */
 public interface MessageAuthor {
 

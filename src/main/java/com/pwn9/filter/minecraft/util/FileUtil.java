@@ -1,18 +1,15 @@
 package com.pwn9.filter.minecraft.util;
 
-import com.pwn9.filter.bukkit.PwnFilterPlugin;
-import com.pwn9.filter.util.LogManager;
-import org.bukkit.plugin.Plugin;
-
 import java.io.*;
+import java.util.logging.Logger;
 
 /**
  * Helpers for File Handling
- * User: ptoal
+ * User: Sage905
  * Date: 13-11-25
  * Time: 1:04 PM
  *
- * @author ptoal
+ * @author Sage905
  * @version $Id: $Id
  */
 public class FileUtil {
@@ -27,7 +24,7 @@ public class FileUtil {
      *                   from the plugin resources directory.
      * @return File object for requested config, or null if not found.
      */
-    public static File getFile(File dir, String fileName, boolean createFile) {
+    public static File getFile(File dir, Logger logger, String fileName, boolean createFile) {
         try {
             File ruleFile = new File(dir,fileName);
             if (ruleFile.exists()) {
@@ -35,24 +32,24 @@ public class FileUtil {
             } else {
                 if (createFile) {
                     if (!ruleFile.getParentFile().exists() && !ruleFile.getParentFile().mkdirs()) {
-                        LogManager.logger.warning("Unable to create directory for:" + fileName);
+                        logger.warning("Unable to create directory for:" + fileName);
                         return null;
                     }
                     if (copyTemplate(ruleFile, fileName)) {
                         return ruleFile;
                     } else {
-                        LogManager.logger.warning("Unable to find or create file:" + fileName);
+                        logger.warning("Unable to find or create file:" + fileName);
                         return null;
                     }
                 }
             }
 
         } catch (IOException ex) {
-            LogManager.logger.warning("Unable to find or create file:" + fileName);
-            LogManager.getInstance().debugLow(ex.getMessage());
+            logger.warning("Unable to find or create file:" + fileName);
+            logger.finest(ex::getMessage);
         } catch (SecurityException ex) {
-            LogManager.logger.warning("Insufficient Privileges to create file: " + fileName);
-            LogManager.getInstance().debugLow(ex.getMessage());
+            logger.warning("Insufficient Privileges to create file: " + fileName);
+            logger.finest(ex::getMessage);
         }
         return null;
     }
@@ -67,30 +64,31 @@ public class FileUtil {
      * @throws java.lang.SecurityException if any.
      */
     public static boolean copyTemplate(File destFile, String configName) throws IOException, SecurityException {
-        Plugin plugin = PwnFilterPlugin.getInstance();
-
-        InputStream templateFile;
-
-        templateFile = plugin.getResource(configName);
-        if (templateFile == null) {
-            // Create an empty file.
-            return destFile.mkdirs() && destFile.createNewFile();
-        }
-        if (destFile.createNewFile()) {
-            BufferedInputStream fin = new BufferedInputStream(templateFile);
-            FileOutputStream fout = new FileOutputStream(destFile);
-            byte[] data = new byte[1024];
-            int c;
-            while ((c = fin.read(data, 0, 1024)) != -1)
-                fout.write(data, 0, c);
-            fin.close();
-            fout.close();
-            LogManager.logger.info("Created file from template: " + configName);
-            return true;
-        } else {
-            LogManager.logger.warning("Failed to create file from template: " + configName);
-            return false;
-        }
+//        Plugin plugin = PwnFilterPlugin.getInstance();
+//
+//        InputStream templateFile;
+//
+//        templateFile = plugin.getResource(configName);
+//        if (templateFile == null) {
+//            // Create an empty file.
+//            return destFile.mkdirs() && destFile.createNewFile();
+//        }
+//        if (destFile.createNewFile()) {
+//            BufferedInputStream fin = new BufferedInputStream(templateFile);
+//            FileOutputStream fout = new FileOutputStream(destFile);
+//            byte[] data = new byte[1024];
+//            int c;
+//            while ((c = fin.read(data, 0, 1024)) != -1)
+//                fout.write(data, 0, c);
+//            fin.close();
+//            fout.close();
+//            FileLogger.logger.info("Created file from template: " + configName);
+//            return true;
+//        } else {
+//            FileLogger.logger.warning("Failed to create file from template: " + configName);
+//            return false;
+//        }
+        return false;
     }
 
     /**
@@ -100,9 +98,9 @@ public class FileUtil {
      * @return a {@link java.io.BufferedReader} object.
      * @throws java.io.FileNotFoundException if any.
      */
-    public static BufferedReader getBufferedReader(File sourceDir, String filename ) throws FileNotFoundException {
+    public static BufferedReader getBufferedReader(File sourceDir, String filename, Logger logger ) throws FileNotFoundException {
 
-        File textfile = FileUtil.getFile(sourceDir, filename, false);
+        File textfile = FileUtil.getFile(sourceDir, logger, filename, false);
         if (textfile == null) throw new FileNotFoundException("Unable to open file: " + filename);
 
         FileInputStream fs  = new FileInputStream(textfile);

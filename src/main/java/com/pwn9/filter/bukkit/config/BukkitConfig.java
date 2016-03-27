@@ -10,11 +10,11 @@
 
 package com.pwn9.filter.bukkit.config;
 
+import com.pwn9.filter.engine.FilterService;
+import com.pwn9.filter.engine.PointManager;
 import com.pwn9.filter.engine.api.Action;
-import com.pwn9.filter.engine.config.FilterConfig;
 import com.pwn9.filter.engine.rules.action.ActionFactory;
-import com.pwn9.filter.util.LogManager;
-import com.pwn9.filter.util.PointManager;
+import com.pwn9.filter.engine.rules.action.InvalidActionException;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.EventPriority;
@@ -23,13 +23,14 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- *
  * A largely static object, which serves as an interface to the PwnFilter Bukkit
  * configuration.
- *
- * Created by ptoal on 15-09-10.
+ * <p/>
+ * Created by Sage905 on 15-09-10.
  */
 public class BukkitConfig {
 
@@ -39,131 +40,125 @@ public class BukkitConfig {
 
     private static File dataFolder;
 
-    public static void loadConfiguration(Configuration configuration, File folder) {
+    public static void loadConfiguration(Configuration configuration, File folder, FilterService filterService) {
 
         dataFolder = folder;
         config = configuration;
 
         if (config.getBoolean("logfile")) {
-            LogManager.getInstance().start();
+            filterService.setLogFileHandler(new File(dataFolder, "pwnfilter.log"));
         } else { // Needed during configuration reload to turn off logging if the option changes
-            LogManager.getInstance().stop();
+            filterService.clearLogFileHandler();
         }
 
         // Set the directory containing rules files.
-        File ruleDir = setupDirectory(config.getString("ruledirectory", "rules"));
+        File ruleDir = setupDirectory(config.getString("ruledirectory", "rules"),
+                filterService.getLogger());
         if (ruleDir != null) {
-            FilterConfig.getInstance().setRulesDir(ruleDir);
+            filterService.getConfig().setRulesDir(ruleDir);
         } else {
             throw new RuntimeException(
                     "Unable to create or access rule directory.");
         }
 
         // Set the directory containing Text Files
-        FilterConfig.getInstance().setTextDir(
-                setupDirectory(config.getString("textdir", "textfiles"))
+        filterService.getConfig().setTextDir(
+                setupDirectory(config.getString("textdir", "textfiles"),
+                        filterService.getLogger())
         );
 
         // Setup logging
-        LogManager.setRuleLogLevel(config.getString("loglevel", "info"));
-        LogManager.setDebugMode(config.getString("debug"));
+        filterService.getLogger().setLevel(Level.parse(config.getString("loglevel", "info")));
+        filterService.setDebugMode(config.getString("debug"));
 
-        setupPoints();
+        setupPoints(filterService);
     }
 
 
-    private static void setupPoints() {
+    private static void setupPoints(FilterService filterService) {
+        PointManager pointManager = filterService.getPointManager();
         ConfigurationSection pointsSection = config.getConfigurationSection("points");
         if (!pointsSection.getBoolean("enabled")) {
-            if (PointManager.isEnabled()) {
-                PointManager.getInstance().shutdown();
+            if (pointManager.isEnabled()) {
+                pointManager.shutdown();
             }
         } else {
-            if (!PointManager.isEnabled()) {
-                PointManager.setup(
-                        pointsSection.getDouble("leak.points",1),
-                        pointsSection.getInt("leak.interval",30)
-                );
+            if (!pointManager.isEnabled()) {
+                pointManager.setLeakPoints(pointsSection.getDouble("leak.points", 1));
+                pointManager.setLeakInterval(pointsSection.getInt("leak.interval", 30));
 
-                parseThresholds(pointsSection);
+                try {
+                    parseThresholds(pointsSection, pointManager, filterService.getActionFactory());
+                } catch (InvalidActionException ex) {
+                    filterService.getLogger().warning("Invalid Action parsing Thresholds: " + ex.getMessage());
+                    pointManager.shutdown();
+                }
+
             }
         }
     }
 
-    private static void parseThresholds(ConfigurationSection cs) {
+    private static void parseThresholds(ConfigurationSection configSection,
+                                        PointManager pointManager,
+                                        ActionFactory actionFactory)
+    throws InvalidActionException {
 
-        for (String threshold : cs.getKeys(false)) {
-            List<Action> ascending = new ArrayList<Action>();
-            List<Action> descending = new ArrayList<Action>();
+        for (String threshold : configSection.getKeys(false)) {
+            List<Action> ascending = new ArrayList<>();
+            List<Action> descending = new ArrayList<>();
 
-            for (String action : cs.getStringList(threshold + ".actions.ascending")) {
-                Action actionObject = ActionFactory.getActionFromString(action);
-                if (actionObject != null) {
-                    ascending.add(actionObject);
-                } else {
-                    LogManager.logger.warning("Unable to parse action in threshold: " + threshold);
-                }
+            for (String action : configSection.getStringList(threshold + ".actions.ascending")) {
+                ascending.add(actionFactory.getActionFromString(action));
             }
-            for (String action : cs.getStringList(threshold + ".actions.descending")) {
-                Action actionObject = ActionFactory.getActionFromString(action);
-                if (actionObject != null) {
-                    descending.add(actionObject);
-                } else {
-                    LogManager.logger.warning("Unable to parse action in threshold: " + threshold);
-                }
+            for (String action : configSection.getStringList(threshold + ".actions.descending")) {
+                descending.add(actionFactory.getActionFromString(action));
             }
-            PointManager.getInstance().addThreshold(
-                    cs.getString(threshold + ".name"),
-                    cs.getDouble(threshold + ".points"),
+            pointManager.addThreshold(
+                    configSection.getString(threshold + ".name"),
+                    configSection.getDouble(threshold + ".points"),
                     ascending,
                     descending);
         }
 
     }
 
-
-
     /**
      * Ensure that the named directory exists and is accessible.  If the
      * directory begins with a / (slash), it is assumed to be an absolute
      * path.  Otherwise, the directory is assumed to be relative to the root
      * data folder.
-     *
+     * <p/>
      * If the directory doesn't exist, an attempt is made to create it.
      *
      * @param directoryName relative or absolute path to the directory
      * @return {@link File} referencing the directory.
      */
-    private static File setupDirectory(@NotNull String directoryName) {
+    private static File setupDirectory(@NotNull String directoryName,
+                                       Logger logger) {
         File dir;
         if (directoryName.startsWith("/")) {
             dir = new File(directoryName);
         } else {
-            dir = new File(dataFolder,directoryName);
+            dir = new File(dataFolder, directoryName);
         }
         try {
             if (!dir.exists()) {
                 if (dir.mkdirs())
-                    LogManager.logger.info("Created directory: " + dir.getAbsolutePath());
+                    logger.info("Created directory: " + dir.getAbsolutePath());
             }
             return dir;
         } catch (Exception ex) {
-            LogManager.logger.warning("Unable to access/create directory: " + dir.getAbsolutePath());
+            logger.warning("Unable to access or create directory: " + dir.getAbsolutePath());
             return null;
         }
 
-    }
-
-    /* Accessors */
-    public File getDataFolder() {
-        return dataFolder;
     }
 
     public static boolean decolor() {
         return config.getBoolean("decolor");
     }
 
-    public static boolean isGlobalMute() {
+    public static boolean globalMute() {
         return globalMute;
     }
 
@@ -180,7 +175,7 @@ public class BukkitConfig {
     }
 
     public static List<String> getCmdchat() {
-        return  config.getStringList("cmdchat");
+        return config.getStringList("cmdchat");
     }
 
     public static EventPriority getCmdpriority() {

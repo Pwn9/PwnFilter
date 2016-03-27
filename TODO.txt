@@ -1,11 +1,35 @@
+Minimum Marketable Features:
+ * Modularize PwnFilter Engine and Server Modules
+ - Useful Spam Filter
+ - Book & Quill Filter Support
+ - Compatibility with Spigot 1.9
+ - Support for Sponge
+
+
+User Stories for current MMF:
+ * Filter Engine processes messages.
+ * Make it compile again
 
 
 
-Low Priority:
+Engineering Tasks:
+ * Refactor Actions into immutable objects
+ - Implement interfaces for actions (eg: BurnTarget)
+ - Revisit ActionFactory mechanism.
 
- - Rewrite Spam filter to be useful
- -
+To Do on Current Task:
+ * Investigate options for Immutability and Constructors
+ * Refactor all the logging.
+ * Fix Shortcuts file.
+ - Implement permission caching in minecraft API
+ - Fix Points Manager
+ - Refactor FilterService to allow RuleChainResources to be registered
+ - Keep better track of listeners to allow reloading of all configs.
 
+
+
+
+Random thoughts:
 TODO: Add support for Books
 TODO: Enable configuration management /pfset /pfsave
 TODO: It's powerful.  Now, make it easier.

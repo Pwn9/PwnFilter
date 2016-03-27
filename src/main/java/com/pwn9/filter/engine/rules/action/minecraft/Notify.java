@@ -10,44 +10,45 @@
 
 package com.pwn9.filter.engine.rules.action.minecraft;
 
-import com.pwn9.filter.engine.api.FilterTask;
+import com.pwn9.filter.engine.api.FilterContext;
+import com.pwn9.filter.engine.rules.action.InvalidActionException;
 import com.pwn9.filter.minecraft.api.MinecraftConsole;
 import com.pwn9.filter.engine.api.Action;
-import com.pwn9.filter.util.tags.TagRegistry;
+import com.pwn9.filter.util.tag.TagRegistry;
 import org.bukkit.ChatColor;
 
 /**
  * Notify all users with the permission specified in notifyperm:
  *
- * @author ptoal
+ * @author Sage905
  * @version $Id: $Id
  */
 @SuppressWarnings("UnusedDeclaration")
 public class Notify implements Action {
-    String permissionString;
-    String messageString;
+    private final String permissionString;
+    private final String messageString;
 
-    /** {@inheritDoc} */
-    public void init(String s)
+
+    private Notify(String perm, String message ) {
+        this.permissionString = perm;
+        this.messageString = message;
+    }
+
+    public static Action getAction(String s) throws InvalidActionException
     {
         String[] parts;
 
         parts = s.split("\\s",2);
 
-        permissionString = parts[0];
+        if (parts.length < 2 || parts[0].isEmpty() || parts[1].isEmpty())
+            throw new InvalidActionException("'notify' action requires a permission or 'console', and a message.");
 
-        if (permissionString.isEmpty()) throw new IllegalArgumentException("'notify' action requires a permission or 'console'");
-
-        if (parts.length > 1) {
-            messageString = ChatColor.translateAlternateColorCodes('&',parts[1]);
-        } else {
-            throw new IllegalArgumentException("'notify' action requires a message string");
-        }
+        return new Notify(parts[0],ChatColor.translateAlternateColorCodes('&',parts[1]));
 
     }
 
     /** {@inheritDoc} */
-    public void execute(final FilterTask filterTask) {
+    public void execute(final FilterContext filterTask) {
 
         // Create the message to send
         final String sendString = TagRegistry.replaceTags(messageString, filterTask);

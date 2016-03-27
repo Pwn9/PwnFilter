@@ -14,7 +14,6 @@ import com.pwn9.filter.engine.api.MessageAuthor;
 import org.bukkit.permissions.Permission;
 
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
@@ -22,7 +21,7 @@ import java.util.concurrent.ExecutionException;
  * A generic Minecraft API interface containing all the calls we require into
  * the server.
  *
- * Created by ptoal on 15-09-11.
+ * Created by Sage905 on 15-09-11.
  */
 public interface MinecraftAPI {
     void reset();
@@ -40,13 +39,6 @@ public interface MinecraftAPI {
      * @param permissions a {@link java.util.List} object.
      */
     void addCachedPermissions(List<Permission> permissions);
-
-    /**
-     * <p>addCachedPermissions.</p>
-     *
-     * @param permissions a {@link java.util.Set} object.
-     */
-    void addCachedPermissions(Set<String> permissions);
 
     MessageAuthor getAuthor(UUID uuid);
 

@@ -13,7 +13,7 @@ package com.pwn9.filter.minecraft.api;
 /**
  * Tiny class to store a reference to the Minecraft API we're using at runtime.
  *
- * Created by ptoal on 15-09-11.
+ * Created by Sage905 on 15-09-11.
  */
 public class MinecraftServer {
 

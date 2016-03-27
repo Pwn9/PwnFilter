@@ -10,16 +10,16 @@
 
 package com.pwn9.filter.minecraft.tag;
 
-import com.pwn9.filter.engine.api.FilterTask;
-import com.pwn9.filter.util.tags.Tag;
+import com.pwn9.filter.engine.api.FilterContext;
+import com.pwn9.filter.util.tag.Tag;
 
 /**
  * Player Display Name Tag
- * Created by ptoal on 15-09-04.
+ * Created by Sage905 on 15-09-04.
  */
 public class PlayerTag implements Tag {
     @Override
-    public String getValue(FilterTask filterTask) {
+    public String getValue(FilterContext filterTask) {
        return filterTask.getAuthor().getName();
     }
 }

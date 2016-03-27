@@ -8,12 +8,12 @@
  * of the License, or (at your option) any later version.
  */
 
-package com.pwn9.filter.util.tags;
+package com.pwn9.filter.util.tag;
 
-import com.pwn9.filter.engine.api.FilterTask;
+import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.api.FilterClient;
 import com.pwn9.filter.engine.api.MessageAuthor;
-import com.pwn9.filter.engine.rules.RuleChain;
+import com.pwn9.filter.engine.rules.chain.RuleChain;
 import junit.framework.Assert;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
@@ -24,7 +24,7 @@ import java.util.UUID;
 
 /**
  * Tests for TagRegistry
- * Created by ptoal on 15-09-07.
+ * Created by Sage905 on 15-09-07.
  */
 public class TagRegistryTest {
 
@@ -96,7 +96,7 @@ public class TagRegistryTest {
     @Test
     public void testUntaggedStringIsUnmodified() throws Exception {
 
-        FilterTask testState = new FilterTask("TestString", testAuthor, testClient);
+        FilterContext testState = new FilterContext("TestString", testAuthor, testClient);
 
         String input = "This is a test";
         String result = TagRegistry.replaceTags(input, testState);
@@ -105,7 +105,7 @@ public class TagRegistryTest {
 
     @Test
     public void testUnmatchedTagIsUnmodified() throws Exception {
-        FilterTask testState = new FilterTask("TestString", testAuthor, testClient);
+        FilterContext testState = new FilterContext("TestString", testAuthor, testClient);
 
         String input = "This is a %test%";
         String result = TagRegistry.replaceTags(input, testState);
@@ -114,11 +114,11 @@ public class TagRegistryTest {
 
     @Test
     public void testStaticTagIsReplaced() throws Exception {
-        FilterTask testState = new FilterTask("TestString", testAuthor, testClient);
+        FilterContext testState = new FilterContext("TestString", testAuthor, testClient);
 
         TagRegistry.addTag("test", new Tag() {
             @Override
-            public String getValue(FilterTask filterTask) {
+            public String getValue(FilterContext filterTask) {
                 return "foo";
             }
         });

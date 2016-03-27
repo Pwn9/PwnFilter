@@ -10,35 +10,42 @@
 
 package com.pwn9.filter.engine.rules.action.minecraft;
 
-import com.pwn9.filter.engine.api.FilterTask;
-import com.pwn9.filter.engine.api.MessageAuthor;
-import com.pwn9.filter.minecraft.api.MinecraftPlayer;
 import com.pwn9.filter.engine.api.Action;
-import com.pwn9.filter.util.tags.TagRegistry;
+import com.pwn9.filter.engine.api.FilterContext;
+import com.pwn9.filter.engine.api.MessageAuthor;
+import com.pwn9.filter.engine.rules.action.InvalidActionException;
+import com.pwn9.filter.minecraft.api.MinecraftPlayer;
+import com.pwn9.filter.util.tag.TagRegistry;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Execute a chain of commands by the player.
  *  * NOTE: This method needs to use runTask to operate on the player, as the bukkit API
  * calls are NOT thread-safe.
  *
- * @author ptoal
+ * @author Sage905
  * @version $Id: $Id
  */
 @SuppressWarnings("UnusedDeclaration")
 public class CommandChain implements Action {
-    String[] commands;
+    private final List<String> commands;
 
-    /** {@inheritDoc} */
-    public void init(String s)
-    {
-        commands = s.split("\\|");
-        if (commands[0].isEmpty()) throw new IllegalArgumentException("No commands were provided to 'cmdchain'");
+    private CommandChain(List<String> commands) {
+        this.commands = commands;
     }
 
     /** {@inheritDoc} */
-    public void execute(final FilterTask filterTask) {
+    public static Action getAction(String s) throws InvalidActionException
+    {
+        if (s.isEmpty()) throw new InvalidActionException("No commands were provided to 'cmdchain'");
+        return new CommandChain(Arrays.asList(s.split("\\|")));
+    }
+
+    /** {@inheritDoc} */
+    public void execute(final FilterContext filterTask) {
         filterTask.setCancelled();
         final ArrayList<String> parsedCommands = new ArrayList<String>();
 

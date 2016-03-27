@@ -15,11 +15,11 @@ import org.bukkit.ChatColor;
 
 /**
  * Simple helper to get default messages from the PwnFilter config.yml
- * User: ptoal
+ * User: Sage905
  * Date: 13-10-01
  * Time: 3:56 PM
  *
- * @author ptoal
+ * @author Sage905
  * @version $Id: $Id
  */
 public class DefaultMessages {
@@ -27,7 +27,7 @@ public class DefaultMessages {
     /**
      * Selects string from the first not null of: message, default from config.yml or null.
      * Converts & to u00A7
-     * Used by Action.init() methods.
+     * Used by Action.newAction() methods.
      *
      * @return String containing message to be used.
      * @param message a {@link java.lang.String} object.

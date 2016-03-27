@@ -19,15 +19,15 @@ import java.util.List;
 /**
  * A wrapper for LineNumberReader that auto-trim's lines, skips comment-only
  * lines and strips comments from rules files.
- * User: ptoal
+ * User: Sage905
  * Date: 13-11-14
  * Time: 9:49 PM
  *
- * @author ptoal
+ * @author Sage905
  * @version $Id: $Id
  */
 @SuppressWarnings("UnusedDeclaration")
-public class RuleStreamReader extends LineNumberReader{
+public class RuleStreamReader extends LineNumberReader {
     /**
      * Create a new line-numbering reader, using the default input-buffer
      * size.
@@ -91,7 +91,7 @@ public class RuleStreamReader extends LineNumberReader{
 
     /**
      * Read through the stream until we reach the end of the file, or a
-     * newline.
+     * blank line.
      *
      * @return A List of NumberedLine's containing the lines for this section.
      * @throws java.io.IOException if any.

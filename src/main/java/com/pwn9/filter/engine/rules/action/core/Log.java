@@ -10,26 +10,31 @@
 
 package com.pwn9.filter.engine.rules.action.core;
 
-import com.pwn9.filter.engine.api.FilterTask;
+import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.api.Action;
 
 /**
  * Log this event.
  *
- * @author ptoal
+ * For now, the Logging is a simple switch, but in future, there may be an
+ * option to specify where to log and/or at what level.
+ *
+ * @author Sage905
  * @version $Id: $Id
  */
 @SuppressWarnings("UnusedDeclaration")
 public class Log implements Action {
 
-    /** {@inheritDoc} */
-    public void init(String s)
-    {
-        // Do nothing with a string, if one is provided.
+    private Log() {
     }
 
-    /** {@inheritDoc} */
-    public void execute(final FilterTask filterTask) {
+    public static Action getAction(String s)
+    {
+        return new Log();
+    }
+
+    @Override
+    public void execute(final FilterContext filterTask) {
         filterTask.setLogging();
     }
 }

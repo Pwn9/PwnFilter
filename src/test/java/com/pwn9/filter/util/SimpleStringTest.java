@@ -20,7 +20,7 @@ import static junit.framework.Assert.assertTrue;
 /**
  * Tests for the SimpleString object
  *
- * Created by ptoal on 15-09-12.
+ * Created by Sage905 on 15-09-12.
  */
 public class SimpleStringTest {
     final String original = "This is the string under test";

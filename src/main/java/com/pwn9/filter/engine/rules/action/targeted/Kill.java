@@ -10,7 +10,7 @@
 
 package com.pwn9.filter.engine.rules.action.targeted;
 
-import com.pwn9.filter.engine.api.FilterTask;
+import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.minecraft.api.MinecraftPlayer;
 import com.pwn9.filter.minecraft.util.DefaultMessages;
 import com.pwn9.filter.engine.api.Action;
@@ -18,22 +18,26 @@ import com.pwn9.filter.engine.api.Action;
 /**
  * Kill a player with a customized Death Message
  *
- * @author ptoal
+ * @author Sage905
  * @version $Id: $Id
  */
 @SuppressWarnings("UnusedDeclaration")
 public class Kill implements Action {
     // Message to apply to this kick action
-    String messageString;
+    private final String messageString;
 
-    /** {@inheritDoc} */
-    public void init(String s)
-    {
-        messageString = DefaultMessages.prepareMessage(s, "burnmsg");
+    private Kill(String messageString) {
+        this.messageString = messageString;
     }
 
     /** {@inheritDoc} */
-    public void execute(final FilterTask filterTask) {
+    public static Action getAction(String s)
+    {
+        return new Kill(DefaultMessages.prepareMessage(s, "burnmsg"));
+    }
+
+    /** {@inheritDoc} */
+    public void execute(final FilterContext filterTask) {
 
         if (filterTask.getAuthor() instanceof MinecraftPlayer) {
 

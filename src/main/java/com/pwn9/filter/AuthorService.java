@@ -18,7 +18,7 @@ import java.util.UUID;
  *
  * Provide a registry / lookups of MessageAuthors
  *
- * Created by ptoal on 15-09-13.
+ * Created by Sage905 on 15-09-13.
  */
 public class AuthorService {
     public static MessageAuthor getAuthor(UUID uuid) {
