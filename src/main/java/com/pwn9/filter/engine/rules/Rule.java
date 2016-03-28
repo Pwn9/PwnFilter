@@ -151,7 +151,7 @@ public class Rule implements ChainEntry {
 
         // If finest logging is set, then generate our logging info. (This is a
         // lambda + Supplier pattern.)
-        logger.finest(() -> "Testing Pattern: '" + pattern.toString() + "' on string: '" +
+        logger.finest("Testing Pattern: '" + pattern.toString() + "' on string: '" +
                 filterContext.getModifiedMessage().toString()+"'");
 
         // Check if action matches the current state of the message

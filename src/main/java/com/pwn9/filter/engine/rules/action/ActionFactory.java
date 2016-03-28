@@ -10,8 +10,10 @@
 
 package com.pwn9.filter.engine.rules.action;
 
+import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.ActionToken;
+import com.pwn9.filter.engine.config.FilterConfig;
 import com.pwn9.filter.engine.rules.action.core.CoreAction;
 
 import java.util.ArrayList;
@@ -28,10 +30,12 @@ public final class ActionFactory {
 
     private final List<Class<? extends ActionToken>> actionTokens =
             new ArrayList<>();
+    private final FilterConfig filterConfig;
 
-    public ActionFactory() {
+    public ActionFactory(FilterService filterService) {
         // Ensure that all instances get the Core Actions
         actionTokens.add(CoreAction.class);
+        filterConfig = filterService.getConfig();
     }
 
     public Action getActionFromString(String s) throws InvalidActionException {
@@ -50,12 +54,13 @@ public final class ActionFactory {
 
         for ( Class<? extends ActionToken> tokens : actionTokens ) {
             for (ActionToken token : tokens.getEnumConstants() ) {
-                if (token.match(actionName.toUpperCase())) {
-                    return token.getAction(actionData);
+                if (token.toString().equals(actionName.toUpperCase())) {
+                    return token.getAction(actionData, filterConfig);
                 }
             }
         }
-        return null;
+        throw new InvalidActionException("Unable to implement action: " + actionName
+                + " / " + actionData);
     }
 
     synchronized public void addActionTokens(Class<? extends ActionToken> tokenEnum) {

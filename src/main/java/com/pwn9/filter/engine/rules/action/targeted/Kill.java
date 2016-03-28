@@ -10,10 +10,9 @@
 
 package com.pwn9.filter.engine.rules.action.targeted;
 
+import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.minecraft.api.MinecraftPlayer;
-import com.pwn9.filter.minecraft.util.DefaultMessages;
-import com.pwn9.filter.engine.api.Action;
 
 /**
  * Kill a player with a customized Death Message
@@ -25,6 +24,9 @@ import com.pwn9.filter.engine.api.Action;
 public class Kill implements Action {
     // Message to apply to this kick action
     private final String messageString;
+    // Default message to apply to this burn action
+    private static String defaultMessage = "";
+
 
     private Kill(String messageString) {
         this.messageString = messageString;
@@ -33,7 +35,10 @@ public class Kill implements Action {
     /** {@inheritDoc} */
     public static Action getAction(String s)
     {
-        return new Kill(DefaultMessages.prepareMessage(s, "burnmsg"));
+        return new Kill((s != null && !s.isEmpty() ? s : defaultMessage));
+    }
+    public static void setDefaultMessage(String s) {
+        defaultMessage = s;
     }
 
     /** {@inheritDoc} */

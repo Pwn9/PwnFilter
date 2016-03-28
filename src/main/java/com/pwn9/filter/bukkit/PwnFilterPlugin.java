@@ -15,7 +15,6 @@ import com.pwn9.filter.bukkit.config.BukkitConfig;
 import com.pwn9.filter.bukkit.listener.*;
 import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.rules.action.minecraft.MinecraftAction;
-import com.pwn9.filter.engine.rules.action.targeted.TargetedAction;
 import com.pwn9.filter.minecraft.api.MinecraftAPI;
 import com.pwn9.filter.minecraft.api.MinecraftServer;
 import com.pwn9.filter.minecraft.command.pfcls;
@@ -155,8 +154,6 @@ public class PwnFilterPlugin extends JavaPlugin {
     }
 
     private void configureMinecraftActions() {
-        MinecraftAction.setFilterConfig(filterService.getConfig());
-        TargetedAction.setFilterConfig(filterService.getConfig());
         filterService.getActionFactory().addActionTokens(MinecraftAction.class);
 
     }

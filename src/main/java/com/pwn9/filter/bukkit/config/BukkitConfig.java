@@ -15,6 +15,8 @@ import com.pwn9.filter.engine.PointManager;
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.rules.action.ActionFactory;
 import com.pwn9.filter.engine.rules.action.InvalidActionException;
+import com.pwn9.filter.engine.rules.action.targeted.*;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.EventPriority;
@@ -66,6 +68,13 @@ public class BukkitConfig {
                 setupDirectory(config.getString("textdir", "textfiles"),
                         filterService.getLogger())
         );
+
+        // Set up the default action messages
+        Burn.setDefaultMessage(ChatColor.translateAlternateColorCodes('&', config.getString("burnmsg")));
+        Kill.setDefaultMessage(ChatColor.translateAlternateColorCodes('&', config.getString("killnmsg")));
+        Warn.setDefaultMessage(ChatColor.translateAlternateColorCodes('&', config.getString("warnnmsg")));
+        Kick.setDefaultMessage(ChatColor.translateAlternateColorCodes('&', config.getString("kicknmsg")));
+        Fine.setDefaultMessage(ChatColor.translateAlternateColorCodes('&', config.getString("finenmsg")));
 
         // Setup logging
         filterService.getLogger().setLevel(Level.parse(config.getString("loglevel", "info")));

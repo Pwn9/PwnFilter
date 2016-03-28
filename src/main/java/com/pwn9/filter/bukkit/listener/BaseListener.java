@@ -15,14 +15,12 @@ import com.pwn9.filter.bukkit.PwnFilterPlugin;
 import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.FilterClient;
 import com.pwn9.filter.engine.rules.chain.Chain;
-import com.pwn9.filter.engine.rules.chain.InvalidChain;
+import com.pwn9.filter.engine.rules.chain.InvalidChainException;
 import com.pwn9.filter.engine.rules.chain.RuleChain;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
 import java.io.File;
-import java.io.InvalidObjectException;
 
 /**
  * User: Sage905
@@ -46,16 +44,9 @@ public abstract class BaseListener implements FilterClient, Listener {
         this.plugin = plugin;
     }
 
-    RuleChain getCompiledChain(String path) throws InvalidConfigurationException, InvalidObjectException {
+    RuleChain getCompiledChain(String path) throws InvalidChainException {
         Chain newChain = plugin.getFilterService().parseRules(new File(path));
-
-        if (newChain instanceof RuleChain) {
-            return (RuleChain) newChain;
-        } else if (newChain instanceof InvalidChain) {
-            throw new InvalidConfigurationException(
-                    ((InvalidChain) newChain).getErrorMessage());
-        } else
-            throw new InvalidObjectException("Unknown Chain returned from Parser");
+        return (RuleChain) newChain;
     }
 
     @Override

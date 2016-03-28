@@ -11,6 +11,7 @@
 package com.pwn9.filter.engine.rules.parser;
 
 import com.pwn9.filter.engine.rules.chain.Chain;
+import com.pwn9.filter.engine.rules.chain.InvalidChainException;
 
 import java.io.File;
 import java.util.List;
@@ -24,5 +25,5 @@ import java.util.List;
 public interface FilterConfigParser {
 
     Chain parse(File source,
-                List<File> parents);
+                List<File> parents) throws InvalidChainException ;
 }

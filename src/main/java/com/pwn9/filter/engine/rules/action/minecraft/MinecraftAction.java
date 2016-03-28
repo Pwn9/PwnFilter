@@ -21,60 +21,45 @@ import com.pwn9.filter.engine.rules.action.InvalidActionException;
 public enum MinecraftAction implements ActionToken {
     BROADCAST {
         @Override
-        public Action getAction(String s) {
+        public Action getAction(String s, FilterConfig filterConfig) {
             return Broadcast.getAction(s);
         }
     },
     BROADCASTFILE {
         @Override
-        public Action getAction(String s) throws InvalidActionException {
+        public Action getAction(String s, FilterConfig filterConfig) throws InvalidActionException {
             return BroadcastFile.getAction(s,filterConfig.getTextDir());
         }
     },
     COMMAND {
         @Override
-        public Action getAction(String s) throws InvalidActionException {
+        public Action getAction(String s, FilterConfig filterConfig) throws InvalidActionException {
             return Command.getAction(s);
         }
     },
     CMDCHAIN {
         @Override
-        public Action getAction(String s) throws InvalidActionException {
+        public Action getAction(String s, FilterConfig filterConfig) throws InvalidActionException {
             return CommandChain.getAction(s);
         }
     },
     CONSOLE {
         @Override
-        public Action getAction(String s) throws InvalidActionException {
+        public Action getAction(String s, FilterConfig filterConfig) throws InvalidActionException {
             return Console.getAction(s);
         }
     },
     CONCHAIN {
         @Override
-        public Action getAction(String s) throws InvalidActionException {
+        public Action getAction(String s, FilterConfig filterConfig) throws InvalidActionException {
             return ConsoleChain.getAction(s);
         }
     },
     NOTIFY {
         @Override
-        public Action getAction(String s) throws InvalidActionException {
+        public Action getAction(String s, FilterConfig filterConfig) throws InvalidActionException {
             return Notify.getAction(s);
         }
     };
-
-    static FilterConfig filterConfig;
-
-    public static void setFilterConfig(FilterConfig filterConfig) {
-        MinecraftAction.filterConfig = filterConfig;
-    }
-
-    public boolean match(String s) {
-        try {
-            valueOf(s);
-            return true;
-        } catch (IllegalArgumentException e) {
-            return false;
-        }
-    }
 
 }

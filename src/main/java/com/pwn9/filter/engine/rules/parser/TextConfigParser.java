@@ -18,8 +18,7 @@ import com.pwn9.filter.engine.rules.Rule;
 import com.pwn9.filter.engine.rules.ShortCutManager;
 import com.pwn9.filter.engine.rules.action.ActionFactory;
 import com.pwn9.filter.engine.rules.action.InvalidActionException;
-import com.pwn9.filter.engine.rules.chain.Chain;
-import com.pwn9.filter.engine.rules.chain.InvalidChain;
+import com.pwn9.filter.engine.rules.chain.InvalidChainException;
 import com.pwn9.filter.engine.rules.chain.RuleChain;
 
 import java.io.*;
@@ -56,12 +55,12 @@ public class TextConfigParser implements FilterConfigParser {
         this.filterConfig = filterService.getConfig();
     }
 
-    public Chain parse(File source) {
+    public RuleChain parse(File source) throws InvalidChainException {
         List<File> parents = new ArrayList<>();
         return parse(source, parents);
     }
 
-    public Chain parse(File source, List<File> parents) {
+    public RuleChain parse(File source, List<File> parents) throws InvalidChainException {
         RuleChain.Builder builder = new RuleChain.Builder();
         return parse(source, parents, builder);
     }
@@ -69,15 +68,15 @@ public class TextConfigParser implements FilterConfigParser {
     /**
      * Consumes a Reader Stream and outputs a Chain
      *
-     * @return Chain containing new chain, or InvalidChain on failure.
+     * @return Chain containing new chain, or InvalidChainException on failure.
      */
-    Chain parse(File source, List<File> parents, RuleChain.Builder builder ) {
+    RuleChain parse(File source, List<File> parents, RuleChain.Builder builder ) throws InvalidChainException {
 
         RuleStreamReader reader;
         try {
             reader  = new RuleStreamReader(new InputStreamReader(new FileInputStream(source)));
         } catch ( FileNotFoundException ex ) {
-            return new InvalidChain("Rule File not found: " + source);
+            throw new InvalidChainException("Rule File not found: " + source);
         }
 
         // Check to make sure this file isn't already in the parent chain
@@ -90,13 +89,13 @@ public class TextConfigParser implements FilterConfigParser {
                 }
                 error.append("\n").append(source).
                         append(" has been called recursively.");
-                return new InvalidChain(parserError(reader.getLineNumber(),
+                throw new InvalidChainException(parserError(reader.getLineNumber(),
                         error.toString(), source.toString()));
             } else {
                 parents.add(source);
             }
         } catch (IOException | SecurityException ex ) {
-            return new InvalidChain(parserError(reader.getLineNumber(),
+            throw new InvalidChainException(parserError(reader.getLineNumber(),
                     "IO Exception while trying to get canonical filename",
                     source.toString()));
         }
@@ -133,14 +132,14 @@ public class TextConfigParser implements FilterConfigParser {
                         if (fileName.isEmpty()) {
                             shortcuts.clear();
                         } else {
-                            File shortcutFile = new File(source.getParent(), fileName);
+                            File shortcutFile = new File(filterConfig.getRulesDir(), fileName);
                             useShortcuts(shortcutFile, reader.getLineNumber());
                         }
                     }
                     // Process an included file
                     else if (command.equalsIgnoreCase("include")) {
                         String fileName = tokenString.popToken();
-                        processIncludedFile(fileName, builder, parents);
+                        processIncludedFile(fileName, source.getParentFile(),builder, parents);
                     }
                     // Parse a rule starting with the pattern
                     else if (command.matches("match|catch|replace|rewrite")) {
@@ -164,7 +163,7 @@ public class TextConfigParser implements FilterConfigParser {
         } catch (IOException e) {
             String err = "IO Exception during processing: " + e.getMessage();
             logger.severe(err);
-            return new InvalidChain(err);
+            throw new InvalidChainException(err);
         }
         return builder.build();
     }
@@ -300,7 +299,7 @@ public class TextConfigParser implements FilterConfigParser {
 
     }
 
-    private void processIncludedFile(String lineData, RuleChain.Builder parentBuilder, List<File> parents) {
+    private void processIncludedFile(String lineData, File parentDir, RuleChain.Builder parentBuilder, List<File> parents) throws InvalidChainException {
         // Major change to the way this is done.  It used to be its own chain, which was linked.
         // Now, we are going to import each statement into this chain.  We will apply this chain's
         // shortcuts, actiongroups, etc. to the chain.  This will allow different chains to include
@@ -313,7 +312,7 @@ public class TextConfigParser implements FilterConfigParser {
 //        if (getParents().contains(lineData))
 //            throw new ParserException(lineNo, "Recursion error.  File: " + lineData + " has already been included.");
 
-        File child = new File(lineData);
+        File child = new File(parentDir,lineData);
 
         parse(child, parents, parentBuilder);
 

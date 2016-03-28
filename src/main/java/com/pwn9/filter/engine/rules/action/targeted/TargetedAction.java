@@ -22,60 +22,45 @@ import com.pwn9.filter.engine.rules.action.InvalidActionException;
 public enum TargetedAction implements ActionToken {
     BURN {
         @Override
-        public Action getAction(String s) {
+        public Action getAction(String s, FilterConfig filterConfig) {
             return Burn.getAction(s);
         }
     },
     FINE {
         @Override
-        public Action getAction(String s) throws InvalidActionException {
+        public Action getAction(String s, FilterConfig filterConfig) throws InvalidActionException {
             return Fine.getAction(s);
         }
     },
     KICK {
         @Override
-        public Action getAction(String s) {
+        public Action getAction(String s, FilterConfig filterConfig) {
             return Kick.getAction(s);
         }
     },
     KILL {
         @Override
-        public Action getAction(String s) {
+        public Action getAction(String s, FilterConfig filterConfig) {
             return Kill.getAction(s);
         }
     },
     RESPOND {
         @Override
-        public Action getAction(String s) {
+        public Action getAction(String s, FilterConfig filterConfig) {
             return Respond.getAction(s);
         }
     },
     RESPONDFILE {
         @Override
-        public Action getAction(String s) throws InvalidActionException {
+        public Action getAction(String s, FilterConfig filterConfig) throws InvalidActionException {
             return RespondFile.getAction(s, filterConfig.getTextDir());
         }
     },
     WARN {
         @Override
-        public Action getAction(String s) {
+        public Action getAction(String s, FilterConfig filterConfig) {
             return Warn.getAction(s);
         }
     };
-
-    static FilterConfig filterConfig;
-
-    public static void setFilterConfig(FilterConfig filterConfig) {
-        TargetedAction.filterConfig = filterConfig;
-    }
-
-    public boolean match(String s) {
-        try {
-            valueOf(s);
-            return true;
-        } catch (IllegalArgumentException e) {
-            return false;
-        }
-    }
 
 }

@@ -14,10 +14,10 @@ package com.pwn9.filter.bukkit.listener;
 import com.pwn9.filter.bukkit.PwnFilterPlugin;
 import com.pwn9.filter.bukkit.config.BukkitConfig;
 import com.pwn9.filter.engine.api.FilterContext;
+import com.pwn9.filter.engine.rules.chain.InvalidChainException;
 import com.pwn9.filter.minecraft.api.MinecraftPlayer;
 import com.pwn9.filter.minecraft.util.ColoredString;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventPriority;
@@ -26,8 +26,6 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.PluginManager;
-
-import java.io.InvalidObjectException;
 
 
 /**
@@ -129,7 +127,7 @@ public class PwnFilterInvListener extends BaseListener {
                 setActive();
                 plugin.getLogger().info("Activated ItemListener with Priority Setting: " + priority.toString()
                         + " Rule Count: " + getRuleChain().ruleCount());
-            } catch (InvalidObjectException | InvalidConfigurationException e) {
+            } catch (InvalidChainException e) {
                 plugin.getLogger().severe("Unable to activate ItemListener.  Error: " + e.getMessage());
                 setInactive();
             }

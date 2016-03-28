@@ -13,7 +13,6 @@ package com.pwn9.filter.engine.rules.action.targeted;
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.api.MessageAuthor;
-import com.pwn9.filter.minecraft.util.DefaultMessages;
 
 /**
  * Burns a player to death.
@@ -29,14 +28,20 @@ public class Burn implements Action {
     // Message to apply to this burn action
     private final String messageString;
 
+    // Default message to apply to this burn action
+    private static String defaultMessage = "";
+
     private Burn(String messageString) {
         this.messageString = messageString;
     }
 
     public static Action getAction(String s)
     {
-        //TODO: Refactor DefaultMessages so it is non-static
-        return new Burn(DefaultMessages.prepareMessage(s, "burnmsg"));
+        return new Burn((s != null && !s.isEmpty() ? s : defaultMessage));
+    }
+
+    public static void setDefaultMessage(String s) {
+        defaultMessage = s;
     }
 
     /** {@inheritDoc} */

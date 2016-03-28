@@ -12,6 +12,7 @@ package com.pwn9.filter.engine.rules.action.core;
 
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.ActionToken;
+import com.pwn9.filter.engine.config.FilterConfig;
 import com.pwn9.filter.engine.rules.action.InvalidActionException;
 
 /**
@@ -23,66 +24,57 @@ import com.pwn9.filter.engine.rules.action.InvalidActionException;
 public enum CoreAction implements ActionToken {
     ABORT{
         @Override
-        public Action getAction(String s) {
+        public Action getAction(String s, FilterConfig filterConfig) {
             return Abort.INSTANCE;
         }
     },
     DENY{
         @Override
-        public Action getAction(String s) {
+        public Action getAction(String s, FilterConfig filterConfig) {
             return Deny.INSTANCE;
         }
     },
     LOG{
         @Override
-        public Action getAction(String s) {
+        public Action getAction(String s, FilterConfig filterConfig) {
             return Log.getAction(s);
         }
     },
     LOWER{
         @Override
-        public Action getAction(String s) {
+        public Action getAction(String s, FilterConfig filterConfig) {
             return Lower.INSTANCE;
         }
     },
     POINTS{
         @Override
-        public Action getAction(String s) throws InvalidActionException {
+        public Action getAction(String s, FilterConfig filterConfig) throws InvalidActionException {
             return Points.getAction(s);
         }
     },
     RANDREP{
         @Override
-        public Action getAction(String s) throws InvalidActionException {
+        public Action getAction(String s, FilterConfig filterConfig) throws InvalidActionException {
             return RandomReplace.getAction(s);
         }
     },
     REPLACE{
         @Override
-        public Action getAction(String s) {
+        public Action getAction(String s, FilterConfig filterConfig) {
             return Replace.getAction(s);
         }
     },
     REWRITE{
         @Override
-        public Action getAction(String s) {
+        public Action getAction(String s, FilterConfig filterConfig) {
             return Rewrite.getAction(s);
         }
     },
     UPPER{
         @Override
-        public Action getAction(String s) {
+        public Action getAction(String s, FilterConfig filterConfig) {
             return Upper.INSTANCE;
         }
     };
-
-    public boolean match(String s) {
-        for (CoreAction c : CoreAction.values()) {
-            if (c.name().equals(s)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
 }

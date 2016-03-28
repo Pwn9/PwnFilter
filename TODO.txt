@@ -5,29 +5,23 @@ Minimum Marketable Features:
  - Compatibility with Spigot 1.9
  - Support for Sponge
 
-
 User Stories for current MMF:
+ + Make it compile again
  * Filter Engine processes messages.
- * Make it compile again
-
-
 
 Engineering Tasks:
- * Refactor Actions into immutable objects
+ + Refactor Actions into immutable objects
  - Implement interfaces for actions (eg: BurnTarget)
  - Revisit ActionFactory mechanism.
+ - Add a File handling service, so parser can be more modular.
 
 To Do on Current Task:
- * Investigate options for Immutability and Constructors
+ + Investigate options for Immutability and Constructors
  * Refactor all the logging.
  * Fix Shortcuts file.
  - Implement permission caching in minecraft API
  - Fix Points Manager
- - Refactor FilterService to allow RuleChainResources to be registered
  - Keep better track of listeners to allow reloading of all configs.
-
-
-
 
 Random thoughts:
 TODO: Add support for Books

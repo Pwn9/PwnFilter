@@ -10,18 +10,15 @@
 
 package com.pwn9.filter.util.tag;
 
-import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.api.FilterClient;
+import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.api.MessageAuthor;
+import com.pwn9.filter.engine.rules.TestAuthor;
+import com.pwn9.filter.engine.rules.TestClient;
 import com.pwn9.filter.minecraft.tag.PlayerTag;
-import com.pwn9.filter.engine.rules.chain.RuleChain;
 import junit.framework.Assert;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.List;
-import java.util.UUID;
 
 /**
  * Test Tags
@@ -33,64 +30,8 @@ public class TagTest {
 
     @Before
     public void setUp() throws Exception {
-        testClient = new FilterClient() {
-            @Override
-            public String getShortName() {
-                return "TESTCLIENT";
-            }
-
-            @Override
-            public RuleChain getRuleChain() {
-                return null;
-            }
-
-            @Override
-            public boolean isActive() {
-                return true;
-            }
-
-            @Override
-            public void activate() {
-
-            }
-
-            @Override
-            public void shutdown() {
-
-            }
-        };
-
-        testAuthor = new MessageAuthor() {
-            private final UUID testUUID = UUID.randomUUID();
-
-            @Override
-            public boolean hasPermission(String permString) {
-                return false;
-            }
-
-            @NotNull
-            @Override
-            public String getName() {
-                return "TESTPLAYER";
-            }
-
-            @NotNull
-            @Override
-            public UUID getID() {
-                return testUUID;
-            }
-
-            @Override
-            public void sendMessage(String message) {
-
-            }
-
-            @Override
-            public void sendMessages(List<String> messages) {
-
-            }
-        };
-
+        testClient = new TestClient();
+        testAuthor = new TestAuthor();
     }
 
     @Test
@@ -98,7 +39,7 @@ public class TagTest {
         String input = "Test %player% tag";
         FilterContext testState = new FilterContext(input, testAuthor , testClient );
         TagRegistry.addTag("player",new PlayerTag());
-        Assert.assertEquals(TagRegistry.replaceTags(input, testState), "Test TESTPLAYER tag");
+        Assert.assertEquals(TagRegistry.replaceTags(input, testState), "Test Sage905 tag");
 
     }
 }

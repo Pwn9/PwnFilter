@@ -1,15 +1,14 @@
 package com.pwn9.filter.engine.rules;
 
-import com.pwn9.filter.engine.api.FilterContext;
-import com.pwn9.filter.engine.api.FilterClient;
-import com.pwn9.filter.engine.api.MessageAuthor;
-import com.pwn9.filter.engine.config.FilterConfig;
 import com.pwn9.filter.bukkit.PwnFilterPlugin;
-import com.pwn9.filter.engine.rules.action.RegisterActions;
+import com.pwn9.filter.engine.FilterService;
+import com.pwn9.filter.engine.api.FilterContext;
+import com.pwn9.filter.engine.api.MessageAuthor;
+import com.pwn9.filter.engine.rules.action.minecraft.MinecraftAction;
+import com.pwn9.filter.engine.rules.action.targeted.TargetedAction;
+import com.pwn9.filter.engine.rules.chain.InvalidChainException;
 import com.pwn9.filter.engine.rules.chain.RuleChain;
-import com.pwn9.filter.util.FileLogger;
 import junit.framework.Assert;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,11 +16,10 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.File;
-import java.util.List;
-import java.util.UUID;
 import java.util.logging.Logger;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  * Tests for RuleSets
@@ -33,81 +31,51 @@ import static org.junit.Assert.assertEquals;
 @PrepareForTest({PwnFilterPlugin.class})
 public class RuleSetTest {
 
-    RuleManager ruleManager;
-    RuleChain rs;
-    FilterLogger pwnLogger;
-    final FilterClient mockClient = new FilterClient() {
-        public String getShortName() { return "TEST"; }
-        public RuleChain getRuleChain() { return ruleManager.getRuleChain("testrules.txt");}
-        public boolean isActive() { return true; }
-        public void activate() {}
-        public void shutdown() {}
-    };
-    final MessageAuthor author = new MessageAuthor() {
-        @Override
-        public boolean hasPermission(String permString) {
-            return false;
-        }
+    RuleChain rs, sc;
+    FilterService filterService = new FilterService(new TestStatsTracker());
+    Logger logger = filterService.getLogger();
+    final MessageAuthor author = new TestAuthor();
+    File parentDir;
 
-        @NotNull
-        @Override
-        public String getName() {
-            return "";
-        }
-
-        @NotNull
-        @Override
-        public UUID getID() {
-            return UUID.randomUUID();
-        }
-
-        @Override
-        public void sendMessage(String message) {
-
-        }
-
-        @Override
-        public void sendMessages(List<String> messages) {
-
-        }
-    };
 
     @Before
     public void setUp() {
-        RegisterActions.all();
-        //TODO: Remove this, and add a FilterService initialization call.
-        ruleManager = RuleManager.getInstance();
-        File testFile = new File(getClass().getResource("/testrules.txt").getFile());
-        FilterConfig.getInstance().setRulesDir(testFile.getParentFile());
-        FilterConfig.getInstance().setTextDir(testFile.getParentFile());
-        rs = ruleManager.getRuleChain("testrules.txt");
-        Logger logger = Logger.getAnonymousLogger();
-        pwnLogger = FileLogger.getInstance(logger, new File("/tmp/"));
-        rs.load();
+        // For debugging purposes
+//        filterService.setLogFileHandler(new File("/tmp/pwnfilter.log"));
+//        logger.setLevel(Level.FINEST);
+        filterService.getActionFactory().addActionTokens(MinecraftAction.class);
+        filterService.getActionFactory().addActionTokens(TargetedAction.class);
+        File testRules = new File(getClass().getResource("/testrules.txt").getFile());
+        parentDir = testRules.getParentFile();
+        filterService.getConfig().setRulesDir(parentDir);
+        filterService.getConfig().setTextDir(parentDir);
+        try {
+            rs = filterService.parseRules(testRules);
+            sc = filterService.parseRules(new File(parentDir, "shortcutTest.txt"));
+        } catch (InvalidChainException ex) {
+            fail();
+        }
     }
 
     @Test
     public void testApplyRules() {
-        rs.load();
-        FilterContext testState = new FilterContext("This is a test", author, mockClient);
-        rs.apply(testState);
+        FilterContext testState = new FilterContext("This is a test", author, new TestClient());
+        rs.execute(testState, logger);
         assertEquals("This WAS a test", testState.getModifiedMessage().toString());
     }
 
     @Test
     public void testDollarSignInMessage() {
-        rs.load();
-        FilterContext testState = new FilterContext("notATestPerson {test] $ (test 2}",author,mockClient);
-        rs.apply(testState);
+        FilterContext testState = new FilterContext("notATestPerson {test] $ (test 2}",author,new TestClient());
+        rs.execute(testState, logger);
     }
 
     // DBO Ticket # 13
     @Test
     public void testBackslashAtEndOfLine() {
         try {
-            rs.load();
-            FilterContext testState = new FilterContext("Message that ends with \\",author,mockClient);
-            rs.apply(testState);
+            FilterContext testState = new FilterContext("Message that ends with \\",author,new TestClient());
+            rs.execute(testState, logger);
         } catch (StringIndexOutOfBoundsException ex) {
             Assert.fail(ex.getMessage());
         }
@@ -115,10 +83,8 @@ public class RuleSetTest {
 
     @Test
     public void testShortcuts() {
-        RuleChain ruleChain = ruleManager.getRuleChain("shortcutTest.txt");
-        ruleChain.load();
-        FilterContext testState = new FilterContext("ShortCutPattern",author,mockClient);
-        ruleChain.apply(testState);
+        FilterContext testState = new FilterContext("ShortCutPattern",author,new TestClient());
+        sc.execute(testState, logger);
         Assert.assertEquals("Replaced", testState.getModifiedMessage().toString());
     }
 

@@ -10,21 +10,19 @@
 
 package com.pwn9.filter.engine.rules;
 
-import com.pwn9.filter.engine.config.FilterConfig;
-import com.pwn9.filter.bukkit.PwnFilterPlugin;
+import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.Action;
-import com.pwn9.filter.engine.rules.action.RegisterActions;
+import com.pwn9.filter.engine.api.MessageAuthor;
 import com.pwn9.filter.engine.rules.action.core.Deny;
+import com.pwn9.filter.engine.rules.action.minecraft.MinecraftAction;
 import com.pwn9.filter.engine.rules.action.targeted.Respond;
+import com.pwn9.filter.engine.rules.action.targeted.TargetedAction;
 import com.pwn9.filter.engine.rules.chain.ChainEntry;
+import com.pwn9.filter.engine.rules.chain.InvalidChainException;
 import com.pwn9.filter.engine.rules.chain.RuleChain;
-import com.pwn9.filter.util.FileLogger;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,7 +30,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import static junit.framework.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Tests for RuleSets
@@ -41,40 +39,35 @@ import static org.junit.Assert.assertTrue;
  * Time: 11:28 AM
  */
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({PwnFilterPlugin.class})
 public class ParserTest {
 
-    RuleManager ruleManager;
-    RuleChain rs;
-    Logger logger;
-
-    PwnFilterPlugin mockPlugin;
+    RuleChain rs, sc;
+    FilterService filterService = new FilterService(new TestStatsTracker());
+    Logger logger = filterService.getLogger();
+    final MessageAuthor author = new TestAuthor();
+    File testFile = new File(getClass().getResource("/testrules.txt").getFile());
+    File parentDir = new File(testFile.getParent());
 
     @Before
     public void setUp() {
-        RegisterActions.all();
-        //TODO: Remove this, and add a FilterService initialization call.
-        ruleManager = RuleManager.getInstance();
-        File testFile = new File(getClass().getResource("/testrules.txt").getFile());
-        FilterConfig.getInstance().setRulesDir(testFile.getParentFile());
-        FilterConfig.getInstance().setTextDir(testFile.getParentFile());
-        Logger logger = Logger.getLogger("PwnFilter");
-        logger = FileLogger.getInstance(logger, new File("/tmp/"));
-        //pwnLogger.start(); logger.setLevel(Level.FINEST);pwnLogger.debugMode = LogManager.DebugModes.high; // For debugging
+        // For debugging purposes
+//        filterService.setLogFileHandler(new File("/tmp/pwnfilter.log"));
+//        logger.setLevel(Level.FINEST);
+        filterService.getActionFactory().addActionTokens(MinecraftAction.class);
+        filterService.getActionFactory().addActionTokens(TargetedAction.class);
+        filterService.getConfig().setRulesDir(parentDir);
+        filterService.getConfig().setRulesDir(parentDir);
+        try {
+            rs = filterService.parseRules(testFile);
+            assertNotNull(rs);
+        } catch (InvalidChainException e) {
+            fail(e.getMessage());
+        }
 
-    }
-
-    @Test
-    public void testLoadRules() {
-        rs = ruleManager.getRuleChain("testrules.txt");
-        assertTrue(rs.load());
     }
 
     @Test
     public void testShortcuts() {
-        rs = ruleManager.getRuleChain("testrules.txt");
-        rs.load();
         List<ChainEntry> ruleChain = rs.getChain();
         for (ChainEntry e : ruleChain) {
             if(e.toString().equals("ShortCutPattern")) {
@@ -87,48 +80,60 @@ public class ParserTest {
     @Test
     // Requires actiongroup.txt in the resources folder.
     public void testActionGroupParser() throws IOException {
-        RuleChain ruleChain = ruleManager.getRuleChain("actiongroup.txt");
-        ruleChain.load();
+        File actionFile = new File(parentDir, "actiongroup.txt");
+        try {
+            RuleChain ruleChain = filterService.parseRules(actionFile);
+            assertNotNull(ruleChain);
 
-        assertTrue(ruleChain.getActionGroups().containsKey("aGroupTest"));
+            assertTrue(ruleChain.getActionGroups().containsKey("aGroupTest"));
 
-        Rule rule = (Rule)ruleChain.getChain().get(0);
-        List<Action> actionList = rule.getActions();
+            Rule rule = (Rule)ruleChain.getChain().get(0);
+            List<Action> actionList = rule.getActions();
 
-        assertTrue(actionList.remove(0) instanceof Deny);
-        assertTrue(actionList.remove(0) instanceof Respond);
+            assertTrue(actionList.remove(0) instanceof Deny);
+            assertTrue(actionList.remove(0) instanceof Respond);
+
+        } catch (InvalidChainException e) {
+            fail(e.getMessage());
+        }
+
     }
 
     @Test
     // Requires conditiongroup.txt in the resources folder.
     public void testConditionGroupParser() throws IOException {
-        RuleChain ruleChain = ruleManager.getRuleChain("conditiongroup.txt");
-        ruleChain.load();
+        File conditionFile = new File(parentDir, "conditiongroup.txt");
+        try {
+            RuleChain ruleChain = filterService.parseRules(conditionFile);
+            assertNotNull(ruleChain);
 
-        assertTrue(ruleChain.getConditionGroups().containsKey("cGroupTest"));
+            assertTrue(ruleChain.getConditionGroups().containsKey("cGroupTest"));
 
-        Rule rule = (Rule)ruleChain.getChain().get(0);
-        List<Condition> conditionList = rule.getConditions();
+            Rule rule = (Rule)ruleChain.getChain().get(0);
+            List<Condition> conditionList = rule.getConditions();
 
-        Condition cTest = conditionList.remove(0);
-        assertEquals(cTest.flag, Condition.CondFlag.require);
-        assertEquals(cTest.type, Condition.CondType.permission);
-        assertEquals(cTest.parameters, "pwnfilter.test");
+            Condition cTest = conditionList.remove(0);
+            assertEquals(cTest.flag, Condition.CondFlag.require);
+            assertEquals(cTest.type, Condition.CondType.permission);
+            assertEquals(cTest.parameters, "pwnfilter.test");
 
-        cTest = conditionList.remove(0);
-        assertEquals(cTest.flag, Condition.CondFlag.ignore);
-        assertEquals(cTest.type, Condition.CondType.user);
-        assertEquals(cTest.parameters, "Sage905");
+            cTest = conditionList.remove(0);
+            assertEquals(cTest.flag, Condition.CondFlag.ignore);
+            assertEquals(cTest.type, Condition.CondType.user);
+            assertEquals(cTest.parameters, "Sage905");
 
-        cTest = conditionList.remove(0);
-        assertEquals(cTest.flag, Condition.CondFlag.ignore);
-        assertEquals(cTest.type, Condition.CondType.string);
-        assertEquals(cTest.parameters, "derp");
+            cTest = conditionList.remove(0);
+            assertEquals(cTest.flag, Condition.CondFlag.ignore);
+            assertEquals(cTest.type, Condition.CondType.string);
+            assertEquals(cTest.parameters, "derp");
 
-        cTest = conditionList.remove(0);
-        assertEquals(cTest.flag, Condition.CondFlag.ignore);
-        assertEquals(cTest.type, Condition.CondType.command);
-        assertEquals(cTest.parameters, "me");
+            cTest = conditionList.remove(0);
+            assertEquals(cTest.flag, Condition.CondFlag.ignore);
+            assertEquals(cTest.type, Condition.CondType.command);
+            assertEquals(cTest.parameters, "me");
+        } catch (InvalidChainException e) {
+            fail(e.getMessage());
+        }
     }
 
 

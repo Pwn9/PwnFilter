@@ -13,19 +13,17 @@ package com.pwn9.filter.bukkit.listener;
 import com.pwn9.filter.bukkit.PwnFilterPlugin;
 import com.pwn9.filter.bukkit.config.BukkitConfig;
 import com.pwn9.filter.engine.api.FilterContext;
+import com.pwn9.filter.engine.rules.chain.InvalidChainException;
 import com.pwn9.filter.minecraft.api.MinecraftPlayer;
 import com.pwn9.filter.minecraft.util.ColoredString;
 import com.pwn9.filter.util.SimpleString;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.PluginManager;
-
-import java.io.InvalidObjectException;
 
 /**
  * Listen for Chat events and apply the filter.
@@ -137,7 +135,7 @@ public class PwnFilterPlayerListener extends BaseListener {
                     + " Rule Count: " + getRuleChain().ruleCount() );
 
             setActive();
-        } catch (InvalidObjectException | InvalidConfigurationException e) {
+        } catch (InvalidChainException e) {
             plugin.getLogger().severe("Unable to activate PlayerListener.  Error: " + e.getMessage());
             setInactive();
         }

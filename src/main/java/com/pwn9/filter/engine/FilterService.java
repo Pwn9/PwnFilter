@@ -17,8 +17,8 @@ import com.pwn9.filter.engine.api.FilterClient;
 import com.pwn9.filter.engine.api.StatsTracker;
 import com.pwn9.filter.engine.config.FilterConfig;
 import com.pwn9.filter.engine.rules.action.ActionFactory;
-import com.pwn9.filter.engine.rules.chain.Chain;
-import com.pwn9.filter.engine.rules.chain.InvalidChain;
+import com.pwn9.filter.engine.rules.chain.InvalidChainException;
+import com.pwn9.filter.engine.rules.chain.RuleChain;
 import com.pwn9.filter.engine.rules.parser.TextConfigParser;
 import com.pwn9.filter.util.PwnFormatter;
 
@@ -57,11 +57,12 @@ public class FilterService {
     private final PointManager pointManager = new PointManager();
 
     private FileHandler logfileHandler;
+
     public FilterService(StatsTracker statsTracker) {
 
         this.statsTracker = statsTracker;
         this.config = new FilterConfig();
-        this.actionFactory = new ActionFactory();
+        this.actionFactory = new ActionFactory(this);
     }
 
     @SuppressWarnings("WeakerAccess")
@@ -184,12 +185,10 @@ public class FilterService {
         }
     }
 
-    public Chain parseRules(File ruleFile) {
+    public RuleChain parseRules(File ruleFile) throws InvalidChainException {
         TextConfigParser parser = new TextConfigParser(this);
 
-        parser.parse(ruleFile);
-
-        return new InvalidChain("Failed to parse file: " + ruleFile);
+        return parser.parse(ruleFile);
     }
     /*
      * Set the level that the LogFile will listen to, based on the Debug

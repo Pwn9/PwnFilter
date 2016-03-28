@@ -10,11 +10,10 @@
 
 package com.pwn9.filter.engine.rules.action.targeted;
 
+import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.rules.action.InvalidActionException;
 import com.pwn9.filter.minecraft.api.MinecraftPlayer;
-import com.pwn9.filter.minecraft.util.DefaultMessages;
-import com.pwn9.filter.engine.api.Action;
 
 /**
  * Fine the user by extracting money from his economy account.
@@ -27,6 +26,8 @@ public class Fine implements Action {
 
     private final String messageString; // Message to apply to this action
     private final double fineAmount; // How much to fine the player.
+    // Default message to apply to this burn action
+    private static String defaultMessage = "";
 
     private Fine(String message, double fineAmount) {
         this.messageString = message;
@@ -46,7 +47,10 @@ public class Fine implements Action {
             throw new InvalidActionException("'fine' action did not have a valid amount.");
         }
 
-        return new Fine(DefaultMessages.prepareMessage((parts.length > 1) ? parts[1] : "", "finemsg"), fineAmount);
+        return new Fine((parts.length > 1) ? parts[1] : defaultMessage, fineAmount);
+    }
+    public static void setDefaultMessage(String s) {
+        defaultMessage = s;
     }
 
     /** {@inheritDoc} */

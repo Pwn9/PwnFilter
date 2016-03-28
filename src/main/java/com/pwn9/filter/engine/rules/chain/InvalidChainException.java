@@ -8,16 +8,17 @@
  * of the License, or (at your option) any later version.
  */
 
-package com.pwn9.filter.engine.api;
-
-import com.pwn9.filter.engine.config.FilterConfig;
-import com.pwn9.filter.engine.rules.action.InvalidActionException;
+package com.pwn9.filter.engine.rules.chain;
 
 /**
- * Created by Sage905 on 2016-03-18.
+ * An Invalid Chain is generated from invalid configuration files, and other
+ * errors.
+ * <p/>
+ * Created by Sage905 on 15-10-10.
  */
-public interface ActionToken {
+public class InvalidChainException extends Exception {
 
-    Action getAction(String parameters, FilterConfig filterConfig) throws InvalidActionException;
-
+    public InvalidChainException(String message) {
+        super(message);
+    }
 }

@@ -1,23 +1,21 @@
 package com.pwn9.filter.engine.rules;
 
+import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.FilterContext;
-import com.pwn9.filter.engine.api.FilterClient;
 import com.pwn9.filter.engine.api.MessageAuthor;
-import com.pwn9.filter.engine.config.FilterConfig;
-import com.pwn9.filter.engine.rules.action.RegisterActions;
+import com.pwn9.filter.engine.rules.action.minecraft.MinecraftAction;
+import com.pwn9.filter.engine.rules.action.targeted.TargetedAction;
+import com.pwn9.filter.engine.rules.chain.InvalidChainException;
 import com.pwn9.filter.engine.rules.chain.RuleChain;
-import com.pwn9.filter.util.FileLogger;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
-import java.util.List;
-import java.util.UUID;
 import java.util.logging.Logger;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Tests for Actions
@@ -28,91 +26,59 @@ import static junit.framework.Assert.assertTrue;
 
 public class ActionTest {
 
-    private RuleManager ruleManager;
     RuleChain rs;
-    final FilterClient mockClient = new FilterClient() {
-        public String getShortName() { return "ACTIONTEST"; }
-        public RuleChain getRuleChain() { return ruleManager.getRuleChain("rules/actionTests.txt");}
-        public boolean isActive() { return true; }
-        public void activate() {}
-        public void shutdown() {}
-    };
-
-    private final MessageAuthor author = new MessageAuthor() {
-        @Override
-        public boolean hasPermission(String permString) {
-            return false;
-        }
-
-        @NotNull
-        @Override
-        public String getName() {
-            return "";
-        }
-
-        @NotNull
-        @Override
-        public UUID getID() {
-            return UUID.randomUUID();
-        }
-
-        @Override
-        public void sendMessage(String message) {
-
-        }
-
-        @Override
-        public void sendMessages(List<String> messages) {
-
-        }
-    };
+    FilterService filterService = new FilterService(new TestStatsTracker());
+    Logger logger = filterService.getLogger();
+    final MessageAuthor author = new TestAuthor();
 
     @Before
     public void setUp() {
-        RegisterActions.all();
-        ruleManager = RuleManager.getInstance();
+        filterService.getActionFactory().addActionTokens(MinecraftAction.class);
+        filterService.getActionFactory().addActionTokens(TargetedAction.class);
         File rulesDir = new File(getClass().getResource("/rules").getFile());
-        FilterConfig.getInstance().setRulesDir(rulesDir);
-        rs = ruleManager.getRuleChain("actionTests.txt");
-        FileLogger.getInstance(Logger.getAnonymousLogger(), new File("/tmp/"));
-        rs.load();
+        filterService.getConfig().setRulesDir(rulesDir);
+        try {
+            rs = filterService.parseRules(new File(rulesDir, "actionTests.txt"));
+        } catch (InvalidChainException ex) {
+            fail();
+        }
     }
 
     @Test
     public void testAbort() {
-        FilterContext testState = new FilterContext("abort", author, mockClient);
-        rs.apply(testState);
+        FilterContext testState = new FilterContext("abort", author, new TestClient());
+        rs.execute(testState, logger);
         assertTrue(testState.isAborted());
     }
 
     @Test
     public void testRandRep() {
-        FilterContext testState = new FilterContext("randrep", author, mockClient);
-        rs.apply(testState);
+        FilterContext testState = new FilterContext("randrep", author, new TestClient());
+        rs.execute(testState, logger);
         assertTrue(testState.getModifiedMessage().toString().matches("(random|replace)"));
     }
 
     @Test
     public void testBurn() {
-        FilterContext testState = new FilterContext("burn", author, mockClient);
-        rs.apply(testState);
+        FilterContext testState = new FilterContext("burn", author, new TestClient());
+        rs.execute(testState, logger);
     }
 
     @Test
     public void testUpper() {
-        FilterContext testState = new FilterContext("upper", author, mockClient);
-        rs.apply(testState);
+        FilterContext testState = new FilterContext("upper", author, new TestClient());
+        rs.execute(testState, logger);
         assertEquals("UPPER", testState.getModifiedMessage().toString());
     }
 
     @Test
     public void testLower() {
-        FilterContext testState = new FilterContext("LOWER", author, mockClient);
-        rs.apply(testState);
+        FilterContext testState = new FilterContext("LOWER", author, new TestClient());
+        rs.execute(testState, logger);
         assertEquals("lower", testState.getModifiedMessage().toString());
 
-        FilterContext test2 = new FilterContext("LOWERCASE ALL THIS STUFF!", author, mockClient);
-        rs.apply((test2));
+        FilterContext test2 = new FilterContext("LOWERCASE ALL THIS STUFF!", author, new TestClient());
+        rs.execute(test2, logger);
         assertEquals("lowercase all this stuff!", test2.getModifiedMessage().toString());
     }
 

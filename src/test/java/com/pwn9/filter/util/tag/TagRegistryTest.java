@@ -10,17 +10,14 @@
 
 package com.pwn9.filter.util.tag;
 
-import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.api.FilterClient;
+import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.api.MessageAuthor;
-import com.pwn9.filter.engine.rules.chain.RuleChain;
+import com.pwn9.filter.engine.rules.TestAuthor;
+import com.pwn9.filter.engine.rules.TestClient;
 import junit.framework.Assert;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.List;
-import java.util.UUID;
 
 /**
  * Tests for TagRegistry
@@ -34,62 +31,8 @@ public class TagRegistryTest {
 
     @Before
     public void setUp() {
-        testAuthor = new MessageAuthor() {
-            final UUID testId = UUID.randomUUID();
-
-            public boolean hasPermission(String permString) {
-                return false;
-            }
-
-            @NotNull
-            @Override
-            public String getName() {
-                return "";
-            }
-
-            @NotNull
-            @Override
-            public UUID getID() {
-                return testId;
-            }
-
-            @Override
-            public void sendMessage(String message) {
-
-            }
-
-            @Override
-            public void sendMessages(List<String> messages) {
-
-            }
-        };
-
-        testClient = new FilterClient() {
-            @Override
-            public String getShortName() {
-                return "TEST";
-            }
-
-            @Override
-            public RuleChain getRuleChain() {
-                return null;
-            }
-
-            @Override
-            public boolean isActive() {
-                return true;
-            }
-
-            @Override
-            public void activate() {
-
-            }
-
-            @Override
-            public void shutdown() {
-
-            }
-        };
+        testAuthor = new TestAuthor();
+        testClient = new TestClient();
 
     }
 

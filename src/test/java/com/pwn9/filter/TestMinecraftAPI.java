@@ -50,17 +50,6 @@ public class TestMinecraftAPI implements MinecraftAPI {
         }
     }
 
-    /**
-     * <p>addCachedPermissions.</p>
-     *
-     * @param permissions a {@link java.util.Set} object.
-     */
-    @Override
-    public synchronized void addCachedPermissions(Set<String> permissions) {
-        permSet.addAll(permissions);
-    }
-
-
     @Override
     public MessageAuthor getAuthor(UUID uuid) {
         return null;

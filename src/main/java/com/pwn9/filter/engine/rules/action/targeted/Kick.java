@@ -10,10 +10,9 @@
 
 package com.pwn9.filter.engine.rules.action.targeted;
 
+import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.minecraft.api.MinecraftPlayer;
-import com.pwn9.filter.minecraft.util.DefaultMessages;
-import com.pwn9.filter.engine.api.Action;
 
 import static com.pwn9.filter.util.tag.TagRegistry.replaceTags;
 
@@ -27,6 +26,8 @@ import static com.pwn9.filter.util.tag.TagRegistry.replaceTags;
 public class Kick implements Action {
     // Message to apply to this kick action
     private final String messageString;
+    // Default message to apply to this burn action
+    private static String defaultMessage = "";
 
     private Kick(String messageString) {
         this.messageString = messageString;
@@ -35,7 +36,11 @@ public class Kick implements Action {
     /** {@inheritDoc} */
     public static Action getAction(String s)
     {
-        return new Kick(DefaultMessages.prepareMessage(s, "burnmsg"));
+        return new Kick((s != null && !s.isEmpty() ? s : defaultMessage));
+    }
+
+    public static void setDefaultMessage(String s) {
+        defaultMessage = s;
     }
 
     /** {@inheritDoc} */

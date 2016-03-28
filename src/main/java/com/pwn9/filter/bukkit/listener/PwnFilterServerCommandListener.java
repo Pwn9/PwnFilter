@@ -13,18 +13,16 @@ package com.pwn9.filter.bukkit.listener;
 import com.pwn9.filter.bukkit.PwnFilterPlugin;
 import com.pwn9.filter.bukkit.config.BukkitConfig;
 import com.pwn9.filter.engine.api.FilterContext;
+import com.pwn9.filter.engine.rules.chain.InvalidChainException;
 import com.pwn9.filter.minecraft.api.MinecraftConsole;
 import com.pwn9.filter.minecraft.util.ColoredString;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.ServerCommandEvent;
 import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.PluginManager;
-
-import java.io.InvalidObjectException;
 
 /**
  * Apply the filter to commands.
@@ -118,7 +116,7 @@ public class PwnFilterServerCommandListener extends BaseListener {
 
                 setActive();
             }
-        } catch (InvalidObjectException | InvalidConfigurationException e) {
+        } catch (InvalidChainException e) {
             plugin.getLogger().severe("Unable to activate ServerCommandListener.  Error: " + e.getMessage());
             setInactive();
         }
