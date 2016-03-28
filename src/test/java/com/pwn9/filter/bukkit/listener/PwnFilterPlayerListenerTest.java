@@ -1,26 +1,26 @@
-/*
- * PwnFilter -- Regex-based User Filter Plugin for Bukkit-based Minecraft servers.
- * Copyright (c) 2015 Pwn9.com. Tremor77 <admin@pwn9.com> & Sage905 <patrick@toal.ca>
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 3
- * of the License, or (at your option) any later version.
- */
-
-package com.pwn9.filter.bukkit.listener;
-
-/**
- * Test the Bukkit Built-in Chat Filter Listener
- *
- * This is more of a smoke test than a Unit test.  It's difficult to test the
- * listener without testing a lot of the other components upon which it depends.
- *
- * Created by Sage905 on 15-09-10.
- */
-
-public class PwnFilterPlayerListenerTest {
-
+///*
+// * PwnFilter -- Regex-based User Filter Plugin for Bukkit-based Minecraft servers.
+// * Copyright (c) 2015 Pwn9.com. Tremor77 <admin@pwn9.com> & Sage905 <patrick@toal.ca>
+// *
+// * This program is free software; you can redistribute it and/or
+// * modify it under the terms of the GNU General Public License
+// * as published by the Free Software Foundation; either version 3
+// * of the License, or (at your option) any later version.
+// */
+//
+//package com.pwn9.filter.bukkit.listener;
+//
+///**
+// * Test the Bukkit Built-in Chat Filter Listener
+// *
+// * This is more of a smoke test than a Unit test.  It's difficult to test the
+// * listener without testing a lot of the other components upon which it depends.
+// *
+// * Created by Sage905 on 15-09-10.
+// */
+//
+//public class PwnFilterPlayerListenerTest {
+//
 //    @Mock
 //    Player mockPlayer;
 //
@@ -112,7 +112,7 @@ public class PwnFilterPlayerListenerTest {
 //        assertTrue(!chatEvent.isCancelled());
 //        assertEquals(chatEvent.getMessage(), "HEY! this should all get lowered.");
 //    }
-
-
-
-}
+//
+//
+//
+//}
