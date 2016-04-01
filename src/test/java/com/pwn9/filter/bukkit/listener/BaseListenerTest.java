@@ -47,16 +47,16 @@ public class BaseListenerTest {
 
         try {
             test.getCompiledChain("/rules/blank.txt");
-            Assert.fail("getCompiledChain didn't throw exception on invalid file.");
+            Assert.fail("getCompiledChain throws exception on invalid file.");
         } catch (InvalidChainException ex) {
-            if (!ex.getMessage().endsWith("Rule File not found: /rules/blank.txt")) {
-                Assert.fail("getCompiledChain didn't return expected error in path.");
-            }
+            Assert.assertTrue("Rule File not found when path invalid"
+                    ,ex.getMessage().endsWith("Rule File not found: /rules/blank.txt"));
         }
 
         System.out.println(getClass().getResource("/").getFile());
         filterService.getConfig().setRulesDir(new File(getClass().getResource("/").getFile()));
-        Assert.assertNotNull(test.getCompiledChain("rules/blank.txt"));
+        Assert.assertNotNull("Rulechain generated from valid path.",
+                test.getCompiledChain("rules/blank.txt"));
 
 
     }
