@@ -49,7 +49,7 @@ public class FilterService {
     private final FilterConfig config;
     private final Set<FilterClient> registeredClients = Sets.newConcurrentHashSet();
     private final ActionFactory actionFactory;
-    private final Logger logger = Logger.getLogger("com.pwn9.filter");
+    private final Logger logger;
     public PointManager getPointManager() {
         return pointManager;
     }
@@ -59,10 +59,14 @@ public class FilterService {
     private FileHandler logfileHandler;
 
     public FilterService(StatsTracker statsTracker) {
+        this(statsTracker, Logger.getLogger("com.pwn9.filter"));
+    }
 
+    public FilterService(StatsTracker statsTracker, Logger logger) {
         this.statsTracker = statsTracker;
         this.config = new FilterConfig();
         this.actionFactory = new ActionFactory(this);
+        this.logger = logger;
     }
 
     @SuppressWarnings("WeakerAccess")

@@ -22,6 +22,7 @@ import com.pwn9.filter.minecraft.command.pfmute;
 import com.pwn9.filter.minecraft.command.pfreload;
 import com.pwn9.filter.util.tag.RegisterTags;
 import net.milkbowl.vault.economy.Economy;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -77,7 +78,7 @@ public class PwnFilterPlugin extends JavaPlugin {
 
         minecraftAPI = new BukkitAPI(this);
         statsTracker = new MCStatsTracker(this);
-        filterService = new FilterService(statsTracker);
+        filterService = new FilterService(statsTracker, getLogger());
         MinecraftServer.setAPI(minecraftAPI);
         RegisterTags.all();
     }
@@ -86,42 +87,41 @@ public class PwnFilterPlugin extends JavaPlugin {
      * <p>onEnable.</p>
      */
     public void onEnable() {
+            // Initialize Configuration
+            saveDefaultConfig();
 
-        // Initialize Configuration
-        saveDefaultConfig();
+            // Set up a Vault economy for actions like "fine" (optional)
+            setupEconomy();
 
-        // Set up a Vault economy for actions like "fine" (optional)
-        setupEconomy();
+            // Now get our configuration
+            configurePlugin();
 
-        // Now get our configuration
-        configurePlugin();
+            // Activate Statistics Tracking
+            statsTracker.startTracking();
 
-        // Activate Statistics Tracking
-        statsTracker.startTracking();
+            //Load up our listeners
+    //        BaseListener.setAPI(minecraftAPI);
 
-        //Load up our listeners
-//        BaseListener.setAPI(minecraftAPI);
-
-        filterService.registerClient(new PwnFilterCommandListener(this));
-        filterService.registerClient(new PwnFilterInvListener(this));
-        filterService.registerClient(new PwnFilterPlayerListener(this));
-        filterService.registerClient(new PwnFilterServerCommandListener(this));
-        filterService.registerClient(new PwnFilterSignListener(this));
-        filterService.registerClient(new PwnFilterBookListener(this));
+            filterService.registerClient(new PwnFilterCommandListener(this));
+            filterService.registerClient(new PwnFilterInvListener(this));
+            filterService.registerClient(new PwnFilterPlayerListener(this));
+            filterService.registerClient(new PwnFilterServerCommandListener(this));
+            filterService.registerClient(new PwnFilterSignListener(this));
+            filterService.registerClient(new PwnFilterBookListener(this));
 
 
-        // The Entity Death handler, for custom death messages.
-        getServer().getPluginManager().registerEvents(new PwnFilterEntityListener(), this);
-        // The DataCache handler, for async-safe player info (name/world/permissions)
-        getServer().getPluginManager().registerEvents(new PlayerCacheListener(), this);
+            // The Entity Death handler, for custom death messages.
+            getServer().getPluginManager().registerEvents(new PwnFilterEntityListener(), this);
+            // The DataCache handler, for async-safe player info (name/world/permissions)
+            getServer().getPluginManager().registerEvents(new PlayerCacheListener(), this);
 
-        // Enable the listeners
-        filterService.enableClients();
+            // Enable the listeners
+            filterService.enableClients();
 
-        // Set up Command Handlers
-        getCommand("pfreload").setExecutor(new pfreload(filterService));
-        getCommand("pfcls").setExecutor(new pfcls(getLogger()));
-        getCommand("pfmute").setExecutor(new pfmute(getLogger()));
+            // Set up Command Handlers
+            getCommand("pfreload").setExecutor(new pfreload(filterService));
+            getCommand("pfcls").setExecutor(new pfcls(getLogger()));
+            getCommand("pfmute").setExecutor(new pfmute(getLogger()));
     }
 
     /**
@@ -142,10 +142,9 @@ public class PwnFilterPlugin extends JavaPlugin {
         // Whenever we reset the API, we need to make sure the plugin permissions
         // get re-loaded into the cache.
         minecraftAPI.addCachedPermissions(getDescription().getPermissions());
-
         try {
             BukkitConfig.loadConfiguration(getConfig(), getDataFolder(), filterService);
-        } catch (RuntimeException ex) {
+        } catch (InvalidConfigurationException ex) {
             filterService.getLogger().severe("Fatal configuration failure: " + ex.getMessage());
             filterService.getLogger().severe("PwnFilter disabled.");
             getPluginLoader().disablePlugin(this);

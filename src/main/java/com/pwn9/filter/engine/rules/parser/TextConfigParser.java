@@ -76,7 +76,7 @@ public class TextConfigParser implements FilterConfigParser {
         try {
             reader  = new RuleStreamReader(new InputStreamReader(new FileInputStream(source)));
         } catch ( FileNotFoundException ex ) {
-            throw new InvalidChainException("Rule File not found: " + source);
+            throw new InvalidChainException("Rule File not found: " + source.getAbsoluteFile());
         }
 
         // Check to make sure this file isn't already in the parent chain

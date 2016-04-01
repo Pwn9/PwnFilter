@@ -11,7 +11,6 @@
 
 package com.pwn9.filter.bukkit.listener;
 
-import com.pwn9.filter.bukkit.PwnFilterPlugin;
 import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.FilterClient;
 import com.pwn9.filter.engine.rules.chain.Chain;
@@ -32,26 +31,34 @@ import java.io.File;
  */
 public abstract class BaseListener implements FilterClient, Listener {
     boolean active;
-    protected final PwnFilterPlugin plugin;
+    protected final FilterService filterService;
     protected volatile RuleChain ruleChain;
 
 
     /**
      * <p>Constructor for BaseListener.</p>
      *
+     * @param filterService
      */
-    BaseListener(PwnFilterPlugin plugin) {
-        this.plugin = plugin;
+    BaseListener(FilterService filterService) {
+        this.filterService = filterService;
     }
 
     RuleChain getCompiledChain(String path) throws InvalidChainException {
-        Chain newChain = plugin.getFilterService().parseRules(new File(path));
+        File ruleFile;
+
+        if (path.startsWith("/")) {
+            ruleFile = new File(path);
+        } else {
+            ruleFile = new File(filterService.getConfig().getRulesDir(), path);
+        }
+        Chain newChain = filterService.parseRules(ruleFile);
         return (RuleChain) newChain;
     }
 
     @Override
     public FilterService getFilterService() {
-        return plugin.getFilterService();
+        return filterService;
     }
 
     @Override

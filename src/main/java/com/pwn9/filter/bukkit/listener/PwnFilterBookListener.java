@@ -40,12 +40,15 @@ import java.util.List;
  */
 public class PwnFilterBookListener extends BaseListener {
 
+    private final PwnFilterPlugin plugin;
+
     /**
      * <p>Constructor for PwnFilterBookListener.</p>
      *
      */
     public PwnFilterBookListener(PwnFilterPlugin plugin) {
-        super(plugin);
+        super(plugin.getFilterService());
+        this.plugin = plugin;
     }
 
     /** {@inheritDoc} */
@@ -130,7 +133,7 @@ public class PwnFilterBookListener extends BaseListener {
         PluginManager pm = Bukkit.getPluginManager();
         EventPriority priority = BukkitConfig.getBookpriority();
 
-        if (!active && BukkitConfig.bookfilterEnabled()  ) {
+        if (BukkitConfig.bookfilterEnabled()  ) {
             try {
                 ruleChain = getCompiledChain("book.txt");
                 pm.registerEvent(PlayerEditBookEvent.class, this, priority,

@@ -27,7 +27,7 @@ itemfilter: false
 consolefilter: false
 
 # Filter commands as well as chat true/false
-commandfilter: true
+commandfilter: false
 
 # Filter Book Titles and Pages
 bookfilter: false

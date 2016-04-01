@@ -36,13 +36,14 @@ import java.util.List;
  * @version $Id: $Id
  */
 public class PwnFilterSignListener extends BaseListener {
-
+    private final PwnFilterPlugin plugin;
     /**
      * <p>Constructor for PwnFilterSignListener.</p>
      *
      */
     public PwnFilterSignListener(PwnFilterPlugin plugin) {
-        super(plugin);
+        super(plugin.getFilterService());
+        this.plugin = plugin;
     }
 
     /** {@inheritDoc} */
@@ -138,12 +139,12 @@ public class PwnFilterSignListener extends BaseListener {
         if (isActive()) return;
 
         try {
-            ruleChain = getCompiledChain("sign.txt");
 
             PluginManager pm = Bukkit.getPluginManager();
             EventPriority priority = BukkitConfig.getSignpriority();
 
             if (BukkitConfig.signfilterEnabled()) {
+                ruleChain = getCompiledChain("sign.txt");
                 // Now register the listener with the appropriate priority
                 pm.registerEvent(SignChangeEvent.class, this, priority,
                         new EventExecutor() {

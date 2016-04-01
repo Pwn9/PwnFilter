@@ -5,7 +5,7 @@ This is a continuation of the original RegexFilter by FloydATC.
 
 Continued development by: tREMor
 
-3.0 refactor by: Sage905 (aka ptoal)
+3.0 and 4.0 refactors by: Sage905
 
 Source code located at: https://github.com/Pwn9/PwnFilter
 
@@ -25,4 +25,4 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 PwnFilter -- Regex-based User Filter Plugin for Bukkit-based Minecraft servers.
-Copyright (c) 2013 Pwn9.com. Tremor77 <admin@pwn9.com> & Sage905 <patrick@toal.ca>
+Copyright (c) 2013 Pwn9.com. Tremor77 <admin@pwn9.com> & Sage905 <sage905@takeflight.ca>

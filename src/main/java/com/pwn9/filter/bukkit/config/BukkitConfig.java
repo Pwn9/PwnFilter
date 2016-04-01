@@ -19,6 +19,7 @@ import com.pwn9.filter.engine.rules.action.targeted.*;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.event.EventPriority;
 import org.jetbrains.annotations.NotNull;
 
@@ -42,7 +43,7 @@ public class BukkitConfig {
 
     private static File dataFolder;
 
-    public static void loadConfiguration(Configuration configuration, File folder, FilterService filterService) {
+    public static void loadConfiguration(Configuration configuration, File folder, FilterService filterService) throws InvalidConfigurationException {
 
         dataFolder = folder;
         config = configuration;
@@ -59,7 +60,7 @@ public class BukkitConfig {
         if (ruleDir != null) {
             filterService.getConfig().setRulesDir(ruleDir);
         } else {
-            throw new RuntimeException(
+            throw new InvalidConfigurationException(
                     "Unable to create or access rule directory.");
         }
 
@@ -70,19 +71,19 @@ public class BukkitConfig {
         );
 
         // Set up the default action messages
-        Burn.setDefaultMessage(ChatColor.translateAlternateColorCodes('&', config.getString("burnmsg")));
-        Kill.setDefaultMessage(ChatColor.translateAlternateColorCodes('&', config.getString("killnmsg")));
-        Warn.setDefaultMessage(ChatColor.translateAlternateColorCodes('&', config.getString("warnnmsg")));
-        Kick.setDefaultMessage(ChatColor.translateAlternateColorCodes('&', config.getString("kicknmsg")));
-        Fine.setDefaultMessage(ChatColor.translateAlternateColorCodes('&', config.getString("finenmsg")));
+        TargetedAction.getActionsWithDefaults().
+                filter(targetedAction -> !(config.getString(targetedAction.getDefaultMsgConfigName()) == null)).
+                forEach(targetedAction -> targetedAction.setDefMsg(
+                        ChatColor.translateAlternateColorCodes('&',
+                                config.getString(targetedAction.getDefaultMsgConfigName())))
+                );
 
         // Setup logging
-        filterService.getLogger().setLevel(Level.parse(config.getString("loglevel", "info")));
+        filterService.getLogger().setLevel(Level.parse(config.getString("loglevel", "info").toUpperCase()));
         filterService.setDebugMode(config.getString("debug"));
 
         setupPoints(filterService);
     }
-
 
     private static void setupPoints(FilterService filterService) {
         PointManager pointManager = filterService.getPointManager();

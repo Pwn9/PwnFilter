@@ -32,7 +32,7 @@ import org.bukkit.plugin.PluginManager;
  * @version $Id: $Id
  */
 public class PwnFilterPlayerListener extends BaseListener {
-
+    private final PwnFilterPlugin plugin;
     /**
      * <p>getShortName.</p>
      *
@@ -47,7 +47,9 @@ public class PwnFilterPlayerListener extends BaseListener {
 	 *
 	 */
 	public PwnFilterPlayerListener(PwnFilterPlugin plugin){
-        super(plugin);}
+        super(plugin.getFilterService());
+        this.plugin = plugin;
+    }
 
     /**
      * <p>onPlayerChat.</p>

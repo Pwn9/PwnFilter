@@ -20,11 +20,8 @@ import com.pwn9.filter.minecraft.api.MinecraftPlayer;
 import com.pwn9.filter.minecraft.util.ColoredString;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.PluginManager;
 
 /**
@@ -34,7 +31,7 @@ import org.bukkit.plugin.PluginManager;
  * @version $Id: $Id
  */
 public class PwnFilterCommandListener extends BaseListener {
-
+    private final PwnFilterPlugin plugin;
     private RuleChain chatRuleChain;
 
     /**
@@ -49,7 +46,8 @@ public class PwnFilterCommandListener extends BaseListener {
      *
      */
     public PwnFilterCommandListener(PwnFilterPlugin plugin) {
-	    super(plugin);
+	    super(plugin.getFilterService());
+        this.plugin = plugin;
     }
 
     @Override
@@ -64,9 +62,7 @@ public class PwnFilterCommandListener extends BaseListener {
                 chatRuleChain = getCompiledChain("chat.txt");
 
                 pm.registerEvent(PlayerCommandPreprocessEvent.class, this, priority,
-                        new EventExecutor() {
-                            public void execute(Listener l, Event e) { eventProcessor((PlayerCommandPreprocessEvent) e); }
-                        },
+                        (l, e) -> eventProcessor((PlayerCommandPreprocessEvent) e),
                         PwnFilterPlugin.getInstance());
                 setActive();
                 plugin.getLogger().info("Activated CommandListener with Priority Setting: " + priority.toString()

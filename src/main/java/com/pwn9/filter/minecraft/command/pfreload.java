@@ -51,7 +51,7 @@ public class pfreload implements CommandExecutor {
 
         //TODO: MAKE THIS COMMAND WORK AGAIN!
         //
-        // reloadAllConfigs();
+//         reloadAllConfigs();
 
         filterService.getLogger().config("All rules reloaded by " + sender.getName());
 

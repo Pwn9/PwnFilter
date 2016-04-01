@@ -32,12 +32,15 @@ import org.bukkit.plugin.PluginManager;
  */
 public class PwnFilterServerCommandListener extends BaseListener {
 
+    private final PwnFilterPlugin plugin;
+
     /**
      * <p>Constructor for PwnFilterServerCommandListener.</p>
      *
      */
     public PwnFilterServerCommandListener(PwnFilterPlugin plugin) {
-	    super(plugin);
+	    super(plugin.getFilterService());
+        this.plugin = plugin;
     }
 
     /** {@inheritDoc} */
@@ -97,10 +100,10 @@ public class PwnFilterServerCommandListener extends BaseListener {
 
 
         try {
-            ruleChain = getCompiledChain("console.txt");
 
             if (BukkitConfig.consolefilterEnabled()) {
 
+                ruleChain = getCompiledChain("console.txt");
                 PluginManager pm = Bukkit.getPluginManager();
                 EventPriority priority = BukkitConfig.getCmdpriority();
 

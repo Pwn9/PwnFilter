@@ -2,6 +2,26 @@
 Release Notes for PwnFilter
 ===========================
 
+4.0.. The "I never thought it would happen" release
+====================================================
+
+4.0 is a major rewrite of the core filter engine, to make it more modular, more
+robust, and easier to extend.  The major goal was to make it possible to use the
+filter engine in other projects, not just Bukkit or Spigot, but Sponge, FML, or
+even non-minecraft environments.
+
+What does that mean to you, the general end-user?  Not much.  PwnFilter should
+be more stable, and perform better, but since this is a major refactor, there
+are things that may be broken.  A lot of tests have been added, to try to make
+sure the code works as designed.
+
+New Features
+------------
+
+ * Official Spigot 1.9 support
+
+
+
 Changes in 3.4.0
 ================
 

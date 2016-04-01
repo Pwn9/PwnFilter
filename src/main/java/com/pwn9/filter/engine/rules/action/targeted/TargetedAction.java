@@ -15,52 +15,90 @@ import com.pwn9.filter.engine.api.ActionToken;
 import com.pwn9.filter.engine.config.FilterConfig;
 import com.pwn9.filter.engine.rules.action.InvalidActionException;
 
+import java.util.Arrays;
+import java.util.stream.Stream;
+
 /**
  * Created by Sage905 on 2016-03-26.
  */
 
 public enum TargetedAction implements ActionToken {
-    BURN {
+    BURN("burnmsg") {
         @Override
-        public Action getAction(String s, FilterConfig filterConfig) {
-            return Burn.getAction(s);
-        }
+        public Action getAction(String s, FilterConfig filterConfig) { return Burn.getAction(s); }
+        public void setDefMsg(String s) {Burn.setDefaultMessage(s);}
     },
-    FINE {
+    FINE("finemsg") {
+        @Override
+        public void setDefMsg(String s) {
+            Fine.setDefaultMessage(s);
+        }
+
         @Override
         public Action getAction(String s, FilterConfig filterConfig) throws InvalidActionException {
             return Fine.getAction(s);
         }
     },
-    KICK {
+    KICK("kickmsg") {
+        @Override
+        public void setDefMsg(String s) {
+            Kick.setDefaultMessage(s);
+        }
+
         @Override
         public Action getAction(String s, FilterConfig filterConfig) {
             return Kick.getAction(s);
         }
     },
-    KILL {
+    KILL("killmsg") {
+        @Override
+        public void setDefMsg(String s) {
+            Kill.setDefaultMessage(s);
+        }
+
         @Override
         public Action getAction(String s, FilterConfig filterConfig) {
             return Kill.getAction(s);
         }
     },
-    RESPOND {
+    RESPOND("") {
         @Override
         public Action getAction(String s, FilterConfig filterConfig) {
             return Respond.getAction(s);
         }
     },
-    RESPONDFILE {
+    RESPONDFILE("") {
         @Override
         public Action getAction(String s, FilterConfig filterConfig) throws InvalidActionException {
             return RespondFile.getAction(s, filterConfig.getTextDir());
         }
     },
-    WARN {
+    WARN("") {
+        @Override
+        public void setDefMsg(String s) {
+            Warn.setDefaultMessage(s);
+        }
+
         @Override
         public Action getAction(String s, FilterConfig filterConfig) {
             return Warn.getAction(s);
         }
     };
+
+    private final String defaultMsgConfig;
+
+    TargetedAction(String defaultMsgConfig) {
+        this.defaultMsgConfig = defaultMsgConfig;
+    }
+
+    public String getDefaultMsgConfigName() {
+        return defaultMsgConfig;
+    }
+    public void setDefMsg(String s) {
+        throw new RuntimeException("Can not set Default message on action" + this.toString());};
+
+    public static Stream<TargetedAction> getActionsWithDefaults() {
+        return Arrays.stream(TargetedAction.values()).filter(e -> !e.getDefaultMsgConfigName().isEmpty());
+    }
 
 }

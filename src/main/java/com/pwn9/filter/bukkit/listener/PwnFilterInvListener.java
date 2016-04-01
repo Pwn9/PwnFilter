@@ -36,11 +36,14 @@ import org.bukkit.plugin.PluginManager;
  */
 public class PwnFilterInvListener extends BaseListener {
 
+    private final PwnFilterPlugin plugin;
+
     /**
      * <p>Constructor for PwnFilterInvListener.</p>
      **/
     public PwnFilterInvListener(PwnFilterPlugin plugin) {
-        super(plugin);
+        super(plugin.getFilterService());
+        this.plugin = plugin;
     }
 
     /** {@inheritDoc} */
@@ -117,7 +120,7 @@ public class PwnFilterInvListener extends BaseListener {
         PluginManager pm = Bukkit.getPluginManager();
         EventPriority priority = BukkitConfig.getItempriority();
 
-        if (!active && BukkitConfig.itemFilterEnabled()) {
+        if (BukkitConfig.itemFilterEnabled()) {
             try {
                 ruleChain = getCompiledChain("item.txt");
                 // Now register the listener with the appropriate priority
