@@ -96,7 +96,7 @@ public class PwnFilterPlayerListener extends BaseListener {
 
         // Take the message from the ChatEvent and send it through the filter.
         plugin.getLogger().finer("Applying '" + ruleChain.getConfigName() + "' to message: " + state.getModifiedMessage());
-        ruleChain.execute(state, plugin.getLogger());
+        ruleChain.execute(state, filterService.getLogger());
 
         // Only update the message if it has been changed.
         if (state.messageChanged()){
@@ -121,6 +121,7 @@ public class PwnFilterPlayerListener extends BaseListener {
         if (isActive()) return;
 
         try {
+
             ruleChain = getCompiledChain("chat.txt");
 
             PluginManager pm = Bukkit.getServer().getPluginManager();

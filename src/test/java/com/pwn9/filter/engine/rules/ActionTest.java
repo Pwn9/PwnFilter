@@ -2,11 +2,11 @@ package com.pwn9.filter.engine.rules;
 
 import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.FilterContext;
-import com.pwn9.filter.engine.api.MessageAuthor;
 import com.pwn9.filter.engine.rules.action.minecraft.MinecraftAction;
 import com.pwn9.filter.engine.rules.action.targeted.TargetedAction;
 import com.pwn9.filter.engine.rules.chain.InvalidChainException;
 import com.pwn9.filter.engine.rules.chain.RuleChain;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -29,7 +29,7 @@ public class ActionTest {
     RuleChain rs;
     FilterService filterService = new FilterService(new TestStatsTracker());
     Logger logger = filterService.getLogger();
-    final MessageAuthor author = new TestAuthor();
+    final TestAuthor author = new TestAuthor();
 
     @Before
     public void setUp() {
@@ -62,6 +62,7 @@ public class ActionTest {
     public void testBurn() {
         FilterContext testState = new FilterContext("burn", author, new TestClient());
         rs.execute(testState, logger);
+        Assert.assertTrue(author.burnt());
     }
 
     @Test

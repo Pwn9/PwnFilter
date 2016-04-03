@@ -11,8 +11,6 @@
 package com.pwn9.filter.engine.config;
 
 import java.io.File;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
 
 /**
  * Object to hold the configuration of the PwnFilter Engine
@@ -41,25 +39,6 @@ public class FilterConfig {
 
     public void setRulesDir(File rulesDir) {
         this.rulesDir = rulesDir;
-    }
-
-    private Level ruleLogLevel;
-    // Logging variables
-
-    private File logFile;
-
-    private FileHandler logfileHandler;
-
-    public void setRuleLogLevel(String level) {
-        try {
-            ruleLogLevel = Level.parse(level.toUpperCase());
-        } catch (IllegalArgumentException e ) {
-            ruleLogLevel = Level.INFO;
-        }
-    }
-
-    public Level getRuleLogLevel() {
-        return ruleLogLevel;
     }
 
 }

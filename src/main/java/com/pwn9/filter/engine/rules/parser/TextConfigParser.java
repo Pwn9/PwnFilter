@@ -153,7 +153,7 @@ public class TextConfigParser implements FilterConfigParser {
                         parseRule(new Rule(id, descr), reader.readSection(), builder, actionFactory);
                     }
                 } catch (ParseException e) {
-                    parserError(e.getErrorOffset(), e.getMessage(),builder.getConfigName());
+                    throw new InvalidChainException(parserError(e.getErrorOffset(), e.getMessage(), builder.getConfigName()));
                 }
 
             }
@@ -206,6 +206,7 @@ public class TextConfigParser implements FilterConfigParser {
                 String actionName = tokenString.popToken();
                 try {
                     rule.addAction(factory.getAction(actionName, tokenString.getString()));
+                    logger.finest("(parser) then action: " + actionName);
                 } catch (InvalidActionException ex) {
                     throw new ParseException("Error in action line: " + ex.getMessage(), line.number);
                 }

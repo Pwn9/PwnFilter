@@ -16,6 +16,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.logging.Logger;
 
 import static org.junit.Assert.assertEquals;
@@ -58,7 +59,7 @@ public class RuleSetTest {
     }
 
     @Test
-    public void testApplyRules() {
+    public void testApplyRules() throws IOException {
         FilterContext testState = new FilterContext("This is a test", author, new TestClient());
         rs.execute(testState, logger);
         assertEquals("This WAS a test", testState.getModifiedMessage().toString());

@@ -11,6 +11,7 @@
 package com.pwn9.filter.engine.rules;
 
 import com.pwn9.filter.engine.api.MessageAuthor;
+import com.pwn9.filter.engine.rules.action.targeted.BurnTarget;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -19,7 +20,10 @@ import java.util.UUID;
 /**
  * Created by Sage905 on 2016-03-27.
  */
-public class TestAuthor implements MessageAuthor {
+public class TestAuthor implements MessageAuthor, BurnTarget {
+
+    private boolean burnt;
+
     @Override
     public boolean hasPermission(String permString) {
         return false;
@@ -44,4 +48,12 @@ public class TestAuthor implements MessageAuthor {
     @Override
     public void sendMessages(List<String> messages) {
     }
+
+    @Override
+    public boolean burn(int duration, String message) {
+        return burnt = true;
+    }
+
+    public boolean burnt() {
+        return burnt;}
 }

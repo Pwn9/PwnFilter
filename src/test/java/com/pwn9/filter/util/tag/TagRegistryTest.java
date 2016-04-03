@@ -50,7 +50,7 @@ public class TagRegistryTest {
     public void testUnmatchedTagIsUnmodified() throws Exception {
         FilterContext testState = new FilterContext("TestString", testAuthor, testClient);
 
-        String input = "This is a %test%";
+        String input = "This is a %nonexistenttag%";
         String result = TagRegistry.replaceTags(input, testState);
         Assert.assertEquals(input, result);
     }

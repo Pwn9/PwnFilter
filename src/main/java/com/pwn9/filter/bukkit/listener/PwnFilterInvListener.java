@@ -84,7 +84,7 @@ public class PwnFilterInvListener extends BaseListener {
 
             FilterContext filterTask = new FilterContext(new ColoredString(message), MinecraftPlayer.getInstance(player), this);
 
-            ruleChain.execute(filterTask, plugin.getLogger());
+            ruleChain.execute(filterTask, filterService.getLogger());
             if (filterTask.isCancelled()) event.setCancelled(true);
 
             // Only update the message if it has been changed.

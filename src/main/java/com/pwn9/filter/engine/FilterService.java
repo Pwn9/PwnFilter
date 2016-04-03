@@ -169,9 +169,8 @@ public class FilterService {
             logfileHandler = new FileHandler(fileName, true);
             SimpleFormatter f = new PwnFormatter();
             logfileHandler.setFormatter(f);
-            logfileHandler.setLevel(Level.FINEST); // Catch all log messages
             logger.addHandler(logfileHandler);
-            logger.info("Now logging to " + fileName );
+            logger.info("Now logging to " + fileName + " at level: " + logfileHandler.getLevel());
 
         } catch (IOException e) {
             logger.warning("Unable to open logfile.");
@@ -200,10 +199,20 @@ public class FilterService {
      */
     public void setDebugMode(String s) {
         switch (s.toLowerCase()) {
-            case "high": logfileHandler.setLevel(Level.FINEST);
-            case "medium": logfileHandler.setLevel(Level.FINER);
-            case "low": logfileHandler.setLevel(Level.FINE);
+            case "low":
+                logfileHandler.setLevel(Level.FINE);
+                break;
+            case "medium":
+                logfileHandler.setLevel(Level.FINER);
+                break;
+            case "high":
+                logfileHandler.setLevel(Level.FINEST);
+                break;
+            default:
+                logfileHandler.setLevel(Level.INFO);
+                break;
         }
+        logger.info("Logger debug set to: " + s);
     }
 
     /*

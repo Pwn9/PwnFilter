@@ -50,6 +50,8 @@ public class BukkitConfig {
 
         if (config.getBoolean("logfile")) {
             filterService.setLogFileHandler(new File(dataFolder, "pwnfilter.log"));
+            filterService.setDebugMode(config.getString("debug", "off"));
+
         } else { // Needed during configuration reload to turn off logging if the option changes
             filterService.clearLogFileHandler();
         }
@@ -79,10 +81,11 @@ public class BukkitConfig {
                 );
 
         // Setup logging
-        filterService.getLogger().setLevel(Level.parse(config.getString("loglevel", "info").toUpperCase()));
-        filterService.setDebugMode(config.getString("debug"));
+        Level level = Level.parse(config.getString("loglevel", "info").toUpperCase());
+        filterService.getLogger().setLevel(level);
 
         setupPoints(filterService);
+
     }
 
     private static void setupPoints(FilterService filterService) {

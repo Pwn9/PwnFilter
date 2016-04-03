@@ -81,7 +81,7 @@ public class PwnFilterBookListener extends BaseListener {
             message = bookMeta.getTitle();
             FilterContext filterTask = new FilterContext(new ColoredString(message),
                     MinecraftPlayer.getInstance(player), this);
-            ruleChain.execute(filterTask, plugin.getLogger());
+            ruleChain.execute(filterTask, filterService.getLogger());
             if (filterTask.isCancelled()) event.setCancelled(true);
             if (filterTask.messageChanged()) {
                 bookMeta.setTitle(filterTask.getModifiedMessage().getRaw());
@@ -96,7 +96,7 @@ public class PwnFilterBookListener extends BaseListener {
             for (String page : bookMeta.getPages()) {
                 FilterContext state = new FilterContext(new ColoredString(page),
                         MinecraftPlayer.getInstance(player.getUniqueId()), this);
-                ruleChain.execute(state, plugin.getLogger());
+                ruleChain.execute(state, filterService.getLogger());
                 if (state.isCancelled()) {
                     event.setCancelled(true);
                 }

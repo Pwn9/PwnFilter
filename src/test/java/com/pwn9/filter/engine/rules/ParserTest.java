@@ -56,7 +56,7 @@ public class ParserTest {
         filterService.getActionFactory().addActionTokens(MinecraftAction.class);
         filterService.getActionFactory().addActionTokens(TargetedAction.class);
         filterService.getConfig().setRulesDir(parentDir);
-        filterService.getConfig().setRulesDir(parentDir);
+        filterService.getConfig().setTextDir(parentDir);
         try {
             rs = filterService.parseRules(testFile);
             assertNotNull(rs);
@@ -64,6 +64,13 @@ public class ParserTest {
             fail(e.getMessage());
         }
 
+    }
+
+    @Test
+    public void testSimple() throws InvalidChainException {
+        File simpleFile = new File(getClass().getResource("/rules/simpleTest.txt").getFile());
+        RuleChain simple = filterService.parseRules(simpleFile);
+        Assert.assertEquals(simple.ruleCount(),1);
     }
 
     @Test

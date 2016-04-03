@@ -108,7 +108,6 @@ public class RuleChain implements Chain, ChainEntry {
      * @param context a {@link FilterContext} object.
      */
     public void execute(FilterContext context, Logger logger) {
-
         apply(context, EmptyChain.INSTANCE, logger);
 
         if (!context.getMatchedRules().isEmpty()) {

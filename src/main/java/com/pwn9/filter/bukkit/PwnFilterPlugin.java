@@ -15,6 +15,7 @@ import com.pwn9.filter.bukkit.config.BukkitConfig;
 import com.pwn9.filter.bukkit.listener.*;
 import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.rules.action.minecraft.MinecraftAction;
+import com.pwn9.filter.engine.rules.action.targeted.TargetedAction;
 import com.pwn9.filter.minecraft.api.MinecraftAPI;
 import com.pwn9.filter.minecraft.api.MinecraftServer;
 import com.pwn9.filter.minecraft.command.pfcls;
@@ -29,6 +30,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.UUID;
 import java.util.concurrent.ConcurrentMap;
+import java.util.logging.Logger;
 
 
 /**
@@ -79,6 +81,8 @@ public class PwnFilterPlugin extends JavaPlugin {
         minecraftAPI = new BukkitAPI(this);
         statsTracker = new MCStatsTracker(this);
         filterService = new FilterService(statsTracker, getLogger());
+        filterService.getActionFactory().addActionTokens(MinecraftAction.class);
+        filterService.getActionFactory().addActionTokens(TargetedAction.class);
         MinecraftServer.setAPI(minecraftAPI);
         RegisterTags.all();
     }
@@ -122,6 +126,7 @@ public class PwnFilterPlugin extends JavaPlugin {
             getCommand("pfreload").setExecutor(new pfreload(filterService));
             getCommand("pfcls").setExecutor(new pfcls(getLogger()));
             getCommand("pfmute").setExecutor(new pfmute(getLogger()));
+
     }
 
     /**
@@ -139,9 +144,6 @@ public class PwnFilterPlugin extends JavaPlugin {
     public void configurePlugin() {
 
         minecraftAPI.reset();
-        // Whenever we reset the API, we need to make sure the plugin permissions
-        // get re-loaded into the cache.
-        minecraftAPI.addCachedPermissions(getDescription().getPermissions());
         try {
             BukkitConfig.loadConfiguration(getConfig(), getDataFolder(), filterService);
         } catch (InvalidConfigurationException ex) {
@@ -152,10 +154,6 @@ public class PwnFilterPlugin extends JavaPlugin {
 
     }
 
-    private void configureMinecraftActions() {
-        filterService.getActionFactory().addActionTokens(MinecraftAction.class);
-
-    }
     private void setupEconomy() {
 
         if (getServer().getPluginManager().getPlugin("Vault") != null) {
