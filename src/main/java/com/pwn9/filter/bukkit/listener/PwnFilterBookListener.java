@@ -76,7 +76,7 @@ public class PwnFilterBookListener extends BaseListener {
             message = bookMeta.getTitle();
             FilterContext filterTask = new FilterContext(new ColoredString(message),
                     filterService.getAuthor(player.getUniqueId()), this);
-            ruleChain.execute(filterTask, filterService.getLogger());
+            ruleChain.execute(filterTask, filterService);
             if (filterTask.isCancelled()) event.setCancelled(true);
             if (filterTask.messageChanged()) {
                 bookMeta.setTitle(filterTask.getModifiedMessage().getRaw());
@@ -91,7 +91,7 @@ public class PwnFilterBookListener extends BaseListener {
             for (String page : bookMeta.getPages()) {
                 FilterContext state = new FilterContext(new ColoredString(page),
                         filterService.getAuthor(player.getUniqueId()), this);
-                ruleChain.execute(state, filterService.getLogger());
+                ruleChain.execute(state, filterService);
                 if (state.isCancelled()) {
                     event.setCancelled(true);
                 }

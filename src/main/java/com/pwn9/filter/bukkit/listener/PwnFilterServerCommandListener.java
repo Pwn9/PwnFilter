@@ -69,7 +69,7 @@ public class PwnFilterServerCommandListener extends BaseListener {
 
         // Take the message from the Command Event and send it through the filter.
 
-        ruleChain.execute(state, filterService.getLogger());
+        ruleChain.execute(state, filterService);
 
         // Only update the message if it has been changed.
         if (state.messageChanged()){

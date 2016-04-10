@@ -235,18 +235,18 @@ public class PointManager implements FilterClient {
             return Double.compare(this.points, o.points);
         }
 
-        public void executeAscending(java.util.UUID id, FilterClient client) {
+        public void executeAscending(UUID id, FilterClient client) {
             FilterContext state = new FilterContext(new SimpleString(""), getFilterService().getAuthor(id), client );
             for (Action a : actionsAscending ) {
-                a.execute(state);
+                a.execute(state, filterService);
             }
 
         }
 
-        public void executeDescending(java.util.UUID id, FilterClient client) {
+        public void executeDescending(UUID id, FilterClient client) {
             FilterContext state = new FilterContext(new SimpleString(""), getFilterService().getAuthor(id), client );
             for (Action a : actionsDescending ) {
-                a.execute(state);
+                a.execute(state, filterService);
             }
         }
 

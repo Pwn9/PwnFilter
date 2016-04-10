@@ -124,7 +124,7 @@ public class PwnFilterCommandListener extends BaseListener {
                 PwnFilterPlugin.lastMessage.put(minecraftPlayer.getId(), message);
             }
 
-            chatRuleChain.execute(filterTask, filterService.getLogger());
+            chatRuleChain.execute(filterTask, filterService);
 
         } else {
 
@@ -133,7 +133,7 @@ public class PwnFilterCommandListener extends BaseListener {
 
             // Take the message from the Command Event and send it through the filter.
 
-            ruleChain.execute(filterTask, filterService.getLogger());
+            ruleChain.execute(filterTask, filterService);
 
         }
 

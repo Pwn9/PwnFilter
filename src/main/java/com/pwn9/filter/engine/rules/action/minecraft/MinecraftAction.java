@@ -12,7 +12,7 @@ package com.pwn9.filter.engine.rules.action.minecraft;
 
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.ActionToken;
-import com.pwn9.filter.engine.config.FilterConfig;
+import com.pwn9.filter.engine.FilterConfig;
 import com.pwn9.filter.engine.rules.action.InvalidActionException;
 
 /**
@@ -60,6 +60,6 @@ public enum MinecraftAction implements ActionToken {
         public Action getAction(String s, FilterConfig filterConfig) throws InvalidActionException {
             return Notify.getAction(s);
         }
-    };
+    }
 
 }

@@ -77,7 +77,7 @@ public class PwnFilterSignListener extends BaseListener {
         FilterContext filterTask = new FilterContext(new ColoredString(signLines),
                 signAuthor, this);
 
-        ruleChain.execute(filterTask, filterService.getLogger());
+        ruleChain.execute(filterTask, filterService);
 
         if (filterTask.messageChanged()){
             // TODO: Can colors be placed on signs?  Wasn't working. Find out why.

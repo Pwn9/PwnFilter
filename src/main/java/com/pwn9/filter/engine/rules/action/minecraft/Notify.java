@@ -10,6 +10,7 @@
 
 package com.pwn9.filter.engine.rules.action.minecraft;
 
+import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.rules.action.InvalidActionException;
@@ -47,7 +48,7 @@ public class Notify implements Action {
     }
 
     /** {@inheritDoc} */
-    public void execute(final FilterContext filterTask) {
+    public void execute(final FilterContext filterTask, FilterService filterService) {
 
         // Create the message to send
         final String sendString = TagRegistry.replaceTags(messageString, filterTask);

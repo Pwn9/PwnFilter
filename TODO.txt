@@ -23,7 +23,7 @@ To Do on Current Task:
  + Refactor all the logging.
  + Fix Shortcuts file.
  * Implement interfaces for actions (eg: BurnTarget)
- - Implement permission caching in minecraft API
+ + Implement permission caching in minecraft API
  - Fix Points Manager
  - Keep better track of listeners to allow reloading of all configs.
 

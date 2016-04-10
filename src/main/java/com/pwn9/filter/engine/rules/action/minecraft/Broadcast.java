@@ -11,6 +11,7 @@
 package com.pwn9.filter.engine.rules.action.minecraft;
 
 import com.pwn9.filter.bukkit.BukkitPlayer;
+import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.api.MessageAuthor;
@@ -44,7 +45,7 @@ public class Broadcast implements Action {
     /**
      * {@inheritDoc}
      */
-    public void execute(final FilterContext filterTask) {
+    public void execute(final FilterContext filterTask, FilterService filterService) {
 
         /*
         TODO: Abstract out to a BroadcastDestination object, so that broadcasts

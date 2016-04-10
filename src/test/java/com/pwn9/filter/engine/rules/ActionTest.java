@@ -11,7 +11,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
-import java.util.logging.Logger;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
@@ -28,7 +27,6 @@ public class ActionTest {
 
     RuleChain rs;
     FilterService filterService = new FilterService(new TestStatsTracker());
-    Logger logger = filterService.getLogger();
     final TestAuthor author = new TestAuthor();
 
     @Before
@@ -47,39 +45,39 @@ public class ActionTest {
     @Test
     public void testAbort() {
         FilterContext testState = new FilterContext("abort", author, new TestClient());
-        rs.execute(testState, logger);
+        rs.execute(testState, filterService);
         assertTrue(testState.isAborted());
     }
 
     @Test
     public void testRandRep() {
         FilterContext testState = new FilterContext("randrep", author, new TestClient());
-        rs.execute(testState, logger);
+        rs.execute(testState, filterService);
         assertTrue(testState.getModifiedMessage().toString().matches("(random|replace)"));
     }
 
     @Test
     public void testBurn() {
         FilterContext testState = new FilterContext("burn", author, new TestClient());
-        rs.execute(testState, logger);
+        rs.execute(testState, filterService);
         Assert.assertTrue(author.burnt());
     }
 
     @Test
     public void testUpper() {
         FilterContext testState = new FilterContext("upper", author, new TestClient());
-        rs.execute(testState, logger);
+        rs.execute(testState, filterService);
         assertEquals("UPPER", testState.getModifiedMessage().toString());
     }
 
     @Test
     public void testLower() {
         FilterContext testState = new FilterContext("LOWER", author, new TestClient());
-        rs.execute(testState, logger);
+        rs.execute(testState, filterService);
         assertEquals("lower", testState.getModifiedMessage().toString());
 
         FilterContext test2 = new FilterContext("LOWERCASE ALL THIS STUFF!", author, new TestClient());
-        rs.execute(test2, logger);
+        rs.execute(test2, filterService);
         assertEquals("lowercase all this stuff!", test2.getModifiedMessage().toString());
     }
 

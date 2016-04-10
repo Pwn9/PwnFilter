@@ -10,6 +10,7 @@
 
 package com.pwn9.filter.engine.rules.action.core;
 
+import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.util.SimpleString;
@@ -38,7 +39,7 @@ public class Replace implements Action {
     }
 
     @Override
-    public void execute(final FilterContext filterTask) {
+    public void execute(final FilterContext filterTask, FilterService filterService) {
         filterTask.setModifiedMessage(new SimpleString(filterTask.
                 getModifiedMessage().toString()).
                 replaceText(filterTask.getPattern(), messageString));

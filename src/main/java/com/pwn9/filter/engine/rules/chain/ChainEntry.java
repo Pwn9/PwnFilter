@@ -10,10 +10,10 @@
 
 package com.pwn9.filter.engine.rules.chain;
 
+import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.FilterContext;
 
 import java.util.Set;
-import java.util.logging.Logger;
 
 /**
  * Objects that can be attached to ruleChains (eg: rules, and other ruleChains)
@@ -36,10 +36,9 @@ public interface ChainEntry {
 
     /**
      * <p>apply.</p>
-     *
-     * @param state a {@link FilterContext} object.
-     */
-    void apply(FilterContext state, Chain parent, Logger logger);
+     *  @param state a {@link FilterContext} object.
+     * @param filterService*/
+    void apply(FilterContext state, FilterService filterService);
 
     /**
      * Find all conditions in all RuleChain entries that match the passed

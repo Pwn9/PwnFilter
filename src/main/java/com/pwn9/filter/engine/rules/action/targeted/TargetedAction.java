@@ -12,7 +12,7 @@ package com.pwn9.filter.engine.rules.action.targeted;
 
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.ActionToken;
-import com.pwn9.filter.engine.config.FilterConfig;
+import com.pwn9.filter.engine.FilterConfig;
 import com.pwn9.filter.engine.rules.action.InvalidActionException;
 
 import java.util.Arrays;
@@ -95,7 +95,7 @@ public enum TargetedAction implements ActionToken {
         return defaultMsgConfig;
     }
     public void setDefMsg(String s) {
-        throw new RuntimeException("Can not set Default message on action" + this.toString());};
+        throw new RuntimeException("Can not set Default message on action" + this.toString());}
 
     public static Stream<TargetedAction> getActionsWithDefaults() {
         return Arrays.stream(TargetedAction.values()).filter(e -> !e.getDefaultMsgConfigName().isEmpty());

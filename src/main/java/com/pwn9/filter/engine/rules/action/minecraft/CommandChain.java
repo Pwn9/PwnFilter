@@ -10,6 +10,7 @@
 
 package com.pwn9.filter.engine.rules.action.minecraft;
 
+import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.api.MessageAuthor;
@@ -45,7 +46,7 @@ public class CommandChain implements Action {
     }
 
     /** {@inheritDoc} */
-    public void execute(final FilterContext filterTask) {
+    public void execute(final FilterContext filterTask, FilterService filterService) {
         filterTask.setCancelled();
         final ArrayList<String> parsedCommands = new ArrayList<>();
 

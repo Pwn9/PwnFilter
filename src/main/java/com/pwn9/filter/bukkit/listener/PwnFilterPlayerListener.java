@@ -93,7 +93,7 @@ public class PwnFilterPlayerListener extends BaseListener {
 
         // Take the message from the ChatEvent and send it through the filter.
         plugin.getLogger().finer("Applying '" + ruleChain.getConfigName() + "' to message: " + state.getModifiedMessage());
-        ruleChain.execute(state, filterService.getLogger());
+        ruleChain.execute(state, filterService);
 
         // Only update the message if it has been changed.
         if (state.messageChanged()){

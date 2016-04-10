@@ -14,6 +14,7 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.rules.Condition;
@@ -21,7 +22,6 @@ import com.pwn9.filter.engine.rules.Rule;
 
 import java.io.InvalidObjectException;
 import java.util.*;
-import java.util.logging.Logger;
 
 
 /**
@@ -94,11 +94,11 @@ public class RuleChain implements Chain, ChainEntry {
      * stop processing rules.  If not, continue along the rule chain, checking the
      * (possibly modified) message against subsequent rules.
      */
-    public void apply(FilterContext context, Chain parent, Logger logger) throws IllegalStateException {
+    public void apply(FilterContext context, FilterService filterService) throws IllegalStateException {
 
         for (ChainEntry entry : chain) {
             if (context.isAborted()) break;
-            entry.apply(context, parent, logger);
+            entry.apply(context, filterService);
         }
     }
 
@@ -106,13 +106,14 @@ public class RuleChain implements Chain, ChainEntry {
      * <p>execute.</p>
      *
      * @param context a {@link FilterContext} object.
+     * @param filterService
      */
-    public void execute(FilterContext context, Logger logger) {
-        apply(context, EmptyChain.INSTANCE, logger);
+    public void execute(FilterContext context, FilterService filterService) {
+        apply(context,filterService);
 
         if (!context.getMatchedRules().isEmpty()) {
             //TODO: Add counter for matches, here.
-            logger.finer(() ->
+            filterService.getLogger().finer(() ->
                     {
                         StringBuilder sb = new StringBuilder();
                         for (Rule r : context.getMatchedRules()) {
@@ -129,7 +130,7 @@ public class RuleChain implements Chain, ChainEntry {
             );
 
         } else {
-            logger.finer(() -> "Debug no match: " + context.getOriginalMessage().getRaw());
+            filterService.getLogger().finer(() -> "Debug no match: " + context.getOriginalMessage().getRaw());
         }
 
         if (context.isCancelled()) {
@@ -139,7 +140,7 @@ public class RuleChain implements Chain, ChainEntry {
                     context.getAuthor().getName() + "> " + context.getModifiedMessage().toString());
         }
 
-        context.getLogMessages().stream().filter(s -> context.loggingOn()).forEach(logger::info);
+        context.getLogMessages().stream().filter(s -> context.loggingOn()).forEach(filterService.getLogger()::info);
     }
 
 

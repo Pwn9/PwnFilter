@@ -10,6 +10,7 @@
 
 package com.pwn9.filter.engine.rules.action.core;
 
+import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.rules.action.InvalidActionException;
@@ -45,7 +46,7 @@ public class RandomReplace implements Action {
     }
 
     @Override
-    public void execute(final FilterContext filterTask) {
+    public void execute(final FilterContext filterTask, FilterService filterService) {
         int randomInt = random.nextInt(replacementArray.length);
         filterTask.setModifiedMessage(filterTask.getModifiedMessage().
                 replaceText(filterTask.getPattern(),

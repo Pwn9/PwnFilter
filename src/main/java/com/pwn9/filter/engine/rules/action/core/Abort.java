@@ -10,6 +10,7 @@
 
 package com.pwn9.filter.engine.rules.action.core;
 
+import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.FilterContext;
 
@@ -25,7 +26,7 @@ public enum Abort implements Action {
 
     INSTANCE;
 
-    public void execute(final FilterContext filterTask) {
+    public void execute(final FilterContext filterTask, FilterService filterService) {
         filterTask.setAborted();
         filterTask.addLogMessage("<Abort> Not processing more rules.");
     }

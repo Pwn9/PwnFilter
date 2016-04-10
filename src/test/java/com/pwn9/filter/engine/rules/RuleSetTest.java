@@ -61,14 +61,14 @@ public class RuleSetTest {
     @Test
     public void testApplyRules() throws IOException {
         FilterContext testState = new FilterContext("This is a test", author, new TestClient());
-        rs.execute(testState, logger);
+        rs.execute(testState, filterService);
         assertEquals("This WAS a test", testState.getModifiedMessage().toString());
     }
 
     @Test
     public void testDollarSignInMessage() {
         FilterContext testState = new FilterContext("notATestPerson {test] $ (test 2}",author,new TestClient());
-        rs.execute(testState, logger);
+        rs.execute(testState, filterService);
     }
 
     // DBO Ticket # 13
@@ -76,7 +76,7 @@ public class RuleSetTest {
     public void testBackslashAtEndOfLine() {
         try {
             FilterContext testState = new FilterContext("Message that ends with \\",author,new TestClient());
-            rs.execute(testState, logger);
+            rs.execute(testState, filterService);
         } catch (StringIndexOutOfBoundsException ex) {
             Assert.fail(ex.getMessage());
         }
@@ -85,7 +85,7 @@ public class RuleSetTest {
     @Test
     public void testShortcuts() {
         FilterContext testState = new FilterContext("ShortCutPattern",author,new TestClient());
-        sc.execute(testState, logger);
+        sc.execute(testState, filterService);
         Assert.assertEquals("Replaced", testState.getModifiedMessage().toString());
     }
 

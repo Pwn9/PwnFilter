@@ -12,7 +12,7 @@ package com.pwn9.filter.engine.rules.parser;
 
 import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.Action;
-import com.pwn9.filter.engine.config.FilterConfig;
+import com.pwn9.filter.engine.FilterConfig;
 import com.pwn9.filter.engine.rules.Condition;
 import com.pwn9.filter.engine.rules.Rule;
 import com.pwn9.filter.engine.rules.ShortCutManager;

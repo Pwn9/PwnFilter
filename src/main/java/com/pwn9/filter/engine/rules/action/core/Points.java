@@ -10,8 +10,11 @@
 
 package com.pwn9.filter.engine.rules.action.core;
 
+import com.pwn9.filter.engine.FilterService;
+import com.pwn9.filter.engine.PointManager;
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.FilterContext;
+import com.pwn9.filter.engine.api.MessageAuthor;
 import com.pwn9.filter.engine.rules.action.InvalidActionException;
 import org.bukkit.ChatColor;
 
@@ -49,28 +52,28 @@ public class Points implements Action {
     }
 
     @Override
-    public void execute(final FilterContext filterTask) {
-//        UUID p = filterTask.getAuthor();
-//
-//        if (p == null) return;
-//
-//        PointManager pm;
-//        try {
-//            pm = PointManager.getInstance();
-//        } catch (IllegalStateException ex) {
-//            FileLogger.getInstance().debugLow(String.format("Rule: %s has 'then points', but PointManager is disabled in config.yml", filterTask.getRule().getId()));
-//            return;
-//        }
-//
-//        // TODO: Add more comprehensive messaging, as well as details about thresholds.
-//
-//        pm.addPoints(p.getID(), pointsAmount);
-//
-//        filterTask.addLogMessage(String.format("Points Accumulated %s : %f. Total: %f", p.getName(), pointsAmount, pm.getPoints(p)));
-//
-//        if (!messageString.isEmpty()) {
-//          p.sendMessage(messageString);
-//        }
+    public void execute(final FilterContext filterTask, FilterService filterService) {
+        MessageAuthor a = filterTask.getAuthor();
+
+        if (a == null) return;
+
+        PointManager pm;
+        try {
+            pm = filterService.getPointManager();
+        } catch (IllegalStateException ex) {
+            filterService.getLogger().fine(String.format("Rule: %s has 'then points', but PointManager is disabled in config.yml", filterTask.getRule().getId()));
+            return;
+        }
+
+        // TODO: Add more comprehensive messaging, as well as details about thresholds.
+
+        pm.addPoints(a.getId(), pointsAmount);
+
+        filterTask.addLogMessage(String.format("Points Accumulated %s : %f. Total: %f", a.getName(), pointsAmount, pm.getPoints(a)));
+
+        if (!messageString.isEmpty()) {
+          a.sendMessage(messageString);
+        }
 
     }
 }

@@ -10,6 +10,7 @@
 
 package com.pwn9.filter.engine.rules.action.minecraft;
 
+import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.rules.action.InvalidActionException;
 import com.pwn9.filter.bukkit.BukkitPlayer;
@@ -39,7 +40,7 @@ public class Command implements Action {
     }
 
     /** {@inheritDoc} */
-    public void execute(final FilterContext filterTask) {
+    public void execute(final FilterContext filterTask, FilterService filterService) {
         filterTask.setCancelled();
         final String cmd;
         if (filterTask.getAuthor() instanceof BukkitPlayer) {

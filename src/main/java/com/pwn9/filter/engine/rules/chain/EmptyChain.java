@@ -12,12 +12,12 @@ package com.pwn9.filter.engine.rules.chain;
 
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.Multimap;
+import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.rules.Condition;
 
 import java.util.Set;
-import java.util.logging.Logger;
 
 /**
  * This is just an empty chain object, to be used instead of a null value.
@@ -51,7 +51,7 @@ public enum EmptyChain implements Chain, ChainEntry {
         }
 
         @Override
-        public void apply(FilterContext state, Chain parent, Logger logger) {
+        public void apply(FilterContext state, FilterService filterService) {
             // Nothing to do.
         }
 

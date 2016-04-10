@@ -10,6 +10,7 @@
 
 package com.pwn9.filter.engine.rules.action.core;
 
+import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.api.Action;
 
@@ -28,7 +29,7 @@ public enum Deny implements Action {
     INSTANCE;
 
     @Override
-    public void execute(final FilterContext filterTask) {
+    public void execute(final FilterContext filterTask, FilterService filterService) {
         filterTask.setCancelled();
     }
 }

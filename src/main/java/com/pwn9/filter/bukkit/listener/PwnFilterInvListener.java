@@ -83,7 +83,7 @@ public class PwnFilterInvListener extends BaseListener {
 
             FilterContext filterTask = new FilterContext(new ColoredString(message), filterService.getAuthor(player.getUniqueId()), this);
 
-            ruleChain.execute(filterTask, filterService.getLogger());
+            ruleChain.execute(filterTask, filterService);
             if (filterTask.isCancelled()) event.setCancelled(true);
 
             // Only update the message if it has been changed.

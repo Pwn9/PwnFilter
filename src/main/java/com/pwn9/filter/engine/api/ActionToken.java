@@ -10,7 +10,7 @@
 
 package com.pwn9.filter.engine.api;
 
-import com.pwn9.filter.engine.config.FilterConfig;
+import com.pwn9.filter.engine.FilterConfig;
 import com.pwn9.filter.engine.rules.action.InvalidActionException;
 
 /**

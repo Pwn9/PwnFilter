@@ -17,7 +17,6 @@ import com.pwn9.filter.engine.api.AuthorService;
 import com.pwn9.filter.engine.api.FilterClient;
 import com.pwn9.filter.engine.api.MessageAuthor;
 import com.pwn9.filter.engine.api.StatsTracker;
-import com.pwn9.filter.engine.config.FilterConfig;
 import com.pwn9.filter.engine.rules.action.ActionFactory;
 import com.pwn9.filter.engine.rules.chain.InvalidChainException;
 import com.pwn9.filter.engine.rules.chain.RuleChain;

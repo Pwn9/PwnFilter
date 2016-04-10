@@ -12,7 +12,7 @@ package com.pwn9.filter.engine.rules.action.core;
 
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.ActionToken;
-import com.pwn9.filter.engine.config.FilterConfig;
+import com.pwn9.filter.engine.FilterConfig;
 import com.pwn9.filter.engine.rules.action.InvalidActionException;
 
 /**

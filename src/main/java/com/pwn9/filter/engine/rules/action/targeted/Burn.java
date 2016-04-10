@@ -10,6 +10,7 @@
 
 package com.pwn9.filter.engine.rules.action.targeted;
 
+import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.api.MessageAuthor;
@@ -45,7 +46,7 @@ public class Burn implements Action {
     }
 
     /** {@inheritDoc} */
-    public void execute(final FilterContext filterTask) {
+    public void execute(final FilterContext filterTask, FilterService filterService) {
         MessageAuthor target = filterTask.getAuthor();
 
         if (target instanceof BurnTarget) {

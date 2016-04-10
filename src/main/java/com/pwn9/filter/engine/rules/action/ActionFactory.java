@@ -13,7 +13,7 @@ package com.pwn9.filter.engine.rules.action;
 import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.ActionToken;
-import com.pwn9.filter.engine.config.FilterConfig;
+import com.pwn9.filter.engine.FilterConfig;
 import com.pwn9.filter.engine.rules.action.core.CoreAction;
 
 import java.util.ArrayList;

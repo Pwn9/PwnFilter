@@ -11,7 +11,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
-import java.util.logging.Logger;
 
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -26,7 +25,6 @@ public class ConditionTest {
 
     RuleChain rs;
     FilterService filterService = new FilterService(new TestStatsTracker());
-    Logger logger = filterService.getLogger();
     final MessageAuthor author = new TestAuthor();
     File testFile = new File(getClass().getResource("/conditionTests.txt").getFile());
     File parentDir = new File(testFile.getParent());
@@ -36,7 +34,7 @@ public class ConditionTest {
     public void setUp() {
         // For debugging purposes
 //        filterService.setLogFileHandler(new File("/tmp/pwnfilter.log"));
-//        logger.setLevel(Level.FINEST);
+//        filterService.setLevel(Level.FINEST);
         filterService.getActionFactory().addActionTokens(MinecraftAction.class);
         filterService.getActionFactory().addActionTokens(TargetedAction.class);
         filterService.getConfig().setRulesDir(parentDir);
@@ -50,10 +48,10 @@ public class ConditionTest {
     @Test
     public void testIgnoreString() {
         FilterContext testState = new FilterContext("Ignore string baseline test.", author, new TestClient());
-        rs.execute(testState, logger);
+        rs.execute(testState, filterService);
         assertEquals("Ignore replaced baseline test.", testState.getModifiedMessage().toString());
         FilterContext state2 = new FilterContext("Ignore string qwerty test.", author, new TestClient());
-        rs.execute(state2, logger);
+        rs.execute(state2, filterService);
         assertEquals("Ignore string qwerty test.",state2.getModifiedMessage().toString());
 
     }
@@ -61,28 +59,28 @@ public class ConditionTest {
     @Test
     public void testIgnoreCommand() {
         FilterContext testState1 = new FilterContext("Ignore baseline command test", author, new TestClient());
-        rs.execute(testState1, logger);
+        rs.execute(testState1, filterService);
         assertEquals("Ignore baseline replace command", testState1.getModifiedMessage().toString());
 
         FilterContext testState2 = new FilterContext("/tell Ignore command test", author, new TestClient("COMMAND"));
-        rs.execute(testState2, logger);
+        rs.execute(testState2, filterService);
         assertEquals("/tell Ignore command test",testState2.getModifiedMessage().toString());
     }
 
     @Test
     public void testIgnoreDoesntMatch() {
         FilterContext testState2 = new FilterContext("testestest banned", author, new TestClient());
-        rs.execute(testState2, logger);
+        rs.execute(testState2, filterService);
         assertEquals("testestest matched",testState2.getModifiedMessage().toString());
     }
 
     @Test
     public void testComandConditionOnlyMatchesCommandHandler() {
         FilterContext testState = new FilterContext("tell banned", author, new TestClient());
-        rs.execute(testState, logger);
+        rs.execute(testState, filterService);
         assertEquals("tell matched",testState.getModifiedMessage().toString());
         FilterContext testState2 = new FilterContext("tell banned", author, new TestClient("COMMAND"));
-        rs.execute(testState2, logger);
+        rs.execute(testState2, filterService);
         assertEquals("tell banned", testState2.getModifiedMessage().toString());
     }
 

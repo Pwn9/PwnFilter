@@ -10,9 +10,9 @@
 
 package com.pwn9.filter.engine.rules;
 
+import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.FilterContext;
-import com.pwn9.filter.engine.rules.chain.Chain;
 import com.pwn9.filter.engine.rules.chain.ChainEntry;
 import com.pwn9.filter.util.LimitedRegexCharSequence;
 
@@ -147,7 +147,9 @@ public class Rule implements ChainEntry {
      * apply this action to the current message / event.  May trigger other bukkit events.
      *
      */
-    public void apply(FilterContext filterContext, Chain parent, Logger logger ) {
+    public void apply(FilterContext filterContext, FilterService filterService) {
+
+        Logger logger = filterService.getLogger();
 
         // If finest logging is set, then generate our logging info. (This is a
         // lambda + Supplier pattern.)
@@ -192,7 +194,7 @@ public class Rule implements ChainEntry {
 
         // If we get this far, execute the actions
         for (Action a : actions) {
-            a.execute(filterContext);
+            a.execute(filterContext, filterService );
         }
 
     }

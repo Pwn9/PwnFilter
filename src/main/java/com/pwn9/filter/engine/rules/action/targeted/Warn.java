@@ -10,6 +10,7 @@
 
 package com.pwn9.filter.engine.rules.action.targeted;
 
+import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.bukkit.BukkitPlayer;
@@ -42,7 +43,7 @@ public class Warn implements Action {
     }
 
     /** {@inheritDoc} */
-    public void execute(final FilterContext filterTask) {
+    public void execute(final FilterContext filterTask, FilterService filterService) {
         if ( filterTask.getAuthor() instanceof BukkitPlayer) {
 
             final String message = TagRegistry.replaceTags(messageString, filterTask);

@@ -11,6 +11,7 @@
 package com.pwn9.filter.engine.rules.action.minecraft;
 
 import com.pwn9.filter.bukkit.BukkitPlayer;
+import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.api.MessageAuthor;
@@ -43,7 +44,7 @@ public class ConsoleChain implements Action {
     }
 
     /** {@inheritDoc} */
-    public void execute(final FilterContext filterTask) {
+    public void execute(final FilterContext filterTask, FilterService filterService) {
         final ArrayList<String> parsedCommands = new ArrayList<String>();
 
         for (String cmd : commands)

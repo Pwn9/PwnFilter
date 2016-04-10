@@ -10,6 +10,8 @@
 
 package com.pwn9.filter.engine.api;
 
+import com.pwn9.filter.engine.FilterService;
+
 /**
  * Actions are compiled into RuleChains for execution when matched by a rule.
  *
@@ -24,6 +26,7 @@ public interface Action {
      * <p>Execute this action on a FilterContext</p>
      *
      * @param task a {@link FilterContext} object.
+     * @param filterService
      */
-    void execute(FilterContext task);
+    void execute(FilterContext task, FilterService filterService);
 }
