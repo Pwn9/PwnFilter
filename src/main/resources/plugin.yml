@@ -22,11 +22,6 @@ commands:
     usage: /<command> 
     permission: pwnfilter.reload
     permission-message: You don't have permission for this command
-  pfdumpcache:
-    description: Dump the contents of the DataCache
-    usage: /<command>
-    permission: pwnfilter.debug
-    permission-message: You don't have permission for this command
 
 permissions:
   pwnfilter.*:

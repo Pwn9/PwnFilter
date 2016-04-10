@@ -13,15 +13,12 @@ package com.pwn9.filter.bukkit.listener;
 import com.pwn9.filter.bukkit.PwnFilterPlugin;
 import com.pwn9.filter.bukkit.config.BukkitConfig;
 import com.pwn9.filter.engine.api.FilterContext;
+import com.pwn9.filter.engine.api.MessageAuthor;
 import com.pwn9.filter.engine.rules.chain.InvalidChainException;
-import com.pwn9.filter.minecraft.api.MinecraftPlayer;
 import com.pwn9.filter.minecraft.util.ColoredString;
 import org.bukkit.Bukkit;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
-import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.PluginManager;
 
 import java.util.ArrayList;
@@ -63,10 +60,10 @@ public class PwnFilterSignListener extends BaseListener {
     public void onSignChange(SignChangeEvent event) {
         if (event.isCancelled()) return;
 
-        MinecraftPlayer bukkitPlayer = MinecraftPlayer.getInstance(event.getPlayer());
+        MessageAuthor signAuthor = plugin.getFilterService().getAuthor((event.getPlayer().getUniqueId()));
 
         // Permissions Check, if player has bypass permissions, then skip everything.
-        if (bukkitPlayer.hasPermission("pwnfilter.bypass.signs")) {
+        if (signAuthor.hasPermission("pwnfilter.bypass.signs")) {
             return;
         }
         // Take the message from the SignListenerEvent and send it through the filter.
@@ -78,17 +75,17 @@ public class PwnFilterSignListener extends BaseListener {
         String signLines = builder.toString().trim();
 
         FilterContext filterTask = new FilterContext(new ColoredString(signLines),
-                bukkitPlayer, this);
+                signAuthor, this);
 
         ruleChain.execute(filterTask, filterService.getLogger());
 
         if (filterTask.messageChanged()){
             // TODO: Can colors be placed on signs?  Wasn't working. Find out why.
             // Break the changed string into new Lines
-            List<String> newLines = new ArrayList<String>();
+            List<String> newLines = new ArrayList<>();
 
             // Global decolor
-            if ((BukkitConfig.decolor()) && !(bukkitPlayer.hasPermission("pwnfilter.color"))) {
+            if ((BukkitConfig.decolor()) && !(signAuthor.hasPermission("pwnfilter.color"))) {
                 Collections.addAll(newLines,filterTask.getModifiedMessage().toString().split("\t"));
             } else {
                 Collections.addAll(newLines,filterTask.getModifiedMessage().getRaw().split("\t"));
@@ -147,9 +144,7 @@ public class PwnFilterSignListener extends BaseListener {
                 ruleChain = getCompiledChain("sign.txt");
                 // Now register the listener with the appropriate priority
                 pm.registerEvent(SignChangeEvent.class, this, priority,
-                        new EventExecutor() {
-                            public void execute(Listener l, Event e) { onSignChange((SignChangeEvent)e); }
-                        },
+                        (l, e) -> onSignChange((SignChangeEvent)e),
                         PwnFilterPlugin.getInstance());
 
                 plugin.getLogger().info("Activated SignListener with Priority Setting: " + priority.toString()

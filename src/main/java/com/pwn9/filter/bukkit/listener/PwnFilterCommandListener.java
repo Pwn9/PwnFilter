@@ -14,9 +14,9 @@ package com.pwn9.filter.bukkit.listener;
 import com.pwn9.filter.bukkit.PwnFilterPlugin;
 import com.pwn9.filter.bukkit.config.BukkitConfig;
 import com.pwn9.filter.engine.api.FilterContext;
+import com.pwn9.filter.engine.api.MessageAuthor;
 import com.pwn9.filter.engine.rules.chain.InvalidChainException;
 import com.pwn9.filter.engine.rules.chain.RuleChain;
-import com.pwn9.filter.minecraft.api.MinecraftPlayer;
 import com.pwn9.filter.minecraft.util.ColoredString;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -93,7 +93,7 @@ public class PwnFilterCommandListener extends BaseListener {
         if (event.isCancelled()) return;
 
 
-        MinecraftPlayer minecraftPlayer = MinecraftPlayer.getInstance(event.getPlayer().getUniqueId());
+        MessageAuthor minecraftPlayer = plugin.getFilterService().getAuthor((event.getPlayer().getUniqueId()));
 
         if (minecraftPlayer.hasPermission("pwnfilter.bypass.commands")) return;
 
@@ -116,12 +116,12 @@ public class PwnFilterCommandListener extends BaseListener {
             // Simple Spam filter
             if (BukkitConfig.commandspamfilterEnabled() && !minecraftPlayer.hasPermission("pwnfilter.bypass.spam")) {
                 // Keep a log of the last message sent by this player.  If it's the same as the current message, cancel.
-                if (PwnFilterPlugin.lastMessage.containsKey(minecraftPlayer.getID()) && PwnFilterPlugin.lastMessage.get(minecraftPlayer.getID()).equals(message)) {
+                if (PwnFilterPlugin.lastMessage.containsKey(minecraftPlayer.getId()) && PwnFilterPlugin.lastMessage.get(minecraftPlayer.getId()).equals(message)) {
                     event.setCancelled(true);
                     minecraftPlayer.sendMessage(ChatColor.DARK_RED + "[PwnFilter]" + ChatColor.RED + " Repeated command blocked by spam filter.");
                     return;
                 }
-                PwnFilterPlugin.lastMessage.put(minecraftPlayer.getID(), message);
+                PwnFilterPlugin.lastMessage.put(minecraftPlayer.getId(), message);
             }
 
             chatRuleChain.execute(filterTask, filterService.getLogger());

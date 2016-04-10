@@ -11,8 +11,8 @@
 package com.pwn9.filter.minecraft.tag;
 
 import com.pwn9.filter.engine.api.FilterContext;
+import com.pwn9.filter.bukkit.BukkitPlayer;
 import com.pwn9.filter.engine.api.MessageAuthor;
-import com.pwn9.filter.minecraft.api.MinecraftPlayer;
 import com.pwn9.filter.util.tag.Tag;
 
 /**
@@ -24,8 +24,8 @@ public class WorldTag implements Tag {
     @Override
     public String getValue(FilterContext filterTask) {
         MessageAuthor author = filterTask.getAuthor();
-        if (author instanceof MinecraftPlayer) {
-            return ((MinecraftPlayer) author).getWorldName();
+        if (author instanceof BukkitPlayer) {
+            return ((BukkitPlayer) author).getWorldName();
         }
         return "";
     }

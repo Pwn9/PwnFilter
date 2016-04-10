@@ -10,20 +10,11 @@
 
 package com.pwn9.filter.engine.api;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 import java.util.UUID;
 
 /**
- * Created by Sage905 on 2016-04-08.
+ * Created by Sage905 on 2016-04-09.
  */
-public interface MessageAuthor {
-
-    Boolean hasPermission(String s);
-    @NotNull
-    String getName();
-    UUID getId();
-    void sendMessage(final String message);
-    void sendMessages(final List<String> messages);
+public interface AuthorService {
+    MessageAuthor getAuthorById(UUID uuid);
 }

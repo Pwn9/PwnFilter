@@ -13,23 +13,20 @@ package com.pwn9.filter.bukkit;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.pwn9.filter.engine.api.MessageAuthor;
+import com.pwn9.filter.engine.api.AuthorService;
 import com.pwn9.filter.minecraft.DeathMessages;
 import com.pwn9.filter.minecraft.api.MinecraftAPI;
-import com.pwn9.filter.minecraft.api.MinecraftPlayer;
-import com.pwn9.filter.minecraft.api.PlayerData;
+import com.pwn9.filter.minecraft.api.MinecraftConsole;
 import net.milkbowl.vault.economy.EconomyResponse;
+import org.apache.commons.lang.BooleanUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.permissions.Permission;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -46,102 +43,52 @@ import java.util.concurrent.TimeUnit;
  */
 
 @SuppressWarnings("UnusedDeclaration")
-public class BukkitAPI implements MinecraftAPI {
+public class BukkitAPI implements MinecraftAPI, AuthorService {
 
-    private final LoadingCache<UUID, PlayerData> playerDataMap = CacheBuilder.newBuilder()
+    private final PwnFilterPlugin plugin;
+
+    BukkitAPI(PwnFilterPlugin p) {
+        plugin = p;
+    }
+
+    private final MinecraftAPI playerAPI = this;
+
+    private final LoadingCache<UUID, BukkitPlayer> playerLoadingCache = CacheBuilder.newBuilder()
             .maximumSize(100)
             .expireAfterWrite(10, TimeUnit.SECONDS)
             .build(
-                    new CacheLoader<UUID, PlayerData>() {
+                    new CacheLoader<UUID, BukkitPlayer>() {
                         @Override
-                        public PlayerData load(@NotNull final UUID uuid) {
-                            Callable<PlayerData> cacheTask =
-                                    new Callable<PlayerData>() {
-                                        @Override
-                                        public PlayerData call() {
-                                            return dataFetch(uuid);
-                                        }
-                                    };
-                            return safeBukkitAPICall(cacheTask);
+                        public BukkitPlayer load(@NotNull final UUID uuid) {
+                            if (BooleanUtils.isTrue(safeBukkitAPICall(() -> Bukkit.getPlayer(uuid) != null))) {
+                                return new BukkitPlayer(uuid, playerAPI);
+                            } else {
+                                throw new InstantiationError();
+                            }
                         }
                     }
             );
 
-    private final Plugin plugin;
-
-    // Permissions we are interested in caching
-    protected final Set<String> permSet = new HashSet<String>();
-
-    public BukkitAPI(Plugin p) {
-        plugin = p;
-
+    public BukkitPlayer getAuthorById(UUID u) {
+        try {
+            return playerLoadingCache.get(u);
+        } catch (ExecutionException e) {
+            return null; // Not a player
+        }
     }
 
-    public static BukkitAPI get(PwnFilterPlugin plugin) {
-        return new BukkitAPI(plugin);
+    public MinecraftConsole getConsole() {
+        return plugin.getConsole();
     }
 
     @Override
     public synchronized void reset() {
-        permSet.clear();
-        playerDataMap.invalidateAll();
+        playerLoadingCache.invalidateAll();
     }
 
-
-//    /**
-//     * <p>Getter for the field <code>onlinePlayers</code>.</p>
-//     *
-//     * @return an array of {@link org.bukkit.entity.Player} objects.
-//     */
-//    public Player[] getOnlinePlayers() {
-//        return onlinePlayers.toArray(new Player[onlinePlayers.size()]);
-//    }
-
-
-    /**
-     * <p>addCachedPermission.</p>
-     *
-     * @param permission a {@link java.lang.String} object.
-     */
-    @Override
-    public synchronized void addCachedPermission(String permission) {
-        permSet.add(permission);
-    }
-
-
-    /**
-     * <p>addCachedPermissions.</p>
-     *
-     * @param permissions a {@link java.util.List} object.
-     */
-    @Override
-    public synchronized void addCachedPermissions(List<Permission> permissions) {
-        for (Permission p : permissions) {
-            permSet.add(p.getName());
-        }
-    }
-
-    public synchronized void addCachedPermissions(Set<String> permissions) {
-        permSet.addAll(permissions);
-    }
-
-    // NOTE: This is not synchronized, but it is private, so that only the
-    // synchronized methods can call it.
-
-    private Set<String> cachePlayerPermissions(Player p) {
-
-        Set<String> result = new HashSet<String>();
-
-        for (String perm : permSet) {
-            if (p.hasPermission(perm)) {
-                result.add(perm);
-            }
-        }
-        return result;
-    }
 
     @Nullable
-    public <T> T safeBukkitAPICall(Callable<T> callable) {
+    private <T> T safeBukkitAPICall(Callable<T> callable) {
 
         if (Bukkit.isPrimaryThread()) {
             // We are in the main thread, just execute API calls directly.
@@ -168,7 +115,7 @@ public class BukkitAPI implements MinecraftAPI {
         return null;
     }
 
-    public void safeBukkitDispatch(Runnable runnable) {
+    private void safeBukkitDispatch(Runnable runnable) {
         if (Bukkit.isPrimaryThread()) {
             // We are in the main thread, just execute API calls directly.
             try {
@@ -183,34 +130,48 @@ public class BukkitAPI implements MinecraftAPI {
             Bukkit.getScheduler().runTask(plugin, runnable);
         }
     }
-
-
-    private PlayerData dataFetch(UUID uuid) {
-        PlayerData cache = new PlayerData();
-        Player p = Bukkit.getPlayer(uuid);
-        if (p == null) return null; // Couldn't find the player!
-        cache.setPermissionSet(cachePlayerPermissions(p));
-        cache.setName(p.getDisplayName());
-        cache.setWorld(p.getWorld());
-        return cache;
-    }
-
-    @Override
-    public MessageAuthor getAuthor(UUID uuid) {
-        return MinecraftPlayer.getInstance(uuid);
-    }
-
-    @Override
-    public PlayerData getData(UUID uuid) throws ExecutionException {
-        return playerDataMap.get(uuid);
-    }
-
-
+    
     /*
       **********
       Player API
       **********
     */
+
+    public Player getPlayerFromID(UUID id) {
+        return safeBukkitAPICall(() -> Bukkit.getPlayer(UUID.randomUUID()));
+
+    }
+
+    // Get the player's Name (Works even if they are offline)
+    @Nullable
+    @Override
+    public String getPlayerName(final UUID u) {
+        return safeBukkitAPICall(() -> {
+            OfflinePlayer p = Bukkit.getOfflinePlayer(u);
+            if (p != null) return p.getName();
+            return null;
+        });
+    }
+
+    // Get the player's current world
+    @Nullable
+    @Override
+    public String getPlayerWorldName(final UUID uuid) {
+        return safeBukkitAPICall(() -> {
+            Player p = Bukkit.getPlayer(uuid);
+            if (p != null) return p.getWorld().getName();
+            return null;
+        });
+    }
+
+    // Check if a player has a perm. (not cached)
+    @Override
+    public Boolean playerIdHasPermission(final UUID u, final String s) {
+        return safeBukkitAPICall(() -> {
+            Player p = Bukkit.getPlayer(u);
+            return p != null && p.hasPermission(s);
+        });
+    }
 
     @Override
     public boolean burn(final UUID uuid, final int duration, final String messageString) {
@@ -280,18 +241,15 @@ public class BukkitAPI implements MinecraftAPI {
     public boolean withdrawMoney(final UUID uuid, final Double amount, final String messageString) {
         if (PwnFilterPlugin.economy != null) {
             Boolean result = safeBukkitAPICall(
-                    new Callable<Boolean>() {
-                        @Override
-                        public Boolean call() {
-                            Player bukkitPlayer = Bukkit.getPlayer(uuid);
-                            if (bukkitPlayer != null) {
-                                EconomyResponse resp = PwnFilterPlugin.economy.withdrawPlayer(
-                                        Bukkit.getOfflinePlayer(uuid), amount);
-                                bukkitPlayer.sendMessage(messageString);
-                                return resp.transactionSuccess();
-                            }
-                            return false;
+                    () -> {
+                        Player bukkitPlayer = Bukkit.getPlayer(uuid);
+                        if (bukkitPlayer != null) {
+                            EconomyResponse resp = PwnFilterPlugin.economy.withdrawPlayer(
+                                    Bukkit.getOfflinePlayer(uuid), amount);
+                            bukkitPlayer.sendMessage(messageString);
+                            return resp.transactionSuccess();
                         }
+                        return false;
                     });
             if (result != null) return result;
         }
@@ -326,16 +284,6 @@ public class BukkitAPI implements MinecraftAPI {
                 });
     }
 
-    @Override
-    public String getPlayerWorldName(UUID uuid) {
-        try {
-            return getData(uuid).getWorld().getName();
-        } catch (ExecutionException e) {
-            return null;
-        }
-
-    }
-
     /*
       ***********
       Console API
@@ -344,22 +292,14 @@ public class BukkitAPI implements MinecraftAPI {
 
     @Override
     public void sendConsoleMessage(final String message) {
-        safeBukkitDispatch(new Runnable() {
-            @Override
-            public void run() {
-                Bukkit.getConsoleSender().sendMessage(message);
-            }
-        });
+        safeBukkitDispatch(() -> Bukkit.getConsoleSender().sendMessage(message));
     }
 
     @Override
     public void sendConsoleMessages(final List<String> messageList) {
-        safeBukkitDispatch(new Runnable() {
-            @Override
-            public void run() {
-                for (String message : messageList) {
-                    Bukkit.getConsoleSender().sendMessage(message);
-                }
+        safeBukkitDispatch(() -> {
+            for (String message : messageList) {
+                Bukkit.getConsoleSender().sendMessage(message);
             }
         });
 
@@ -367,24 +307,13 @@ public class BukkitAPI implements MinecraftAPI {
 
     @Override
     public void sendBroadcast(final String message) {
-        safeBukkitDispatch(new BukkitRunnable() {
-            @Override
-            public void run() {
-                Bukkit.broadcastMessage(message);
-            }
-        });
+        safeBukkitDispatch(() -> Bukkit.broadcastMessage(message));
     }
 
     @Override
     public void sendBroadcast(final List<String> messageList) {
-        safeBukkitDispatch(new BukkitRunnable() {
-            @Override
-            public void run() {
-                for (String m : messageList) {
-                    Bukkit.broadcastMessage(m);
-                }
-            }
-        });
+        safeBukkitDispatch(() -> messageList.forEach(Bukkit::broadcastMessage)
+        );
     }
 
     @Override
@@ -394,27 +323,22 @@ public class BukkitAPI implements MinecraftAPI {
             public void run() {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
             }
-        }.runTask(PwnFilterPlugin.getInstance());
+        }.runTask(plugin);
 
     }
 
     @Override
     public boolean notifyWithPerm(final String permissionString, final String sendString) {
-        safeBukkitDispatch(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        if (permissionString.equalsIgnoreCase("console")) {
-                            Bukkit.getConsoleSender().sendMessage(sendString);
-                        } else {
-                            for (Player p : Bukkit.getOnlinePlayers()) {
-                                if (p.hasPermission(permissionString)) {
-                                    p.sendMessage(sendString);
-                                }
-                            }
-                        }
-                    }
-                });
+        safeBukkitDispatch(() -> {
+            if (permissionString.equalsIgnoreCase("console")) {
+                Bukkit.getConsoleSender().sendMessage(sendString);
+            } else {
+                Bukkit.getOnlinePlayers()
+                        .stream()
+                        .filter(p -> p.hasPermission(permissionString))
+                        .forEach(p -> p.sendMessage(sendString));
+            }
+        });
 
         return true;
 

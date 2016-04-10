@@ -14,7 +14,7 @@ import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.api.MessageAuthor;
 import com.pwn9.filter.engine.rules.action.InvalidActionException;
-import com.pwn9.filter.minecraft.api.MinecraftPlayer;
+import com.pwn9.filter.bukkit.BukkitPlayer;
 import com.pwn9.filter.util.tag.TagRegistry;
 
 import java.util.ArrayList;
@@ -47,14 +47,14 @@ public class CommandChain implements Action {
     /** {@inheritDoc} */
     public void execute(final FilterContext filterTask) {
         filterTask.setCancelled();
-        final ArrayList<String> parsedCommands = new ArrayList<String>();
+        final ArrayList<String> parsedCommands = new ArrayList<>();
 
         for (String cmd : commands)
             parsedCommands.add(TagRegistry.replaceTags(cmd, filterTask));
 
         MessageAuthor author = filterTask.getAuthor();
-        if (author instanceof MinecraftPlayer) {
-            MinecraftPlayer player = (MinecraftPlayer)author;
+        if (author instanceof BukkitPlayer) {
+            BukkitPlayer player = (BukkitPlayer)author;
             for (String cmd : parsedCommands) {
                 player.executeCommand(cmd);
                 filterTask.addLogMessage("Helped " + author.getName() + " execute command: " + cmd);

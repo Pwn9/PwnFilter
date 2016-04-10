@@ -13,16 +13,13 @@ package com.pwn9.filter.bukkit.listener;
 import com.pwn9.filter.bukkit.PwnFilterPlugin;
 import com.pwn9.filter.bukkit.config.BukkitConfig;
 import com.pwn9.filter.engine.api.FilterContext;
+import com.pwn9.filter.engine.api.MessageAuthor;
 import com.pwn9.filter.engine.rules.chain.InvalidChainException;
-import com.pwn9.filter.minecraft.api.MinecraftPlayer;
 import com.pwn9.filter.minecraft.util.ColoredString;
 import com.pwn9.filter.util.SimpleString;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.event.Event;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.PluginManager;
 
 /**
@@ -60,7 +57,7 @@ public class PwnFilterPlayerListener extends BaseListener {
 
         if (event.isCancelled()) return;
 
-        MinecraftPlayer minecraftPlayer = MinecraftPlayer.getInstance(event.getPlayer());
+        MessageAuthor minecraftPlayer = plugin.getFilterService().getAuthor((event.getPlayer().getUniqueId()));
 
 
         // Permissions Check, if player has bypass permissions, then skip everything.
@@ -76,13 +73,13 @@ public class PwnFilterPlayerListener extends BaseListener {
 
         if (BukkitConfig.spamfilterEnabled() && !minecraftPlayer.hasPermission("pwnfilter.bypass.spam")) {
             // Keep a log of the last message sent by this player.  If it's the same as the current message, cancel.
-            if (PwnFilterPlugin.lastMessage.containsKey(minecraftPlayer.getID()) && PwnFilterPlugin.lastMessage.get(minecraftPlayer.getID()).equals(message)) {
+            if (PwnFilterPlugin.lastMessage.containsKey(minecraftPlayer.getId()) && PwnFilterPlugin.lastMessage.get(minecraftPlayer.getId()).equals(message)) {
                 event.setCancelled(true);
                 minecraftPlayer.sendMessage(ChatColor.DARK_RED + "[PwnFilter]" + ChatColor.RED + " Repeated command blocked by spam filter.");
 
                 return;
             }
-            PwnFilterPlugin.lastMessage.put(minecraftPlayer.getID(), message);
+            PwnFilterPlugin.lastMessage.put(minecraftPlayer.getId(), message);
 
         }
 
@@ -128,11 +125,7 @@ public class PwnFilterPlayerListener extends BaseListener {
 
             /* Hook up the Listener for PlayerChat events */
             pm.registerEvent(AsyncPlayerChatEvent.class, this, BukkitConfig.getChatpriority(),
-                    new EventExecutor() {
-                        public void execute(Listener l, Event e) {
-                            onPlayerChat((AsyncPlayerChatEvent) e);
-                        }
-                    }, PwnFilterPlugin.getInstance());
+                    (l, e) -> onPlayerChat((AsyncPlayerChatEvent) e), PwnFilterPlugin.getInstance());
 
             plugin.getLogger().info("Activated PlayerListener with Priority Setting: " + BukkitConfig.getChatpriority().toString()
                     + " Rule Count: " + getRuleChain().ruleCount() );

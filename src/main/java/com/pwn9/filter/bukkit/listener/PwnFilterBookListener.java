@@ -15,17 +15,12 @@ import com.pwn9.filter.bukkit.PwnFilterPlugin;
 import com.pwn9.filter.bukkit.config.BukkitConfig;
 import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.rules.chain.InvalidChainException;
-import com.pwn9.filter.minecraft.api.MinecraftPlayer;
-import com.pwn9.filter.minecraft.api.MinecraftServer;
 import com.pwn9.filter.minecraft.util.ColoredString;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerEditBookEvent;
 import org.bukkit.inventory.meta.BookMeta;
-import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.PluginManager;
 
 import java.util.ArrayList;
@@ -71,7 +66,7 @@ public class PwnFilterBookListener extends BaseListener {
 
         player = event.getPlayer();
 
-        if (MinecraftServer.getAPI().getAuthor(player.getUniqueId()).hasPermission("pwnfilter.bypass.book")) return;
+        if (plugin.getFilterService().getAuthor(player.getUniqueId()).hasPermission("pwnfilter.bypass.book")) return;
 
         BookMeta bookMeta = event.getNewBookMeta();
 
@@ -80,7 +75,7 @@ public class PwnFilterBookListener extends BaseListener {
             // Run title through filter.
             message = bookMeta.getTitle();
             FilterContext filterTask = new FilterContext(new ColoredString(message),
-                    MinecraftPlayer.getInstance(player), this);
+                    filterService.getAuthor(player.getUniqueId()), this);
             ruleChain.execute(filterTask, filterService.getLogger());
             if (filterTask.isCancelled()) event.setCancelled(true);
             if (filterTask.messageChanged()) {
@@ -91,11 +86,11 @@ public class PwnFilterBookListener extends BaseListener {
 
         // Process Book Text
         if (bookMeta.hasPages()) {
-            List<String> newPages = new ArrayList<String>();
+            List<String> newPages = new ArrayList<>();
             boolean modified = false;
             for (String page : bookMeta.getPages()) {
                 FilterContext state = new FilterContext(new ColoredString(page),
-                        MinecraftPlayer.getInstance(player.getUniqueId()), this);
+                        filterService.getAuthor(player.getUniqueId()), this);
                 ruleChain.execute(state, filterService.getLogger());
                 if (state.isCancelled()) {
                     event.setCancelled(true);
@@ -137,9 +132,7 @@ public class PwnFilterBookListener extends BaseListener {
             try {
                 ruleChain = getCompiledChain("book.txt");
                 pm.registerEvent(PlayerEditBookEvent.class, this, priority,
-                        new EventExecutor() {
-                            public void execute(Listener l, Event e) { onBookEdit((PlayerEditBookEvent) e); }
-                        },
+                        (l, e) -> onBookEdit((PlayerEditBookEvent) e),
                         PwnFilterPlugin.getInstance());
                 setActive();
                 plugin.getLogger().info("Activated BookListener with Priority Setting: " + priority.toString()

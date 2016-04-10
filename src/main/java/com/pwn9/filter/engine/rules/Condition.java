@@ -129,7 +129,7 @@ public class Condition {
                 }
             case permission:
                 for (String check: parameters.split("\\s")) {
-                    if (state.playerHasPermission(check)) matched = true;
+                    if (state.getAuthor().hasPermission(check)) matched = true;
                 }
             case string:
                 for (String check: parameters.split("\\|")) {
@@ -137,7 +137,7 @@ public class Condition {
                 }
             case command:
                 for (String check: parameters.split("\\|")) {
-                    if (state.getListenerName().equals("COMMAND")) {
+                    if (state.getFilterClient().getShortName().equals("COMMAND")) {
                         String command = state.getOriginalMessage().toString().split("\\s")[0].replaceFirst("^\\/","");
                         if (command.toUpperCase().matches(check.toUpperCase())) matched = true;
                     }

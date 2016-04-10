@@ -10,7 +10,6 @@
 
 package com.pwn9.filter.engine.api;
 
-import com.pwn9.filter.AuthorService;
 import com.pwn9.filter.engine.rules.Rule;
 import com.pwn9.filter.util.SimpleString;
 
@@ -32,8 +31,8 @@ public class FilterContext {
     private EnhancedString modifiedMessage; // Modified message string
     private final MessageAuthor author; // Author that this event is connected to.
     private final FilterClient filterClient;
-    private final List<String> logMessages = new ArrayList<String>(); // Rules can add strings to this array.  They will be output to log if log=true
-    private final List<Rule> matchedRules = new ArrayList<Rule>(); // An array containing all the rules we matched.
+    private final List<String> logMessages = new ArrayList<>(); // Rules can add strings to this array.  They will be output to log if log=true
+    private final List<Rule> matchedRules = new ArrayList<>(); // An array containing all the rules we matched.
     private boolean logging = false;  // If true, actions will be logged
     private boolean aborted = false; // If set true by a rule, will stop further processing.
     private boolean cancelled = false; // If set true, will cancel this event.
@@ -48,7 +47,7 @@ public class FilterContext {
      * already be converted to the section character (u00A7), otherwise they
      * will not be correctly processed.
      *  @param m The original text string to run rules against.
-     * @param a  a {@link MessageAuthor} object.
+     * @param a  a {@link UUID} object.
      * @param l a {@link FilterClient} object.
      */
     public FilterContext(EnhancedString m, MessageAuthor a, FilterClient l) {
@@ -61,25 +60,11 @@ public class FilterContext {
     /**
      * A convenience Constructor that wraps a plain String
      * @param s A String containing the original text to run rules on.
-     * @param a The {@link MessageAuthor } of this message
+     * @param a The {@link UUID } of this message
      * @param l The {@link FilterClient } that generated this message
      */
     public FilterContext(String s, MessageAuthor a, FilterClient l) {
         this(new SimpleString(s), a, l);
-    }
-
-    /**
-     * A FilterTask object from a UUID, instead of an Author Object.
-     *  @param m String message to process
-     * @param uuid Unique ID of the Author
-     * @param l Listener that is calling.
-     */
-    public FilterContext(EnhancedString m, UUID uuid, FilterClient l) {
-        originalMessage = m;
-        modifiedMessage = m;
-        filterClient = l;
-        //TODO: Abstract this into a generic MessageAuthor lookup?
-        author = AuthorService.getAuthor(uuid);
     }
 
     /**
@@ -111,16 +96,6 @@ public class FilterContext {
     }
 
     /**
-     * <p>playerHasPermission.</p>
-     *
-     * @param perm a {@link java.lang.String} object.
-     * @return a boolean.
-     */
-    public boolean playerHasPermission(String perm) {
-        return author != null && author.hasPermission(perm);
-    }
-
-    /**
      * <p>Getter for the field <code>author</code>.</p>
      *
      * @return a {@link org.bukkit.entity.Player} object.
@@ -146,14 +121,6 @@ public class FilterContext {
         this.cancelled = true;
     }
 
-    /**
-     * <p>getListenerName.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
-    public String getListenerName() {
-        return filterClient.getShortName();
-    }
     /**
      * <p>Getter for the field <code>originalMessage</code>.</p>
      *

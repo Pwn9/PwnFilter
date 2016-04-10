@@ -53,7 +53,7 @@ public class Rule implements ChainEntry {
      * @param matchStr a {@link java.lang.String} object.
      */
     public Rule(String matchStr) {
-        this.pattern = Pattern.compile(matchStr, Pattern.CASE_INSENSITIVE);;
+        this.pattern = Pattern.compile(matchStr, Pattern.CASE_INSENSITIVE);
     }
 
     /**
@@ -173,7 +173,7 @@ public class Rule implements ChainEntry {
         filterContext.setRule(this);
 
         // If Match, log it and then check any conditions.
-        filterContext.addLogMessage("|" + filterContext.getListenerName() + "| MATCH " +
+        filterContext.addLogMessage("|" + filterContext.getFilterClient().getShortName() + "| MATCH " +
                 (id.isEmpty() ? "" : "(" + id + ")") +
                 " <" +
                 filterContext.getAuthor().getName() + "> " + filterContext.getModifiedMessage().toString());

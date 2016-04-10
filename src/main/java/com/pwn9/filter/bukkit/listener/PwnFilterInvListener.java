@@ -15,7 +15,6 @@ import com.pwn9.filter.bukkit.PwnFilterPlugin;
 import com.pwn9.filter.bukkit.config.BukkitConfig;
 import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.rules.chain.InvalidChainException;
-import com.pwn9.filter.minecraft.api.MinecraftPlayer;
 import com.pwn9.filter.minecraft.util.ColoredString;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
@@ -82,7 +81,7 @@ public class PwnFilterInvListener extends BaseListener {
         if (itemMeta != null && itemMeta.hasDisplayName()) {
             message = itemMeta.getDisplayName();
 
-            FilterContext filterTask = new FilterContext(new ColoredString(message), MinecraftPlayer.getInstance(player), this);
+            FilterContext filterTask = new FilterContext(new ColoredString(message), filterService.getAuthor(player.getUniqueId()), this);
 
             ruleChain.execute(filterTask, filterService.getLogger());
             if (filterTask.isCancelled()) event.setCancelled(true);

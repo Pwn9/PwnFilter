@@ -12,7 +12,6 @@ package com.pwn9.filter.engine.rules.action.targeted;
 
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.FilterContext;
-import com.pwn9.filter.minecraft.api.MinecraftPlayer;
 
 import static com.pwn9.filter.util.tag.TagRegistry.replaceTags;
 
@@ -46,10 +45,10 @@ public class Kick implements Action {
     /** {@inheritDoc} */
     public void execute(final FilterContext filterTask) {
 
-        if (filterTask.getAuthor() instanceof MinecraftPlayer) {
+        if (filterTask.getAuthor() instanceof KickTarget) {
 
             String outMessage = replaceTags(messageString, filterTask);
-            ((MinecraftPlayer) filterTask.getAuthor()).kick(outMessage);
+            ((KickTarget) filterTask.getAuthor()).kick(outMessage);
             filterTask.addLogMessage("Kicked " + filterTask.getAuthor().getName() + ": " + messageString);
         }
     }

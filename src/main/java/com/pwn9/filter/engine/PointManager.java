@@ -40,8 +40,8 @@ import java.util.concurrent.*;
 @SuppressWarnings("UnusedDeclaration")
 public class PointManager implements FilterClient {
 
-    private final Map<UUID,Double> pointsMap = new ConcurrentHashMap<UUID, Double>(8, 0.75f, 2);
-    private final TreeMap<Double, Threshold> thresholds = new TreeMap<Double,Threshold>();
+    private final Map<UUID,Double> pointsMap = new ConcurrentHashMap<>(8, 0.75f, 2);
+    private final TreeMap<Double, Threshold> thresholds = new TreeMap<>();
 
     private int leakInterval = 0;
 
@@ -49,8 +49,11 @@ public class PointManager implements FilterClient {
     private ScheduledFuture<?> scheduledFuture;
     private final ScheduledExecutorService scheduler =
             Executors.newScheduledThreadPool(1);
+    private final FilterService filterService;
 
-    PointManager() {}
+    PointManager(FilterService filterService) {
+        this.filterService = filterService;
+    }
 
     public void reset() {
         stop();
@@ -78,7 +81,7 @@ public class PointManager implements FilterClient {
     public void clearThresholds() {
         thresholds.clear();
         // Setup the 0 threshold
-        addThreshold("Default", (double) 0, new ArrayList<Action>(), new ArrayList<Action>());
+        addThreshold("Default", (double) 0, new ArrayList<>(), new ArrayList<>());
     }
 
 
@@ -86,14 +89,11 @@ public class PointManager implements FilterClient {
         if (scheduledFuture == null) {
             final PointManager pointManager = this;
 
-            final Runnable leakTask = new Runnable() {
-                @Override
-                public void run() {
-                    //Every interval, check point balances, and if they are > 0, subtract leakPoints
-                    // from the players balance.  If they reach 0, remove them from the list.
-                    for (UUID id : pointManager.getPointsMap()) {
-                        pointManager.subPoints(id, leakPoints);
-                    }
+            final Runnable leakTask = () -> {
+                //Every interval, check point balances, and if they are > 0, subtract leakPoints
+                // from the players balance.  If they reach 0, remove them from the list.
+                for (UUID id : pointManager.getPointsMap()) {
+                    pointManager.subPoints(id, leakPoints);
                 }
             };
             scheduledFuture = scheduler.scheduleAtFixedRate(leakTask, 1, leakInterval, TimeUnit.SECONDS);
@@ -114,7 +114,7 @@ public class PointManager implements FilterClient {
      *
      * @return a {@link java.util.Set} object.
      */
-    public Set<UUID> getPointsMap() {
+    public Set<java.util.UUID> getPointsMap() {
         return pointsMap.keySet();
     }
 
@@ -123,7 +123,7 @@ public class PointManager implements FilterClient {
      *
      * @return a {@link java.lang.Double} object.
      */
-    public Double getPoints(UUID uuid) {
+    public Double getPoints(java.util.UUID uuid) {
         return (pointsMap.containsKey(uuid))? pointsMap.get(uuid):0.0;
     }
 
@@ -133,7 +133,7 @@ public class PointManager implements FilterClient {
      * @return a {@link java.lang.Double} object.
      */
     public Double getPoints(MessageAuthor author) {
-        return (pointsMap.containsKey(author.getID()))? pointsMap.get(author.getID()):0.0;
+        return (pointsMap.containsKey(author.getId()))? pointsMap.get(author.getId()):0.0;
     }
 
     /**
@@ -141,7 +141,7 @@ public class PointManager implements FilterClient {
      *
      * @param points a {@link java.lang.Double} object.
      */
-    public void setPoints(UUID id, Double points) {
+    public void setPoints(java.util.UUID id, Double points) {
         Double old = pointsMap.get(id);
         pointsMap.put(id, points);
         executeActions(old, points,id);
@@ -152,7 +152,7 @@ public class PointManager implements FilterClient {
      *
      * @param points a {@link java.lang.Double} object.
      */
-    public void addPoints(UUID id, Double points) {
+    public void addPoints(java.util.UUID id, Double points) {
         Double current = pointsMap.get(id);
         if (current == null) current = 0.0;
         Double updated = current + points;
@@ -172,7 +172,7 @@ public class PointManager implements FilterClient {
         return scheduledFuture != null;
     }
 
-    private void executeActions(final Double fromValue, final Double toValue, final UUID id) {
+    private void executeActions(final Double fromValue, final Double toValue, final java.util.UUID id) {
         final Double oldKey = thresholds.floorKey(fromValue);
         final Double newKey = thresholds.floorKey(toValue);
 
@@ -198,7 +198,7 @@ public class PointManager implements FilterClient {
      *
      * @param points a {@link java.lang.Double} object.
      */
-    public void subPoints(UUID id, Double points) {
+    public void subPoints(java.util.UUID id, Double points) {
         Double updated;
         Double current = pointsMap.get(id);
         if (current == null) current = 0.0;
@@ -235,15 +235,16 @@ public class PointManager implements FilterClient {
             return Double.compare(this.points, o.points);
         }
 
-        public void executeAscending(UUID id, FilterClient client) {
-            FilterContext state = new FilterContext(new SimpleString(""), id, client );
+        public void executeAscending(java.util.UUID id, FilterClient client) {
+            FilterContext state = new FilterContext(new SimpleString(""), getFilterService().getAuthor(id), client );
             for (Action a : actionsAscending ) {
                 a.execute(state);
             }
+
         }
 
-        public void executeDescending(UUID id, FilterClient client) {
-            FilterContext state = new FilterContext(new SimpleString(""), id, client );
+        public void executeDescending(java.util.UUID id, FilterClient client) {
+            FilterContext state = new FilterContext(new SimpleString(""), getFilterService().getAuthor(id), client );
             for (Action a : actionsDescending ) {
                 a.execute(state);
             }
@@ -251,13 +252,6 @@ public class PointManager implements FilterClient {
 
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * Setup as a Client, so we can create a FilterTask object, and execute actions.
-     * Really, the only thing we implement is the getShortName() call.  This is hackish.
-     * Should really re-think this implementation.
-     */
     @Override
     public String getShortName() {
         return "POINTS";
@@ -265,7 +259,7 @@ public class PointManager implements FilterClient {
 
     @Override
     public FilterService getFilterService() {
-        return null;
+        return filterService;
     }
 
     /** {@inheritDoc} */
@@ -277,12 +271,13 @@ public class PointManager implements FilterClient {
     /** {@inheritDoc} */
     @Override
     public boolean isActive() {
-        return false;
+        return scheduledFuture != null ;
     }
 
     /** {@inheritDoc} */
     @Override
     public void activate() {
+        start();
     }
 
     /** {@inheritDoc} */

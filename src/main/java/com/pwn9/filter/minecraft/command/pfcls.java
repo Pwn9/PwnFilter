@@ -31,12 +31,14 @@ import java.util.logging.Logger;
  */
 public class pfcls implements CommandExecutor {
     private final Logger logger;
+    private final MinecraftConsole console;
     /**
      * <p>Constructor for pfcls.</p>
-     *
      */
-    public pfcls(Logger logger) {
-        this.logger = logger;}
+    public pfcls(Logger logger, MinecraftConsole console) {
+        this.console = console;
+        this.logger = logger;
+    }
 
     /** {@inheritDoc} */
     @Override
@@ -44,12 +46,13 @@ public class pfcls implements CommandExecutor {
         sender.sendMessage(ChatColor.RED + "Clearing chat screen");
         logger.info("chat screen cleared by " + sender.getName());
         int i = 0;
-        List<String> messages = new ArrayList<String>();
+        List<String> messages = new ArrayList<>();
         while (i <= 120) {
             messages.add(" ");
             i++;
         }
-        MinecraftConsole.getInstance().sendBroadcast(messages);
+
+        console.sendBroadcast(messages);
 
         return true;
     }

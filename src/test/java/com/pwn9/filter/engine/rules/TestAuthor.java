@@ -25,7 +25,7 @@ public class TestAuthor implements MessageAuthor, BurnTarget {
     private boolean burnt;
 
     @Override
-    public boolean hasPermission(String permString) {
+    public Boolean hasPermission(String permString) {
         return false;
     }
 
@@ -35,14 +35,13 @@ public class TestAuthor implements MessageAuthor, BurnTarget {
         return "Sage905";
     }
 
-    @NotNull
     @Override
-    public UUID getID() {
-        return UUID.randomUUID();
+    public void sendMessage(String message) {
     }
 
     @Override
-    public void sendMessage(String message) {
+    public UUID getId() {
+        return UUID.randomUUID();
     }
 
     @Override
@@ -54,6 +53,6 @@ public class TestAuthor implements MessageAuthor, BurnTarget {
         return burnt = true;
     }
 
-    public boolean burnt() {
+    boolean burnt() {
         return burnt;}
 }

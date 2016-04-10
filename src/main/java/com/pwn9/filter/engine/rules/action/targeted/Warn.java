@@ -12,7 +12,7 @@ package com.pwn9.filter.engine.rules.action.targeted;
 
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.FilterContext;
-import com.pwn9.filter.minecraft.api.MinecraftPlayer;
+import com.pwn9.filter.bukkit.BukkitPlayer;
 import com.pwn9.filter.util.tag.TagRegistry;
 
 /**
@@ -43,7 +43,7 @@ public class Warn implements Action {
 
     /** {@inheritDoc} */
     public void execute(final FilterContext filterTask) {
-        if ( filterTask.getAuthor() instanceof MinecraftPlayer) {
+        if ( filterTask.getAuthor() instanceof BukkitPlayer) {
 
             final String message = TagRegistry.replaceTags(messageString, filterTask);
             filterTask.getAuthor().sendMessage(messageString);

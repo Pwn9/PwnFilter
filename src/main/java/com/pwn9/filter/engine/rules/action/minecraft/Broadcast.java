@@ -10,9 +10,10 @@
 
 package com.pwn9.filter.engine.rules.action.minecraft;
 
-import com.pwn9.filter.engine.api.FilterContext;
-import com.pwn9.filter.minecraft.api.MinecraftConsole;
+import com.pwn9.filter.bukkit.BukkitPlayer;
 import com.pwn9.filter.engine.api.Action;
+import com.pwn9.filter.engine.api.FilterContext;
+import com.pwn9.filter.engine.api.MessageAuthor;
 import com.pwn9.filter.util.tag.TagRegistry;
 import org.bukkit.ChatColor;
 
@@ -50,16 +51,17 @@ public class Broadcast implements Action {
         can be sent to more than just the minecraft server (eg: to IRC)
          */
 
-        final ArrayList<String> preparedMessages = new ArrayList<String>();
+        final ArrayList<String> preparedMessages = new ArrayList<>();
 
         for (String message : messageStrings) {
             preparedMessages.add(TagRegistry.replaceTags(message, filterTask));
         }
 
-        filterTask.addLogMessage("Broadcasted: " + preparedMessages.get(0) + (preparedMessages.size() > 1 ? "..." : ""));
-
-        MinecraftConsole.getInstance().sendBroadcast(preparedMessages);
-
+        MessageAuthor author = filterTask.getAuthor();
+        if (author instanceof BukkitPlayer) {
+            filterTask.addLogMessage("Broadcasted: " + preparedMessages.get(0) + (preparedMessages.size() > 1 ? "..." : ""));
+            ((BukkitPlayer) author).getMinecraftAPI().sendBroadcast(preparedMessages);
+        }
     }
 }
 

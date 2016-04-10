@@ -12,7 +12,7 @@ package com.pwn9.filter.engine.rules.action.minecraft;
 
 import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.rules.action.InvalidActionException;
-import com.pwn9.filter.minecraft.api.MinecraftPlayer;
+import com.pwn9.filter.bukkit.BukkitPlayer;
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.util.tag.TagRegistry;
 
@@ -42,8 +42,8 @@ public class Command implements Action {
     public void execute(final FilterContext filterTask) {
         filterTask.setCancelled();
         final String cmd;
-        if (filterTask.getAuthor() instanceof MinecraftPlayer) {
-            MinecraftPlayer player = (MinecraftPlayer)filterTask.getAuthor();
+        if (filterTask.getAuthor() instanceof BukkitPlayer) {
+            BukkitPlayer player = (BukkitPlayer)filterTask.getAuthor();
 
             if (!command.isEmpty()) {
                 cmd = TagRegistry.replaceTags(command, filterTask);

@@ -13,7 +13,6 @@ package com.pwn9.filter.engine.rules.action.targeted;
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.rules.action.InvalidActionException;
-import com.pwn9.filter.minecraft.api.MinecraftPlayer;
 
 /**
  * Fine the user by extracting money from his economy account.
@@ -56,10 +55,10 @@ public class Fine implements Action {
     /** {@inheritDoc} */
     public void execute(final FilterContext filterTask) {
 
-        if (filterTask.getAuthor() instanceof MinecraftPlayer) {
+        if (filterTask.getAuthor() instanceof FineTarget) {
 
-            MinecraftPlayer p = (MinecraftPlayer)filterTask.getAuthor();
-            if (p.withdrawMoney(fineAmount, messageString)) {
+            FineTarget target = (FineTarget)filterTask.getAuthor();
+            if (target.fine(fineAmount, messageString)) {
                 filterTask.addLogMessage(String.format("Fined %s : %f", filterTask.getAuthor().getName(), fineAmount));
             } else {
                 filterTask.addLogMessage(String.format("Failed to fine %s.",

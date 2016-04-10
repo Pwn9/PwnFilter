@@ -8,22 +8,24 @@
  * of the License, or (at your option) any later version.
  */
 
-package com.pwn9.filter.engine.api;
+package com.pwn9.filter.bukkit;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
-import java.util.UUID;
+import com.google.common.base.Ticker;
 
 /**
- * Created by Sage905 on 2016-04-08.
+ * Created by Sage905 on 2016-04-10.
  */
-public interface MessageAuthor {
+public class TestTicker extends Ticker {
 
-    Boolean hasPermission(String s);
-    @NotNull
-    String getName();
-    UUID getId();
-    void sendMessage(final String message);
-    void sendMessages(final List<String> messages);
+    private long elapsedTime = 0;
+
+    public void setElapsed(long elapsedTime) {
+        this.elapsedTime = elapsedTime;
+    }
+
+    @Override
+    public long read() {
+        return elapsedTime;
+    }
 }
+

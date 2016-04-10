@@ -13,7 +13,9 @@
 package com.pwn9.filter.engine;
 
 import com.google.common.collect.Sets;
+import com.pwn9.filter.engine.api.AuthorService;
 import com.pwn9.filter.engine.api.FilterClient;
+import com.pwn9.filter.engine.api.MessageAuthor;
 import com.pwn9.filter.engine.api.StatsTracker;
 import com.pwn9.filter.engine.config.FilterConfig;
 import com.pwn9.filter.engine.rules.action.ActionFactory;
@@ -24,7 +26,10 @@ import com.pwn9.filter.util.PwnFormatter;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -50,13 +55,12 @@ public class FilterService {
     private final Set<FilterClient> registeredClients = Sets.newConcurrentHashSet();
     private final ActionFactory actionFactory;
     private final Logger logger;
+
     public PointManager getPointManager() {
         return pointManager;
     }
 
-    private final PointManager pointManager = new PointManager();
-
-    private FileHandler logfileHandler;
+    private final PointManager pointManager = new PointManager(this);
 
     public FilterService(StatsTracker statsTracker) {
         this(statsTracker, Logger.getLogger("com.pwn9.filter"));
@@ -161,6 +165,7 @@ public class FilterService {
      * Logfile Handling
      * TODO: Maybe these should be moved into their own class in the future.
      */
+    private FileHandler logfileHandler;
 
     public void setLogFileHandler(File logFile) {
         try {
@@ -223,5 +228,27 @@ public class FilterService {
     }
 
     public Logger getLogger() { return logger; }
+
+    // Author Lookup Service
+    private final List<AuthorService> authorServices = new CopyOnWriteArrayList<>();
+
+    public void registerAuthorService(AuthorService authorService) {
+        authorServices.add(authorService);
+    }
+
+    public void deregisterAuthorService(AuthorService authorService) {
+        authorServices.remove(authorService);
+    }
+
+    public MessageAuthor getAuthor(UUID uuid) {
+        for ( AuthorService a : authorServices) {
+            MessageAuthor author = a.getAuthorById(uuid);
+            if (author != null) {
+                return author;
+            }
+        }
+        return null;
+    }
+
 
 }

@@ -14,14 +14,10 @@ import com.pwn9.filter.bukkit.PwnFilterPlugin;
 import com.pwn9.filter.bukkit.config.BukkitConfig;
 import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.rules.chain.InvalidChainException;
-import com.pwn9.filter.minecraft.api.MinecraftConsole;
 import com.pwn9.filter.minecraft.util.ColoredString;
 import org.bukkit.Bukkit;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.server.ServerCommandEvent;
-import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.PluginManager;
 
 /**
@@ -69,7 +65,7 @@ public class PwnFilterServerCommandListener extends BaseListener {
         if (!BukkitConfig.getCmdlist().isEmpty() && !BukkitConfig.getCmdlist().contains(cmdmessage)) return;
         if (BukkitConfig.getCmdblist().contains(cmdmessage)) return;
 
-        FilterContext state = new FilterContext(new ColoredString(command), MinecraftConsole.getInstance(), this);
+        FilterContext state = new FilterContext(new ColoredString(command), plugin.getConsole(), this);
 
         // Take the message from the Command Event and send it through the filter.
 
@@ -108,11 +104,7 @@ public class PwnFilterServerCommandListener extends BaseListener {
                 EventPriority priority = BukkitConfig.getCmdpriority();
 
                 pm.registerEvent(ServerCommandEvent.class, this, priority,
-                        new EventExecutor() {
-                            public void execute(Listener l, Event e) {
-                                onServerCommandEvent((ServerCommandEvent) e);
-                            }
-                        },
+                        (l, e) -> onServerCommandEvent((ServerCommandEvent) e),
                         PwnFilterPlugin.getInstance());
                 plugin.getLogger().info("Activated ServerCommandListener with Priority Setting: " + priority.toString()
                         + " Rule Count: " + getRuleChain().ruleCount());

@@ -10,12 +10,8 @@
 
 package com.pwn9.filter.minecraft.api;
 
-import com.pwn9.filter.engine.api.MessageAuthor;
-import org.bukkit.permissions.Permission;
-
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 
 /**
  * A generic Minecraft API interface containing all the calls we require into
@@ -25,24 +21,6 @@ import java.util.concurrent.ExecutionException;
  */
 public interface MinecraftAPI {
     void reset();
-
-    /**
-     * <p>addCachedPermission.</p>
-     *
-     * @param permission a {@link String} object.
-     */
-    void addCachedPermission(String permission);
-
-    /**
-     * <p>addCachedPermissions.</p>
-     *
-     * @param permissions a {@link java.util.List} object.
-     */
-    void addCachedPermissions(List<Permission> permissions);
-
-    MessageAuthor getAuthor(UUID uuid);
-
-    PlayerData getData(UUID uuid) throws ExecutionException;
 
     boolean burn(UUID uuid, final int duration, final String messageString);
 
@@ -59,6 +37,10 @@ public interface MinecraftAPI {
     void kill(UUID uuid, final String messageString);
 
     String getPlayerWorldName(UUID uuid);
+
+    String getPlayerName(UUID uuid);
+
+    Boolean playerIdHasPermission(UUID u, String s);
 
     // Console APIs
 

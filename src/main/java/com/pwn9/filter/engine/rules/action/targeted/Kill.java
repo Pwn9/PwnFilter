@@ -12,7 +12,6 @@ package com.pwn9.filter.engine.rules.action.targeted;
 
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.FilterContext;
-import com.pwn9.filter.minecraft.api.MinecraftPlayer;
 
 /**
  * Kill a player with a customized Death Message
@@ -44,9 +43,9 @@ public class Kill implements Action {
     /** {@inheritDoc} */
     public void execute(final FilterContext filterTask) {
 
-        if (filterTask.getAuthor() instanceof MinecraftPlayer) {
+        if (filterTask.getAuthor() instanceof KillTarget) {
 
-            ((MinecraftPlayer) filterTask.getAuthor()).kill(messageString);
+            ((KillTarget) filterTask.getAuthor()).kill(messageString);
             filterTask.addLogMessage("Killed by Filter: " + filterTask.getAuthor().getName() + " " + messageString);
 
         }

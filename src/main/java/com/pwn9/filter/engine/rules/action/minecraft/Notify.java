@@ -10,10 +10,9 @@
 
 package com.pwn9.filter.engine.rules.action.minecraft;
 
+import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.rules.action.InvalidActionException;
-import com.pwn9.filter.minecraft.api.MinecraftConsole;
-import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.util.tag.TagRegistry;
 import org.bukkit.ChatColor;
 
@@ -53,7 +52,8 @@ public class Notify implements Action {
         // Create the message to send
         final String sendString = TagRegistry.replaceTags(messageString, filterTask);
 
-        MinecraftConsole.getInstance().notifyWithPerm(permissionString, sendString);
+        //TODO: Create Notification
+        //filterTask.get().notifyWithPerm(permissionString, sendString);
 
     }
 

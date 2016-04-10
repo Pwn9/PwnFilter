@@ -16,8 +16,7 @@ import com.pwn9.filter.bukkit.listener.*;
 import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.rules.action.minecraft.MinecraftAction;
 import com.pwn9.filter.engine.rules.action.targeted.TargetedAction;
-import com.pwn9.filter.minecraft.api.MinecraftAPI;
-import com.pwn9.filter.minecraft.api.MinecraftServer;
+import com.pwn9.filter.minecraft.api.MinecraftConsole;
 import com.pwn9.filter.minecraft.command.pfcls;
 import com.pwn9.filter.minecraft.command.pfmute;
 import com.pwn9.filter.minecraft.command.pfreload;
@@ -30,7 +29,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.UUID;
 import java.util.concurrent.ConcurrentMap;
-import java.util.logging.Logger;
 
 
 /**
@@ -42,7 +40,9 @@ import java.util.logging.Logger;
 
 public class PwnFilterPlugin extends JavaPlugin {
     private static PwnFilterPlugin _instance;
-    private static MinecraftAPI minecraftAPI;
+    private BukkitAPI minecraftAPI;
+    private MinecraftConsole console;
+
 
     private MCStatsTracker statsTracker;
     static Economy economy = null;
@@ -60,7 +60,13 @@ public class PwnFilterPlugin extends JavaPlugin {
         } else {
             throw new IllegalStateException("Only one instance of PwnFilter can be run per server");
         }
-
+        minecraftAPI = new BukkitAPI(this);
+        console = new MinecraftConsole(minecraftAPI);
+        statsTracker = new MCStatsTracker(this);
+        filterService = new FilterService(statsTracker, getLogger());
+        filterService.getActionFactory().addActionTokens(MinecraftAction.class);
+        filterService.getActionFactory().addActionTokens(TargetedAction.class);
+        RegisterTags.all();
     }
 
     /**
@@ -78,54 +84,49 @@ public class PwnFilterPlugin extends JavaPlugin {
     @Override
     public void onLoad() {
 
-        minecraftAPI = new BukkitAPI(this);
-        statsTracker = new MCStatsTracker(this);
-        filterService = new FilterService(statsTracker, getLogger());
-        filterService.getActionFactory().addActionTokens(MinecraftAction.class);
-        filterService.getActionFactory().addActionTokens(TargetedAction.class);
-        MinecraftServer.setAPI(minecraftAPI);
-        RegisterTags.all();
     }
 
     /**
      * <p>onEnable.</p>
      */
     public void onEnable() {
-            // Initialize Configuration
-            saveDefaultConfig();
+        // Initialize Configuration
+        saveDefaultConfig();
 
-            // Set up a Vault economy for actions like "fine" (optional)
-            setupEconomy();
+        // Set up a Vault economy for actions like "fine" (optional)
+        setupEconomy();
 
-            // Now get our configuration
-            configurePlugin();
+        // Now get our configuration
+        configurePlugin();
 
-            // Activate Statistics Tracking
-            statsTracker.startTracking();
+        // Activate Statistics Tracking
+        statsTracker.startTracking();
 
-            //Load up our listeners
-    //        BaseListener.setAPI(minecraftAPI);
+        filterService.registerAuthorService(minecraftAPI);
 
-            filterService.registerClient(new PwnFilterCommandListener(this));
-            filterService.registerClient(new PwnFilterInvListener(this));
-            filterService.registerClient(new PwnFilterPlayerListener(this));
-            filterService.registerClient(new PwnFilterServerCommandListener(this));
-            filterService.registerClient(new PwnFilterSignListener(this));
-            filterService.registerClient(new PwnFilterBookListener(this));
+        //Load up our listeners
+        //        BaseListener.setAPI(minecraftAPI);
+
+        filterService.registerClient(new PwnFilterCommandListener(this));
+        filterService.registerClient(new PwnFilterInvListener(this));
+        filterService.registerClient(new PwnFilterPlayerListener(this));
+        filterService.registerClient(new PwnFilterServerCommandListener(this));
+        filterService.registerClient(new PwnFilterSignListener(this));
+        filterService.registerClient(new PwnFilterBookListener(this));
 
 
-            // The Entity Death handler, for custom death messages.
-            getServer().getPluginManager().registerEvents(new PwnFilterEntityListener(), this);
-            // The DataCache handler, for async-safe player info (name/world/permissions)
-            getServer().getPluginManager().registerEvents(new PlayerCacheListener(), this);
+        // The Entity Death handler, for custom death messages.
+        getServer().getPluginManager().registerEvents(new PwnFilterEntityListener(), this);
+        // The DataCache handler, for async-safe player info (name/world/permissions)
+        getServer().getPluginManager().registerEvents(new PlayerCacheListener(), this);
 
-            // Enable the listeners
-            filterService.enableClients();
+        // Enable the listeners
+        filterService.enableClients();
 
-            // Set up Command Handlers
-            getCommand("pfreload").setExecutor(new pfreload(filterService));
-            getCommand("pfcls").setExecutor(new pfcls(getLogger()));
-            getCommand("pfmute").setExecutor(new pfmute(getLogger()));
+        // Set up Command Handlers
+        getCommand("pfreload").setExecutor(new pfreload(filterService));
+        getCommand("pfcls").setExecutor(new pfcls(getLogger(),console));
+        getCommand("pfmute").setExecutor(new pfmute(getLogger(),console));
 
     }
 
@@ -133,6 +134,7 @@ public class PwnFilterPlugin extends JavaPlugin {
      * <p>onDisable.</p>
      */
     public void onDisable() {
+        filterService.deregisterAuthorService(minecraftAPI);
         filterService.shutdown();
         HandlerList.unregisterAll(this); // Unregister all Bukkit Event handlers.
     }
@@ -167,12 +169,12 @@ public class PwnFilterPlugin extends JavaPlugin {
         filterService.getLogger().info("Vault dependency not found.  Disabling actions requiring Vault");
     }
 
-    public static MinecraftAPI getMinecraftAPI() {
-        return minecraftAPI;
-    }
-
     public FilterService getFilterService() {
         return filterService;
+    }
+
+    public MinecraftConsole getConsole() {
+        return console;
     }
 }
 

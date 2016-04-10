@@ -112,27 +112,30 @@ public class RuleChain implements Chain, ChainEntry {
 
         if (!context.getMatchedRules().isEmpty()) {
             //TODO: Add counter for matches, here.
-            StringBuilder sb = new StringBuilder();
-            for (Rule r : context.getMatchedRules()) {
-                sb.append(" ");
-                sb.append(r.getId());
-            }
             logger.finer(() ->
-                    "\nDebug matched rules: " + sb.toString() +
-                    "\nDebug original: " + context.getOriginalMessage().getRaw() +
-                    "\nDebug current: " + context.getModifiedMessage().getRaw() +
-                    "\nDebug log: " + (context.loggingOn() ? "yes" : "no") +
-                    "\nDebug deny: " + (context.isCancelled() ? "yes" : "no"
-                    ));
+                    {
+                        StringBuilder sb = new StringBuilder();
+                        for (Rule r : context.getMatchedRules()) {
+                            sb.append(" ");
+                            sb.append(r.getId().isEmpty() ? "pattern: " + r.getPattern() : "Rule ID: " + r.getId());
+                        }
+
+                        return "\nDebug matched" + sb.toString() +
+                                "\nDebug original: " + context.getOriginalMessage().getRaw() +
+                                "\nDebug current: " + context.getModifiedMessage().getRaw() +
+                                "\nDebug log: " + (context.loggingOn() ? "yes" : "no") +
+                                "\nDebug deny: " + (context.isCancelled() ? "yes" : "no");
+                    }
+            );
 
         } else {
-            logger.finer(() -> "[PwnFilter] Debug no match: " + context.getOriginalMessage().getRaw());
+            logger.finer(() -> "Debug no match: " + context.getOriginalMessage().getRaw());
         }
 
         if (context.isCancelled()) {
             context.addLogMessage("<" + context.getAuthor().getName() + "> Original message cancelled.");
         } else if (context.getPattern() != null) {
-            context.addLogMessage("|" + context.getListenerName() + "| SENT <" +
+            context.addLogMessage("|" + context.getFilterClient().getShortName() + "| SENT <" +
                     context.getAuthor().getName() + "> " + context.getModifiedMessage().toString());
         }
 

@@ -30,25 +30,27 @@ import java.util.logging.Logger;
  */
 public class pfmute implements CommandExecutor {
     private final Logger logger;
+    private final MinecraftConsole console;
 
     /**
      * <p>Constructor for pfmute.</p>
      *
      */
-    public pfmute(Logger logger) {
+    public pfmute(Logger logger, MinecraftConsole console) {
         this.logger = logger;
+        this.console = console;
     }
 
     /** {@inheritDoc} */
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (BukkitConfig.globalMute()) {
-            MinecraftConsole.getInstance().sendBroadcast(ChatColor.RED + "Global mute cancelled by " + sender.getName());
+            console.sendBroadcast(ChatColor.RED + "Global mute cancelled by " + sender.getName());
             logger.info("global mute cancelled by " + sender.getName());
             BukkitConfig.setGlobalMute(false);
         }
         else {
-            MinecraftConsole.getInstance().sendBroadcast(ChatColor.RED + "Global mute initiated by " + sender.getName());
+            console.sendBroadcast(ChatColor.RED + "Global mute initiated by " + sender.getName());
             logger.info("global mute initiated by " + sender.getName());
             BukkitConfig.setGlobalMute(true);
         }

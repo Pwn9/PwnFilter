@@ -50,7 +50,7 @@ public class Points implements Action {
 
     @Override
     public void execute(final FilterContext filterTask) {
-//        MessageAuthor p = filterTask.getAuthor();
+//        UUID p = filterTask.getAuthor();
 //
 //        if (p == null) return;
 //

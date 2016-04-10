@@ -11,10 +11,11 @@
 package com.pwn9.filter.engine.rules.action.minecraft;
 
 import com.google.common.collect.ImmutableList;
+import com.pwn9.filter.bukkit.BukkitPlayer;
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.FilterContext;
+import com.pwn9.filter.engine.api.MessageAuthor;
 import com.pwn9.filter.engine.rules.action.InvalidActionException;
-import com.pwn9.filter.minecraft.api.MinecraftConsole;
 import com.pwn9.filter.util.tag.TagRegistry;
 import org.bukkit.ChatColor;
 
@@ -39,7 +40,7 @@ public class BroadcastFile implements Action {
     /** {@inheritDoc} */
     static Action getAction(String s, File sourceDir) throws InvalidActionException
     {
-        ArrayList<String> messages = new ArrayList<String>();
+        ArrayList<String> messages = new ArrayList<>();
         try {
             BufferedReader br = new BufferedReader(new FileReader(new File(sourceDir,s)));
             String message;
@@ -64,7 +65,11 @@ public class BroadcastFile implements Action {
         filterTask.addLogMessage("Broadcasted: " + preparedMessages.get(0) +
                 (preparedMessages.size() > 1 ? "..." : ""));
 
-        MinecraftConsole.getInstance().sendBroadcast(preparedMessages);
+        MessageAuthor author = filterTask.getAuthor();
+        if (author instanceof BukkitPlayer) {
+            filterTask.addLogMessage("Broadcasted: " + preparedMessages.get(0) + (preparedMessages.size() > 1 ? "..." : ""));
+            ((BukkitPlayer) author).getMinecraftAPI().sendBroadcast(preparedMessages);
+        }
     }
 }
 

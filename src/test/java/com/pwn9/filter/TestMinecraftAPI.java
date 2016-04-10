@@ -10,13 +10,10 @@
 
 package com.pwn9.filter;
 
-import com.pwn9.filter.engine.api.MessageAuthor;
 import com.pwn9.filter.minecraft.api.MinecraftAPI;
-import com.pwn9.filter.minecraft.api.PlayerData;
-import org.bukkit.permissions.Permission;
 
-import java.util.*;
-import java.util.concurrent.ExecutionException;
+import java.util.List;
+import java.util.UUID;
 
 /**
  *
@@ -25,78 +22,60 @@ import java.util.concurrent.ExecutionException;
  */
 public class TestMinecraftAPI implements MinecraftAPI {
 
-    final Set<String> permSet = new HashSet<String>();
+    // Simple flag to set what we want permission checks to return.
+    public Boolean permReturnValue = false;
 
     @Override
     public void reset() {
-
     }
 
     @Override
-    public synchronized void addCachedPermission(String permission) {
-        permSet.add(permission);
-    }
-
-
-    /**
-     * <p>addCachedPermissions.</p>
-     *
-     * @param permissions a {@link java.util.List} object.
-     */
-    @Override
-    public synchronized void addCachedPermissions(List<Permission> permissions) {
-        for (Permission p : permissions) {
-            permSet.add(p.getName());
-        }
+    public Boolean playerIdHasPermission(UUID u, String s) {
+        return permReturnValue;
     }
 
     @Override
-    public MessageAuthor getAuthor(UUID uuid) {
+    public String getPlayerName(UUID uuid) {
         return null;
     }
 
     @Override
-    public PlayerData getData(UUID uuid) throws ExecutionException {
-        return null;
-    }
-
-    @Override
-    public boolean burn(UUID uuid, int duration, String messageString) {
+    public boolean burn(java.util.UUID uuid, int duration, String messageString) {
         return false;
     }
 
     @Override
-    public void sendMessage(UUID uuid, String message) {
+    public void sendMessage(java.util.UUID uuid, String message) {
 
     }
 
     @Override
-    public void sendMessages(UUID uuid, List<String> messages) {
+    public void sendMessages(java.util.UUID uuid, List<String> messages) {
 
     }
 
     @Override
-    public void executePlayerCommand(UUID uuid, String command) {
+    public void executePlayerCommand(java.util.UUID uuid, String command) {
 
     }
 
     @Override
-    public boolean withdrawMoney(UUID uuid, Double amount, String messageString) {
+    public boolean withdrawMoney(java.util.UUID uuid, Double amount, String messageString) {
         return false;
     }
 
     @Override
-    public void kick(UUID uuid, String messageString) {
+    public void kick(java.util.UUID uuid, String messageString) {
 
     }
 
     @Override
-    public void kill(UUID uuid, String messageString) {
+    public void kill(java.util.UUID uuid, String messageString) {
 
     }
 
     @Override
-    public String getPlayerWorldName(UUID uuid) {
+    public String getPlayerWorldName(java.util.UUID uuid) {
         return null;
     }
 
@@ -129,4 +108,5 @@ public class TestMinecraftAPI implements MinecraftAPI {
     public boolean notifyWithPerm(String permissionString, String sendString) {
         return false;
     }
+
 }

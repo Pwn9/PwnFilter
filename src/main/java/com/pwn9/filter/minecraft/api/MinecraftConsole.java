@@ -22,15 +22,10 @@ import java.util.UUID;
  */
 public class MinecraftConsole implements MessageAuthor {
 
-    private static final MinecraftConsole ourInstance = new MinecraftConsole();
-
-    public static MinecraftConsole getInstance() {
-        return ourInstance;
-    }
-
-
+    private final MinecraftAPI minecraftAPI;
+    
     @Override
-    public boolean hasPermission(String permString) {
+    public Boolean hasPermission(String permString) {
         return true;
     }
 
@@ -42,37 +37,40 @@ public class MinecraftConsole implements MessageAuthor {
 
     @NotNull
     @Override
-    public UUID getID() {
-        return UUID.fromString("CONSOLE");
+    public UUID getId() {
+        return java.util.UUID.fromString("CONSOLE");
     }
 
-    private MinecraftConsole() {}
+    public MinecraftConsole(MinecraftAPI minecraftAPI) {
+        this.minecraftAPI = minecraftAPI;
+    }
+    
 
     @Override
     public void sendMessage(final String message) {
-       MinecraftServer.getAPI().sendConsoleMessage(message);
+       minecraftAPI.sendConsoleMessage(message);
     }
 
     @Override
     public void sendMessages(final List<String> messageList) {
-        MinecraftServer.getAPI().sendConsoleMessages(messageList);
+        minecraftAPI.sendConsoleMessages(messageList);
     }
 
     public void sendBroadcast(final List<String> preparedMessages) {
-       MinecraftServer.getAPI().sendBroadcast(preparedMessages);
+       minecraftAPI.sendBroadcast(preparedMessages);
 
     }
 
     public void sendBroadcast(final String message) {
-        MinecraftServer.getAPI().sendBroadcast(message);
+        minecraftAPI.sendBroadcast(message);
 
     }
 
     public void executeCommand(final String command) {
-        MinecraftServer.getAPI().executeCommand(command);
+        minecraftAPI.executeCommand(command);
     }
 
     public void notifyWithPerm(final String permissionString, final String sendString) {
-        MinecraftServer.getAPI().notifyWithPerm(permissionString, sendString);
+        minecraftAPI.notifyWithPerm(permissionString, sendString);
     }
 }

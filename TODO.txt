@@ -1,30 +1,33 @@
 Minimum Marketable Features:
+ + Compatibility with Spigot 1.9
  * Modularize PwnFilter Engine and Server Modules
+ - Logfile Output is consistent with previous versions
  - Useful Spam Filter
  - Book & Quill Filter Support
- - Compatibility with Spigot 1.9
+ - Player Name Filter Support
  - Support for Sponge
 
 User Stories for current MMF:
  + Make it compile again
- * Filter Engine processes messages.
+ + Filter Engine processes messages.
+ * All "then" actions work correctly
 
 Engineering Tasks:
+ + Revisit ActionFactory mechanism.
  + Refactor Actions into immutable objects
- - Implement interfaces for actions (eg: BurnTarget)
- - Revisit ActionFactory mechanism.
  - Add a File handling service, so parser can be more modular.
+ - Refactor Parser to use more libs (eg: Scanner, Tokenizer)
 
 To Do on Current Task:
  + Investigate options for Immutability and Constructors
- * Refactor all the logging.
- * Fix Shortcuts file.
+ + Refactor all the logging.
+ + Fix Shortcuts file.
+ * Implement interfaces for actions (eg: BurnTarget)
  - Implement permission caching in minecraft API
  - Fix Points Manager
  - Keep better track of listeners to allow reloading of all configs.
 
 Random thoughts:
-TODO: Add support for Books
 TODO: Enable configuration management /pfset /pfsave
 TODO: It's powerful.  Now, make it easier.
 TODO: Make 'base' files that users can pull in to get started quickly (eg: swearing.txt, hate.txt, etc.)

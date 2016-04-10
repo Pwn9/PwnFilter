@@ -19,6 +19,6 @@ import com.pwn9.filter.engine.api.FilterContext;
 public class EventTag implements Tag {
     @Override
     public String getValue(FilterContext filterTask) {
-       return filterTask.getListenerName();
+       return filterTask.getFilterClient().getShortName();
     }
 }
