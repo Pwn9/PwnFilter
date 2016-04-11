@@ -31,7 +31,7 @@
 //    Configuration testConfig;
 //    final File resourcesDir = new File(getClass().getResource("/config.yml").getFile()).getParentFile();
 //    final PwnFilterSignListener signListener = new PwnFilterSignListener();
-//    final MinecraftAPI minecraftAPI = new TestMinecraftAPI();
+//    final MinecraftAPI minecraftAPI = new MockMinecraftAPI();
 //
 //
 //    @Before

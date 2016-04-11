@@ -11,7 +11,7 @@
 
 package com.pwn9.filter.bukkit.listener;
 
-import com.pwn9.filter.bukkit.PwnFilterPlugin;
+import com.pwn9.filter.bukkit.PwnFilterBukkitPlugin;
 import com.pwn9.filter.bukkit.config.BukkitConfig;
 import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.rules.chain.InvalidChainException;
@@ -35,13 +35,13 @@ import java.util.List;
  */
 public class PwnFilterBookListener extends BaseListener {
 
-    private final PwnFilterPlugin plugin;
+    private final PwnFilterBukkitPlugin plugin;
 
     /**
      * <p>Constructor for PwnFilterBookListener.</p>
      *
      */
-    public PwnFilterBookListener(PwnFilterPlugin plugin) {
+    public PwnFilterBookListener(PwnFilterBukkitPlugin plugin) {
         super(plugin.getFilterService());
         this.plugin = plugin;
     }
@@ -133,7 +133,7 @@ public class PwnFilterBookListener extends BaseListener {
                 ruleChain = getCompiledChain("book.txt");
                 pm.registerEvent(PlayerEditBookEvent.class, this, priority,
                         (l, e) -> onBookEdit((PlayerEditBookEvent) e),
-                        PwnFilterPlugin.getInstance());
+                        PwnFilterBukkitPlugin.getInstance());
                 setActive();
                 plugin.getLogger().info("Activated BookListener with Priority Setting: " + priority.toString()
                         + " Rule Count: " + getRuleChain().ruleCount() );

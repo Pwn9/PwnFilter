@@ -10,7 +10,7 @@
 
 package com.pwn9.filter.minecraft.command;
 
-import com.pwn9.filter.bukkit.PwnFilterPlugin;
+import com.pwn9.filter.bukkit.PwnFilterBukkitPlugin;
 import com.pwn9.filter.engine.FilterService;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -44,8 +44,8 @@ public class pfreload implements CommandExecutor {
         filterService.getLogger().info("Disabling all listeners");
         filterService.disableClients();
 
-        PwnFilterPlugin.getInstance().reloadConfig();
-        PwnFilterPlugin.getInstance().configurePlugin();
+        PwnFilterBukkitPlugin.getInstance().reloadConfig();
+        PwnFilterBukkitPlugin.getInstance().configurePlugin();
 
         filterService.getLogger().config("Reloaded config.yml as requested by " + sender.getName());
 

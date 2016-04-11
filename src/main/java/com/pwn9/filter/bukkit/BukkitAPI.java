@@ -45,9 +45,9 @@ import java.util.concurrent.TimeUnit;
 @SuppressWarnings("UnusedDeclaration")
 public class BukkitAPI implements MinecraftAPI, AuthorService {
 
-    private final PwnFilterPlugin plugin;
+    private final PwnFilterBukkitPlugin plugin;
 
-    BukkitAPI(PwnFilterPlugin p) {
+    BukkitAPI(PwnFilterBukkitPlugin p) {
         plugin = p;
     }
 
@@ -239,12 +239,12 @@ public class BukkitAPI implements MinecraftAPI, AuthorService {
 
     @Override
     public boolean withdrawMoney(final UUID uuid, final Double amount, final String messageString) {
-        if (PwnFilterPlugin.economy != null) {
+        if (PwnFilterBukkitPlugin.economy != null) {
             Boolean result = safeBukkitAPICall(
                     () -> {
                         Player bukkitPlayer = Bukkit.getPlayer(uuid);
                         if (bukkitPlayer != null) {
-                            EconomyResponse resp = PwnFilterPlugin.economy.withdrawPlayer(
+                            EconomyResponse resp = PwnFilterBukkitPlugin.economy.withdrawPlayer(
                                     Bukkit.getOfflinePlayer(uuid), amount);
                             bukkitPlayer.sendMessage(messageString);
                             return resp.transactionSuccess();

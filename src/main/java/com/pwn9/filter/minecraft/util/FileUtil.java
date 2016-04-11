@@ -64,7 +64,7 @@ public class FileUtil {
      * @throws java.lang.SecurityException if any.
      */
     public static boolean copyTemplate(File destFile, String configName) throws IOException, SecurityException {
-//        Plugin plugin = PwnFilterPlugin.getInstance();
+//        Plugin plugin = PwnFilterBukkitPlugin.getInstance();
 //
 //        InputStream templateFile;
 //

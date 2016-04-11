@@ -62,6 +62,7 @@ public class TextConfigParser implements FilterConfigParser {
 
     public RuleChain parse(File source, List<File> parents) throws InvalidChainException {
         RuleChain.Builder builder = new RuleChain.Builder();
+        builder.setConfigName(source.getName());
         return parse(source, parents, builder);
     }
 

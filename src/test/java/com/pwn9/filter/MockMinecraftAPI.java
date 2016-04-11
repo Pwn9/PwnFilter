@@ -20,7 +20,7 @@ import java.util.UUID;
  * Stubbed out MinecraftAPI for our tests.
  * Created by Sage905 on 15-09-11.
  */
-public class TestMinecraftAPI implements MinecraftAPI {
+public class MockMinecraftAPI implements MinecraftAPI {
 
     // Simple flag to set what we want permission checks to return.
     public Boolean permReturnValue = false;

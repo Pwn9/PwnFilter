@@ -11,7 +11,7 @@
 
 package com.pwn9.filter.bukkit.listener;
 
-import com.pwn9.filter.bukkit.PwnFilterPlugin;
+import com.pwn9.filter.bukkit.PwnFilterBukkitPlugin;
 import com.pwn9.filter.bukkit.config.BukkitConfig;
 import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.rules.chain.InvalidChainException;
@@ -35,12 +35,12 @@ import org.bukkit.plugin.PluginManager;
  */
 public class PwnFilterInvListener extends BaseListener {
 
-    private final PwnFilterPlugin plugin;
+    private final PwnFilterBukkitPlugin plugin;
 
     /**
      * <p>Constructor for PwnFilterInvListener.</p>
      **/
-    public PwnFilterInvListener(PwnFilterPlugin plugin) {
+    public PwnFilterInvListener(PwnFilterBukkitPlugin plugin) {
         super(plugin.getFilterService());
         this.plugin = plugin;
     }
@@ -125,7 +125,7 @@ public class PwnFilterInvListener extends BaseListener {
                 // Now register the listener with the appropriate priority
                 pm.registerEvent(InventoryClickEvent.class, this, priority,
                         (l, e) -> onInventoryEvent((InventoryClickEvent) e),
-                        PwnFilterPlugin.getInstance());
+                        PwnFilterBukkitPlugin.getInstance());
                 setActive();
                 plugin.getLogger().info("Activated ItemListener with Priority Setting: " + priority.toString()
                         + " Rule Count: " + getRuleChain().ruleCount());

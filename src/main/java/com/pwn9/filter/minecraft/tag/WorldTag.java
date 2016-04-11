@@ -24,9 +24,7 @@ public class WorldTag implements Tag {
     @Override
     public String getValue(FilterContext filterTask) {
         MessageAuthor author = filterTask.getAuthor();
-        if (author instanceof BukkitPlayer) {
-            return ((BukkitPlayer) author).getWorldName();
-        }
-        return "";
+        return (author instanceof BukkitPlayer)
+                ? ((BukkitPlayer) author).getWorldName():"";
     }
 }

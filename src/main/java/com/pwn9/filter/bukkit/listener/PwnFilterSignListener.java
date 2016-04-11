@@ -10,7 +10,7 @@
 
 package com.pwn9.filter.bukkit.listener;
 
-import com.pwn9.filter.bukkit.PwnFilterPlugin;
+import com.pwn9.filter.bukkit.PwnFilterBukkitPlugin;
 import com.pwn9.filter.bukkit.config.BukkitConfig;
 import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.api.MessageAuthor;
@@ -33,12 +33,12 @@ import java.util.List;
  * @version $Id: $Id
  */
 public class PwnFilterSignListener extends BaseListener {
-    private final PwnFilterPlugin plugin;
+    private final PwnFilterBukkitPlugin plugin;
     /**
      * <p>Constructor for PwnFilterSignListener.</p>
      *
      */
-    public PwnFilterSignListener(PwnFilterPlugin plugin) {
+    public PwnFilterSignListener(PwnFilterBukkitPlugin plugin) {
         super(plugin.getFilterService());
         this.plugin = plugin;
     }
@@ -145,7 +145,7 @@ public class PwnFilterSignListener extends BaseListener {
                 // Now register the listener with the appropriate priority
                 pm.registerEvent(SignChangeEvent.class, this, priority,
                         (l, e) -> onSignChange((SignChangeEvent)e),
-                        PwnFilterPlugin.getInstance());
+                        PwnFilterBukkitPlugin.getInstance());
 
                 plugin.getLogger().info("Activated SignListener with Priority Setting: " + priority.toString()
                         + " Rule Count: " + getRuleChain().ruleCount());

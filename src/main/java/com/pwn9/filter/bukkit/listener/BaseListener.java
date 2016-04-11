@@ -66,6 +66,10 @@ public abstract class BaseListener implements FilterClient, Listener {
         return ruleChain;
     }
 
+    public void loadRuleChain(String path) throws InvalidChainException {
+        ruleChain = getCompiledChain(path);
+    }
+
     /** {@inheritDoc} */
     @Override
     public boolean isActive() {

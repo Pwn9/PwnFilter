@@ -1,6 +1,6 @@
 package com.pwn9.filter.engine.rules;
 
-import com.pwn9.filter.bukkit.PwnFilterPlugin;
+import com.pwn9.filter.bukkit.PwnFilterBukkitPlugin;
 import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.api.MessageAuthor;
@@ -29,7 +29,7 @@ import static org.junit.Assert.fail;
  * Time: 11:28 AM
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({PwnFilterPlugin.class})
+@PrepareForTest({PwnFilterBukkitPlugin.class})
 public class RuleSetTest {
 
     RuleChain rs, sc;

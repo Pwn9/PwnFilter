@@ -11,7 +11,7 @@
 
 package com.pwn9.filter.bukkit.listener;
 
-import com.pwn9.filter.bukkit.PwnFilterPlugin;
+import com.pwn9.filter.bukkit.PwnFilterBukkitPlugin;
 import com.pwn9.filter.bukkit.config.BukkitConfig;
 import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.api.MessageAuthor;
@@ -31,7 +31,7 @@ import org.bukkit.plugin.PluginManager;
  * @version $Id: $Id
  */
 public class PwnFilterCommandListener extends BaseListener {
-    private final PwnFilterPlugin plugin;
+    private final PwnFilterBukkitPlugin plugin;
     private RuleChain chatRuleChain;
 
     /**
@@ -45,7 +45,7 @@ public class PwnFilterCommandListener extends BaseListener {
      * <p>Constructor for PwnFilterCommandListener.</p>
      *
      */
-    public PwnFilterCommandListener(PwnFilterPlugin plugin) {
+    public PwnFilterCommandListener(PwnFilterBukkitPlugin plugin) {
 	    super(plugin.getFilterService());
         this.plugin = plugin;
     }
@@ -63,7 +63,7 @@ public class PwnFilterCommandListener extends BaseListener {
 
                 pm.registerEvent(PlayerCommandPreprocessEvent.class, this, priority,
                         (l, e) -> eventProcessor((PlayerCommandPreprocessEvent) e),
-                        PwnFilterPlugin.getInstance());
+                        PwnFilterBukkitPlugin.getInstance());
                 setActive();
                 plugin.getLogger().info("Activated CommandListener with Priority Setting: " + priority.toString()
                         + " Rule Count: " + getRuleChain().ruleCount() );
@@ -116,12 +116,12 @@ public class PwnFilterCommandListener extends BaseListener {
             // Simple Spam filter
             if (BukkitConfig.commandspamfilterEnabled() && !minecraftPlayer.hasPermission("pwnfilter.bypass.spam")) {
                 // Keep a log of the last message sent by this player.  If it's the same as the current message, cancel.
-                if (PwnFilterPlugin.lastMessage.containsKey(minecraftPlayer.getId()) && PwnFilterPlugin.lastMessage.get(minecraftPlayer.getId()).equals(message)) {
+                if (PwnFilterBukkitPlugin.lastMessage.containsKey(minecraftPlayer.getId()) && PwnFilterBukkitPlugin.lastMessage.get(minecraftPlayer.getId()).equals(message)) {
                     event.setCancelled(true);
                     minecraftPlayer.sendMessage(ChatColor.DARK_RED + "[PwnFilter]" + ChatColor.RED + " Repeated command blocked by spam filter.");
                     return;
                 }
-                PwnFilterPlugin.lastMessage.put(minecraftPlayer.getId(), message);
+                PwnFilterBukkitPlugin.lastMessage.put(minecraftPlayer.getId(), message);
             }
 
             chatRuleChain.execute(filterTask, filterService);

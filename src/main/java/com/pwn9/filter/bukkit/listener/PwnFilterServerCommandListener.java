@@ -10,7 +10,7 @@
 
 package com.pwn9.filter.bukkit.listener;
 
-import com.pwn9.filter.bukkit.PwnFilterPlugin;
+import com.pwn9.filter.bukkit.PwnFilterBukkitPlugin;
 import com.pwn9.filter.bukkit.config.BukkitConfig;
 import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.rules.chain.InvalidChainException;
@@ -28,13 +28,13 @@ import org.bukkit.plugin.PluginManager;
  */
 public class PwnFilterServerCommandListener extends BaseListener {
 
-    private final PwnFilterPlugin plugin;
+    private final PwnFilterBukkitPlugin plugin;
 
     /**
      * <p>Constructor for PwnFilterServerCommandListener.</p>
      *
      */
-    public PwnFilterServerCommandListener(PwnFilterPlugin plugin) {
+    public PwnFilterServerCommandListener(PwnFilterBukkitPlugin plugin) {
 	    super(plugin.getFilterService());
         this.plugin = plugin;
     }
@@ -105,7 +105,7 @@ public class PwnFilterServerCommandListener extends BaseListener {
 
                 pm.registerEvent(ServerCommandEvent.class, this, priority,
                         (l, e) -> onServerCommandEvent((ServerCommandEvent) e),
-                        PwnFilterPlugin.getInstance());
+                        PwnFilterBukkitPlugin.getInstance());
                 plugin.getLogger().info("Activated ServerCommandListener with Priority Setting: " + priority.toString()
                         + " Rule Count: " + getRuleChain().ruleCount());
 

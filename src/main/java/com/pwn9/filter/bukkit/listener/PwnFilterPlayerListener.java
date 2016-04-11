@@ -10,6 +10,7 @@
 
 package com.pwn9.filter.bukkit.listener;
 
+import com.pwn9.filter.bukkit.PwnFilterBukkitPlugin;
 import com.pwn9.filter.bukkit.PwnFilterPlugin;
 import com.pwn9.filter.bukkit.config.BukkitConfig;
 import com.pwn9.filter.engine.api.FilterContext;
@@ -42,7 +43,8 @@ public class PwnFilterPlayerListener extends BaseListener {
 	/**
 	 * <p>Constructor for PwnFilterPlayerListener.</p>
 	 *
-	 */
+     * @param plugin
+     */
 	public PwnFilterPlayerListener(PwnFilterPlugin plugin){
         super(plugin.getFilterService());
         this.plugin = plugin;
@@ -73,13 +75,13 @@ public class PwnFilterPlayerListener extends BaseListener {
 
         if (BukkitConfig.spamfilterEnabled() && !minecraftPlayer.hasPermission("pwnfilter.bypass.spam")) {
             // Keep a log of the last message sent by this player.  If it's the same as the current message, cancel.
-            if (PwnFilterPlugin.lastMessage.containsKey(minecraftPlayer.getId()) && PwnFilterPlugin.lastMessage.get(minecraftPlayer.getId()).equals(message)) {
+            if (PwnFilterBukkitPlugin.lastMessage.containsKey(minecraftPlayer.getId()) && PwnFilterBukkitPlugin.lastMessage.get(minecraftPlayer.getId()).equals(message)) {
                 event.setCancelled(true);
                 minecraftPlayer.sendMessage(ChatColor.DARK_RED + "[PwnFilter]" + ChatColor.RED + " Repeated command blocked by spam filter.");
 
                 return;
             }
-            PwnFilterPlugin.lastMessage.put(minecraftPlayer.getId(), message);
+            PwnFilterBukkitPlugin.lastMessage.put(minecraftPlayer.getId(), message);
 
         }
 
@@ -125,7 +127,7 @@ public class PwnFilterPlayerListener extends BaseListener {
 
             /* Hook up the Listener for PlayerChat events */
             pm.registerEvent(AsyncPlayerChatEvent.class, this, BukkitConfig.getChatpriority(),
-                    (l, e) -> onPlayerChat((AsyncPlayerChatEvent) e), PwnFilterPlugin.getInstance());
+                    (l, e) -> onPlayerChat((AsyncPlayerChatEvent) e), PwnFilterBukkitPlugin.getInstance());
 
             plugin.getLogger().info("Activated PlayerListener with Priority Setting: " + BukkitConfig.getChatpriority().toString()
                     + " Rule Count: " + getRuleChain().ruleCount() );

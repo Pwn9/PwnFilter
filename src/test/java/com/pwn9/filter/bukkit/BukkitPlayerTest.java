@@ -10,7 +10,7 @@
 
 package com.pwn9.filter.bukkit;
 
-import com.pwn9.filter.TestMinecraftAPI;
+import com.pwn9.filter.MockMinecraftAPI;
 import org.junit.Test;
 
 import java.util.UUID;
@@ -29,7 +29,7 @@ public class BukkitPlayerTest {
 
     @Test
     public void testHasPermissionCachesValues() throws Exception {
-        TestMinecraftAPI api = new TestMinecraftAPI();
+        MockMinecraftAPI api = new MockMinecraftAPI();
 
         // Set the ticker elapsed time to be 0, so all answers are cached.
         BukkitPlayer bukkitPlayer =

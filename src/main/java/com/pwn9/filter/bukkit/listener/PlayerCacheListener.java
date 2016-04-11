@@ -1,6 +1,6 @@
 package com.pwn9.filter.bukkit.listener;
 
-import com.pwn9.filter.bukkit.PwnFilterPlugin;
+import com.pwn9.filter.bukkit.PwnFilterBukkitPlugin;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -25,8 +25,8 @@ public class PlayerCacheListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerQuit(PlayerQuitEvent event) {
         // Cleanup player messages on quit
-        if (event.getPlayer() != null && PwnFilterPlugin.lastMessage.containsKey(event.getPlayer().getUniqueId())) {
-            PwnFilterPlugin.lastMessage.remove(event.getPlayer().getUniqueId());
+        if (event.getPlayer() != null && PwnFilterBukkitPlugin.lastMessage.containsKey(event.getPlayer().getUniqueId())) {
+            PwnFilterBukkitPlugin.lastMessage.remove(event.getPlayer().getUniqueId());
         }
     }
 
