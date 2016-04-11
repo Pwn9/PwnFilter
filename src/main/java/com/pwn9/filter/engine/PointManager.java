@@ -27,9 +27,6 @@ import java.util.concurrent.*;
  * Each entity that is capable of having points assigned must have a UUID.
  * This manager will track the points assigned to a particular UUID.
  *
- * TODO: Refactor to remove the FilterClient implementation. (IoC, instead?)
- * TODO: Remove Dependency on BukkitTask to leak points.
- *
  * User: Sage905
  * Date: 13-10-31
  * Time: 3:49 PM
@@ -84,19 +81,17 @@ public class PointManager implements FilterClient {
         addThreshold("Default", (double) 0, new ArrayList<>(), new ArrayList<>());
     }
 
+    public void leakTask(PointManager pointManager) {
+        //Every interval, check point balances, and if they are > 0, subtract leakPoints
+        // from the players balance.  If they reach 0, remove them from the list.
+        pointManager.getPointsMap().stream()
+                .forEach((id) -> pointManager.subPoints(id, leakPoints));
+    }
 
     public void start() {
         if (scheduledFuture == null) {
-            final PointManager pointManager = this;
-
-            final Runnable leakTask = () -> {
-                //Every interval, check point balances, and if they are > 0, subtract leakPoints
-                // from the players balance.  If they reach 0, remove them from the list.
-                for (UUID id : pointManager.getPointsMap()) {
-                    pointManager.subPoints(id, leakPoints);
-                }
-            };
-            scheduledFuture = scheduler.scheduleAtFixedRate(leakTask, 1, leakInterval, TimeUnit.SECONDS);
+            scheduledFuture = scheduler.scheduleAtFixedRate(
+                    () -> leakTask(this), 1, leakInterval, TimeUnit.SECONDS);
         }
     }
 
@@ -114,7 +109,7 @@ public class PointManager implements FilterClient {
      *
      * @return a {@link java.util.Set} object.
      */
-    public Set<java.util.UUID> getPointsMap() {
+    public Set<UUID> getPointsMap() {
         return pointsMap.keySet();
     }
 
@@ -123,7 +118,7 @@ public class PointManager implements FilterClient {
      *
      * @return a {@link java.lang.Double} object.
      */
-    public Double getPoints(java.util.UUID uuid) {
+    public Double getPoints(UUID uuid) {
         return (pointsMap.containsKey(uuid))? pointsMap.get(uuid):0.0;
     }
 
@@ -141,7 +136,7 @@ public class PointManager implements FilterClient {
      *
      * @param points a {@link java.lang.Double} object.
      */
-    public void setPoints(java.util.UUID id, Double points) {
+    public void setPoints(UUID id, Double points) {
         Double old = pointsMap.get(id);
         pointsMap.put(id, points);
         executeActions(old, points,id);
@@ -152,7 +147,7 @@ public class PointManager implements FilterClient {
      *
      * @param points a {@link java.lang.Double} object.
      */
-    public void addPoints(java.util.UUID id, Double points) {
+    public void addPoints(UUID id, Double points) {
         Double current = pointsMap.get(id);
         if (current == null) current = 0.0;
         Double updated = current + points;
@@ -172,11 +167,12 @@ public class PointManager implements FilterClient {
         return scheduledFuture != null;
     }
 
-    private void executeActions(final Double fromValue, final Double toValue, final java.util.UUID id) {
+    private void executeActions(final Double fromValue, final Double toValue, final UUID id) {
         final Double oldKey = thresholds.floorKey(fromValue);
         final Double newKey = thresholds.floorKey(toValue);
 
-        if (oldKey.equals(newKey)) return;
+
+        if (oldKey == null || newKey == null || oldKey.equals(newKey)) return;
 
         if (fromValue < toValue) {
 
@@ -198,7 +194,7 @@ public class PointManager implements FilterClient {
      *
      * @param points a {@link java.lang.Double} object.
      */
-    public void subPoints(java.util.UUID id, Double points) {
+    public void subPoints(UUID id, Double points) {
         Double updated;
         Double current = pointsMap.get(id);
         if (current == null) current = 0.0;
@@ -206,8 +202,9 @@ public class PointManager implements FilterClient {
         if ( updated <=0 ) {
             pointsMap.remove(id);
             updated = 0.0;
+        } else {
+            pointsMap.put(id, updated);
         }
-        pointsMap.put(id, updated);
 
         executeActions(current, updated, id);
 
