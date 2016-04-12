@@ -162,8 +162,8 @@ public class MockPlayer implements Player {
     }
 
     @Override
+    @Deprecated
     public void playNote(Location location, byte b, byte b1) {
-
     }
 
     @Override
@@ -182,6 +182,7 @@ public class MockPlayer implements Player {
     }
 
     @Override
+    @Deprecated
     public void playEffect(Location location, Effect effect, int i) {
 
     }
@@ -192,16 +193,19 @@ public class MockPlayer implements Player {
     }
 
     @Override
+    @Deprecated
     public void sendBlockChange(Location location, Material material, byte b) {
 
     }
 
     @Override
+    @Deprecated
     public boolean sendChunkChange(Location location, int i, int i1, int i2, byte[] bytes) {
         return false;
     }
 
     @Override
+    @Deprecated
     public void sendBlockChange(Location location, int i, byte b) {
 
     }
@@ -542,6 +546,7 @@ public class MockPlayer implements Player {
     }
 
     @Override
+    @Deprecated
     public boolean isOnGround() {
         return false;
     }
@@ -777,6 +782,7 @@ public class MockPlayer implements Player {
     }
 
     @Override
+    @Deprecated
     public void setTexturePack(String s) {
 
     }
@@ -827,11 +833,13 @@ public class MockPlayer implements Player {
     }
 
     @Override
+    @Deprecated
     public void sendTitle(String s, String s1) {
 
     }
 
     @Override
+    @Deprecated
     public void resetTitle() {
 
     }

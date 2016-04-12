@@ -1,10 +1,14 @@
 package com.pwn9.filter.util;
 
+import com.pwn9.filter.bukkit.TestTicker;
 import junit.framework.Assert;
 import org.junit.Test;
 
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Tests the LimitedRegexCharSequence
@@ -27,19 +31,32 @@ public class LimitedRegexCharSequenceTest {
 
 
     @Test
+    public void testAccessDoesNotTimeout() {
+        TestTicker ticker = new TestTicker(); // This ticker doesn't Tick. :)
+        LimitedRegexCharSequence lrcs = new LimitedRegexCharSequence(simpleString, 1, ticker);
+        // This should not blow up.
+        int i;
+        for (i = 0; i < 20; i++) {
+            lrcs.charAt(i);
+        }
+        assertEquals(i, lrcs.getAccessCount());
+    }
+
+    @Test(expected = LimitedRegexCharSequence.RegexTimeoutException.class)
+    public void testAccessDoesTimeout() {
+        TestTicker ticker = new TestTicker();
+        LimitedRegexCharSequence lrcs = new LimitedRegexCharSequence(simpleString, 100, ticker);
+
+        ticker.setElapsed(TimeUnit.NANOSECONDS.convert(101,TimeUnit.MILLISECONDS));
+        lrcs.charAt(0); // This should throw RegexTimeoutException
+    }
+
+    @Test(expected = LimitedRegexCharSequence.RegexTimeoutException.class)
     public void testTimeout() throws Exception {
         // demonstrates behavior for regular expression running into catastrophic backtracking for given input
-        LimitedRegexCharSequence timedString = new LimitedRegexCharSequence("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",1000);
+        LimitedRegexCharSequence timedString = new LimitedRegexCharSequence("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",100);
         Pattern pattern = Pattern.compile("(x+x+)+y");
         Matcher matcher = pattern.matcher(timedString);
-
-        try {
-            //noinspection ResultOfMethodCallIgnored
-            matcher.matches();
-            Assert.fail("Shouldn't get here!");
-        } catch (RuntimeException ex) {
-//            System.out.println(timedString.getAccessCount());
-//            System.out.println("PASS: " + ex.getMessage());
-        }
+        matcher.matches(); // This should throw the RegexTimeoutException
     }
 }

@@ -22,9 +22,9 @@ To Do on Current Task:
  + Investigate options for Immutability and Constructors
  + Refactor all the logging.
  + Fix Shortcuts file.
- * Implement interfaces for actions (eg: BurnTarget)
+ + Implement interfaces for actions (eg: BurnTarget)
  + Implement permission caching in minecraft API
- - Fix Points Manager
+ + Fix Points Manager
  - Keep better track of listeners to allow reloading of all configs.
 
 Random thoughts:

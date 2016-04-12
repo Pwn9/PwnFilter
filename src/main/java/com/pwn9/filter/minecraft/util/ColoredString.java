@@ -89,24 +89,12 @@ public final class ColoredString implements EnhancedString {
     /**
      * <p>Constructor for ColoredString.</p>
      *
-     * @param c a {@link ColoredString} object.
-     */
-    public ColoredString(ColoredString c) {
-        // Create a copy of the original array.
-        codes = c.codes;
-        plain = c.plain;
-        formatPrefix = c.formatPrefix;
-    }
-
-    /**
-     * <p>Constructor for ColoredString.</p>
-     *
      * @param plain an array of char.
      * @param codes an array of {@link java.lang.String} objects.
      * @param prefix a char.
      */
     public ColoredString(char[] plain, String[] codes, char prefix) {
-        this.plain = plain;
+        this.plain = Arrays.copyOf(plain, plain.length);
         this.codes = Arrays.copyOf(codes,plain.length+1);
         formatPrefix = prefix;
     }

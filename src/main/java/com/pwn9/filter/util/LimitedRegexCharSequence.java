@@ -10,7 +10,11 @@
 
 package com.pwn9.filter.util;
 
+import com.google.common.base.Stopwatch;
+import com.google.common.base.Ticker;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Create a Timed Regex match.
@@ -34,9 +38,11 @@ public class LimitedRegexCharSequence implements CharSequence {
 
     private final CharSequence inner;
 
-    private final int timeoutMillis;
+    private final Ticker ticker;
 
-    private final long timeoutTime;
+    private final Stopwatch stopwatch;
+
+    private final int timeoutMillis;
 
     private long accessCount;
 
@@ -46,26 +52,39 @@ public class LimitedRegexCharSequence implements CharSequence {
      * @param inner a {@link java.lang.CharSequence} object.
      * @param timeoutMillis a int.
      */
+
     public LimitedRegexCharSequence(CharSequence inner, int timeoutMillis)  {
+        this(inner, timeoutMillis, Ticker.systemTicker());
+    }
+
+    public LimitedRegexCharSequence(CharSequence inner, int timeoutMillis, Ticker ticker)  {
         super();
         if ( inner == null ) {
             throw new NullPointerException("CharSequence must not be null");
         }
         this.inner = inner;
+
+        this.ticker = ticker;
+        this.stopwatch = Stopwatch.createStarted(this.ticker);
+
         this.timeoutMillis = timeoutMillis;
-        timeoutTime = System.currentTimeMillis() + timeoutMillis;
         accessCount = 0;
     }
 
     /** {@inheritDoc} */
     public char charAt(int index) {
         accessCount++ ;
-        if (System.currentTimeMillis() > timeoutTime) {
-            throw new RuntimeException("Timeout occurred after " + timeoutMillis + "ms");
+        if (stopwatch.elapsed(TimeUnit.MILLISECONDS) > timeoutMillis) {
+            throw new RegexTimeoutException("Timeout occurred after " + timeoutMillis + "ms");
         }
         return inner.charAt(index);
     }
 
+    public final class RegexTimeoutException extends RuntimeException {
+        public RegexTimeoutException(String message) {
+            super(message);
+        }
+    }
     /**
      * <p>length.</p>
      *
@@ -77,7 +96,7 @@ public class LimitedRegexCharSequence implements CharSequence {
 
     /** {@inheritDoc} */
     public CharSequence subSequence(int start, int end) {
-        return new LimitedRegexCharSequence(inner.subSequence(start, end), timeoutMillis);
+        return new LimitedRegexCharSequence(inner.subSequence(start, end), timeoutMillis, this.ticker);
     }
 
     /**
