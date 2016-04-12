@@ -49,8 +49,8 @@ public class PwnFilterPlayerListenerTest {
     private Configuration testConfig;
     private final File resourcesDir = new File(getClass().getResource("/config.yml").getFile()).getParentFile();
     private PwnFilterPlugin testPlugin;
-    private PwnFilterPlayerListener playerListener;
     private FilterService filterService;
+    private PwnFilterPlayerListener playerListener;
 
     @Before
     public void setUp() throws InvalidConfigurationException {

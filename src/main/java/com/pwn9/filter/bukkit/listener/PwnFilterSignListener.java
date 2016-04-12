@@ -11,6 +11,7 @@
 package com.pwn9.filter.bukkit.listener;
 
 import com.pwn9.filter.bukkit.PwnFilterBukkitPlugin;
+import com.pwn9.filter.bukkit.PwnFilterPlugin;
 import com.pwn9.filter.bukkit.config.BukkitConfig;
 import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.api.MessageAuthor;
@@ -33,12 +34,12 @@ import java.util.List;
  * @version $Id: $Id
  */
 public class PwnFilterSignListener extends BaseListener {
-    private final PwnFilterBukkitPlugin plugin;
+    private final PwnFilterPlugin plugin;
     /**
      * <p>Constructor for PwnFilterSignListener.</p>
      *
      */
-    public PwnFilterSignListener(PwnFilterBukkitPlugin plugin) {
+    public PwnFilterSignListener(PwnFilterPlugin plugin) {
         super(plugin.getFilterService());
         this.plugin = plugin;
     }
