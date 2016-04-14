@@ -20,6 +20,7 @@ import com.pwn9.filter.engine.rules.chain.RuleChain;
 public class TestClient implements FilterClient {
 
     private final String name;
+    private boolean active;
 
     public TestClient() {
         this.name = "TEST";
@@ -46,16 +47,17 @@ public class TestClient implements FilterClient {
 
     @Override
     public boolean isActive() {
-        return false;
+        return active;
     }
 
     @Override
     public void activate() {
-
+        active = true;
     }
 
     @Override
     public void shutdown() {
+        active = false;
 
     }
 }

@@ -24,6 +24,7 @@ public class MockMinecraftAPI implements MinecraftAPI {
 
     // Simple flag to set what we want permission checks to return.
     public Boolean permReturnValue = false;
+    private String executedCommand = "";
 
     @Override
     public void reset() {
@@ -101,7 +102,11 @@ public class MockMinecraftAPI implements MinecraftAPI {
 
     @Override
     public void executeCommand(String command) {
+        executedCommand = command;
+    }
 
+    public String getExecutedCommand() {
+        return executedCommand;
     }
 
     @Override
