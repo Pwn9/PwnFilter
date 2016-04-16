@@ -112,7 +112,9 @@ public class RuleChain implements Chain, ChainEntry {
         apply(context,filterService);
 
         if (!context.getMatchedRules().isEmpty()) {
-            //TODO: Add counter for matches, here.
+
+            filterService.getStatsTracker().incrementMatch();
+
             filterService.getLogger().finer(() ->
                     {
                         StringBuilder sb = new StringBuilder();

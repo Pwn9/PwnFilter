@@ -28,12 +28,14 @@ import org.bukkit.command.CommandSender;
  */
 public class pfreload implements CommandExecutor {
     private final FilterService filterService;
+    private final PwnFilterBukkitPlugin plugin;
     /**
      * <p>Constructor for pfreload.</p>
      *
      */
-    public pfreload(FilterService filterService) {
+    public pfreload(FilterService filterService, PwnFilterBukkitPlugin plugin) {
         this.filterService = filterService;
+        this.plugin = plugin;
     }
 
     /** {@inheritDoc} */
@@ -44,15 +46,9 @@ public class pfreload implements CommandExecutor {
         filterService.getLogger().info("Disabling all listeners");
         filterService.disableClients();
 
-        PwnFilterBukkitPlugin.getInstance().reloadConfig();
-        PwnFilterBukkitPlugin.getInstance().configurePlugin();
+        if (!plugin.configurePlugin()) return false;
 
         filterService.getLogger().config("Reloaded config.yml as requested by " + sender.getName());
-
-        //TODO: MAKE THIS COMMAND WORK AGAIN!
-        //
-//         reloadAllConfigs();
-
         filterService.getLogger().config("All rules reloaded by " + sender.getName());
 
         // Re-register our listeners

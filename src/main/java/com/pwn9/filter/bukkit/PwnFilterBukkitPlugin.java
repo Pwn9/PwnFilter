@@ -23,10 +23,13 @@ import com.pwn9.filter.minecraft.command.pfreload;
 import com.pwn9.filter.util.tag.RegisterTags;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentMap;
 
@@ -97,7 +100,7 @@ public class PwnFilterBukkitPlugin extends JavaPlugin implements PwnFilterPlugin
         setupEconomy();
 
         // Now get our configuration
-        configurePlugin();
+        if (!configurePlugin()) return;
 
         // Activate Statistics Tracking
         statsTracker.startTracking();
@@ -124,7 +127,7 @@ public class PwnFilterBukkitPlugin extends JavaPlugin implements PwnFilterPlugin
         filterService.enableClients();
 
         // Set up Command Handlers
-        getCommand("pfreload").setExecutor(new pfreload(filterService));
+        getCommand("pfreload").setExecutor(new pfreload(filterService, this));
         getCommand("pfcls").setExecutor(new pfcls(getLogger(),console));
         getCommand("pfmute").setExecutor(new pfmute(getLogger(),console));
 
@@ -143,17 +146,23 @@ public class PwnFilterBukkitPlugin extends JavaPlugin implements PwnFilterPlugin
     /**
      * <p>configurePlugin.</p>
      */
-    public void configurePlugin() {
+    public boolean configurePlugin() {
 
         minecraftAPI.reset();
         try {
+            // Stupid hack because YamlConfiguration.loadConfiguration() eats our exception
+            YamlConfiguration config = new YamlConfiguration();
+            config.load(new File(getDataFolder(), "config.yml"));
+
+            reloadConfig();
             BukkitConfig.loadConfiguration(getConfig(), getDataFolder(), filterService);
-        } catch (InvalidConfigurationException ex) {
+            return true;
+        } catch (InvalidConfigurationException|IOException ex) {
             filterService.getLogger().severe("Fatal configuration failure: " + ex.getMessage());
             filterService.getLogger().severe("PwnFilter disabled.");
             getPluginLoader().disablePlugin(this);
         }
-
+        return false;
     }
 
     private void setupEconomy() {

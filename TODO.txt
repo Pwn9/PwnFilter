@@ -1,8 +1,8 @@
 Minimum Marketable Features:
  + Modularize PwnFilter Engine and Server Modules
+ - Logfile Output is consistent with previous versions
  - Book & Quill Filter Support
  - User-friendly Documentation
- - Logfile Output is consistent with previous versions
  - Player Name Filter Support
  - Useful Spam Filter
  - Support for Sponge
@@ -13,9 +13,7 @@ User Stories for current MMF:
 
 Engineering Tasks:
  * Test all teh things
- - Re-implement mcstats reporting
- - Add a File handling service, so parser can be more modular.
- - Refactor Parser to use more libs (eg: Scanner, Tokenizer)
+ * Re-implement mcstats reporting
 
 To Do on Current Task:
  - Tests for Points Manager ascending/descending
@@ -24,8 +22,10 @@ To Do on Current Task:
 
 
 
-Random thoughts:
-TODO: Enable configuration management /pfset /pfsave
-TODO: It's powerful.  Now, make it easier.
-TODO: Make 'base' files that users can pull in to get started quickly (eg: swearing.txt, hate.txt, etc.)
-TODO: Multiverse-support? (Different configs for different worlds)
+Ideas for later:
+ - Refactor Parser to use more libs (eg: Scanner, Tokenizer)
+ - Add a File handling service, so parser can be more modular.
+ - Enable configuration management /pfset /pfsave
+ - It's powerful.  Now, make it easier.
+ - Make 'base' files that users can pull in to get started quickly (eg: swearing.txt, hate.txt, etc.)
+ - Multiverse-support? (Different configs for different worlds)

@@ -249,5 +249,7 @@ public class FilterService {
         return null;
     }
 
-
+    public StatsTracker getStatsTracker() {
+        return statsTracker;
+    }
 }
