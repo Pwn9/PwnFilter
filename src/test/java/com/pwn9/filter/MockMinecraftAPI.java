@@ -109,9 +109,4 @@ public class MockMinecraftAPI implements MinecraftAPI {
         return executedCommand;
     }
 
-    @Override
-    public boolean notifyWithPerm(String permissionString, String sendString) {
-        return false;
-    }
-
 }

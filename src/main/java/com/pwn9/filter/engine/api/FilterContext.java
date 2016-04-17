@@ -13,9 +13,8 @@ package com.pwn9.filter.engine.api;
 import com.pwn9.filter.engine.rules.Rule;
 import com.pwn9.filter.util.SimpleString;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 /**
@@ -33,6 +32,7 @@ public class FilterContext {
     private final FilterClient filterClient;
     private final List<String> logMessages = new ArrayList<>(); // Rules can add strings to this array.  They will be output to log if log=true
     private final List<Rule> matchedRules = new ArrayList<>(); // An array containing all the rules we matched.
+    private final ConcurrentHashMap<String, String> notifyMessages = new ConcurrentHashMap<>(8,0.9f,1);
     private boolean logging = false;  // If true, actions will be logged
     private boolean aborted = false; // If set true by a rule, will stop further processing.
     private boolean cancelled = false; // If set true, will cancel this event.
@@ -188,4 +188,13 @@ public class FilterContext {
     public FilterClient getFilterClient() {
         return filterClient;
     }
+
+    public Map<String, String> getNotifyMessages() {
+        return Collections.unmodifiableMap(notifyMessages);
+    }
+
+    public void setNotifyMessage(String perm, String message) {
+        notifyMessages.put(perm, message);
+    }
+
 }

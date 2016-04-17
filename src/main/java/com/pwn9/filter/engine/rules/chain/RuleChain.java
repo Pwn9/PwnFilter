@@ -106,7 +106,7 @@ public class RuleChain implements Chain, ChainEntry {
      * <p>execute.</p>
      *
      * @param context a {@link FilterContext} object.
-     * @param filterService
+     * @param filterService The Service that is requesting this execution.
      */
     public void execute(FilterContext context, FilterService filterService) {
         apply(context,filterService);
@@ -115,7 +115,7 @@ public class RuleChain implements Chain, ChainEntry {
 
             filterService.getStatsTracker().incrementMatch();
 
-            filterService.getLogger().finer(() ->
+            filterService.getLogger().finest(() ->
                     {
                         StringBuilder sb = new StringBuilder();
                         for (Rule r : context.getMatchedRules()) {
@@ -132,7 +132,7 @@ public class RuleChain implements Chain, ChainEntry {
             );
 
         } else {
-            filterService.getLogger().finer(() -> "Debug no match: " + context.getOriginalMessage().getRaw());
+            filterService.getLogger().finest(() -> "Debug no match: " + context.getOriginalMessage().getRaw());
         }
 
         if (context.isCancelled()) {
@@ -142,8 +142,14 @@ public class RuleChain implements Chain, ChainEntry {
                     context.getAuthor().getName() + "> " + context.getModifiedMessage().toString());
         }
 
-        context.getLogMessages().stream().filter(s -> context.loggingOn()).forEach(filterService.getLogger()::info);
+        // Send out any notifications
+        context.getNotifyMessages().forEach(filterService::notifyTargets);
+
+        // Log any messages from "then log" actions
+        context.getLogMessages().stream().filter(s -> context.loggingOn())
+                .forEach(filterService.getLogger()::info);
     }
+
 
 
     /**

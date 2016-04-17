@@ -82,7 +82,7 @@ public class BukkitConfig {
 
         // Setup logging
         Level level = Level.parse(config.getString("loglevel", "info").toUpperCase());
-        filterService.getLogger().setLevel(level);
+        filterService.getConfig().setLogLevel(level);
 
         setupPoints(filterService);
 

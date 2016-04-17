@@ -1,0 +1,11 @@
+match foo
+ rule FOO The Foo rule
+ then notify pwnfilter.admins Player %player% has broken %ruleid%
+
+match bar
+ rule BAR The Bar rule
+ then notify pwnfilter.admins Player %player% has broken %ruleid%
+
+match baz
+ rule BAZ The Baz rule
+ then notify pwnfilter.baz Player %player% has broken %ruleid%

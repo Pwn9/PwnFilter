@@ -48,13 +48,13 @@ public class Notify implements Action {
     }
 
     /** {@inheritDoc} */
-    public void execute(final FilterContext filterTask, FilterService filterService) {
+    public void execute(final FilterContext filterContext, FilterService filterService) {
 
         // Create the message to send
-        final String sendString = TagRegistry.replaceTags(messageString, filterTask);
+        final String sendString = TagRegistry.replaceTags(messageString, filterContext);
 
-        //TODO: Create Notification
-        //filterTask.get().notifyWithPerm(permissionString, sendString);
+        // This will set the message for the perm, overwriting older messages.
+        filterContext.setNotifyMessage(permissionString, sendString);
 
     }
 

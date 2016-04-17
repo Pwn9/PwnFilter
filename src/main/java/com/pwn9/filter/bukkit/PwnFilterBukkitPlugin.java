@@ -106,6 +106,7 @@ public class PwnFilterBukkitPlugin extends JavaPlugin implements PwnFilterPlugin
         statsTracker.startTracking();
 
         filterService.registerAuthorService(minecraftAPI);
+        filterService.registerNotifyTarget(minecraftAPI);
 
         //Load up our listeners
         //        BaseListener.setAPI(minecraftAPI);

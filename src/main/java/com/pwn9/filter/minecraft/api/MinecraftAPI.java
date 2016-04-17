@@ -54,5 +54,4 @@ public interface MinecraftAPI {
 
     void executeCommand(String command);
 
-    boolean notifyWithPerm(final String permissionString, final String sendString);
 }

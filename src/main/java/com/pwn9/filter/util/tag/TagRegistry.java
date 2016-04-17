@@ -30,12 +30,14 @@ import java.util.regex.Pattern;
 public class TagRegistry {
 
     private static final HashMap<String, Tag> tagMap
-            = new HashMap<String, Tag>();
+            = new HashMap<>();
 
     public static void addTag(String name, Tag tag) {
-        if (tagMap.containsKey(name))
-            throw new RuntimeException("Duplicate Tag value.");
-
+        if (tagMap.containsKey(name)) {
+            if (tagMap.get(name).getClass() != tag.getClass()) {
+                throw new RuntimeException("Duplicate Tag value.");
+            } else return;
+        }
         tagMap.put(name, tag);
     }
 

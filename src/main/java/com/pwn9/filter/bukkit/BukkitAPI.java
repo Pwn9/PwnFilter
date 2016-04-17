@@ -14,6 +14,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.pwn9.filter.engine.api.AuthorService;
+import com.pwn9.filter.engine.api.NotifyTarget;
 import com.pwn9.filter.minecraft.DeathMessages;
 import com.pwn9.filter.minecraft.api.MinecraftAPI;
 import com.pwn9.filter.minecraft.api.MinecraftConsole;
@@ -43,7 +44,7 @@ import java.util.concurrent.TimeUnit;
  */
 
 @SuppressWarnings("UnusedDeclaration")
-public class BukkitAPI implements MinecraftAPI, AuthorService {
+public class BukkitAPI implements MinecraftAPI, AuthorService, NotifyTarget {
 
     private final PwnFilterBukkitPlugin plugin;
 
@@ -328,7 +329,7 @@ public class BukkitAPI implements MinecraftAPI, AuthorService {
     }
 
     @Override
-    public boolean notifyWithPerm(final String permissionString, final String sendString) {
+    public void notifyWithPerm(final String permissionString, final String sendString) {
         safeBukkitDispatch(() -> {
             if (permissionString.equalsIgnoreCase("console")) {
                 Bukkit.getConsoleSender().sendMessage(sendString);
@@ -339,8 +340,6 @@ public class BukkitAPI implements MinecraftAPI, AuthorService {
                         .forEach(p -> p.sendMessage(sendString));
             }
         });
-
-        return true;
 
     }
 }

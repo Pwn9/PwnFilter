@@ -70,7 +70,4 @@ public class MinecraftConsole implements MessageAuthor {
         minecraftAPI.executeCommand(command);
     }
 
-    public void notifyWithPerm(final String permissionString, final String sendString) {
-        minecraftAPI.notifyWithPerm(permissionString, sendString);
-    }
 }

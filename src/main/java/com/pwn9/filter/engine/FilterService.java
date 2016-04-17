@@ -13,10 +13,7 @@
 package com.pwn9.filter.engine;
 
 import com.google.common.collect.Sets;
-import com.pwn9.filter.engine.api.AuthorService;
-import com.pwn9.filter.engine.api.FilterClient;
-import com.pwn9.filter.engine.api.MessageAuthor;
-import com.pwn9.filter.engine.api.StatsTracker;
+import com.pwn9.filter.engine.api.*;
 import com.pwn9.filter.engine.rules.action.ActionFactory;
 import com.pwn9.filter.engine.rules.chain.InvalidChainException;
 import com.pwn9.filter.engine.rules.chain.RuleChain;
@@ -52,6 +49,7 @@ public class FilterService {
     private final StatsTracker statsTracker;
     private final FilterConfig config;
     private final Set<FilterClient> registeredClients = Sets.newConcurrentHashSet();
+    private final Set<NotifyTarget> notifyTargets = Sets.newConcurrentHashSet();
     private final ActionFactory actionFactory;
     private final Logger logger;
 
@@ -144,6 +142,16 @@ public class FilterService {
         }
     }
 
+    public void registerNotifyTarget(NotifyTarget t) {
+        notifyTargets.add(t);
+    }
+
+    public void notifyTargets(String perm, String message) {
+        logger.finest(() -> "Notify perm: " + perm + " Message: " + message);
+        notifyTargets.stream()
+                .forEach(target -> target.notifyWithPerm(perm, message));
+    }
+
     /**
      * <p>unregisterAllClients.</p>
      */
@@ -204,16 +212,16 @@ public class FilterService {
     public void setDebugMode(String s) {
         switch (s.toLowerCase()) {
             case "low":
-                logfileHandler.setLevel(Level.FINE);
+                logger.setLevel(Level.FINE);
                 break;
             case "medium":
-                logfileHandler.setLevel(Level.FINER);
+                logger.setLevel(Level.FINER);
                 break;
             case "high":
-                logfileHandler.setLevel(Level.FINEST);
+                logger.setLevel(Level.FINEST);
                 break;
             default:
-                logfileHandler.setLevel(Level.INFO);
+                logger.setLevel(Level.INFO);
                 break;
         }
         logger.info("Logger debug set to: " + s);

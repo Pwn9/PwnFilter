@@ -11,6 +11,7 @@
 package com.pwn9.filter.engine;
 
 import java.io.File;
+import java.util.logging.Level;
 
 /**
  * Object to hold the configuration of the PwnFilter Engine
@@ -22,6 +23,7 @@ public class FilterConfig {
 
     private volatile File textDir;
     private volatile File rulesDir;
+    private Level logLevel;
 
     /* Getters and Setters */
 
@@ -41,4 +43,11 @@ public class FilterConfig {
         this.rulesDir = rulesDir;
     }
 
+    public void setLogLevel(Level logLevel) {
+        this.logLevel = logLevel;
+    }
+
+    public Level getLogLevel() {
+        return logLevel;
+    }
 }

@@ -2,10 +2,10 @@
 Release Notes for PwnFilter
 ===========================
 
-4.0.. The "I never thought it would happen" release
-====================================================
+3.9.. The "I never thought it would happen" release
+===================================================
 
-4.0 is a major rewrite of the core filter engine, to make it more modular, more
+3.9 is a major rewrite of the core filter engine, to make it more modular, more
 robust, and easier to extend.  The major goal was to make it possible to use the
 filter engine in other projects, not just Bukkit or Spigot, but Sponge, FML, or
 even non-minecraft environments.
@@ -20,7 +20,33 @@ New Features
 
  * Official Spigot 1.9 support
 
+Changed Features
+----------------
 
+ * The "notify" action no longer sends one message per match.  Now, one message
+   is sent per permission.  The last match that has a notify action for any given
+   permission will be the message that is sent.
+
+   For example::
+
+    match foo
+     rule FOO The Foo rule
+     then notify pwnfilter.admins Player %player% has broken %ruleid%
+
+    match bar
+     rule BAR The Bar rule
+     then notify pwnfilter.admins Player %player% has broken %ruleid%
+
+    match baz
+     rule BAZ The Baz rule
+     then notify pwnfilter.baz Player %player% has broken %ruleid%
+
+   If HanzSoLow sent a message: "foo bar baz", Players with the pwnfilter.admins
+   permission will receive: "Player HanzSoLow has broken BAR", and players with
+   the pwnfilter.baz permission will receive "Player HanzSoLow has broken BAZ".
+   Players with both permissions will receive both messages.
+
+ *
 
 Changes in 3.4.0
 ================

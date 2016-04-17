@@ -16,7 +16,10 @@ Engineering Tasks:
  * Re-implement mcstats reporting
 
 To Do on Current Task:
- - Tests for Points Manager ascending/descending
+ * Restore "notify" function
+ * Create Bukkit API function to notify a perm and add function to RuleChain execution to trigger notify at end of processing.
+ * Make Points Manager work.
+ * Tests for Points Manager ascending/descending
  - Tests for remaining actions.
  - Tests for all Tags
 
