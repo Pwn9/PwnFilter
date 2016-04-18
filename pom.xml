@@ -240,11 +240,11 @@
 
   <ciManagement>
       <system>jenkins</system>
-      <url>http://ci.sagely.ca</url>
+      <url>https://ci.sagely.ca</url>
   </ciManagement>
 
     <distributionManagement>
-        <downloadUrl>http://repo.sagely.ca/PwnFilter</downloadUrl>
+        <downloadUrl>https://repo.sagely.ca/PwnFilter</downloadUrl>
         <repository>
             <id>repo-sagely</id>
             <name>PwnFilter Release</name>
