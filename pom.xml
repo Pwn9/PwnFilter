@@ -5,7 +5,7 @@
 
     <groupId>com.pwn9.PwnFilter</groupId>
     <artifactId>PwnFilter</artifactId>
-    <version>3.9.0</version>
+    <version>3.9.0-SNAPSHOT</version>
     <name>PwnFilter</name>
     <description>Complete chat control with the power of regex.</description>
     <url>http://dev.bukkit.org/server-mods/pwnfilter/</url>
@@ -233,9 +233,9 @@
         </plugins>
     </build>
     <scm>
-        <connection>scm:git:ssh://github.com/Pwn9/PwnFilter.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/Pwn9/PwnFilter.git</developerConnection>
-      <tag>v3.9.0</tag>
+        <connection>scm:git:ssh://github.com/ptoal/PwnFilter.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/ptoal/PwnFilter.git</developerConnection>
+      <tag>HEAD</tag>
   </scm>
 
   <ciManagement>
