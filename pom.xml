@@ -233,8 +233,8 @@
         </plugins>
     </build>
     <scm>
-        <connection>scm:git:ssh://github.com/ptoal/PwnFilter.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/ptoal/PwnFilter.git</developerConnection>
+        <connection>scm:git:ssh://github.com/Pwn9/PwnFilter.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/Pwn9/PwnFilter.git</developerConnection>
       <tag>HEAD</tag>
   </scm>
 
