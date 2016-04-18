@@ -916,7 +916,7 @@ public class MockPlayer implements Player {
 
     @Override
     public String getName() {
-        return null;
+        return "Pwn9";
     }
 
     @Override

@@ -1,9 +1,9 @@
 Minimum Marketable Features:
  + Modularize PwnFilter Engine and Server Modules
- - Logfile Output is consistent with previous versions
- - Book & Quill Filter Support
- - User-friendly Documentation
+ X Logfile Output is consistent with previous versions
+ + Book & Quill Filter Support
  - Player Name Filter Support
+ - User-friendly Documentation
  - Useful Spam Filter
  - Support for Sponge
  - Web Tool for Rulefile editing.
@@ -12,17 +12,15 @@ User Stories for current MMF:
  + All "then" actions work correctly
 
 Engineering Tasks:
- * Test all teh things
- * Re-implement mcstats reporting
+ + Re-implement mcstats reporting
 
 To Do on Current Task:
  + Restore "notify" function
  + Create Bukkit API function to notify a perm and add function to RuleChain execution to trigger notify at end of processing.
- * Make Points Manager work.
- * Tests for Points Manager ascending/descending
+ + Make Points Manager work.
+ + Tests for Points Manager ascending/descending
  - Tests for remaining actions.
  - Tests for all Tags
-
 
 
 Ideas for later:

@@ -12,6 +12,7 @@
 package com.pwn9.filter.bukkit.listener;
 
 import com.pwn9.filter.bukkit.PwnFilterBukkitPlugin;
+import com.pwn9.filter.bukkit.PwnFilterPlugin;
 import com.pwn9.filter.bukkit.config.BukkitConfig;
 import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.rules.chain.InvalidChainException;
@@ -35,13 +36,13 @@ import java.util.List;
  */
 public class PwnFilterBookListener extends BaseListener {
 
-    private final PwnFilterBukkitPlugin plugin;
+    private final PwnFilterPlugin plugin;
 
     /**
      * <p>Constructor for PwnFilterBookListener.</p>
      *
      */
-    public PwnFilterBookListener(PwnFilterBukkitPlugin plugin) {
+    public PwnFilterBookListener(PwnFilterPlugin plugin) {
         super(plugin.getFilterService());
         this.plugin = plugin;
     }
