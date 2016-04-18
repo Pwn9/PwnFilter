@@ -246,12 +246,12 @@
     <distributionManagement>
         <downloadUrl>http://repo.sagely.ca/PwnFilter</downloadUrl>
         <repository>
-            <id>toal-ca</id>
+            <id>repo-sagely</id>
             <name>PwnFilter Release</name>
             <url>scpexe://repo.sagely.ca/home/ci/public_html/</url>
         </repository>
         <snapshotRepository>
-            <id>toal-ca</id>
+            <id>repo-sagely</id>
             <name>PwnFilter Snapshot</name>
             <url>scpexe://repo.sagely.ca/home/ci/public_html/snapshots</url>
         </snapshotRepository>
