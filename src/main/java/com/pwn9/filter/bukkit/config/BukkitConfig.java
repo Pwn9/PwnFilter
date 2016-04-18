@@ -81,8 +81,13 @@ public class BukkitConfig {
                 );
 
         // Setup logging
-        Level level = Level.parse(config.getString("loglevel", "info").toUpperCase());
-        filterService.getConfig().setLogLevel(level);
+        Level logLevel;
+        try {
+             logLevel = Level.parse(config.getString("loglevel", "info").toUpperCase());
+        } catch (IllegalArgumentException ex) {
+            throw new InvalidConfigurationException("Could not parse loglevel.  Must be either 'info' or 'fine'.  Found: " + config.getString("loglevel"));
+        }
+        filterService.getConfig().setLogLevel(logLevel);
 
         setupPoints(filterService);
 
