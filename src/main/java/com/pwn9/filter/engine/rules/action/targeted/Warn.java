@@ -15,6 +15,7 @@ import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.bukkit.BukkitPlayer;
 import com.pwn9.filter.util.tag.TagRegistry;
+import net.md_5.bungee.api.ChatColor;
 
 /**
  * Warn the user with the string provided.
@@ -36,7 +37,7 @@ public class Warn implements Action {
 
     public static Action getAction(String s)
     {
-        return new Warn((s != null && !s.isEmpty() ? s : defaultMessage));
+        return new Warn((s != null && !s.isEmpty() ? ChatColor.translateAlternateColorCodes('&',s) : defaultMessage));
     }
     public static void setDefaultMessage(String s) {
         defaultMessage = s;

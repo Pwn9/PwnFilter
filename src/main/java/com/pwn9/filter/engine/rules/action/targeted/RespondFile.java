@@ -19,8 +19,11 @@ import com.pwn9.filter.util.tag.TagRegistry;
 import org.bukkit.ChatColor;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Responds to the user with the string provided.
@@ -38,17 +41,17 @@ public class RespondFile implements Action {
 
     public static Action getAction(String s, File sourceDir ) throws InvalidActionException {
         ArrayList<String> messageStrings = new ArrayList<>();
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(new File(sourceDir, s)));
-            String message;
-            while ((message = br.readLine()) != null) {
-                messageStrings.add(ChatColor.translateAlternateColorCodes('&', message));
-            }
+        Path filePath = sourceDir.toPath().resolve(s);
+
+        try (Stream<String> sourceLines = Files.lines(filePath)) {
+            sourceLines.forEach((String message) ->
+                    messageStrings.add(ChatColor.translateAlternateColorCodes('&', message)));
         } catch (FileNotFoundException ex) {
             throw new InvalidActionException("File not found while trying to add Action: " + ex.getMessage());
         } catch (IOException ex) {
             throw new InvalidActionException("Error reading file: " + s);
         }
+
         return new RespondFile(ImmutableList.copyOf(messageStrings));
     }
 
