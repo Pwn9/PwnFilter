@@ -15,6 +15,7 @@ import com.pwn9.filter.engine.PointManager;
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.api.MessageAuthor;
+import com.pwn9.filter.engine.rules.Rule;
 import com.pwn9.filter.engine.rules.action.InvalidActionException;
 import org.bukkit.ChatColor;
 
@@ -57,11 +58,11 @@ public class Points implements Action {
 
         if (a == null) return;
 
-        PointManager pm;
-        try {
-            pm = filterService.getPointManager();
-        } catch (IllegalStateException ex) {
-            filterService.getLogger().fine(String.format("Rule: %s has 'then points', but PointManager is disabled in config.yml", filterTask.getRule().getId()));
+        PointManager pm = filterService.getPointManager();
+        if (!pm.isEnabled()) {
+            Rule thisRule = filterTask.getRule();
+            filterService.getLogger().fine(String.format("Rule: %s has 'then points', but PointManager is disabled in config.yml",
+                    (thisRule != null)?thisRule.getId():"None"));
             return;
         }
 

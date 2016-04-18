@@ -23,7 +23,15 @@ import java.util.UUID;
 public class TestAuthor implements MessageAuthor, BurnTarget {
 
     private boolean burnt;
-    private final UUID id = UUID.randomUUID();
+    private final UUID id;
+
+    public TestAuthor() {
+        id = UUID.randomUUID();
+    }
+
+    public TestAuthor(UUID id) {
+        this.id = id;
+    }
 
     @Override
     public Boolean hasPermission(String permString) {

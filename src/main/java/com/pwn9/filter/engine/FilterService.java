@@ -53,12 +53,6 @@ public class FilterService {
     private final ActionFactory actionFactory;
     private final Logger logger;
 
-    public PointManager getPointManager() {
-        return pointManager;
-    }
-
-    private final PointManager pointManager = new PointManager(this);
-
     public FilterService(StatsTracker statsTracker) {
         this(statsTracker, Logger.getLogger("com.pwn9.filter"));
     }
@@ -68,6 +62,12 @@ public class FilterService {
         this.config = new FilterConfig();
         this.actionFactory = new ActionFactory(this);
         this.logger = logger;
+    }
+
+    private final PointManager pointManager = new PointManager(this);
+
+    public PointManager getPointManager() {
+        return pointManager;
     }
 
     @SuppressWarnings("WeakerAccess")

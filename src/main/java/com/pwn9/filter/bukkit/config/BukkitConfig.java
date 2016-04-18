@@ -101,12 +101,12 @@ public class BukkitConfig {
                 pointManager.setLeakInterval(pointsSection.getInt("leak.interval", 30));
 
                 try {
-                    parseThresholds(pointsSection, pointManager, filterService.getActionFactory());
+                    parseThresholds(pointsSection.getConfigurationSection("thresholds"), pointManager, filterService.getActionFactory());
                 } catch (InvalidActionException ex) {
                     filterService.getLogger().warning("Invalid Action parsing Thresholds: " + ex.getMessage());
                     pointManager.shutdown();
                 }
-
+                pointManager.start();
             }
         }
     }
@@ -117,13 +117,20 @@ public class BukkitConfig {
     throws InvalidActionException {
 
         for (String threshold : configSection.getKeys(false)) {
+            pointManager.getFilterService().getLogger().
+                    finest("Parsing Threshold: " + threshold);
+
             List<Action> ascending = new ArrayList<>();
             List<Action> descending = new ArrayList<>();
 
             for (String action : configSection.getStringList(threshold + ".actions.ascending")) {
+                pointManager.getFilterService().getLogger().
+                        finest("Adding Ascending Action: " + action);
                 ascending.add(actionFactory.getActionFromString(action));
             }
             for (String action : configSection.getStringList(threshold + ".actions.descending")) {
+                pointManager.getFilterService().getLogger().
+                        finest("Adding Descending Action: " + action);
                 descending.add(actionFactory.getActionFromString(action));
             }
             pointManager.addThreshold(
@@ -131,6 +138,9 @@ public class BukkitConfig {
                     configSection.getDouble(threshold + ".points"),
                     ascending,
                     descending);
+            pointManager.getFilterService().getLogger().
+                    finest("Adding Threshold: " + configSection.getString(threshold + ".name") +
+                            " at points: " + configSection.getDouble(threshold + ".points"));
         }
 
     }

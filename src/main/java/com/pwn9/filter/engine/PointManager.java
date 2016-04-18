@@ -40,9 +40,9 @@ public class PointManager implements FilterClient {
     private final Map<UUID,Double> pointsMap = new ConcurrentHashMap<>(8, 0.75f, 2);
     private final TreeMap<Double, Threshold> thresholds = new TreeMap<>();
 
-    private int leakInterval = 0;
+    private int leakInterval = 10;
 
-    private Double leakPoints = 0.0;
+    private Double leakPoints = 1.0;
     private ScheduledFuture<?> scheduledFuture;
     private final ScheduledExecutorService scheduler =
             Executors.newScheduledThreadPool(1);
@@ -50,6 +50,7 @@ public class PointManager implements FilterClient {
 
     PointManager(FilterService filterService) {
         this.filterService = filterService;
+        this.clearThresholds();
     }
 
     public void reset() {
@@ -132,14 +133,13 @@ public class PointManager implements FilterClient {
     }
 
     /**
-     * <p>Setter for the field <code>pointsMap</code>.</p>
+     * <p>Setter for the field <code>pointsMap</code>. Does not execute actions.</p>
      *
      * @param points a {@link java.lang.Double} object.
      */
     public void setPoints(UUID id, Double points) {
-        Double old = pointsMap.get(id);
+        Double old = pointsMap.getOrDefault(id,0d);
         pointsMap.put(id, points);
-        executeActions(old, points,id);
     }
 
     /**
@@ -148,8 +148,7 @@ public class PointManager implements FilterClient {
      * @param points a {@link java.lang.Double} object.
      */
     public void addPoints(UUID id, Double points) {
-        Double current = pointsMap.get(id);
-        if (current == null) current = 0.0;
+        Double current = pointsMap.getOrDefault(id,0d);
         Double updated = current + points;
 
         pointsMap.put(id, updated);
@@ -170,7 +169,6 @@ public class PointManager implements FilterClient {
     private void executeActions(final Double fromValue, final Double toValue, final UUID id) {
         final Double oldKey = thresholds.floorKey(fromValue);
         final Double newKey = thresholds.floorKey(toValue);
-
 
         if (oldKey == null || newKey == null || oldKey.equals(newKey)) return;
 
@@ -196,8 +194,7 @@ public class PointManager implements FilterClient {
      */
     public void subPoints(UUID id, Double points) {
         Double updated;
-        Double current = pointsMap.get(id);
-        if (current == null) current = 0.0;
+        Double current = pointsMap.getOrDefault(id,0d);
         updated = current - points;
         if ( updated <=0 ) {
             pointsMap.remove(id);
@@ -235,14 +232,15 @@ public class PointManager implements FilterClient {
         public void executeAscending(UUID id, FilterClient client) {
             FilterContext state = new FilterContext(new SimpleString(""), getFilterService().getAuthor(id), client );
             for (Action a : actionsAscending ) {
+                client.getFilterService().getLogger().finest("Executing Action: " + a + " on " + state.getAuthor().getName());
                 a.execute(state, filterService);
             }
-
         }
 
         public void executeDescending(UUID id, FilterClient client) {
             FilterContext state = new FilterContext(new SimpleString(""), getFilterService().getAuthor(id), client );
             for (Action a : actionsDescending ) {
+                client.getFilterService().getLogger().finest("Executing Action: " + a + " on " + state.getAuthor().getName());
                 a.execute(state, filterService);
             }
         }
