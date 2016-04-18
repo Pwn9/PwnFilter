@@ -240,20 +240,20 @@
 
   <ciManagement>
       <system>jenkins</system>
-      <url>http://ci.toal.ca</url>
+      <url>http://ci.sagely.ca</url>
   </ciManagement>
 
     <distributionManagement>
-        <downloadUrl>http://ci.toal.ca/repo/PwnFilter</downloadUrl>
+        <downloadUrl>http://ci.sagely.ca/repo/PwnFilter</downloadUrl>
         <repository>
             <id>toal-ca</id>
             <name>PwnFilter Release</name>
-            <url>scpexe://ci.toal.ca/home/ci/public_html/repo/</url>
+            <url>scpexe://ci.sagely.ca/home/ci/public_html/repo/</url>
         </repository>
         <snapshotRepository>
             <id>toal-ca</id>
             <name>PwnFilter Snapshot</name>
-            <url>scpexe://ci.toal.ca/home/ci/public_html/repo/snapshots</url>
+            <url>scpexe://ci.sagely.ca/home/ci/public_html/repo/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
 
