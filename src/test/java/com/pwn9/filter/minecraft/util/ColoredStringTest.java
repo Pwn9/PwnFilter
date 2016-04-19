@@ -185,7 +185,16 @@ public class ColoredStringTest {
         assertEquals(testCs.getRaw(), original);
     }
 
+    @Test
+    public void testCRLFInStringIsStrippedFromMatch() {
+        String test = "Test string.\rNext line\r\nAnother line";
+        Pattern p = Pattern.compile("\\bline\\b");
+        String replacement = "word";
 
+        EnhancedString cs = new ColoredString(test);
+        assertEquals("Test string.\rNext word\r\nAnother word", cs.replaceText(p, replacement).getRaw());
+
+    }
 
 
 }
