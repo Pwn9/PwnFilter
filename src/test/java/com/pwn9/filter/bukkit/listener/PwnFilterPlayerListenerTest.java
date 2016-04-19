@@ -48,14 +48,13 @@ public class PwnFilterPlayerListenerTest {
     private AsyncPlayerChatEvent chatEvent;
     private Configuration testConfig;
     private final File resourcesDir = new File(getClass().getResource("/config.yml").getFile()).getParentFile();
-    private PwnFilterPlugin testPlugin;
     private FilterService filterService;
     private PwnFilterPlayerListener playerListener;
 
     @Before
     public void setUp() throws InvalidConfigurationException {
         File rulesDir = new File(getClass().getResource("/rules").getFile());
-        testPlugin = new MockPlugin();
+        PwnFilterPlugin testPlugin = new MockPlugin();
         playerListener = new PwnFilterPlayerListener(testPlugin);
         filterService = testPlugin.getFilterService();
         filterService.getConfig().setRulesDir(rulesDir);

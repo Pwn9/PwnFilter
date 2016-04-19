@@ -75,6 +75,6 @@ public enum CoreAction implements ActionToken {
         public Action getAction(String s, FilterConfig filterConfig) {
             return Upper.INSTANCE;
         }
-    };
+    }
 
 }

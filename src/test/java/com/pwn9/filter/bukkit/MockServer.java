@@ -43,6 +43,7 @@ import java.util.logging.Logger;
 /**
  * Created by Sage905 on 2016-04-18.
  */
+@SuppressWarnings("deprecation")
 public class MockServer implements Server {
     @Override
     public String getName() {
@@ -530,12 +531,12 @@ public class MockServer implements Server {
     }
 
     @Override
-    public CachedServerIcon loadServerIcon(File file) throws IllegalArgumentException, Exception {
+    public CachedServerIcon loadServerIcon(File file) throws Exception {
         return null;
     }
 
     @Override
-    public CachedServerIcon loadServerIcon(BufferedImage image) throws IllegalArgumentException, Exception {
+    public CachedServerIcon loadServerIcon(BufferedImage image) throws Exception {
         return null;
     }
 

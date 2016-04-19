@@ -19,7 +19,7 @@ import java.util.*;
 /**
  * Created by Sage905 on 2016-04-18.
  */
-public class MockBook implements BookMeta {
+public class MockBook implements BookMeta, Cloneable {
 
     private String title, author;
     private LinkedList<String> pages;
@@ -109,7 +109,12 @@ public class MockBook implements BookMeta {
 
     @Override
     public BookMeta clone() {
-        return new MockBook(title, author, pages);
+        try {
+            return (BookMeta)super.clone();
+        } catch ( CloneNotSupportedException ex ) {
+            // Should never be reached
+        }
+        return null;
     }
 
     @Override

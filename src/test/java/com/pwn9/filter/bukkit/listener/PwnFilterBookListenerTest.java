@@ -48,10 +48,7 @@ public class PwnFilterBookListenerTest {
     private Player mockPlayer = new MockPlayer();
 
     private PlayerEditBookEvent event;
-    private Configuration testConfig;
     private final File resourcesDir = new File(getClass().getResource("/config.yml").getFile()).getParentFile();
-    private PwnFilterPlugin testPlugin;
-    private FilterService filterService;
     private PwnFilterBookListener bookListener;
     final String[] testPages = new String[]{
             "This is the first page",
@@ -65,15 +62,15 @@ public class PwnFilterBookListenerTest {
             Bukkit.setServer(new MockServer());
         }
         File rulesDir = new File(getClass().getResource("/rules").getFile());
-        testPlugin = new MockPlugin();
+        PwnFilterPlugin testPlugin = new MockPlugin();
         bookListener = new PwnFilterBookListener(testPlugin);
-        filterService = testPlugin.getFilterService();
+        FilterService filterService = testPlugin.getFilterService();
         filterService.getConfig().setRulesDir(rulesDir);
-        testConfig = YamlConfiguration.loadConfiguration(new File(getClass().getResource("/config.yml").getFile()));
+        Configuration testConfig = YamlConfiguration.loadConfiguration(new File(getClass().getResource("/config.yml").getFile()));
         filterService.getActionFactory().addActionTokens(MinecraftAction.class);
         filterService.getActionFactory().addActionTokens(TargetedAction.class);
         filterService.registerAuthorService(uuid -> new TestAuthor());
-        BukkitConfig.loadConfiguration(testConfig, resourcesDir,filterService);
+        BukkitConfig.loadConfiguration(testConfig, resourcesDir, filterService);
         BukkitConfig.setGlobalMute(false); // To ensure it gets reset between tests.
     }
 
