@@ -37,7 +37,6 @@ public class PointManagerTest {
     private FilterService filterService;
     private PointManager pm;
     private TestAction ascending1, descending1, ascending2, descending2;
-    private List<Action> ascendingList1, descendingList1, ascendingList2, descendingList2;
     private AuthorService authorService = new AuthorService() {
 
         @Override
@@ -54,15 +53,15 @@ public class PointManagerTest {
         pm.start();
         filterService.registerAuthorService(authorService);
         ascending1 = new TestAction();
-        ascendingList1 = Collections.singletonList(ascending1);
+        List<Action> ascendingList1 = Collections.singletonList(ascending1);
         descending1 = new TestAction();
-        descendingList1 = Collections.singletonList(descending1);
+        List<Action> descendingList1 = Collections.singletonList(descending1);
         pm.addThreshold("Level1", 10d, ascendingList1, descendingList1);
 
         ascending2 = new TestAction();
-        ascendingList2 = Collections.singletonList(ascending2);
+        List<Action> ascendingList2 = Collections.singletonList(ascending2);
         descending2 = new TestAction();
-        descendingList2 = Collections.singletonList(descending2);
+        List<Action> descendingList2 = Collections.singletonList(descending2);
         pm.addThreshold("Level1", 20d, ascendingList2, descendingList2);
     }
     @Test

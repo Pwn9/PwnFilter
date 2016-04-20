@@ -42,7 +42,10 @@ public final class ColoredString implements EnhancedString {
 
     private final String[] codes; // The String array containing the color / formatting codes
     private final char[] plain; // the plain text
-    private final char formatPrefix;
+    private final String COLORCODES = "0123456789AaBbCcDdEeFfKkLlMmNnOoRr";
+    private final char CR = '\r';
+    private final char LF = '\n';
+    private final String FORMATPREFIXES = "§&";
 
     /**
      * <p>Constructor for ColoredString.</p>
@@ -50,17 +53,6 @@ public final class ColoredString implements EnhancedString {
      * @param s a {@link java.lang.String} object.
      */
     public ColoredString(String s) {
-        this(s, '&');
-    }
-
-    /**
-     * <p>Constructor for ColoredString.</p>
-     *
-     * @param s a {@link java.lang.String} object.
-     * @param prefix a char.
-     */
-    public ColoredString(String s, char prefix) {
-        formatPrefix = prefix;
         char[] raw = s.toCharArray();
         char[] tmpPlain = new char[raw.length];
         String[] tmpCodes = new String[raw.length+1];
@@ -68,17 +60,26 @@ public final class ColoredString implements EnhancedString {
         int textpos = 0;
 
         for (int i = 0; i < raw.length ; i++) {
-            if (i != raw.length-1 && raw[i] == formatPrefix && "0123456789AaBbCcDdEeFfKkLlMmNnOoRr".indexOf(raw[i+1]) > -1) {
+            if (i != raw.length-1 && FORMATPREFIXES.indexOf(raw[i]) > -1
+                    && COLORCODES.indexOf(raw[i + 1]) > -1) {
                 if (tmpCodes[textpos] == null) {
-                    tmpCodes[textpos] = new String(raw,i,2);
+                    tmpCodes[textpos] = new String(raw, i, 2);
                 } else {
-                    tmpCodes[textpos] += new String(raw,i,2);
+                    tmpCodes[textpos] += new String(raw, i, 2);
                 }
                 i++; // Move past the code character.
+            } else if (raw[i] == CR || raw[i] == LF) {
+
+                tmpCodes[textpos] = new String(raw, i, 1);
+
+                // Now insert a tab in its place
+                tmpPlain[textpos] = ' ';
+                textpos++;
             } else {
                 tmpPlain[textpos] = raw[i];
                 textpos++;
             }
+
         }
         plain = Arrays.copyOf(tmpPlain,textpos);
         // Copy one more code than the plain string
@@ -91,12 +92,10 @@ public final class ColoredString implements EnhancedString {
      *
      * @param plain an array of char.
      * @param codes an array of {@link java.lang.String} objects.
-     * @param prefix a char.
      */
-    public ColoredString(char[] plain, String[] codes, char prefix) {
+    public ColoredString(char[] plain, String[] codes) {
         this.plain = Arrays.copyOf(plain, plain.length);
         this.codes = Arrays.copyOf(codes,plain.length+1);
-        formatPrefix = prefix;
     }
 
     /* CharSequence methods */
@@ -127,7 +126,9 @@ public final class ColoredString implements EnhancedString {
 
     // Return a string with color codes interleaved.
     /**
-     * <p>getColoredString.</p>
+     * Reassemble a colord string by inserting codes found in the array before the
+     * character in that spot.  If the code is a CR/LF, discard the temporary
+     * space character, and replace it with the correct code.
      *
      * @return a {@link java.lang.String} object.
      */
@@ -135,8 +136,15 @@ public final class ColoredString implements EnhancedString {
         StringBuilder sb = new StringBuilder();
 
         for (int i = 0 ; i < plain.length ; i++ ) {
-            if ( codes[i] != null ) sb.append(codes[i]);
-            sb.append(plain[i]);
+            if ( codes[i] != null ) {
+                if (codes[i].indexOf(CR) > -1 || codes[i].indexOf(LF) > -1) {
+                    sb.append(codes[i]);
+                } else {
+                    sb.append(codes[i]).append(plain[i]);
+                }
+            } else {
+                sb.append(plain[i]);
+            }
         }
         // Check to see if there is a code at the end of the text
         // If so, append it to the end of the string.
@@ -258,7 +266,7 @@ public final class ColoredString implements EnhancedString {
         // as well as the trailing code.
         System.arraycopy(codes,currentPosition+1,tempCodes,lastMatchText.length+1,plain.length - currentPosition);
 
-        return new ColoredString(tempText, tempCodes, formatPrefix);
+        return new ColoredString(tempText, tempCodes);
 
     }
 
@@ -278,7 +286,7 @@ public final class ColoredString implements EnhancedString {
                 modified[i] = Character.toLowerCase(modified[i]);
             }
         }
-        return new ColoredString(modified, codes, formatPrefix);
+        return new ColoredString(modified, codes);
     }
     
     /**
@@ -297,7 +305,7 @@ public final class ColoredString implements EnhancedString {
                 modified[i] = Character.toUpperCase(modified[i]);
             }
         }
-        return new ColoredString(modified, codes, formatPrefix);
+        return new ColoredString(modified, codes);
     }    
 
     /**

@@ -185,7 +185,33 @@ public class ColoredStringTest {
         assertEquals(testCs.getRaw(), original);
     }
 
+    @Test
+    public void sectionSymbolTreatedAsCode() {
+        String testString = "§7This §9is§l the §1string§3 under test.";
+        String plainString = "This is the string under test.";
+        String[] codeArray = {"§7", null, null, null, null, "§9", null, "§l",
+                null, null, null, null, "§1", null, null, null, null, null, "§3", null, null,
+                null, null, null, null, null, null, null, null, null, null};
 
+        ColoredString cs = new ColoredString(testString);
+
+        assertEquals(plainString, cs.toString());
+        assertArrayEquals(codeArray, cs.getCodeArray());
+        assertEquals(testString, cs.getColoredString());
+        assertEquals(plainString, cs.toString());
+
+    }
+
+    @Test
+    public void testCRLFInStringIsStrippedFromMatch() {
+        String test = "Test string.\rNext line\r\nAnother line";
+        Pattern p = Pattern.compile("\\bline\\b");
+        String replacement = "word";
+
+        EnhancedString cs = new ColoredString(test);
+        assertEquals("Test string.\rNext word\r\nAnother word", cs.replaceText(p, replacement).getRaw());
+
+    }
 
 
 }

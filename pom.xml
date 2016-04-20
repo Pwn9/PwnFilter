@@ -5,7 +5,7 @@
 
     <groupId>com.pwn9.PwnFilter</groupId>
     <artifactId>PwnFilter</artifactId>
-    <version>3.9.0-SNAPSHOT</version>
+    <version>3.9.1-SNAPSHOT</version>
     <name>PwnFilter</name>
     <description>Complete chat control with the power of regex.</description>
     <url>http://dev.bukkit.org/server-mods/pwnfilter/</url>
@@ -153,11 +153,11 @@
             </testResource>
         </testResources>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.9</version>
-            </plugin>
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-javadoc-plugin</artifactId>-->
+                <!--<version>2.9</version>-->
+            <!--</plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -233,27 +233,27 @@
         </plugins>
     </build>
     <scm>
-        <connection>scm:git:ssh://github.com/ptoal/PwnFilter.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/ptoal/PwnFilter.git</developerConnection>
-      <tag>HEAD</tag>
+        <connection>scm:git:ssh://github.com/pwn9/PwnFilter.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/pwn9/PwnFilter.git</developerConnection>
+      <tag>v3.9.0</tag>
   </scm>
 
   <ciManagement>
       <system>jenkins</system>
-      <url>http://ci.toal.ca</url>
+      <url>https://ci.sagely.ca</url>
   </ciManagement>
 
     <distributionManagement>
-        <downloadUrl>http://ci.toal.ca/repo/PwnFilter</downloadUrl>
+        <downloadUrl>https://repo.sagely.ca/PwnFilter</downloadUrl>
         <repository>
-            <id>toal-ca</id>
+            <id>repo-sagely</id>
             <name>PwnFilter Release</name>
-            <url>scpexe://ci.toal.ca/home/ci/public_html/repo/</url>
+            <url>scpexe://repo.sagely.ca/home/ci/public_html/</url>
         </repository>
         <snapshotRepository>
-            <id>toal-ca</id>
+            <id>repo-sagely</id>
             <name>PwnFilter Snapshot</name>
-            <url>scpexe://ci.toal.ca/home/ci/public_html/repo/snapshots</url>
+            <url>scpexe://repo.sagely.ca/home/ci/public_html/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
 

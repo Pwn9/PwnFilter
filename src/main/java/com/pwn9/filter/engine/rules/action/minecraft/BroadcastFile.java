@@ -21,8 +21,11 @@ import com.pwn9.filter.util.tag.TagRegistry;
 import org.bukkit.ChatColor;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Broadcasts the contents of the named file to all users.
@@ -42,17 +45,17 @@ public class BroadcastFile implements Action {
     static Action getAction(String s, File sourceDir) throws InvalidActionException
     {
         ArrayList<String> messages = new ArrayList<>();
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(new File(sourceDir,s)));
-            String message;
-            while ( (message = br.readLine()) != null ) {
-                messages.add(ChatColor.translateAlternateColorCodes('&',message));
-            }
+
+        Path filePath = sourceDir.toPath().resolve(s);
+        try (Stream<String> sourceLines = Files.lines(filePath)) {
+            sourceLines.forEach((String message) ->
+                    messages.add(ChatColor.translateAlternateColorCodes('&', message)));
         } catch (FileNotFoundException ex) {
             throw new InvalidActionException("File not found while trying to add Action: " + ex.getMessage());
         } catch (IOException ex) {
-            throw new InvalidActionException("Error reading: " + s);
+            throw new InvalidActionException("Error reading file: " + s);
         }
+
         return new BroadcastFile(messages);
     }
 

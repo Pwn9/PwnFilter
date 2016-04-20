@@ -14,6 +14,7 @@ import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.api.MessageAuthor;
+import net.md_5.bungee.api.ChatColor;
 
 /**
  * Burns a player to death.
@@ -38,7 +39,7 @@ public class Burn implements Action {
 
     public static Action getAction(String s)
     {
-        return new Burn((s != null && !s.isEmpty() ? s : defaultMessage));
+        return new Burn((s != null && !s.isEmpty() ? ChatColor.translateAlternateColorCodes('&',s) : defaultMessage));
     }
 
     public static void setDefaultMessage(String s) {

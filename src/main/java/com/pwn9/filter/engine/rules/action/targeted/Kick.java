@@ -13,6 +13,7 @@ package com.pwn9.filter.engine.rules.action.targeted;
 import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.FilterContext;
+import net.md_5.bungee.api.ChatColor;
 
 import static com.pwn9.filter.util.tag.TagRegistry.replaceTags;
 
@@ -36,7 +37,7 @@ public class Kick implements Action {
     /** {@inheritDoc} */
     public static Action getAction(String s)
     {
-        return new Kick((s != null && !s.isEmpty() ? s : defaultMessage));
+        return new Kick((s != null && !s.isEmpty() ? ChatColor.translateAlternateColorCodes('&',s) : defaultMessage));
     }
 
     public static void setDefaultMessage(String s) {

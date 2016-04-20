@@ -11,7 +11,7 @@ match Respond
 then respond <<EOF
 &4This is a mult-line response.
 You can have as much text here as you want.
-NOTE: You MUST terminate a multiline response with a single line that reads: END
+NOTE: You MUST terminate a multiline response with a single line that reads: EOF
 EOF
 
 match notify

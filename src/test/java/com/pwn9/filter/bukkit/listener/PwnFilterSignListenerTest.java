@@ -46,25 +46,22 @@ public class PwnFilterSignListenerTest {
     private Block mockBlock;
 
     private SignChangeEvent signChangeEvent;
-    private Configuration testConfig;
     private final File resourcesDir = new File(getClass().getResource("/config.yml").getFile()).getParentFile();
-    private PwnFilterPlugin testPlugin;
-    private FilterService filterService;
     private PwnFilterSignListener signListener;
 
 
     @Before
     public void setUp() throws InvalidConfigurationException {
         File rulesDir = new File(getClass().getResource("/rules").getFile());
-        testPlugin = new MockPlugin();
+        PwnFilterPlugin testPlugin = new MockPlugin();
         signListener = new PwnFilterSignListener(testPlugin);
-        filterService = testPlugin.getFilterService();
+        FilterService filterService = testPlugin.getFilterService();
         filterService.getConfig().setRulesDir(rulesDir);
-        testConfig = YamlConfiguration.loadConfiguration(new File(getClass().getResource("/config.yml").getFile()));
+        Configuration testConfig = YamlConfiguration.loadConfiguration(new File(getClass().getResource("/config.yml").getFile()));
         filterService.getActionFactory().addActionTokens(MinecraftAction.class);
         filterService.getActionFactory().addActionTokens(TargetedAction.class);
         filterService.registerAuthorService(uuid -> new TestAuthor());
-        BukkitConfig.loadConfiguration(testConfig, resourcesDir,filterService);
+        BukkitConfig.loadConfiguration(testConfig, resourcesDir, filterService);
         BukkitConfig.setGlobalMute(false); // To ensure it gets reset between tests.
     }
 
