@@ -2,10 +2,11 @@
 .project
 /.settings
 /.git
-/.idea/workspace.xml
+/.idea
 /lib
 /bin
 /dist
+/jars
 /target
 /site
 PwnFilter.iml
