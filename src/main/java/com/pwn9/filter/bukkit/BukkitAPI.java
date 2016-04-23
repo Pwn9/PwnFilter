@@ -23,6 +23,8 @@ import org.apache.commons.lang.BooleanUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.IllegalPluginAccessException;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -46,9 +48,9 @@ import java.util.concurrent.TimeUnit;
 @SuppressWarnings("UnusedDeclaration")
 public class BukkitAPI implements MinecraftAPI, AuthorService, NotifyTarget {
 
-    private final PwnFilterBukkitPlugin plugin;
+    private final PwnFilterPlugin plugin;
 
-    BukkitAPI(PwnFilterBukkitPlugin p) {
+    BukkitAPI(PwnFilterPlugin p) {
         plugin = p;
     }
 
@@ -60,11 +62,11 @@ public class BukkitAPI implements MinecraftAPI, AuthorService, NotifyTarget {
             .build(
                     new CacheLoader<UUID, BukkitPlayer>() {
                         @Override
-                        public BukkitPlayer load(@NotNull final UUID uuid) {
-                            if (BooleanUtils.isTrue(safeBukkitAPICall(() -> Bukkit.getPlayer(uuid) != null))) {
+                        public BukkitPlayer load(@NotNull final UUID uuid) throws PlayerNotFound {
+                            if (BooleanUtils.isTrue(safeBukkitAPICall(() -> Bukkit.getOfflinePlayer(uuid) != null))) {
                                 return new BukkitPlayer(uuid, playerAPI);
                             } else {
-                                throw new InstantiationError();
+                                throw new PlayerNotFound();
                             }
                         }
                     }
@@ -102,16 +104,17 @@ public class BukkitAPI implements MinecraftAPI, AuthorService, NotifyTarget {
             // Red Alert, Shields Up.  We are an Async task.  Ask the main
             // thread to execute these calls, and return the Player data to
             // cache.
-            Future<T> task =
-                    Bukkit.getScheduler().callSyncMethod(plugin, callable);
-            try {
-                // This will block the current thread for up to 3s
-                return task.get(3, TimeUnit.SECONDS);
-            } catch (Exception e) {
-                plugin.getLogger().fine("Bukkit API call timed out (>3s).");
-                return null;
-            }
-
+            if (plugin instanceof Plugin) {
+                Future<T> task =
+                        Bukkit.getScheduler().callSyncMethod((Plugin)plugin, callable);
+                try {
+                    // This will block the current thread for up to 3s
+                    return task.get(3, TimeUnit.SECONDS);
+                } catch (Exception e) {
+                    plugin.getLogger().fine("Bukkit API call timed out (>3s).");
+                    return null;
+                }
+            } else throw new IllegalPluginAccessException();
         }
         return null;
     }
@@ -128,7 +131,9 @@ public class BukkitAPI implements MinecraftAPI, AuthorService, NotifyTarget {
             // Red Alert, Shields Up.  We are an Async task.  Ask the main
             // thread to execute these calls, and return the Player data to
             // cache.
-            Bukkit.getScheduler().runTask(plugin, runnable);
+            if (plugin instanceof Plugin) {
+                Bukkit.getScheduler().runTask((Plugin)plugin, runnable);
+            } else throw new IllegalPluginAccessException();
         }
     }
     
@@ -319,13 +324,14 @@ public class BukkitAPI implements MinecraftAPI, AuthorService, NotifyTarget {
 
     @Override
     public void executeCommand(final String command) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
-            }
-        }.runTask(plugin);
-
+        if (plugin instanceof Plugin) {
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+                }
+            }.runTask((Plugin)plugin);
+        } else throw new IllegalPluginAccessException();
     }
 
     @Override
@@ -342,4 +348,7 @@ public class BukkitAPI implements MinecraftAPI, AuthorService, NotifyTarget {
         });
 
     }
+
+    public class PlayerNotFound extends Exception {}
+
 }

@@ -170,9 +170,14 @@ public class MockServer implements Server {
         return 0;
     }
 
+    Player mockPlayer;
+    public void setPlayer(Player player) {
+        mockPlayer = player;
+    }
+
     @Override
     public Player getPlayer(String name) {
-        return null;
+        return mockPlayer;
     }
 
     @Override
@@ -187,7 +192,8 @@ public class MockServer implements Server {
 
     @Override
     public Player getPlayer(UUID id) {
-        return null;
+        if (mockPlayer != null && mockPlayer.getUniqueId() == id) return mockPlayer;
+        else return null;
     }
 
     @Override
@@ -352,7 +358,7 @@ public class MockServer implements Server {
 
     @Override
     public OfflinePlayer getOfflinePlayer(UUID id) {
-        return null;
+        return getPlayer(id);
     }
 
     @Override
@@ -460,9 +466,14 @@ public class MockServer implements Server {
         return 0;
     }
 
+    private boolean primaryThread = true;
+
+    public void setPrimaryThread(boolean b) {
+        primaryThread = b;
+    }
     @Override
     public boolean isPrimaryThread() {
-        return false;
+        return primaryThread;
     }
 
     @Override

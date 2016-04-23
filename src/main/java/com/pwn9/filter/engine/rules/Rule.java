@@ -158,7 +158,7 @@ public class Rule implements ChainEntry {
 
         // Check if action matches the current state of the message
         LimitedRegexCharSequence limitedRegexCharSequence =
-                new LimitedRegexCharSequence(filterContext.getModifiedMessage().toString(),100);
+                new LimitedRegexCharSequence(filterContext.getModifiedMessage().toString(),1000);
         final Matcher matcher = pattern.matcher(limitedRegexCharSequence);
 
         // If we don't match, return immediately with the original message
