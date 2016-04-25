@@ -138,9 +138,9 @@ public class PwnFilterBukkitPlugin extends JavaPlugin implements PwnFilterPlugin
      * <p>onDisable.</p>
      */
     public void onDisable() {
-        filterService.deregisterAuthorService(minecraftAPI);
-        filterService.shutdown();
         HandlerList.unregisterAll(this); // Unregister all Bukkit Event handlers.
+        filterService.shutdown();
+        filterService.deregisterAuthorService(minecraftAPI);
     }
 
 

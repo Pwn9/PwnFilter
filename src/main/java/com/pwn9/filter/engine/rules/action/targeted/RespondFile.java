@@ -10,6 +10,7 @@
 
 package com.pwn9.filter.engine.rules.action.targeted;
 
+import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableList;
 import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.Action;
@@ -43,7 +44,7 @@ public class RespondFile implements Action {
         ArrayList<String> messageStrings = new ArrayList<>();
         Path filePath = sourceDir.toPath().resolve(s);
 
-        try (Stream<String> sourceLines = Files.lines(filePath)) {
+        try (Stream<String> sourceLines = Files.lines(filePath, Charsets.UTF_16)) {
             sourceLines.forEach((String message) ->
                     messageStrings.add(ChatColor.translateAlternateColorCodes('&', message)));
         } catch (FileNotFoundException ex) {
