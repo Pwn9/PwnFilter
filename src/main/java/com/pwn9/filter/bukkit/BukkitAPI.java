@@ -19,7 +19,6 @@ import com.pwn9.filter.minecraft.DeathMessages;
 import com.pwn9.filter.minecraft.api.MinecraftAPI;
 import com.pwn9.filter.minecraft.api.MinecraftConsole;
 import net.milkbowl.vault.economy.EconomyResponse;
-import org.apache.commons.lang.BooleanUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -63,7 +62,8 @@ public class BukkitAPI implements MinecraftAPI, AuthorService, NotifyTarget {
                     new CacheLoader<UUID, BukkitPlayer>() {
                         @Override
                         public BukkitPlayer load(@NotNull final UUID uuid) throws PlayerNotFound {
-                            if (BooleanUtils.isTrue(safeBukkitAPICall(() -> Bukkit.getOfflinePlayer(uuid) != null))) {
+                            OfflinePlayer offlinePlayer = safeBukkitAPICall(() -> Bukkit.getOfflinePlayer(uuid));
+                            if (offlinePlayer != null) {
                                 return new BukkitPlayer(uuid, playerAPI);
                             } else {
                                 throw new PlayerNotFound();
