@@ -30,10 +30,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * Handles keeping a cache of data that we need during Async event handling.
@@ -110,9 +107,13 @@ public class BukkitAPI implements MinecraftAPI, AuthorService, NotifyTarget {
                 try {
                     // This will block the current thread for up to 3s
                     return task.get(3, TimeUnit.SECONDS);
-                } catch (Exception e) {
-                    plugin.getLogger().fine("Bukkit API call timed out (>3s).");
+                } catch (TimeoutException e) {
+                    plugin.getLogger().warning("Bukkit API call timed out (>3s).");
                     return null;
+                } catch (InterruptedException e) {
+                    plugin.getLogger().warning("Bukkit API call Interrupted.");
+                } catch (ExecutionException e) {
+                    plugin.getLogger().warning("Bukkit API call threw exception: " + e.getMessage());
                 }
             } else throw new IllegalPluginAccessException();
         }
