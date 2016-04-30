@@ -257,6 +257,7 @@ public class FilterService {
         return Collections.unmodifiableList(authorServices);
     }
     public MessageAuthor getAuthor(UUID uuid) {
+        if (authorServices.isEmpty()) throw new RuntimeException("No AuthorServices Registered. This should not happen!");
         for ( AuthorService a : authorServices) {
             MessageAuthor author = a.getAuthorById(uuid);
             if (author != null) {
