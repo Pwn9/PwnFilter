@@ -99,7 +99,7 @@ public class PwnFilterServerCommandListener extends BaseListener {
 
             if (BukkitConfig.consolefilterEnabled()) {
 
-                ruleChain = getCompiledChain("console.txt");
+                ruleChain = getCompiledChain(filterService.getConfig().getRuleFile("console.txt"));
                 PluginManager pm = Bukkit.getPluginManager();
                 EventPriority priority = BukkitConfig.getCmdpriority();
 

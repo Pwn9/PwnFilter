@@ -15,6 +15,7 @@ import com.pwn9.filter.bukkit.PwnFilterPlugin;
 import com.pwn9.filter.bukkit.config.BukkitConfig;
 import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.api.MessageAuthor;
+import com.pwn9.filter.engine.api.UnknownAuthor;
 import com.pwn9.filter.engine.rules.chain.InvalidChainException;
 import com.pwn9.filter.minecraft.util.ColoredString;
 import com.pwn9.filter.util.SimpleString;
@@ -61,6 +62,15 @@ public class PwnFilterPlayerListener extends BaseListener {
 
         MessageAuthor minecraftPlayer = plugin.getFilterService().getAuthor((event.getPlayer().getUniqueId()));
 
+        // This should never happen.  Log it, if it does.
+        if (minecraftPlayer instanceof UnknownAuthor) {
+            plugin.getLogger().info("Filtering Aborted. Unable to lookup player in Chat Event.  PlayerUUID: "
+                    + event.getPlayer().getUniqueId());
+            plugin.getLogger().info("Message: " + event.getMessage());
+            plugin.getLogger().info("AuthorServices: " + filterService.getAuthorServices());
+            plugin.getLogger().info("Bukkit player online: " + event.getPlayer().isOnline());
+            return;
+        }
 
         // Permissions Check, if player has bypass permissions, then skip everything.
         if (minecraftPlayer.hasPermission("pwnfilter.bypass.chat")) return;
@@ -121,7 +131,7 @@ public class PwnFilterPlayerListener extends BaseListener {
 
         try {
 
-            ruleChain = getCompiledChain("chat.txt");
+            ruleChain = getCompiledChain(filterService.getConfig().getRuleFile("chat.txt"));
 
             PluginManager pm = Bukkit.getServer().getPluginManager();
 

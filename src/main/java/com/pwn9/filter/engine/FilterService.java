@@ -22,6 +22,7 @@ import com.pwn9.filter.util.PwnFormatter;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -48,8 +49,8 @@ public class FilterService {
 
     private final StatsTracker statsTracker;
     private final FilterConfig config;
-    private final Set<FilterClient> registeredClients = Sets.newConcurrentHashSet();
-    private final Set<NotifyTarget> notifyTargets = Sets.newConcurrentHashSet();
+    private final Set<FilterClient> registeredClients = Sets.newCopyOnWriteArraySet();
+    private final Set<NotifyTarget> notifyTargets = Sets.newCopyOnWriteArraySet();
     private final ActionFactory actionFactory;
     private final Logger logger;
 
@@ -59,7 +60,7 @@ public class FilterService {
 
     public FilterService(StatsTracker statsTracker, Logger logger) {
         this.statsTracker = statsTracker;
-        this.config = new FilterConfig();
+        this.config = new FilterConfig(logger);
         this.actionFactory = new ActionFactory(this);
         this.logger = logger;
     }
@@ -72,8 +73,9 @@ public class FilterService {
 
     @SuppressWarnings("WeakerAccess")
     public Set<FilterClient> getActiveClients() {
-        return registeredClients.stream().filter(FilterClient::isActive).
-                collect(Collectors.toSet());
+        return Collections.unmodifiableSet(registeredClients
+                .stream().filter(FilterClient::isActive)
+                .collect(Collectors.toSet()));
     }
 
     public void shutdown() {
@@ -87,7 +89,7 @@ public class FilterService {
      * @return a {@link java.util.Map} object.
      */
     public Set<FilterClient> getRegisteredClients() {
-        return registeredClients;
+        return Collections.unmodifiableSet(registeredClients);
     }
     public FilterConfig getConfig() {
         return config;
@@ -247,17 +249,26 @@ public class FilterService {
         authorServices.remove(authorService);
     }
 
+    public void clearAuthorServices() {
+        authorServices.clear();
+    }
+
+    public List<AuthorService> getAuthorServices() {
+        return Collections.unmodifiableList(authorServices);
+    }
     public MessageAuthor getAuthor(UUID uuid) {
+        if (authorServices.isEmpty()) throw new RuntimeException("No AuthorServices Registered. This should not happen!");
         for ( AuthorService a : authorServices) {
             MessageAuthor author = a.getAuthorById(uuid);
             if (author != null) {
                 return author;
             }
         }
-        return null;
+        return new UnknownAuthor(uuid);
     }
 
     public StatsTracker getStatsTracker() {
         return statsTracker;
     }
+
 }

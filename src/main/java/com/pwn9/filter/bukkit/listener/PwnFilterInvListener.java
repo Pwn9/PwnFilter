@@ -121,7 +121,7 @@ public class PwnFilterInvListener extends BaseListener {
 
         if (BukkitConfig.itemFilterEnabled()) {
             try {
-                ruleChain = getCompiledChain("item.txt");
+                ruleChain = getCompiledChain(filterService.getConfig().getRuleFile("item.txt"));
                 // Now register the listener with the appropriate priority
                 pm.registerEvent(InventoryClickEvent.class, this, priority,
                         (l, e) -> onInventoryEvent((InventoryClickEvent) e),

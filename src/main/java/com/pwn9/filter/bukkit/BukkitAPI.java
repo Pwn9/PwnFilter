@@ -19,7 +19,6 @@ import com.pwn9.filter.minecraft.DeathMessages;
 import com.pwn9.filter.minecraft.api.MinecraftAPI;
 import com.pwn9.filter.minecraft.api.MinecraftConsole;
 import net.milkbowl.vault.economy.EconomyResponse;
-import org.apache.commons.lang.BooleanUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -31,10 +30,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * Handles keeping a cache of data that we need during Async event handling.
@@ -57,13 +53,13 @@ public class BukkitAPI implements MinecraftAPI, AuthorService, NotifyTarget {
     private final MinecraftAPI playerAPI = this;
 
     private final LoadingCache<UUID, BukkitPlayer> playerLoadingCache = CacheBuilder.newBuilder()
-            .maximumSize(100)
-            .expireAfterWrite(10, TimeUnit.SECONDS)
+            .maximumSize(0)
             .build(
                     new CacheLoader<UUID, BukkitPlayer>() {
                         @Override
                         public BukkitPlayer load(@NotNull final UUID uuid) throws PlayerNotFound {
-                            if (BooleanUtils.isTrue(safeBukkitAPICall(() -> Bukkit.getOfflinePlayer(uuid) != null))) {
+                            OfflinePlayer offlinePlayer = safeBukkitAPICall(() -> Bukkit.getOfflinePlayer(uuid));
+                            if (offlinePlayer != null) {
                                 return new BukkitPlayer(uuid, playerAPI);
                             } else {
                                 throw new PlayerNotFound();
@@ -110,9 +106,13 @@ public class BukkitAPI implements MinecraftAPI, AuthorService, NotifyTarget {
                 try {
                     // This will block the current thread for up to 3s
                     return task.get(3, TimeUnit.SECONDS);
-                } catch (Exception e) {
-                    plugin.getLogger().fine("Bukkit API call timed out (>3s).");
+                } catch (TimeoutException e) {
+                    plugin.getLogger().warning("Bukkit API call timed out (>3s).");
                     return null;
+                } catch (InterruptedException e) {
+                    plugin.getLogger().warning("Bukkit API call Interrupted.");
+                } catch (ExecutionException e) {
+                    plugin.getLogger().warning("Bukkit API call threw exception: " + e.getMessage());
                 }
             } else throw new IllegalPluginAccessException();
         }

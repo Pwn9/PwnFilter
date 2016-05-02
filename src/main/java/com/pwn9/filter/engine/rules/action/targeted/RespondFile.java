@@ -18,7 +18,11 @@ import com.pwn9.filter.engine.rules.action.InvalidActionException;
 import com.pwn9.filter.util.tag.TagRegistry;
 import org.bukkit.ChatColor;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.charset.MalformedInputException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -50,6 +54,10 @@ public class RespondFile implements Action {
             throw new InvalidActionException("File not found while trying to add Action: " + ex.getMessage());
         } catch (IOException ex) {
             throw new InvalidActionException("Error reading file: " + s);
+        } catch (UncheckedIOException ex) {
+            if (ex.getCause() instanceof MalformedInputException) {
+                throw new InvalidActionException("Error reading file: " + s + " File was not utf-8 encoded.", ex.getCause());
+            }
         }
 
         return new RespondFile(ImmutableList.copyOf(messageStrings));
