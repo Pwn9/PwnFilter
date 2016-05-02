@@ -19,4 +19,8 @@ public class InvalidActionException extends Exception {
         super(message);
     }
 
+    public InvalidActionException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
 }

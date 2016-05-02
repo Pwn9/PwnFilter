@@ -2,6 +2,7 @@ package com.pwn9.filter.engine.rules;
 
 import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.FilterContext;
+import com.pwn9.filter.engine.rules.action.InvalidActionException;
 import com.pwn9.filter.engine.rules.action.minecraft.MinecraftAction;
 import com.pwn9.filter.engine.rules.action.targeted.TargetedAction;
 import com.pwn9.filter.engine.rules.chain.InvalidChainException;
@@ -11,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.nio.charset.MalformedInputException;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
@@ -35,6 +37,7 @@ public class ActionTest {
         filterService.getActionFactory().addActionTokens(TargetedAction.class);
         File rulesDir = new File(getClass().getResource("/rules").getFile());
         filterService.getConfig().setRulesDir(rulesDir);
+        filterService.getConfig().setTextDir(new File(getClass().getResource("/textfiles").getFile()));
         try {
             rs = filterService.parseRules(new File(rulesDir, "actionTests.txt"));
         } catch (InvalidChainException ex) {
@@ -81,5 +84,13 @@ public class ActionTest {
         assertEquals("lowercase all this stuff!", test2.getModifiedMessage().toString());
     }
 
+    @Test
+    public void testReadWindowsEncodedFile() throws InvalidActionException {
+        try {
+            filterService.getActionFactory().getAction("respondfile", "colors.txt");
+        } catch (InvalidActionException ex) {
+            assertTrue(ex.getCause() instanceof MalformedInputException);
+        }
+    }
 
 }
