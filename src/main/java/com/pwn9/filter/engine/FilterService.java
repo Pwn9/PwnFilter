@@ -60,7 +60,7 @@ public class FilterService {
 
     public FilterService(StatsTracker statsTracker, Logger logger) {
         this.statsTracker = statsTracker;
-        this.config = new FilterConfig();
+        this.config = new FilterConfig(logger);
         this.actionFactory = new ActionFactory(this);
         this.logger = logger;
     }

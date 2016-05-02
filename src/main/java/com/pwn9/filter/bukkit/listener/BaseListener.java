@@ -44,14 +44,7 @@ public abstract class BaseListener implements FilterClient, Listener {
         this.filterService = filterService;
     }
 
-    RuleChain getCompiledChain(String path) throws InvalidChainException {
-        File ruleFile;
-
-        if (path.startsWith("/")) {
-            ruleFile = new File(path);
-        } else {
-            ruleFile = new File(filterService.getConfig().getRulesDir(), path);
-        }
+    RuleChain getCompiledChain(File ruleFile) throws InvalidChainException {
         Chain newChain = filterService.parseRules(ruleFile);
         return (RuleChain) newChain;
     }
@@ -66,8 +59,12 @@ public abstract class BaseListener implements FilterClient, Listener {
         return ruleChain;
     }
 
-    public void loadRuleChain(String path) throws InvalidChainException {
+    public void loadRuleChain(File path) throws InvalidChainException {
         ruleChain = getCompiledChain(path);
+    }
+
+    public void loadRuleChain(String name) throws InvalidChainException {
+        ruleChain = getCompiledChain(filterService.getConfig().getRuleFile(name));
     }
 
     /** {@inheritDoc} */

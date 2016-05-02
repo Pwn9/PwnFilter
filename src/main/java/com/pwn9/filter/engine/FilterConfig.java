@@ -10,8 +10,11 @@
 
 package com.pwn9.filter.engine;
 
-import java.io.File;
+import com.pwn9.filter.bukkit.TemplateProvider;
+
+import java.io.*;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Object to hold the configuration of the PwnFilter Engine
@@ -24,6 +27,12 @@ public class FilterConfig {
     private volatile File textDir;
     private volatile File rulesDir;
     private Level logLevel;
+    private TemplateProvider templateProvider;
+    private final Logger logger;
+
+    FilterConfig(Logger logger) {
+        this.logger = logger;
+    }
 
     /* Getters and Setters */
 
@@ -47,7 +56,75 @@ public class FilterConfig {
         this.logLevel = logLevel;
     }
 
+    public TemplateProvider getTemplateProvider() {
+        return templateProvider;
+    }
+
+    public void setTemplateProvider(TemplateProvider templateProvider) {
+        this.templateProvider = templateProvider;
+    }
+
+    public Logger getLogger() {
+        return logger;
+    }
+
     public Level getLogLevel() {
         return logLevel;
     }
+
+    public File getRuleFile(String path) {
+        // TODO: This can most certainly be cleaned up.
+        File ruleFile;
+        if (path.startsWith("/")) {
+            ruleFile = new File(path);
+        } else {
+            ruleFile = new File(getRulesDir(), path);
+        }
+        if (ruleFile.exists()) {
+            return ruleFile;
+        } else {
+            try {
+                if (copyTemplate(ruleFile)) {
+                    return ruleFile;
+                }
+            } catch (IOException |SecurityException ex) {
+                return null; // Failed to create file or copy template.
+            }
+            return null;
+        }
+    }
+
+    boolean copyTemplate(File destFile) throws IOException, SecurityException {
+
+        if (destFile.exists() || templateProvider == null) {
+            return false;
+        }
+
+        String configName = destFile.getName();
+
+        InputStream templateFile;
+
+        templateFile = templateProvider.getResource(configName);
+
+        if (templateFile == null) {
+            // Create an empty file.
+            return destFile.mkdirs() && destFile.createNewFile();
+        }
+        if (destFile.createNewFile()) {
+            BufferedInputStream fin = new BufferedInputStream(templateFile);
+            FileOutputStream fout = new FileOutputStream(destFile);
+            byte[] data = new byte[1024];
+            int c;
+            while ((c = fin.read(data, 0, 1024)) != -1)
+                fout.write(data, 0, c);
+            fin.close();
+            fout.close();
+            logger.info("Created file from template: " + configName);
+            return true;
+        } else {
+            logger.warning("Failed to create file from template: " + configName);
+            return false;
+        }
+    }
+
 }

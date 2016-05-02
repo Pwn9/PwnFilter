@@ -131,7 +131,7 @@ public class PwnFilterPlayerListener extends BaseListener {
 
         try {
 
-            ruleChain = getCompiledChain("chat.txt");
+            ruleChain = getCompiledChain(filterService.getConfig().getRuleFile("chat.txt"));
 
             PluginManager pm = Bukkit.getServer().getPluginManager();
 

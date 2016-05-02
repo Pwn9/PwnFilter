@@ -131,7 +131,7 @@ public class PwnFilterBookListener extends BaseListener {
 
         if (BukkitConfig.bookfilterEnabled()  ) {
             try {
-                ruleChain = getCompiledChain("book.txt");
+                ruleChain = getCompiledChain(filterService.getConfig().getRuleFile("book.txt"));
                 pm.registerEvent(PlayerEditBookEvent.class, this, priority,
                         (l, e) -> onBookEdit((PlayerEditBookEvent) e),
                         PwnFilterBukkitPlugin.getInstance());

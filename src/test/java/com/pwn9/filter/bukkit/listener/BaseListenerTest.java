@@ -12,12 +12,7 @@ package com.pwn9.filter.bukkit.listener;
 
 import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.rules.TestStatsTracker;
-import com.pwn9.filter.engine.rules.chain.InvalidChainException;
-import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Test;
-
-import java.io.File;
 
 /**
  * Created by Sage905 on 2016-04-01.
@@ -40,24 +35,6 @@ public class BaseListenerTest {
 
             }
         };
-
-    }
-    @Test
-    public void getCompiledChainChecksCorrectPath() throws Exception {
-
-        try {
-            test.getCompiledChain("/rules/blank.txt");
-            Assert.fail("getCompiledChain throws exception on invalid file.");
-        } catch (InvalidChainException ex) {
-            Assert.assertTrue("Rule File not found when path invalid"
-                    ,ex.getMessage().endsWith("Rule File not found: /rules/blank.txt"));
-        }
-
-        System.out.println(getClass().getResource("/").getFile());
-        filterService.getConfig().setRulesDir(new File(getClass().getResource("/").getFile()));
-        Assert.assertNotNull("Rulechain generated from valid path.",
-                test.getCompiledChain("rules/blank.txt"));
-
 
     }
 }

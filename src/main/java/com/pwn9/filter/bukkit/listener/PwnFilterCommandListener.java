@@ -58,8 +58,8 @@ public class PwnFilterCommandListener extends BaseListener {
         EventPriority priority = BukkitConfig.getCmdpriority();
         if (BukkitConfig.cmdfilterEnabled()) {
             try {
-                ruleChain = getCompiledChain("command.txt");
-                chatRuleChain = getCompiledChain("chat.txt");
+                ruleChain = getCompiledChain(filterService.getConfig().getRuleFile("command.txt"));
+                chatRuleChain = getCompiledChain(filterService.getConfig().getRuleFile("chat.txt"));
 
                 pm.registerEvent(PlayerCommandPreprocessEvent.class, this, priority,
                         (l, e) -> eventProcessor((PlayerCommandPreprocessEvent) e),
