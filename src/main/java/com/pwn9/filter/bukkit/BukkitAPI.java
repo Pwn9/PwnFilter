@@ -105,9 +105,9 @@ public class BukkitAPI implements MinecraftAPI, AuthorService, NotifyTarget {
                         Bukkit.getScheduler().callSyncMethod((Plugin)plugin, callable);
                 try {
                     // This will block the current thread for up to 3s
-                    return task.get(3, TimeUnit.SECONDS);
+                    return task.get(10, TimeUnit.SECONDS);
                 } catch (TimeoutException e) {
-                    plugin.getLogger().warning("Bukkit API call timed out (>3s).");
+                    plugin.getLogger().warning("Bukkit API call timed out (Waited >10s!). Is the server busy?");
                     return null;
                 } catch (InterruptedException e) {
                     plugin.getLogger().warning("Bukkit API call Interrupted.");
