@@ -53,7 +53,7 @@ public class BukkitAPI implements MinecraftAPI, AuthorService, NotifyTarget {
     private final MinecraftAPI playerAPI = this;
 
     private final LoadingCache<UUID, BukkitPlayer> playerLoadingCache = CacheBuilder.newBuilder()
-            .maximumSize(0)
+            .maximumSize(100)
             .build(
                     new CacheLoader<UUID, BukkitPlayer>() {
                         @Override
