@@ -1,0 +1,9 @@
+&4 -&8[]&4---------------< &6Minecraft Colors &4>---------------&8[]&4-
+
+    In order to add colors to chat, clan tags, signs or
+    other places: prefix the &e& &fSymbol in front of the
+    corresponding color code. [i]Example: [i]&f[i]&&f[i]2Green for &2[i]Green[/i]
+
+ &00 &11 &22 &33 &44 &55 &66 &77 &88 &99 &aa &bb &cc &dd &ee &ff • [b]L[/b] [s]M[/s] [u]N[/u] [i]O[/i] • k: random r: reset
+
+&4 -&8[]&4-------------------< &6Pwn9.com &4>------------------&8[]&4-
