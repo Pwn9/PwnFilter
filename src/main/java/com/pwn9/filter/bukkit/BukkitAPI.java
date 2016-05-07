@@ -13,6 +13,7 @@ package com.pwn9.filter.bukkit;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.common.collect.EvictingQueue;
 import com.pwn9.filter.engine.api.AuthorService;
 import com.pwn9.filter.engine.api.NotifyTarget;
 import com.pwn9.filter.minecraft.DeathMessages;
@@ -31,6 +32,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Handles keeping a cache of data that we need during Async event handling.
@@ -46,19 +49,41 @@ public class BukkitAPI implements MinecraftAPI, AuthorService, NotifyTarget {
 
     private final PwnFilterPlugin plugin;
 
+    private final EvictingQueue<String> debugLog = EvictingQueue.create(20);
+
     BukkitAPI(PwnFilterPlugin p) {
         plugin = p;
     }
 
     private final MinecraftAPI playerAPI = this;
 
+
+    private void addDebug(String s) {
+      synchronized (debugLog) {
+          debugLog.add(s);
+      }
+    }
+
+    private Stream<String> getDebug() {
+        synchronized (debugLog) {
+            return debugLog.stream();
+        }
+    }
+
     private final LoadingCache<UUID, BukkitPlayer> playerLoadingCache = CacheBuilder.newBuilder()
-            .maximumSize(100)
+            .maximumSize(0)
             .build(
                     new CacheLoader<UUID, BukkitPlayer>() {
                         @Override
                         public BukkitPlayer load(@NotNull final UUID uuid) throws PlayerNotFound {
-                            OfflinePlayer offlinePlayer = safeBukkitAPICall(() -> Bukkit.getOfflinePlayer(uuid));
+                            addDebug("Cache Load for Player: " + uuid.toString());
+                            OfflinePlayer offlinePlayer = safeBukkitAPICall(() -> {
+                                addDebug("Bukkit Callable executing lookup for: " + uuid);
+                                OfflinePlayer p =  Bukkit.getOfflinePlayer(uuid);
+                                addDebug("Bukkit Callable finished. Player: " + (p != null ? p.toString() : "none"));
+                                Thread.sleep(5000);
+                                return p;
+                            });
                             if (offlinePlayer != null) {
                                 return new BukkitPlayer(uuid, playerAPI);
                             } else {
@@ -70,8 +95,12 @@ public class BukkitAPI implements MinecraftAPI, AuthorService, NotifyTarget {
 
     public BukkitPlayer getAuthorById(UUID u) {
         try {
+            addDebug("Looking for author: " + u);
             return playerLoadingCache.get(u);
         } catch (ExecutionException e) {
+            plugin.getLogger().warning(getDebug().collect(Collectors.joining("\n")));
+            plugin.getLogger().info("Player Lookup failed: " + e.getMessage());
+            plugin.getLogger().info("Cause: " + e.getCause().getMessage());
             return null; // Not a player
         }
     }
@@ -101,13 +130,16 @@ public class BukkitAPI implements MinecraftAPI, AuthorService, NotifyTarget {
             // thread to execute these calls, and return the Player data to
             // cache.
             if (plugin instanceof Plugin) {
+                addDebug("Sending Callable to bukkit");
                 Future<T> task =
                         Bukkit.getScheduler().callSyncMethod((Plugin)plugin, callable);
+                addDebug("Task sent: " + task.toString());
                 try {
                     // This will block the current thread for up to 3s
-                    return task.get(10, TimeUnit.SECONDS);
+                    return task.get(3, TimeUnit.SECONDS);
                 } catch (TimeoutException e) {
                     plugin.getLogger().warning("Bukkit API call timed out (Waited >10s!). Is the server busy?");
+                    plugin.getLogger().warning("Task Cancelled?: " + task.isCancelled() + " Task Done?: " + task.isDone());
                     return null;
                 } catch (InterruptedException e) {
                     plugin.getLogger().warning("Bukkit API call Interrupted.");
