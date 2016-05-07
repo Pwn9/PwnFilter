@@ -81,7 +81,6 @@ public class BukkitAPI implements MinecraftAPI, AuthorService, NotifyTarget {
                                 addDebug("Bukkit Callable executing lookup for: " + uuid);
                                 OfflinePlayer p =  Bukkit.getOfflinePlayer(uuid);
                                 addDebug("Bukkit Callable finished. Player: " + (p != null ? p.toString() : "none"));
-                                Thread.sleep(5000);
                                 return p;
                             });
                             if (offlinePlayer != null) {
