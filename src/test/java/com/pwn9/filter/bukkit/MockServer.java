@@ -45,6 +45,9 @@ import java.util.logging.Logger;
  */
 @SuppressWarnings("deprecation")
 public class MockServer implements Server {
+
+    private BukkitScheduler scheduler;
+
     @Override
     public String getName() {
         return "Sage905's Mock Server";
@@ -203,7 +206,7 @@ public class MockServer implements Server {
 
     @Override
     public BukkitScheduler getScheduler() {
-        return null;
+        return scheduler;
     }
 
     @Override
@@ -466,14 +469,20 @@ public class MockServer implements Server {
         return 0;
     }
 
-    private boolean primaryThread = true;
+    private Thread primaryThread;
 
-    public void setPrimaryThread(boolean b) {
-        primaryThread = b;
+    public void setPrimaryThread(Thread t) {
+        primaryThread = t;
     }
+
     @Override
     public boolean isPrimaryThread() {
-        return primaryThread;
+
+        return Thread.currentThread().equals(primaryThread);
+    }
+
+    public void clearPrimaryThread() {
+        primaryThread = null;
     }
 
     @Override
@@ -589,5 +598,9 @@ public class MockServer implements Server {
     @Override
     public Set<String> getListeningPluginChannels() {
         return null;
+    }
+
+    public void setScheduler(BukkitScheduler scheduler) {
+        this.scheduler = scheduler;
     }
 }

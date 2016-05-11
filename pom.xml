@@ -92,6 +92,11 @@
             <version>R8-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>net.jodah</groupId>
+            <artifactId>concurrentunit</artifactId>
+            <version>0.4.2</version>
+        </dependency>
 
     </dependencies>
 
