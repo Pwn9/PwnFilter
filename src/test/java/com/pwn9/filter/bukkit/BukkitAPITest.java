@@ -31,6 +31,9 @@ import static org.junit.Assert.*;
 public class BukkitAPITest {
 
     private PwnFilterPlugin testPlugin = new MockPlugin();
+    private MockServer server;
+    private Player testPlayer;
+    private BukkitAPI api;
 
     @Before
     public void setup() {
@@ -42,28 +45,27 @@ public class BukkitAPITest {
         if (Bukkit.getServer() == null ) {
             Bukkit.setServer(new MockServer());
         }
+        server = (MockServer) Bukkit.getServer();
+        testPlayer = new MockPlayer();
+        api = new BukkitAPI(testPlugin);
+
         FilterService filterService = testPlugin.getFilterService();
         filterService.registerAuthorService(uuid -> new TestAuthor());
     }
 
     @Test
     public void getAuthorByIdReturnsNullForNoMatch() throws Exception {
-        MockServer server = (MockServer) Bukkit.getServer();
         server.setPrimaryThread(Thread.currentThread());
         server.setScheduler(new WorkingScheduler());
         server.setPlayer(null);
-        BukkitAPI api = new BukkitAPI(testPlugin);
         assertNull(api.getAuthorById(UUID.randomUUID()));
     }
 
     @Test
     public void testBasicCacheLoad() {
-        MockServer server = (MockServer) Bukkit.getServer();
-        Player testPlayer = new MockPlayer();
         server.setPlayer(testPlayer);
         server.clearPrimaryThread();
         server.setScheduler(new WorkingScheduler());
-        BukkitAPI api = new BukkitAPI(testPlugin);
         BukkitPlayer player = api.getAuthorById(testPlayer.getUniqueId());
         assertFalse(server.isPrimaryThread());
         assertEquals(player.getId(), testPlayer.getUniqueId());
@@ -71,11 +73,8 @@ public class BukkitAPITest {
 
     @Test
     public void testAsyncCacheLoad() throws Throwable {
-        MockServer server = (MockServer) Bukkit.getServer();
-        Player testPlayer = new MockPlayer();
         server.setPlayer(testPlayer);
         server.setScheduler(new WorkingScheduler());
-        final BukkitAPI api = new BukkitAPI(testPlugin);
         final Waiter waiter = new Waiter();
 
         new Thread(() -> {
@@ -97,14 +96,11 @@ public class BukkitAPITest {
      */
     @Test(timeout=100)
     public void testCacheLoadDoesNotBlock() throws Throwable {
-        MockServer server = (MockServer) Bukkit.getServer();
         final BlockingScheduler scheduler = new BlockingScheduler();
         server.setScheduler(scheduler);
-        Player testPlayer = new MockPlayer();
         server.setPlayer(testPlayer);
         final Thread mainThread = Thread.currentThread();
         server.setPrimaryThread(mainThread);
-        final BukkitAPI api = new BukkitAPI(testPlugin);
         Waiter waiter = new Waiter();
         final AtomicReference<BukkitPlayer> asyncPlayer = new AtomicReference<>();
 
@@ -134,14 +130,11 @@ public class BukkitAPITest {
 
     @Test(timeout=100)
     public void testPermissionLoadDoesNotBlock() throws Throwable {
-        MockServer server = (MockServer) Bukkit.getServer();
         final BlockingScheduler scheduler = new BlockingScheduler();
         server.setScheduler(scheduler);
-        Player testPlayer = new MockPlayer();
         server.setPlayer(testPlayer);
         final Thread mainThread = Thread.currentThread();
         server.setPrimaryThread(mainThread);
-        final BukkitAPI api = new BukkitAPI(testPlugin);
         Waiter waiter = new Waiter();
         BukkitPlayer bukkitPlayer;
 

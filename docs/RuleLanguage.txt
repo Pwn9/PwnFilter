@@ -4,7 +4,11 @@ Lexigraphic Format of rules.txt
 Tokens
 ------
 
-Each statement is composed of at least one top-level token from:
+Each statement is composed of a top-level token from the list of
+tokens below, followed by optional parameters in the format:
+<keyword> [param1] .. [param n]
+
+The number of parameters is determined by the initial keyword.
 
 Section definition tokens
 ^^^^^^^^^^^^^^^^^^^^^^^^^
