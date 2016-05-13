@@ -34,7 +34,7 @@ public class TestAuthor implements MessageAuthor, BurnTarget {
     }
 
     @Override
-    public Boolean hasPermission(String permString) {
+    public boolean hasPermission(String permString) {
         return false;
     }
 

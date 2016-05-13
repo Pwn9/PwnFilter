@@ -28,7 +28,7 @@ public final class UnknownAuthor implements MessageAuthor {
         this.id = uuid;
     }
     @Override
-    public Boolean hasPermission(String s) {
+    public boolean hasPermission(String s) {
         return false;
     }
 
