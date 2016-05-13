@@ -132,4 +132,40 @@ public class BukkitAPITest {
 
     }
 
+    @Test(timeout=100)
+    public void testPermissionLoadDoesNotBlock() throws Throwable {
+        MockServer server = (MockServer) Bukkit.getServer();
+        final BlockingScheduler scheduler = new BlockingScheduler();
+        server.setScheduler(scheduler);
+        Player testPlayer = new MockPlayer();
+        server.setPlayer(testPlayer);
+        final Thread mainThread = Thread.currentThread();
+        server.setPrimaryThread(mainThread);
+        final BukkitAPI api = new BukkitAPI(testPlugin);
+        Waiter waiter = new Waiter();
+        BukkitPlayer bukkitPlayer;
+
+        bukkitPlayer = api.getAuthorById(testPlayer.getUniqueId());
+
+        scheduler.setWaiter(waiter);
+        new Thread(() -> {
+            waiter.assertFalse(bukkitPlayer.hasPermission("test.permission"));
+            waiter.resume();
+        }).start();
+
+        // Wait for the call to be scheduled
+        waiter.await();
+
+        // This should not block
+        BukkitPlayer myPlayer = api.getAuthorById(testPlayer.getUniqueId());
+        assertFalse(myPlayer.hasPermission("test.permission"));
+
+        // Now release the thread.
+        scheduler.releaseTask();
+        waiter.await();
+
+        assertFalse(myPlayer.hasPermission("test.permission"));
+
+    }
+
 }
