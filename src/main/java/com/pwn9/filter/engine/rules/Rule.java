@@ -164,10 +164,14 @@ public class Rule implements ChainEntry {
         // If we don't match, return immediately with the original message
         try {
             if (!matcher.find()) return;
-        } catch (RuntimeException ex) {
+        } catch (LimitedRegexCharSequence.RegexTimeoutException ex) {
             logger.severe("Regex match timed out! Regex: " + pattern.toString());
             logger.severe("Failed string was: " + limitedRegexCharSequence);
             return;
+        } catch (RuntimeException ex) {
+            // Note: Due to this:
+            // https://stackoverflow.com/questions/16008974/strange-java-unicode-regular-expression-stringindexoutofboundsexception
+            // Supplementary UTF characters will cause index-out-of-bounds.  Not sure what to do about this, right now.
         }
 
         // If we do match, update the pattern and rule in the filter.
