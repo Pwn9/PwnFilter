@@ -72,12 +72,14 @@ public class BukkitPlayer implements MessageAuthor, FineTarget, BurnTarget, Kill
 
         if (hasPerm == null) {
             Boolean newPerm = minecraftAPI.playerIdHasPermission(playerId, permString);
-            playerPermCache.putIfAbsent(permString, newPerm);
+            if (newPerm != null) playerPermCache.putIfAbsent(permString, newPerm);
         }
         // At this point, the player should be in the cache if they are online.
-        // If player is offline, returns null
+        // If player is offline, or there is an API failure, returns null
 
-        return playerPermCache.get(permString);
+        hasPerm = playerPermCache.get(permString);
+
+        return hasPerm != null && hasPerm;
     }
 
     private String playerName = "";
