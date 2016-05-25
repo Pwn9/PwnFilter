@@ -142,7 +142,7 @@ public class PwnFilterSignListener extends BaseListener {
             EventPriority priority = BukkitConfig.getSignpriority();
 
             if (BukkitConfig.signfilterEnabled()) {
-                ruleChain = getCompiledChain("sign.txt");
+                ruleChain = getCompiledChain(filterService.getConfig().getRuleFile("sign.txt"));
                 // Now register the listener with the appropriate priority
                 pm.registerEvent(SignChangeEvent.class, this, priority,
                         (l, e) -> onSignChange((SignChangeEvent)e),

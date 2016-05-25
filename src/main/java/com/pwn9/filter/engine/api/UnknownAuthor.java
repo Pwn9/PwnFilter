@@ -8,44 +8,34 @@
  * of the License, or (at your option) any later version.
  */
 
-package com.pwn9.filter.engine.rules;
+package com.pwn9.filter.engine.api;
 
-import com.pwn9.filter.engine.api.MessageAuthor;
-import com.pwn9.filter.engine.rules.action.targeted.BurnTarget;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.UUID;
 
 /**
- * Created by Sage905 on 2016-03-27.
+ * This is returned by the engine when an author for a message can not be found.
+ *
+ * Created by Sage905 on 2016-04-25.
  */
-public class TestAuthor implements MessageAuthor, BurnTarget {
+public final class UnknownAuthor implements MessageAuthor {
 
-    private boolean burnt;
     private final UUID id;
 
-    public TestAuthor() {
-        id = UUID.randomUUID();
+    public UnknownAuthor(UUID uuid) {
+        this.id = uuid;
     }
-
-    public TestAuthor(UUID id) {
-        this.id = id;
-    }
-
     @Override
-    public boolean hasPermission(String permString) {
+    public boolean hasPermission(String s) {
         return false;
     }
 
     @NotNull
     @Override
     public String getName() {
-        return "Sage905";
-    }
-
-    @Override
-    public void sendMessage(String message) {
+        return "Unknown";
     }
 
     @Override
@@ -54,14 +44,12 @@ public class TestAuthor implements MessageAuthor, BurnTarget {
     }
 
     @Override
-    public void sendMessages(List<String> messages) {
+    public void sendMessage(String message) {
+        // Silently do nothing, since we don't know who this is.
     }
 
     @Override
-    public boolean burn(int duration, String message) {
-        return burnt = true;
+    public void sendMessages(List<String> messages) {
+        // Silently do nothing, since we don't know who this is.
     }
-
-    boolean burnt() {
-        return burnt;}
 }

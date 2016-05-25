@@ -10,6 +10,8 @@
 
 package com.pwn9.filter.minecraft.api;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -40,6 +42,8 @@ public interface MinecraftAPI {
 
     String getPlayerName(UUID uuid);
 
+    // Null return is a failure of the API to get the answer.
+    @Nullable
     Boolean playerIdHasPermission(UUID u, String s);
 
     // Console APIs

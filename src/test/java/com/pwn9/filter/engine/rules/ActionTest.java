@@ -35,6 +35,7 @@ public class ActionTest {
         filterService.getActionFactory().addActionTokens(TargetedAction.class);
         File rulesDir = new File(getClass().getResource("/rules").getFile());
         filterService.getConfig().setRulesDir(rulesDir);
+        filterService.getConfig().setTextDir(new File(getClass().getResource("/textfiles").getFile()));
         try {
             rs = filterService.parseRules(new File(rulesDir, "actionTests.txt"));
         } catch (InvalidChainException ex) {
@@ -81,5 +82,14 @@ public class ActionTest {
         assertEquals("lowercase all this stuff!", test2.getModifiedMessage().toString());
     }
 
+// This doesn't work reliably on Jenkins, presumably because the encoding changes
+//    @Test
+//    public void testReadWindowsEncodedFile() throws InvalidActionException {
+//        try {
+//            filterService.getActionFactory().getAction("respondfile", "colors.txt");
+//        } catch (InvalidActionException ex) {
+//            assertTrue(ex.getCause() instanceof MalformedInputException);
+//        }
+//    }
 
 }

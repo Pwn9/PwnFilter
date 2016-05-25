@@ -56,7 +56,7 @@ public class BukkitPlayer implements MessageAuthor, FineTarget, BurnTarget, Kill
             new ConcurrentHashMap<>(16, 0.9f, 1); // Optimizations for Map
 
     @Override
-    public Boolean hasPermission(String permString) {
+    public boolean hasPermission(String permString) {
 
         // We are caching permissions, so we don't have to ask the API every time,
         // as that could get expensive for complex rulechains.  Every MAX_CACHE_AGE_SECS
@@ -68,7 +68,18 @@ public class BukkitPlayer implements MessageAuthor, FineTarget, BurnTarget, Kill
             playerPermCache.clear();
         }
 
-        return playerPermCache.computeIfAbsent(permString, (s) -> minecraftAPI.playerIdHasPermission(playerId, s));
+        Boolean hasPerm = playerPermCache.get(permString);
+
+        if (hasPerm == null) {
+            Boolean newPerm = minecraftAPI.playerIdHasPermission(playerId, permString);
+            if (newPerm != null) playerPermCache.putIfAbsent(permString, newPerm);
+        }
+        // At this point, the player should be in the cache if they are online.
+        // If player is offline, or there is an API failure, returns null
+
+        hasPerm = playerPermCache.get(permString);
+
+        return hasPerm != null && hasPerm;
     }
 
     private String playerName = "";

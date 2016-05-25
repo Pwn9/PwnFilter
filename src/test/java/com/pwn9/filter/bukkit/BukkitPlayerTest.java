@@ -24,7 +24,20 @@ import static org.junit.Assert.assertTrue;
  */
 public class BukkitPlayerTest {
 
-    TestTicker ticker = new TestTicker();
+    private TestTicker ticker = new TestTicker();
+
+    @Test
+    public void hasPermissionWorksWithNull() throws Exception {
+        MockMinecraftAPI api = new MockMinecraftAPI();
+
+        BukkitPlayer bukkitPlayer =
+                new BukkitPlayer(UUID.randomUUID(), api);
+
+        // Test a simple permission
+        api.permReturnValue = null;
+        assertFalse(bukkitPlayer.hasPermission("TestTrue"));
+
+    }
 
 
     @Test

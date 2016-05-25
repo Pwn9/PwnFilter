@@ -120,6 +120,4 @@ public class PwnFilterPlayerListenerTest {
         assertEquals(chatEvent.getMessage(), "HEY! this should all get lowered.");
     }
 
-
-
 }

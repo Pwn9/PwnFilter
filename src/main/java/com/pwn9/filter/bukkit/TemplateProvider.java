@@ -8,19 +8,14 @@
  * of the License, or (at your option) any later version.
  */
 
-package com.pwn9.filter.engine.rules.action;
+package com.pwn9.filter.bukkit;
+
+import java.io.InputStream;
 
 /**
- * Created by Sage905 on 2016-03-26.
+ * Created by Sage905 on 2016-05-02.
  */
-public class InvalidActionException extends Exception {
+public interface TemplateProvider {
 
-    public InvalidActionException(String message) {
-        super(message);
-    }
-
-    public InvalidActionException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
+    InputStream getResource(String name);
 }

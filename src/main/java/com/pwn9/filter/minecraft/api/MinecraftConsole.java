@@ -25,7 +25,7 @@ public class MinecraftConsole implements MessageAuthor {
     private final MinecraftAPI minecraftAPI;
     
     @Override
-    public Boolean hasPermission(String permString) {
+    public boolean hasPermission(String permString) {
         return true;
     }
 

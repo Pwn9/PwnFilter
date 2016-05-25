@@ -20,7 +20,7 @@ import java.util.UUID;
  */
 public interface MessageAuthor {
 
-    Boolean hasPermission(String s);
+    boolean hasPermission(String s);
     @NotNull
     String getName();
     UUID getId();

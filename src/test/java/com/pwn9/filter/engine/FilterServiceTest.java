@@ -42,4 +42,11 @@ public class FilterServiceTest {
         assertFalse(service.getRegisteredClients().contains(client));
     }
 
+//    @Test
+//    public void getRuleFileUsesCorrectPath() throws Exception {
+//
+//
+//    }
+
+
 }

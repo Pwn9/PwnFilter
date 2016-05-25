@@ -10,31 +10,25 @@
 
 package com.pwn9.filter.bukkit;
 
+import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 import com.pwn9.filter.engine.api.AuthorService;
 import com.pwn9.filter.engine.api.NotifyTarget;
 import com.pwn9.filter.minecraft.DeathMessages;
 import com.pwn9.filter.minecraft.api.MinecraftAPI;
 import com.pwn9.filter.minecraft.api.MinecraftConsole;
 import net.milkbowl.vault.economy.EconomyResponse;
-import org.apache.commons.lang.BooleanUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.IllegalPluginAccessException;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * Handles keeping a cache of data that we need during Async event handling.
@@ -56,28 +50,32 @@ public class BukkitAPI implements MinecraftAPI, AuthorService, NotifyTarget {
 
     private final MinecraftAPI playerAPI = this;
 
-    private final LoadingCache<UUID, BukkitPlayer> playerLoadingCache = CacheBuilder.newBuilder()
-            .maximumSize(100)
-            .expireAfterWrite(10, TimeUnit.SECONDS)
-            .build(
-                    new CacheLoader<UUID, BukkitPlayer>() {
-                        @Override
-                        public BukkitPlayer load(@NotNull final UUID uuid) throws PlayerNotFound {
-                            if (BooleanUtils.isTrue(safeBukkitAPICall(() -> Bukkit.getOfflinePlayer(uuid) != null))) {
-                                return new BukkitPlayer(uuid, playerAPI);
-                            } else {
-                                throw new PlayerNotFound();
-                            }
-                        }
-                    }
-            );
+    /*
+    Note: The "load" call can cause blocking of the main Bukkit thread, if it is called
+    from the main thread while there is an outstanding request.
+     */
 
-    public BukkitPlayer getAuthorById(UUID u) {
-        try {
-            return playerLoadingCache.get(u);
-        } catch (ExecutionException e) {
-            return null; // Not a player
+    private final Cache<UUID, BukkitPlayer> playerCache = CacheBuilder.newBuilder()
+            .maximumSize(100)
+            .build();
+
+    public BukkitPlayer getAuthorById(final UUID u) {
+        /* Not sure if this is the best way of doing this, but we need to make
+        certain that we do not block the main server thread while waiting for a
+        FutureTask in the same thread when the Cache loads a missing value.
+         */
+        BukkitPlayer bPlayer;
+        bPlayer = playerCache.getIfPresent(u);
+        if (bPlayer == null) {
+            Player onlinePlayer = safeBukkitAPICall(() -> Bukkit.getPlayer(u));
+            if (onlinePlayer != null) {
+                playerCache.asMap().putIfAbsent(u, new BukkitPlayer(u, this));
+            }
         }
+        // At this point, the player should be in the cache if they are online.
+        // If player is offline, returns null
+        return playerCache.getIfPresent(u);
+
     }
 
     public MinecraftConsole getConsole() {
@@ -86,7 +84,7 @@ public class BukkitAPI implements MinecraftAPI, AuthorService, NotifyTarget {
 
     @Override
     public synchronized void reset() {
-        playerLoadingCache.invalidateAll();
+        playerCache.invalidateAll();
     }
 
 
@@ -110,9 +108,13 @@ public class BukkitAPI implements MinecraftAPI, AuthorService, NotifyTarget {
                 try {
                     // This will block the current thread for up to 3s
                     return task.get(3, TimeUnit.SECONDS);
-                } catch (Exception e) {
-                    plugin.getLogger().fine("Bukkit API call timed out (>3s).");
+                } catch (TimeoutException e) {
+                    plugin.getLogger().warning("Bukkit API call timed out (Waited >3s). Is the server busy?");
                     return null;
+                } catch (InterruptedException e) {
+                    plugin.getLogger().warning("Bukkit API call Interrupted.");
+                } catch (ExecutionException e) {
+                    plugin.getLogger().warning("Bukkit API call threw exception: " + e.getMessage());
                 }
             } else throw new IllegalPluginAccessException();
         }

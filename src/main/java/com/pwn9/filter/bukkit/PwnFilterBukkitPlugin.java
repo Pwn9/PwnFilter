@@ -28,8 +28,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentMap;
 
@@ -41,7 +40,7 @@ import java.util.concurrent.ConcurrentMap;
  * @version $Id: $Id
  */
 
-public class PwnFilterBukkitPlugin extends JavaPlugin implements PwnFilterPlugin {
+public class PwnFilterBukkitPlugin extends JavaPlugin implements PwnFilterPlugin, TemplateProvider {
     private static PwnFilterBukkitPlugin _instance;
     private BukkitAPI minecraftAPI;
     private MinecraftConsole console;
@@ -69,6 +68,7 @@ public class PwnFilterBukkitPlugin extends JavaPlugin implements PwnFilterPlugin
         filterService = new FilterService(statsTracker, getLogger());
         filterService.getActionFactory().addActionTokens(MinecraftAction.class);
         filterService.getActionFactory().addActionTokens(TargetedAction.class);
+        filterService.getConfig().setTemplateProvider(this);
         RegisterTags.all();
     }
 
@@ -138,9 +138,9 @@ public class PwnFilterBukkitPlugin extends JavaPlugin implements PwnFilterPlugin
      * <p>onDisable.</p>
      */
     public void onDisable() {
-        filterService.deregisterAuthorService(minecraftAPI);
-        filterService.shutdown();
         HandlerList.unregisterAll(this); // Unregister all Bukkit Event handlers.
+        filterService.shutdown();
+        filterService.deregisterAuthorService(minecraftAPI);
     }
 
 
@@ -148,7 +148,6 @@ public class PwnFilterBukkitPlugin extends JavaPlugin implements PwnFilterPlugin
      * <p>configurePlugin.</p>
      */
     public boolean configurePlugin() {
-
         minecraftAPI.reset();
         try {
             // Stupid hack because YamlConfiguration.loadConfiguration() eats our exception
@@ -188,5 +187,7 @@ public class PwnFilterBukkitPlugin extends JavaPlugin implements PwnFilterPlugin
     public MinecraftConsole getConsole() {
         return console;
     }
+
 }
+
 

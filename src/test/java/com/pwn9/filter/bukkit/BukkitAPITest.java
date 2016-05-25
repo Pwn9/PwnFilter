@@ -14,15 +14,16 @@ import com.pwn9.filter.MockPlayer;
 import com.pwn9.filter.MockPlugin;
 import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.rules.TestAuthor;
+import net.jodah.concurrentunit.Waiter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 /**
  * Created by Sage905 on 2016-04-22.
@@ -30,42 +31,134 @@ import static org.junit.Assert.assertNull;
 public class BukkitAPITest {
 
     private PwnFilterPlugin testPlugin = new MockPlugin();
+    private MockServer server;
+    private Player testPlayer;
+    private BukkitAPI api;
 
     @Before
     public void setup() {
 
-        //TODO: This is potentially a test nightmare, because another test might
-        // Load a different server object.  Maybe wrap the Bukkit class?
+        /* TODO: This is potentially a test nightmare, because another test might
+           Load a different server object.  Maybe wrap the Bukkit class?
+         */
 
         if (Bukkit.getServer() == null ) {
             Bukkit.setServer(new MockServer());
         }
+        server = (MockServer) Bukkit.getServer();
+        testPlayer = new MockPlayer();
+        api = new BukkitAPI(testPlugin);
+
         FilterService filterService = testPlugin.getFilterService();
         filterService.registerAuthorService(uuid -> new TestAuthor());
-
-    }
-    @Test
-    public void getAuthorByIdReturnsPlayer() throws Exception {
-        MockServer server = (MockServer) Bukkit.getServer();
-        server.setPrimaryThread(true);
-        Player mockPlayer = new MockPlayer();
-        server.setPlayer(mockPlayer);
-        BukkitAPI api = new BukkitAPI(testPlugin);
-        assertEquals(api.getAuthorById(mockPlayer.getUniqueId()).getId(),mockPlayer.getUniqueId());
     }
 
     @Test
     public void getAuthorByIdReturnsNullForNoMatch() throws Exception {
-        MockServer server = (MockServer) Bukkit.getServer();
-        server.setPrimaryThread(true);
+        server.setPrimaryThread(Thread.currentThread());
+        server.setScheduler(new WorkingScheduler());
         server.setPlayer(null);
-        BukkitAPI api = new BukkitAPI(testPlugin);
         assertNull(api.getAuthorById(UUID.randomUUID()));
     }
 
-//    @Test
-//    public void notifyWithPerm() throws Exception {
-//
-//    }
+    @Test
+    public void testBasicCacheLoad() {
+        server.setPlayer(testPlayer);
+        server.clearPrimaryThread();
+        server.setScheduler(new WorkingScheduler());
+        BukkitPlayer player = api.getAuthorById(testPlayer.getUniqueId());
+        assertFalse(server.isPrimaryThread());
+        assertEquals(player.getId(), testPlayer.getUniqueId());
+    }
+
+    @Test
+    public void testAsyncCacheLoad() throws Throwable {
+        server.setPlayer(testPlayer);
+        server.setScheduler(new WorkingScheduler());
+        final Waiter waiter = new Waiter();
+
+        new Thread(() -> {
+            BukkitPlayer player = api.getAuthorById(testPlayer.getUniqueId());
+            waiter.assertEquals(player.getId(), testPlayer.getUniqueId());
+            waiter.resume();
+        }).start();
+
+        waiter.await(1000);
+        assertEquals(testPlayer.getUniqueId(), api.getAuthorById(testPlayer.getUniqueId()).getId());
+    }
+
+
+    /*
+    1. Fire off Async Event to call getAuthorById()
+    2. When getScheduler().callSyncMethod is called, don't execute the task.  This will block the Bukkit Call.
+    3. Execute the getAuthorById() method from a different thread.
+    4. If the method is blocking, this will block both threads.  If not, both will return.
+     */
+    @Test(timeout=100)
+    public void testCacheLoadDoesNotBlock() throws Throwable {
+        final BlockingScheduler scheduler = new BlockingScheduler();
+        server.setScheduler(scheduler);
+        server.setPlayer(testPlayer);
+        final Thread mainThread = Thread.currentThread();
+        server.setPrimaryThread(mainThread);
+        Waiter waiter = new Waiter();
+        final AtomicReference<BukkitPlayer> asyncPlayer = new AtomicReference<>();
+
+        scheduler.setWaiter(waiter);
+        new Thread(() -> {
+            // Wait for this thread to start it's query, so we know it runs first.
+            // The BlockingScheduler will automatically call waiter.resume() when the
+            // callSyncMethod() function is called.
+            asyncPlayer.set(api.getAuthorById(testPlayer.getUniqueId()));
+            waiter.assertEquals(asyncPlayer.get().getId(), testPlayer.getUniqueId());
+            waiter.resume();
+        }).start();
+
+        // Wait for the call to be scheduled
+        waiter.await();
+
+        // This should not block
+        BukkitPlayer myPlayer = api.getAuthorById(testPlayer.getUniqueId());
+
+        // Now release the thread.
+        scheduler.releaseTask();
+        waiter.await();
+
+        assertTrue(asyncPlayer.get().equals(myPlayer));
+
+    }
+
+    @Test(timeout=100)
+    public void testPermissionLoadDoesNotBlock() throws Throwable {
+        final BlockingScheduler scheduler = new BlockingScheduler();
+        server.setScheduler(scheduler);
+        server.setPlayer(testPlayer);
+        final Thread mainThread = Thread.currentThread();
+        server.setPrimaryThread(mainThread);
+        Waiter waiter = new Waiter();
+        BukkitPlayer bukkitPlayer;
+
+        bukkitPlayer = api.getAuthorById(testPlayer.getUniqueId());
+
+        scheduler.setWaiter(waiter);
+        new Thread(() -> {
+            waiter.assertFalse(bukkitPlayer.hasPermission("test.permission"));
+            waiter.resume();
+        }).start();
+
+        // Wait for the call to be scheduled
+        waiter.await();
+
+        // This should not block
+        BukkitPlayer myPlayer = api.getAuthorById(testPlayer.getUniqueId());
+        assertFalse(myPlayer.hasPermission("test.permission"));
+
+        // Now release the thread.
+        scheduler.releaseTask();
+        waiter.await();
+
+        assertFalse(myPlayer.hasPermission("test.permission"));
+
+    }
 
 }
