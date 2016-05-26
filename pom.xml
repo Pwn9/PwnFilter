@@ -12,6 +12,10 @@
 
     <repositories>
         <repository>
+            <id>sponge</id>
+            <url>http://repo.spongepowered.org/maven</url>
+        </repository>
+        <repository>
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
         </repository>
@@ -37,6 +41,12 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.spongepowered</groupId>
+            <artifactId>spongeapi</artifactId>
+            <version>4.0.3</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
             <version>1.9.2-R0.1-SNAPSHOT</version>
@@ -61,25 +71,6 @@
             <artifactId>annotations</artifactId>
             <version>5.1</version>
         </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-module-junit4</artifactId>
-            <version>${powermock.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-api-easymock</artifactId>
-            <version>${powermock.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.easymock</groupId>
-            <artifactId>easymock</artifactId>
-            <version>${easymock.version}</version>
-            <scope>test</scope>
-        </dependency>
-
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -264,7 +255,11 @@
 
 
     <properties>
-        <powermock.version>1.5</powermock.version>
-        <easymock.version>3.3</easymock.version>
+        <siteUrlSuffix>${project.version}</siteUrlSuffix>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <ghUser>Pwn9</ghUser>
+        <ghRepo>PwnFilter</ghRepo>
+        <ghProject>${ghUser}/${ghRepo}</ghProject>
+
     </properties>
 </project>

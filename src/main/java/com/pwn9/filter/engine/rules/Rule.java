@@ -37,8 +37,6 @@ public class Rule implements ChainEntry {
 
     private final List<Condition> conditions = new ArrayList<>();
     private final List<Action> actions = new ArrayList<>();
-    public final List<String> includeEvents = new ArrayList<>();
-    public final List<String> excludeEvents = new ArrayList<>();
 
         /* Constructors */
 

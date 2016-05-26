@@ -1,6 +1,5 @@
 package com.pwn9.filter.engine.rules;
 
-import com.pwn9.filter.bukkit.PwnFilterBukkitPlugin;
 import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.api.MessageAuthor;
@@ -11,9 +10,6 @@ import com.pwn9.filter.engine.rules.chain.RuleChain;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,8 +24,7 @@ import static org.junit.Assert.fail;
  * Date: 13-05-04
  * Time: 11:28 AM
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({PwnFilterBukkitPlugin.class})
+
 public class RuleSetTest {
 
     RuleChain rs, sc;
