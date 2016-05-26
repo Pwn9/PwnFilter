@@ -71,14 +71,6 @@ public class PwnFilterBookListener extends BaseListener {
 
         BookMeta bookMeta = event.getNewBookMeta();
 
-        String onepage = bookMeta.getPages().get(0);
-
-        StringBuilder b = new StringBuilder();
-        for (int i=0; i < onepage.length() ; i++ ) {
-            b.append(onepage.charAt(i)).append("(").append(onepage.codePointAt(i)).append(") ");
-        }
-        plugin.getLogger().info(b.toString());
-
         // Process Book Title
         if (bookMeta.hasTitle()) {
             // Run title through filter.
