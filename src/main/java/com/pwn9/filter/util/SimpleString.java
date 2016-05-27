@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
 
 /**
  * A Simple wrapper around a String object.
- *
+ * <p>
  * Created by Sage905 on 15-09-09.
  */
 public class SimpleString implements EnhancedString {

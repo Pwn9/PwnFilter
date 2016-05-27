@@ -21,13 +21,13 @@
 package com.pwn9.filter.engine.rules.action.core;
 
 import com.pwn9.filter.engine.FilterService;
-import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.api.Action;
+import com.pwn9.filter.engine.api.FilterContext;
 
 /**
  * Deny this event from propagating by cancelling it (i.e.: throw the message
  * in the trash)
- *
+ * <p>
  * Deny is a singleton, because it does not have any parameters and always
  * performs the same action on a FilterContext ( calls setCancelled())
  *

@@ -117,8 +117,8 @@ public class MockBook implements BookMeta, Cloneable {
     @Override
     public BookMeta clone() {
         try {
-            return (BookMeta)super.clone();
-        } catch ( CloneNotSupportedException ex ) {
+            return (BookMeta) super.clone();
+        } catch (CloneNotSupportedException ex) {
             // Should never be reached
         }
         return null;

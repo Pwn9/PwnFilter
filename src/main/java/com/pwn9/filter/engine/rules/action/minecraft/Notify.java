@@ -39,25 +39,26 @@ class Notify implements Action {
     private final String messageString;
 
 
-    private Notify(String perm, String message ) {
+    private Notify(String perm, String message) {
         this.permissionString = perm;
         this.messageString = message;
     }
 
-    public static Action getAction(String s) throws InvalidActionException
-    {
+    public static Action getAction(String s) throws InvalidActionException {
         String[] parts;
 
-        parts = s.split("\\s",2);
+        parts = s.split("\\s", 2);
 
         if (parts.length < 2 || parts[0].isEmpty() || parts[1].isEmpty())
             throw new InvalidActionException("'notify' action requires a permission or 'console', and a message.");
 
-        return new Notify(parts[0],ChatColor.translateAlternateColorCodes('&',parts[1]));
+        return new Notify(parts[0], ChatColor.translateAlternateColorCodes('&', parts[1]));
 
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void execute(final FilterContext filterContext, FilterService filterService) {
 
         // Create the message to send

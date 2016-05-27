@@ -28,7 +28,7 @@ import java.util.UUID;
 /**
  * A generic Minecraft API interface containing all the calls we require into
  * the server.
- *
+ * <p>
  * Created by Sage905 on 15-09-11.
  */
 public interface MinecraftAPI {

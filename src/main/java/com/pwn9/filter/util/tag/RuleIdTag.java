@@ -29,6 +29,6 @@ import com.pwn9.filter.engine.api.FilterContext;
 class RuleIdTag implements Tag {
     @Override
     public String getValue(FilterContext filterTask) {
-       return filterTask.getRule().getId();
+        return filterTask.getRule().getId();
     }
 }

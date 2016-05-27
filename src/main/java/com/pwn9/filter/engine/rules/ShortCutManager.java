@@ -38,8 +38,8 @@ import java.util.regex.Pattern;
  * @version $Id: $Id
  */
 public class ShortCutManager {
-    private static ShortCutManager _instance;
     private static final Map<File, Map<String, String>> shortcutFiles = new HashMap<>();
+    private static ShortCutManager _instance;
 
     private ShortCutManager() {
     }
@@ -55,7 +55,7 @@ public class ShortCutManager {
         // If we don't have a shortcuts file to process, just return what we were given.
         if (shortcuts == null) return lineData;
 
-        Pattern shortcutMatch = Pattern.compile("<[a-zA-Z_]{0,3}>",Pattern.CASE_INSENSITIVE);
+        Pattern shortcutMatch = Pattern.compile("<[a-zA-Z_]{0,3}>", Pattern.CASE_INSENSITIVE);
         Matcher matcher = shortcutMatch.matcher(lineData);
         StringBuffer newLineData = new StringBuffer();
         while (matcher.find()) {
@@ -78,7 +78,7 @@ public class ShortCutManager {
 
     }
 
-     public Map<String, String> getShortcutMap(File shortcutFile ) throws IOException, ParseException {
+    public Map<String, String> getShortcutMap(File shortcutFile) throws IOException, ParseException {
         File absoluteFile = shortcutFile.getAbsoluteFile();
         Map<String, String> returnValue = shortcutFiles.get(absoluteFile);
 

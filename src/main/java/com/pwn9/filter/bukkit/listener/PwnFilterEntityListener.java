@@ -1,4 +1,3 @@
-
 /*
  *  PwnFilter - Chat and user-input filter with the power of Regex
  *  Copyright (C) 2016 Pwn9.com / Sage905 <sage905@takeflight.ca>
@@ -42,13 +41,13 @@ public class PwnFilterEntityListener implements Listener {
      *
      * @param event a {@link org.bukkit.event.entity.EntityDeathEvent} object.
      */
-    @EventHandler(priority=EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onEntityDeath(EntityDeathEvent event) {
         if (!(event instanceof PlayerDeathEvent)) return;
 
-        PlayerDeathEvent e = (PlayerDeathEvent)event;
+        PlayerDeathEvent e = (PlayerDeathEvent) event;
 
-        final Player player = (Player)event.getEntity();
+        final Player player = (Player) event.getEntity();
 
         if (DeathMessages.killedPlayers.containsKey(player.getUniqueId())) {
             e.setDeathMessage(DeathMessages.killedPlayers.remove(player.getUniqueId()));

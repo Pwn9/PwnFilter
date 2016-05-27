@@ -68,6 +68,7 @@ public class PointManagerTest {
         List<Action> descendingList2 = Collections.singletonList(descending2);
         pm.addThreshold("Level1", 20d, ascendingList2, descendingList2);
     }
+
     @Test
     public void testPointsLeakEachInterval() throws Exception {
         pm.setLeakPoints(4d);
@@ -91,14 +92,14 @@ public class PointManagerTest {
         assertEquals(0, descending2.getCounter());
 
         // Trigger the first threshold on the way up
-        pm.addPoints(authorId,5d);
+        pm.addPoints(authorId, 5d);
         assertEquals(1, ascending1.getCounter());
         assertEquals(0, ascending2.getCounter());
         assertEquals(0, descending1.getCounter());
         assertEquals(0, descending2.getCounter());
 
         // Trigger the second threshold on the way up
-        pm.addPoints(authorId,10d);
+        pm.addPoints(authorId, 10d);
         assertEquals(1, ascending1.getCounter());
         assertEquals(1, ascending2.getCounter());
         assertEquals(0, descending1.getCounter());
@@ -118,14 +119,14 @@ public class PointManagerTest {
         assertEquals(0, descending2.getCounter());
 
         // Trigger the second threshold on the way down
-        pm.subPoints(authorId,5d);
+        pm.subPoints(authorId, 5d);
         assertEquals(0, ascending1.getCounter());
         assertEquals(0, ascending2.getCounter());
         assertEquals(0, descending1.getCounter());
         assertEquals(1, descending2.getCounter());
 
         // Trigger the first threshold on the way down
-        pm.subPoints(authorId,10d);
+        pm.subPoints(authorId, 10d);
         assertEquals(0, ascending1.getCounter());
         assertEquals(0, ascending2.getCounter());
         assertEquals(1, descending1.getCounter());
@@ -136,9 +137,9 @@ public class PointManagerTest {
     @Test
     public void testPointsAction() throws Exception {
         MessageAuthor messageAuthor = new TestAuthor();
-        assertEquals(pm.getPoints(messageAuthor),new Double(0));
-        Action pointsAction = filterService.getActionFactory().getAction("points","7.0 Test");
-        pointsAction.execute(new FilterContext("test", messageAuthor, new TestClient("Test")),filterService);
-        assertEquals(pm.getPoints(messageAuthor),new Double(7));
+        assertEquals(pm.getPoints(messageAuthor), new Double(0));
+        Action pointsAction = filterService.getActionFactory().getAction("points", "7.0 Test");
+        pointsAction.execute(new FilterContext("test", messageAuthor, new TestClient("Test")), filterService);
+        assertEquals(pm.getPoints(messageAuthor), new Double(7));
     }
 }

@@ -73,14 +73,14 @@ public class ParserTest {
     public void testSimple() throws InvalidChainException {
         File simpleFile = new File(getClass().getResource("/rules/simpleTest.txt").getFile());
         RuleChain simple = filterService.parseRules(simpleFile);
-        Assert.assertEquals(simple.ruleCount(),1);
+        Assert.assertEquals(simple.ruleCount(), 1);
     }
 
     @Test
     public void testShortcuts() {
         List<ChainEntry> ruleChain = rs.getChain();
         for (ChainEntry e : ruleChain) {
-            if(e.toString().equals("ShortCutPattern")) {
+            if (e.toString().equals("ShortCutPattern")) {
                 return;
             }
         }
@@ -97,7 +97,7 @@ public class ParserTest {
 
             assertTrue(ruleChain.getActionGroups().containsKey("aGroupTest"));
 
-            Rule rule = (Rule)ruleChain.getChain().get(0);
+            Rule rule = (Rule) ruleChain.getChain().get(0);
             List<Action> actionList = rule.getActions();
 
             assertTrue(actionList.remove(0) instanceof Deny);
@@ -119,7 +119,7 @@ public class ParserTest {
 
             assertTrue(ruleChain.getConditionGroups().containsKey("cGroupTest"));
 
-            Rule rule = (Rule)ruleChain.getChain().get(0);
+            Rule rule = (Rule) ruleChain.getChain().get(0);
             List<Condition> conditionList = rule.getConditions();
 
             Condition cTest = conditionList.remove(0);
@@ -145,7 +145,6 @@ public class ParserTest {
             fail(e.getMessage());
         }
     }
-
 
 
 }

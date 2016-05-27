@@ -25,11 +25,11 @@ import java.util.regex.Pattern;
 /**
  * Enhanced String-like objects, that provide functions for manipulating the
  * text content, while abstracting any embedded codes (eg: Bukkit Color codes)
- *
+ * <p>
  * The important aspect of this type of object is that the filter can perform
  * matches and replacements on the text content, independent of any embedded
  * encoding.
- *
+ * <p>
  * Created by Sage905 on 15-09-09.
  */
 public interface EnhancedString extends CharSequence {
@@ -38,7 +38,7 @@ public interface EnhancedString extends CharSequence {
      * EnhancedString Implementations must provide a way of replacing Text, since
      * standard Regex might not preserve the special coding.
      *
-     * @param p Regex {@link Pattern} to match
+     * @param p     Regex {@link Pattern} to match
      * @param rText Replacement text
      * @return A new EnhancedString object with the changed text.
      */
@@ -47,6 +47,7 @@ public interface EnhancedString extends CharSequence {
 
     /**
      * Convert a section of text to lowercase.
+     *
      * @param p Regex {@link Pattern} to match
      * @return A new EnhancedString object with the changed text.
      */
@@ -54,13 +55,13 @@ public interface EnhancedString extends CharSequence {
 
     /**
      * Convert a section of text to uppercase.
+     *
      * @param p Regex {@link Pattern} to match
      * @return A new EnhancedString object with the changed text.
      */
     EnhancedString patternToUpper(Pattern p);
 
     /**
-     *
      * @return String representing the raw message, including any special codes.
      */
     String getRaw();

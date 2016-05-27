@@ -41,23 +41,22 @@ class Points implements Action {
     private final String messageString;
     private final double pointsAmount; // How much to fine the player.
 
-    private Points(String messageString, Double pointsAmount){
+    private Points(String messageString, Double pointsAmount) {
         this.messageString = messageString;
         this.pointsAmount = pointsAmount;
     }
 
-    static Action getAction(String s) throws InvalidActionException
-    {
+    static Action getAction(String s) throws InvalidActionException {
         String[] parts;
         String message;
         Double points;
-        parts = s.split("\\s",2);
+        parts = s.split("\\s", 2);
         try {
             points = Double.parseDouble(parts[0]);
-        } catch (NumberFormatException e ) {
+        } catch (NumberFormatException e) {
             throw new InvalidActionException("'points' action did not have a valid amount.");
         }
-        message = (parts.length > 1) ? ChatColor.translateAlternateColorCodes('&',parts[1]) : "";
+        message = (parts.length > 1) ? ChatColor.translateAlternateColorCodes('&', parts[1]) : "";
 
         return new Points(message, points);
     }
@@ -72,7 +71,7 @@ class Points implements Action {
         if (!pm.isEnabled()) {
             Rule thisRule = filterTask.getRule();
             filterService.getLogger().fine(String.format("Rule: %s has 'then points', but PointManager is disabled in config.yml",
-                    (thisRule != null)?thisRule.getId():"None"));
+                    (thisRule != null) ? thisRule.getId() : "None"));
             return;
         }
 
@@ -83,7 +82,7 @@ class Points implements Action {
         filterTask.addLogMessage(String.format("Points Accumulated %s : %f. Total: %f", a.getName(), pointsAmount, pm.getPoints(a)));
 
         if (!messageString.isEmpty()) {
-          a.sendMessage(messageString);
+            a.sendMessage(messageString);
         }
 
     }

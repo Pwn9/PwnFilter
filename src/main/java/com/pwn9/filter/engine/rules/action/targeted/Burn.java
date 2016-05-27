@@ -37,31 +37,31 @@ import net.md_5.bungee.api.ChatColor;
  */
 
 class Burn implements Action {
-    // Message to apply to this burn action
-    private final String messageString;
-
     // Default message to apply to this burn action
     private static String defaultMessage = "";
+    // Message to apply to this burn action
+    private final String messageString;
 
     private Burn(String messageString) {
         this.messageString = messageString;
     }
 
-    public static Action getAction(String s)
-    {
-        return new Burn((s != null && !s.isEmpty() ? ChatColor.translateAlternateColorCodes('&',s) : defaultMessage));
+    public static Action getAction(String s) {
+        return new Burn((s != null && !s.isEmpty() ? ChatColor.translateAlternateColorCodes('&', s) : defaultMessage));
     }
 
     static void setDefaultMessage(String s) {
         defaultMessage = s;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void execute(final FilterContext filterTask, FilterService filterService) {
         MessageAuthor target = filterTask.getAuthor();
 
         if (target instanceof BurnTarget) {
-            if (((BurnTarget)target).burn(5000, messageString)) {
+            if (((BurnTarget) target).burn(5000, messageString)) {
                 filterTask.addLogMessage("Burned " + target.getName() + ": " + messageString);
             }
         } else {

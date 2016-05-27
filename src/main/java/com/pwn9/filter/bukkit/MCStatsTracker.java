@@ -37,10 +37,10 @@ import java.util.stream.Collectors;
  * Created by Sage905 on 15-09-13.
  */
 class MCStatsTracker implements StatsTracker {
+    private final Plugin plugin;
     private Metrics metrics;
     private Metrics.Graph eventGraph;
     private Tracker matchTracker;
-    private final Plugin plugin;
 
     MCStatsTracker(Plugin p) {
         plugin = p;

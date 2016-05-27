@@ -20,9 +20,9 @@
 
 package com.pwn9.filter.engine.rules.action.targeted;
 
+import com.pwn9.filter.engine.FilterConfig;
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.ActionToken;
-import com.pwn9.filter.engine.FilterConfig;
 import com.pwn9.filter.engine.rules.action.InvalidActionException;
 
 import java.util.Arrays;
@@ -31,8 +31,13 @@ import java.util.stream.Stream;
 public enum TargetedAction implements ActionToken {
     BURN("burnmsg") {
         @Override
-        public Action getAction(String s, FilterConfig filterConfig) { return Burn.getAction(s); }
-        public void setDefMsg(String s) {Burn.setDefaultMessage(s);}
+        public Action getAction(String s, FilterConfig filterConfig) {
+            return Burn.getAction(s);
+        }
+
+        public void setDefMsg(String s) {
+            Burn.setDefaultMessage(s);
+        }
     },
     FINE("finemsg") {
         @Override
@@ -97,14 +102,16 @@ public enum TargetedAction implements ActionToken {
         this.defaultMsgConfig = defaultMsgConfig;
     }
 
+    public static Stream<TargetedAction> getActionsWithDefaults() {
+        return Arrays.stream(TargetedAction.values()).filter(e -> !e.getDefaultMsgConfigName().isEmpty());
+    }
+
     public String getDefaultMsgConfigName() {
         return defaultMsgConfig;
     }
-    public void setDefMsg(String s) {
-        throw new RuntimeException("Can not set Default message on action" + this.toString());}
 
-    public static Stream<TargetedAction> getActionsWithDefaults() {
-        return Arrays.stream(TargetedAction.values()).filter(e -> !e.getDefaultMsgConfigName().isEmpty());
+    public void setDefMsg(String s) {
+        throw new RuntimeException("Can not set Default message on action" + this.toString());
     }
 
 }

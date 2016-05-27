@@ -28,9 +28,13 @@ import java.util.UUID;
 public interface MessageAuthor {
 
     boolean hasPermission(String s);
+
     @NotNull
     String getName();
+
     UUID getId();
+
     void sendMessage(final String message);
+
     void sendMessages(final List<String> messages);
 }

@@ -77,7 +77,7 @@ public class PwnFilterSignListener extends BaseListener {
         // Take the message from the SignListenerEvent and send it through the filter.
         StringBuilder builder = new StringBuilder();
 
-        for (String l :event.getLines()) {
+        for (String l : event.getLines()) {
             builder.append(l).append("\t");
         }
         String signLines = builder.toString().trim();
@@ -87,23 +87,23 @@ public class PwnFilterSignListener extends BaseListener {
 
         ruleChain.execute(filterTask, filterService);
 
-        if (filterTask.messageChanged()){
+        if (filterTask.messageChanged()) {
             // TODO: Can colors be placed on signs?  Wasn't working. Find out why.
             // Break the changed string into new Lines
             List<String> newLines = new ArrayList<>();
 
             // Global decolor
             if ((BukkitConfig.decolor()) && !(signAuthor.hasPermission("pwnfilter.color"))) {
-                Collections.addAll(newLines,filterTask.getModifiedMessage().toString().split("\t"));
+                Collections.addAll(newLines, filterTask.getModifiedMessage().toString().split("\t"));
             } else {
-                Collections.addAll(newLines,filterTask.getModifiedMessage().getRaw().split("\t"));
+                Collections.addAll(newLines, filterTask.getModifiedMessage().getRaw().split("\t"));
             }
 
             String[] outputLines = new String[4];
 
             // Check if any of the lines are now too long to fit the sign.  Truncate if they are.
 
-            for (int i = 0 ; i < 4 && i < newLines.size() ; i++) {
+            for (int i = 0; i < 4 && i < newLines.size(); i++) {
                 if (newLines.get(i).length() > 15) {
                     outputLines[i] = newLines.get(i).substring(0, 15);
                 } else {
@@ -111,11 +111,11 @@ public class PwnFilterSignListener extends BaseListener {
                 }
             }
 
-            for (int i = 0 ; i < 4 ; i++ ) {
+            for (int i = 0; i < 4; i++) {
                 if (outputLines[i] != null) {
-                    event.setLine(i,outputLines[i]);
+                    event.setLine(i, outputLines[i]);
                 } else {
-                    event.setLine(i,"");
+                    event.setLine(i, "");
                 }
             }
         }
@@ -131,11 +131,11 @@ public class PwnFilterSignListener extends BaseListener {
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * Activate this listener.  This method can be called either by the owning plugin
      * or by PwnFilter.  PwnFilter will call the shutdown / activate methods when PwnFilter
      * is enabled / disabled and whenever it is reloading its config / rules.
-     *
+     * <p>
      * These methods could either register / deregister the listener with Bukkit, or
      * they could just enable / disable the use of the filter.
      */
@@ -152,7 +152,7 @@ public class PwnFilterSignListener extends BaseListener {
                 ruleChain = getCompiledChain(filterService.getConfig().getRuleFile("sign.txt"));
                 // Now register the listener with the appropriate priority
                 pm.registerEvent(SignChangeEvent.class, this, priority,
-                        (l, e) -> onSignChange((SignChangeEvent)e),
+                        (l, e) -> onSignChange((SignChangeEvent) e),
                         PwnFilterBukkitPlugin.getInstance());
 
                 plugin.getLogger().info("Activated SignListener with Priority Setting: " + priority.toString()

@@ -31,10 +31,10 @@ import java.util.regex.Pattern;
  * The TagRegistry is used to manage the currently active %tag% replacements.
  * These Tags are used during the substitution of strings, for example, with
  * a player named "Joe", and the following action in a rule file:
- *   then broadcast %player% has just pooped their self
+ * then broadcast %player% has just pooped their self
  * every time this rule matches, a broadcast message will be sent which reads:
- *   Joe has just pooped their self
- *
+ * Joe has just pooped their self
+ * <p>
  * Created by Sage905 on 15-09-04.
  */
 public class TagRegistry {
@@ -59,7 +59,7 @@ public class TagRegistry {
     /**
      * <p>replaceTags.</p>
      *
-     * @param line a {@link StringTag} object.
+     * @param line       a {@link StringTag} object.
      * @param filterTask a {@link FilterContext} object.
      * @return a {@link StringTag} object.
      */
@@ -90,6 +90,6 @@ public class TagRegistry {
     private static String wrapReplacement(String s) {
         // Wrap the replacement text, so it isn't processed as regex.  Also,
         // Replace null values with a '-'.
-        return (s != null)?Matcher.quoteReplacement(s):"-";
+        return (s != null) ? Matcher.quoteReplacement(s) : "-";
     }
 }

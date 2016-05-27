@@ -47,13 +47,15 @@ class ConsoleChain implements Action {
         this.commands = cmds;
     }
 
-    public static Action getAction(String s) throws InvalidActionException
-    {
-        if (s.isEmpty()) throw new InvalidActionException("No commands were provided to 'conchain'");
+    public static Action getAction(String s) throws InvalidActionException {
+        if (s.isEmpty())
+            throw new InvalidActionException("No commands were provided to 'conchain'");
         return new ConsoleChain(Arrays.asList(s.split("\\|")));
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void execute(final FilterContext filterTask, FilterService filterService) {
         final ArrayList<String> parsedCommands = new ArrayList<>();
 

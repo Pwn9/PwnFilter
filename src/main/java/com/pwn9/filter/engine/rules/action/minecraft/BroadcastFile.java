@@ -30,7 +30,9 @@ import com.pwn9.filter.engine.rules.action.InvalidActionException;
 import com.pwn9.filter.util.tag.TagRegistry;
 import org.bukkit.ChatColor;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -48,9 +50,10 @@ class BroadcastFile implements Action {
         messageStrings = ImmutableList.copyOf(s);
     }
 
-    /** {@inheritDoc} */
-    static Action getAction(String s, File sourceDir) throws InvalidActionException
-    {
+    /**
+     * {@inheritDoc}
+     */
+    static Action getAction(String s, File sourceDir) throws InvalidActionException {
         ArrayList<String> messages = new ArrayList<>();
 
         Path filePath = sourceDir.toPath().resolve(s);
@@ -66,7 +69,9 @@ class BroadcastFile implements Action {
         return new BroadcastFile(messages);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void execute(final FilterContext filterTask, FilterService filterService) {
         final ArrayList<String> preparedMessages = messageStrings.
                 stream().

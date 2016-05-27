@@ -1,4 +1,3 @@
-
 /*
  *  PwnFilter - Chat and user-input filter with the power of Regex
  *  Copyright (C) 2016 Pwn9.com / Sage905 <sage905@takeflight.ca>
@@ -40,9 +39,9 @@ import java.io.File;
  * @version $Id: $Id
  */
 abstract class BaseListener implements FilterClient, Listener {
-    private boolean active;
     protected final FilterService filterService;
     volatile RuleChain ruleChain;
+    private boolean active;
 
     BaseListener(FilterService filterService) {
         this.filterService = filterService;
@@ -86,11 +85,10 @@ abstract class BaseListener implements FilterClient, Listener {
     }
 
     /**
-     *
      * Shutdown this listener.  This method can be called either by the owning plugin
      * or by PwnFilter.  PwnFilter will call the activate / shutdown methods when PwnFilter
      * is enabled / disabled and whenever it is reloading its config / rules.
-     *
+     * <p>
      * These methods could either register / deregister the listener with Bukkit, or
      * they could just enable / disable the use of the filter.
      */

@@ -47,8 +47,8 @@ public class TagTest {
     @Test
     public void testBuiltinTags() throws Exception {
         String input = "Test %player% tag";
-        FilterContext testState = new FilterContext(input, testAuthor , testClient );
-        TagRegistry.addTag("player",new PlayerTag());
+        FilterContext testState = new FilterContext(input, testAuthor, testClient);
+        TagRegistry.addTag("player", new PlayerTag());
         Assert.assertEquals(TagRegistry.replaceTags(input, testState), "Test Sage905 tag");
 
     }

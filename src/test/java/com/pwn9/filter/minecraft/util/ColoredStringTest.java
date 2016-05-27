@@ -31,7 +31,6 @@ import static org.junit.Assert.assertArrayEquals;
 
 /**
  * Extended tests for the ColoredString object.
- *
  */
 public class ColoredStringTest {
     private final String original = "This&0 is the string &8to test";

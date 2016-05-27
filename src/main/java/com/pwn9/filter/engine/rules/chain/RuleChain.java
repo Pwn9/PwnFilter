@@ -31,18 +31,20 @@ import com.pwn9.filter.engine.rules.Condition;
 import com.pwn9.filter.engine.rules.Rule;
 
 import java.io.InvalidObjectException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 
 /**
  * The RuleChain contains a compiled version of all the rules in the text file.
  * A RuleChain is a chain of Rules.  The high-level process is:
- *
+ * <p>
  * Load a chain of rules from a text file, parse them into a chain
  * The Event Handler calls the RuleChain.apply() method with the FilterContext
  * The apply() method iterates over the rules one at a time; matching, checking
  * conditions, and executing actions based on the message and the rules.
- *
  *
  * @author Sage905
  * @version $Id: $Id
@@ -58,8 +60,7 @@ public class RuleChain implements Chain, ChainEntry {
 
     public RuleChain(List<ChainEntry> chain, String configName,
                      Multimap<String, Action> actionGroups,
-                     Multimap<String, Condition> conditionGroups)
-    {
+                     Multimap<String, Condition> conditionGroups) {
         this.chain = ImmutableList.copyOf(chain);
         this.configName = configName;
         this.actionGroups = ImmutableMultimap.copyOf(actionGroups);
@@ -101,7 +102,7 @@ public class RuleChain implements Chain, ChainEntry {
     }
 
     public void execute(FilterContext context, FilterService filterService) {
-        apply(context,filterService);
+        apply(context, filterService);
 
         if (!context.getMatchedRules().isEmpty()) {
 
@@ -167,9 +168,9 @@ public class RuleChain implements Chain, ChainEntry {
     public static final class Builder {
 
         private final List<ChainEntry> chain;
-        private String configName;
         private final Multimap<String, Action> actionGroups;
         private final Multimap<String, Condition> conditionGroups;
+        private String configName;
 
         public Builder() {
             actionGroups = ArrayListMultimap.create();
@@ -178,19 +179,19 @@ public class RuleChain implements Chain, ChainEntry {
         }
 
         public void append(ChainEntry r) {
-             chain.add(r); // Add the Rule to this chain
+            chain.add(r); // Add the Rule to this chain
         }
 
         public void appendAll(List<ChainEntry> rules) {
             chain.addAll(rules);
         }
 
-        public void setConfigName(String s) {
-            this.configName = s;
-        }
-
         public String getConfigName() {
             return configName;
+        }
+
+        public void setConfigName(String s) {
+            this.configName = s;
         }
 
         public void addConditionGroup(String name, List<Condition> cGroup) throws InvalidObjectException {

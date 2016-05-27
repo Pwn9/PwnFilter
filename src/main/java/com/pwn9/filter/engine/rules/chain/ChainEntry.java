@@ -46,6 +46,7 @@ public interface ChainEntry {
      * string.  Eg: if matchString = "permission", and a rule has this
      * condition: "ignore|require permission foo|bar|baz", return:
      * {"foo","bar","baz"}
+     *
      * @param matchString Condition to match
      * @return Set of unique String objects in all conditions of this chain.
      */

@@ -46,29 +46,28 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * Test the Bukkit Built-in Chat Filter Listener
- *
+ * <p>
  * This is more of a smoke test than a Unit test.  It's difficult to test the
  * listener without testing a lot of the other components upon which it depends.
- *
+ * <p>
  * Created by Sage905 on 15-09-10.
  */
 
 public class PwnFilterBookListenerTest {
 
-    private Player mockPlayer = new MockPlayer();
-
-    private PlayerEditBookEvent event;
     private final File resourcesDir = new File(getClass().getResource("/config.yml").getFile()).getParentFile();
-    private PwnFilterBookListener bookListener;
     private final String[] testPages = new String[]{
             "This is the first page",
             "This is the second page",
             "This is the third page",
             "This is the final page"};
+    private Player mockPlayer = new MockPlayer();
+    private PlayerEditBookEvent event;
+    private PwnFilterBookListener bookListener;
 
     @Before
     public void setUp() throws InvalidConfigurationException {
-        if (Bukkit.getServer() == null ) {
+        if (Bukkit.getServer() == null) {
             Bukkit.setServer(new MockServer());
         }
         File rulesDir = new File(getClass().getResource("/rules").getFile());
@@ -94,8 +93,8 @@ public class PwnFilterBookListenerTest {
         bookListener.loadRuleChain("blank.txt");
         bookListener.onBookEdit(event);
 
-        for (int i=0 ; i < bookMeta.getPageCount()-1 ; i++) {
-            assertEquals(testPages[i],event.getNewBookMeta().getPage(i));
+        for (int i = 0; i < bookMeta.getPageCount() - 1; i++) {
+            assertEquals(testPages[i], event.getNewBookMeta().getPage(i));
         }
 
     }
@@ -114,8 +113,8 @@ public class PwnFilterBookListenerTest {
 
         int pageCount = oldBookMeta.getPageCount();
         BookMeta newBookMeta = event.getNewBookMeta();
-        for (int i=0 ; i < pageCount-2 ; i++) {
-            assertEquals(testPages[i],event.getNewBookMeta().getPage(i));
+        for (int i = 0; i < pageCount - 2; i++) {
+            assertEquals(testPages[i], event.getNewBookMeta().getPage(i));
         }
         assertEquals("This test should PASS", newBookMeta.getPage(pageCount - 1));
 

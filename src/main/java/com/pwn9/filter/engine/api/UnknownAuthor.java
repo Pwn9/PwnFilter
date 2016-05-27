@@ -27,7 +27,7 @@ import java.util.UUID;
 
 /**
  * This is returned by the engine when an author for a message can not be found.
- *
+ * <p>
  * Created by Sage905 on 2016-04-25.
  */
 public final class UnknownAuthor implements MessageAuthor {
@@ -37,6 +37,7 @@ public final class UnknownAuthor implements MessageAuthor {
     public UnknownAuthor(UUID uuid) {
         this.id = uuid;
     }
+
     @Override
     public boolean hasPermission(String s) {
         return false;

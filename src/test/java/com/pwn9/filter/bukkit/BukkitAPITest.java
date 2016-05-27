@@ -49,7 +49,7 @@ public class BukkitAPITest {
            Load a different server object.  Maybe wrap the Bukkit class?
          */
 
-        if (Bukkit.getServer() == null ) {
+        if (Bukkit.getServer() == null) {
             Bukkit.setServer(new MockServer());
         }
         server = (MockServer) Bukkit.getServer();
@@ -101,7 +101,7 @@ public class BukkitAPITest {
     3. Execute the getAuthorById() method from a different thread.
     4. If the method is blocking, this will block both threads.  If not, both will return.
      */
-    @Test(timeout=100)
+    @Test(timeout = 100)
     public void testCacheLoadDoesNotBlock() throws Throwable {
         final BlockingScheduler scheduler = new BlockingScheduler();
         server.setScheduler(scheduler);
@@ -135,7 +135,7 @@ public class BukkitAPITest {
 
     }
 
-    @Test(timeout=100)
+    @Test(timeout = 100)
     public void testPermissionLoadDoesNotBlock() throws Throwable {
         final BlockingScheduler scheduler = new BlockingScheduler();
         server.setScheduler(scheduler);

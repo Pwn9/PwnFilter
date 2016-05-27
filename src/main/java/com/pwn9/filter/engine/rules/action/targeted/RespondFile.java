@@ -54,7 +54,7 @@ class RespondFile implements Action {
         this.messageStrings = messageStrings;
     }
 
-    public static Action getAction(String s, File sourceDir ) throws InvalidActionException {
+    public static Action getAction(String s, File sourceDir) throws InvalidActionException {
         ArrayList<String> messageStrings = new ArrayList<>();
         Path filePath = sourceDir.toPath().resolve(s);
 

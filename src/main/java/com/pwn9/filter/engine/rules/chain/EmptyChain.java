@@ -31,7 +31,7 @@ import java.util.Set;
 
 /**
  * This is just an empty chain object, to be used instead of a null value.
- *
+ * <p>
  * Created by Sage905 on 2016-03-20.
  */
 public enum EmptyChain implements Chain, ChainEntry {

@@ -35,26 +35,29 @@ import static com.pwn9.filter.util.tag.TagRegistry.replaceTags;
  */
 @SuppressWarnings("UnusedDeclaration")
 class Kick implements Action {
-    // Message to apply to this kick action
-    private final String messageString;
     // Default message to apply to this burn action
     private static String defaultMessage = "";
+    // Message to apply to this kick action
+    private final String messageString;
 
     private Kick(String messageString) {
         this.messageString = messageString;
     }
 
-    /** {@inheritDoc} */
-    public static Action getAction(String s)
-    {
-        return new Kick((s != null && !s.isEmpty() ? ChatColor.translateAlternateColorCodes('&',s) : defaultMessage));
+    /**
+     * {@inheritDoc}
+     */
+    public static Action getAction(String s) {
+        return new Kick((s != null && !s.isEmpty() ? ChatColor.translateAlternateColorCodes('&', s) : defaultMessage));
     }
 
     static void setDefaultMessage(String s) {
         defaultMessage = s;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void execute(final FilterContext filterTask, FilterService filterService) {
 
         if (filterTask.getAuthor() instanceof KickTarget) {

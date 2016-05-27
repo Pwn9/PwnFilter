@@ -38,7 +38,8 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentMap;
 
@@ -51,16 +52,13 @@ import java.util.concurrent.ConcurrentMap;
  */
 
 public class PwnFilterBukkitPlugin extends JavaPlugin implements PwnFilterPlugin, TemplateProvider {
+    public static final ConcurrentMap<UUID, String> lastMessage = new MapMaker().concurrencyLevel(2).weakKeys().makeMap();
+    static Economy economy = null;
     private static PwnFilterBukkitPlugin _instance;
     private BukkitAPI minecraftAPI;
     private MinecraftConsole console;
-
-
     private MCStatsTracker statsTracker;
-    static Economy economy = null;
     private FilterService filterService;
-
-    public static final ConcurrentMap<UUID, String> lastMessage = new MapMaker().concurrencyLevel(2).weakKeys().makeMap();
 
     /**
      * <p>Constructor for PwnFilter.</p>
@@ -139,8 +137,8 @@ public class PwnFilterBukkitPlugin extends JavaPlugin implements PwnFilterPlugin
 
         // Set up Command Handlers
         getCommand("pfreload").setExecutor(new pfreload(filterService, this));
-        getCommand("pfcls").setExecutor(new pfcls(getLogger(),console));
-        getCommand("pfmute").setExecutor(new pfmute(getLogger(),console));
+        getCommand("pfcls").setExecutor(new pfcls(getLogger(), console));
+        getCommand("pfmute").setExecutor(new pfmute(getLogger(), console));
 
     }
 
@@ -163,7 +161,7 @@ public class PwnFilterBukkitPlugin extends JavaPlugin implements PwnFilterPlugin
             reloadConfig();
             BukkitConfig.loadConfiguration(getConfig(), getDataFolder(), filterService);
             return true;
-        } catch (InvalidConfigurationException|IOException ex) {
+        } catch (InvalidConfigurationException | IOException ex) {
             filterService.getLogger().severe("Fatal configuration failure: " + ex.getMessage());
             filterService.getLogger().severe("PwnFilter disabled.");
             getPluginLoader().disablePlugin(this);

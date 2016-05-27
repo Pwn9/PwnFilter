@@ -38,13 +38,17 @@ class Tracker extends Metrics.Plotter {
         this.last = 0;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getColumnName() {
         return this.name;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getValue() {
         this.last = this.value;
@@ -58,7 +62,9 @@ class Tracker extends Metrics.Plotter {
         this.value++;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void reset() {
         this.value = this.value - this.last;

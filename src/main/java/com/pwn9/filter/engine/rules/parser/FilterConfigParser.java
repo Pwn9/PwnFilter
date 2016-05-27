@@ -34,5 +34,5 @@ import java.util.List;
 interface FilterConfigParser {
 
     Chain parse(File source,
-                List<File> parents) throws InvalidChainException ;
+                List<File> parents) throws InvalidChainException;
 }

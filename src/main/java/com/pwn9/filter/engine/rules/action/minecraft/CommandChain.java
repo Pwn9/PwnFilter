@@ -20,12 +20,12 @@
 
 package com.pwn9.filter.engine.rules.action.minecraft;
 
+import com.pwn9.filter.bukkit.BukkitPlayer;
 import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.api.MessageAuthor;
 import com.pwn9.filter.engine.rules.action.InvalidActionException;
-import com.pwn9.filter.bukkit.BukkitPlayer;
 import com.pwn9.filter.util.tag.TagRegistry;
 
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ import java.util.List;
 
 /**
  * Execute a chain of commands by the player.
- *  * NOTE: This method needs to use runTask to operate on the player, as the bukkit API
+ * * NOTE: This method needs to use runTask to operate on the player, as the bukkit API
  * calls are NOT thread-safe.
  *
  * @author Sage905
@@ -48,14 +48,18 @@ class CommandChain implements Action {
         this.commands = commands;
     }
 
-    /** {@inheritDoc} */
-    public static Action getAction(String s) throws InvalidActionException
-    {
-        if (s.isEmpty()) throw new InvalidActionException("No commands were provided to 'cmdchain'");
+    /**
+     * {@inheritDoc}
+     */
+    public static Action getAction(String s) throws InvalidActionException {
+        if (s.isEmpty())
+            throw new InvalidActionException("No commands were provided to 'cmdchain'");
         return new CommandChain(Arrays.asList(s.split("\\|")));
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void execute(final FilterContext filterTask, FilterService filterService) {
         filterTask.setCancelled();
         final ArrayList<String> parsedCommands = new ArrayList<>();
@@ -65,7 +69,7 @@ class CommandChain implements Action {
 
         MessageAuthor author = filterTask.getAuthor();
         if (author instanceof BukkitPlayer) {
-            BukkitPlayer player = (BukkitPlayer)author;
+            BukkitPlayer player = (BukkitPlayer) author;
             for (String cmd : parsedCommands) {
                 player.executeCommand(cmd);
                 filterTask.addLogMessage("Helped " + author.getName() + " execute command: " + cmd);

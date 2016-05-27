@@ -52,21 +52,19 @@ import java.util.concurrent.*;
 class BukkitAPI implements MinecraftAPI, AuthorService, NotifyTarget {
 
     private final PwnFilterPlugin plugin;
-
-    BukkitAPI(PwnFilterPlugin p) {
-        plugin = p;
-    }
-
     private final MinecraftAPI playerAPI = this;
+    private final Cache<UUID, BukkitPlayer> playerCache = CacheBuilder.newBuilder()
+            .maximumSize(100)
+            .build();
 
     /*
     Note: The "load" call can cause blocking of the main Bukkit thread, if it is called
     from the main thread while there is an outstanding request.
      */
 
-    private final Cache<UUID, BukkitPlayer> playerCache = CacheBuilder.newBuilder()
-            .maximumSize(100)
-            .build();
+    BukkitAPI(PwnFilterPlugin p) {
+        plugin = p;
+    }
 
     public BukkitPlayer getAuthorById(final UUID u) {
         /* Not sure if this is the best way of doing this, but we need to make
@@ -113,7 +111,7 @@ class BukkitAPI implements MinecraftAPI, AuthorService, NotifyTarget {
             // cache.
             if (plugin instanceof Plugin) {
                 Future<T> task =
-                        Bukkit.getScheduler().callSyncMethod((Plugin)plugin, callable);
+                        Bukkit.getScheduler().callSyncMethod((Plugin) plugin, callable);
                 try {
                     // This will block the current thread for up to 3s
                     return task.get(3, TimeUnit.SECONDS);
@@ -143,7 +141,7 @@ class BukkitAPI implements MinecraftAPI, AuthorService, NotifyTarget {
             // thread to execute these calls, and return the Player data to
             // cache.
             if (plugin instanceof Plugin) {
-                Bukkit.getScheduler().runTask((Plugin)plugin, runnable);
+                Bukkit.getScheduler().runTask((Plugin) plugin, runnable);
             } else throw new IllegalPluginAccessException();
         }
     }
@@ -341,7 +339,7 @@ class BukkitAPI implements MinecraftAPI, AuthorService, NotifyTarget {
                 public void run() {
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
                 }
-            }.runTask((Plugin)plugin);
+            }.runTask((Plugin) plugin);
         } else throw new IllegalPluginAccessException();
     }
 
@@ -360,6 +358,7 @@ class BukkitAPI implements MinecraftAPI, AuthorService, NotifyTarget {
 
     }
 
-    public class PlayerNotFound extends Exception {}
+    public class PlayerNotFound extends Exception {
+    }
 
 }

@@ -23,7 +23,7 @@ package com.pwn9.filter.minecraft.command;
 /**
  * This executor is designed to handle commands which have sub-commands.
  * It provides command completion and help from sub-commands.
- *
+ * <p>
  * User: Sage905
  * Date: 13-07-01
  * Time: 4:19 PM
@@ -40,13 +40,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 public class BaseCommandExecutor implements TabExecutor {
-    private final Map<String,SubCommand> subCommands;
+    private final Map<String, SubCommand> subCommands;
 
     /**
      * <p>Constructor for BaseCommandExecutor.</p>
      */
-    public BaseCommandExecutor(){
+    public BaseCommandExecutor() {
         subCommands = new HashMap<>();
 
     }
@@ -95,17 +96,18 @@ public class BaseCommandExecutor implements TabExecutor {
 
         ArrayList<SubCommand> availableCommands = new ArrayList<>();
 
-        for ( SubCommand subCommand : subCommands.values()) {
-            if (subCommand.getPermission() != null && !sender.hasPermission(subCommand.getPermission())) continue;
+        for (SubCommand subCommand : subCommands.values()) {
+            if (subCommand.getPermission() != null && !sender.hasPermission(subCommand.getPermission()))
+                continue;
             if (!subCommand.getHelpMessage().isEmpty()) {
                 availableCommands.add(subCommand);
             }
         }
 
-        if (availableCommands.size() != 0 ) {
+        if (availableCommands.size() != 0) {
             sender.sendMessage("Available commands for " + alias + ":");
 
-            for ( SubCommand subCommand : availableCommands) {
+            for (SubCommand subCommand : availableCommands) {
                 sender.sendMessage("/" + alias + " " +
                         subCommand.getHelpMessage());
             }
@@ -122,8 +124,8 @@ public class BaseCommandExecutor implements TabExecutor {
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         List<String> completions = new ArrayList<>();
 
-        if (args.length == 1 ) {
-            for ( SubCommand subCommand : subCommands.values() ) {
+        if (args.length == 1) {
+            for (SubCommand subCommand : subCommands.values()) {
                 if (!subCommand.getName().startsWith(args[0])) continue;
 
                 if (subCommand.getPermission() == null ||
@@ -133,7 +135,7 @@ public class BaseCommandExecutor implements TabExecutor {
             }
         } else if (args.length > 1) {
             SubCommand subCommand = subCommands.get(args[0].toLowerCase());
-            if ( subCommand != null ) {
+            if (subCommand != null) {
                 return subCommand.tabComplete(sender, alias, args);
             }
         }

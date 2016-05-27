@@ -38,9 +38,9 @@ import static org.junit.Assert.fail;
 
 public class NotifyTest {
 
+    private final TestAuthor author = new TestAuthor();
     private RuleChain rs;
     private FilterService filterService = new FilterService(new TestStatsTracker());
-    private final TestAuthor author = new TestAuthor();
 
     @BeforeClass
     public static void init() {

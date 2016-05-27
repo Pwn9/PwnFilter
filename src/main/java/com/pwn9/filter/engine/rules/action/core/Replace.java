@@ -21,8 +21,8 @@
 package com.pwn9.filter.engine.rules.action.core;
 
 import com.pwn9.filter.engine.FilterService;
-import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.api.Action;
+import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.util.SimpleString;
 import org.bukkit.ChatColor;
 
@@ -41,10 +41,9 @@ class Replace implements Action {
         this.messageString = message;
     }
 
-    static Action getAction(String s)
-    {
-        String message = ChatColor.translateAlternateColorCodes('&',s).
-                replaceAll("\"","");
+    static Action getAction(String s) {
+        String message = ChatColor.translateAlternateColorCodes('&', s).
+                replaceAll("\"", "");
         return new Replace(message);
     }
 

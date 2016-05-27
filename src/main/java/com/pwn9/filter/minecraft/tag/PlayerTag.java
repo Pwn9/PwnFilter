@@ -30,6 +30,6 @@ import com.pwn9.filter.util.tag.Tag;
 public class PlayerTag implements Tag {
     @Override
     public String getValue(FilterContext filterTask) {
-       return filterTask.getAuthor().getName();
+        return filterTask.getAuthor().getName();
     }
 }

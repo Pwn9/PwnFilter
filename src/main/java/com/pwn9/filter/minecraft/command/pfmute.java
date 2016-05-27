@@ -53,8 +53,7 @@ public class pfmute implements CommandExecutor {
             console.sendBroadcast(ChatColor.RED + "Global mute cancelled by " + sender.getName());
             logger.info("global mute cancelled by " + sender.getName());
             BukkitConfig.setGlobalMute(false);
-        }
-        else {
+        } else {
             console.sendBroadcast(ChatColor.RED + "Global mute initiated by " + sender.getName());
             logger.info("global mute initiated by " + sender.getName());
             BukkitConfig.setGlobalMute(true);

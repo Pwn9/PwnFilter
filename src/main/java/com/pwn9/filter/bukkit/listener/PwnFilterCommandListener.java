@@ -1,4 +1,3 @@
-
 /*
  *  PwnFilter - Chat and user-input filter with the power of Regex
  *  Copyright (C) 2016 Pwn9.com / Sage905 <sage905@takeflight.ca>
@@ -44,11 +43,13 @@ public class PwnFilterCommandListener extends BaseListener {
     private final PwnFilterBukkitPlugin plugin;
     private RuleChain chatRuleChain;
 
-    public String getShortName() { return "COMMAND" ;}
-
     public PwnFilterCommandListener(PwnFilterBukkitPlugin plugin) {
-	    super(plugin.getFilterService());
+        super(plugin.getFilterService());
         this.plugin = plugin;
+    }
+
+    public String getShortName() {
+        return "COMMAND";
     }
 
     @Override
@@ -67,14 +68,16 @@ public class PwnFilterCommandListener extends BaseListener {
                         PwnFilterBukkitPlugin.getInstance());
                 setActive();
                 plugin.getLogger().info("Activated CommandListener with Priority Setting: " + priority.toString()
-                        + " Rule Count: " + getRuleChain().ruleCount() );
+                        + " Rule Count: " + getRuleChain().ruleCount());
 
                 StringBuilder sb = new StringBuilder("Commands to filter: ");
-                for (String command : BukkitConfig.getCmdlist()) sb.append(command).append(" ");
+                for (String command : BukkitConfig.getCmdlist())
+                    sb.append(command).append(" ");
                 plugin.getLogger().finest(sb.toString().trim());
 
                 sb = new StringBuilder("Commands to never filter: ");
-                for (String command : BukkitConfig.getCmdblist()) sb.append(command).append(" ");
+                for (String command : BukkitConfig.getCmdblist())
+                    sb.append(command).append(" ");
                 plugin.getLogger().finest(sb.toString().trim());
             } catch (InvalidChainException e) {
                 plugin.getLogger().severe("Unable to activate CommandListener.  Error: " + e.getMessage());
@@ -129,7 +132,8 @@ public class PwnFilterCommandListener extends BaseListener {
 
         } else {
 
-            if (!BukkitConfig.getCmdlist().isEmpty() && !BukkitConfig.getCmdlist().contains(cmdmessage)) return;
+            if (!BukkitConfig.getCmdlist().isEmpty() && !BukkitConfig.getCmdlist().contains(cmdmessage))
+                return;
             if (BukkitConfig.getCmdblist().contains(cmdmessage)) return;
 
             // Take the message from the Command Event and send it through the filter.
@@ -139,7 +143,7 @@ public class PwnFilterCommandListener extends BaseListener {
         }
 
         // Only update the message if it has been changed.
-        if (filterTask.messageChanged()){
+        if (filterTask.messageChanged()) {
             if (filterTask.getModifiedMessage().toString().isEmpty()) {
                 event.setCancelled(true);
                 return;

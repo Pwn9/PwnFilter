@@ -66,7 +66,8 @@ public class PwnFilterBookListener extends BaseListener {
 
         player = event.getPlayer();
 
-        if (plugin.getFilterService().getAuthor(player.getUniqueId()).hasPermission("pwnfilter.bypass.book")) return;
+        if (plugin.getFilterService().getAuthor(player.getUniqueId()).hasPermission("pwnfilter.bypass.book"))
+            return;
 
         BookMeta bookMeta = event.getNewBookMeta();
 
@@ -101,7 +102,7 @@ public class PwnFilterBookListener extends BaseListener {
                 }
                 newPages.add(page);
             }
-            if (modified)  {
+            if (modified) {
                 bookMeta.setPages(newPages);
                 event.setNewBookMeta(bookMeta);
             }
@@ -125,7 +126,7 @@ public class PwnFilterBookListener extends BaseListener {
         PluginManager pm = Bukkit.getPluginManager();
         EventPriority priority = BukkitConfig.getBookpriority();
 
-        if (BukkitConfig.bookfilterEnabled()  ) {
+        if (BukkitConfig.bookfilterEnabled()) {
             try {
                 ruleChain = getCompiledChain(filterService.getConfig().getRuleFile("book.txt"));
                 pm.registerEvent(PlayerEditBookEvent.class, this, priority,
@@ -133,7 +134,7 @@ public class PwnFilterBookListener extends BaseListener {
                         PwnFilterBukkitPlugin.getInstance());
                 setActive();
                 plugin.getLogger().info("Activated BookListener with Priority Setting: " + priority.toString()
-                        + " Rule Count: " + getRuleChain().ruleCount() );
+                        + " Rule Count: " + getRuleChain().ruleCount());
             } catch (InvalidChainException e) {
                 plugin.getLogger().severe("Unable to activate BookListener.  Error: " + e.getMessage());
                 setInactive();

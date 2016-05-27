@@ -36,18 +36,17 @@ import org.bukkit.plugin.PluginManager;
 
 /**
  * Listen for Chat events and apply the filter.
- *
  */
 public class PwnFilterPlayerListener extends BaseListener {
     private final PwnFilterPlugin plugin;
 
-    public String getShortName() {
-        return "CHAT";
-    }
-
-	public PwnFilterPlayerListener(PwnFilterPlugin plugin){
+    public PwnFilterPlayerListener(PwnFilterPlugin plugin) {
         super(plugin.getFilterService());
         this.plugin = plugin;
+    }
+
+    public String getShortName() {
+        return "CHAT";
     }
 
     void onPlayerChat(AsyncPlayerChatEvent event) {
@@ -102,7 +101,7 @@ public class PwnFilterPlayerListener extends BaseListener {
         ruleChain.execute(state, filterService);
 
         // Only update the message if it has been changed.
-        if (state.messageChanged()){
+        if (state.messageChanged()) {
             event.setMessage(state.getModifiedMessage().getRaw());
         }
         if (state.isCancelled()) event.setCancelled(true);
@@ -110,11 +109,11 @@ public class PwnFilterPlayerListener extends BaseListener {
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * Activate this listener.  This method can be called either by the owning plugin
      * or by PwnFilter.  PwnFilter will call the shutdown / activate methods when PwnFilter
      * is enabled / disabled and whenever it is reloading its config / rules.
-     *
+     * <p>
      * These methods could either register / deregister the listener with Bukkit, or
      * they could just enable / disable the use of the filter.
      */
@@ -134,7 +133,7 @@ public class PwnFilterPlayerListener extends BaseListener {
                     (l, e) -> onPlayerChat((AsyncPlayerChatEvent) e), PwnFilterBukkitPlugin.getInstance());
 
             plugin.getLogger().info("Activated PlayerListener with Priority Setting: " + BukkitConfig.getChatpriority().toString()
-                    + " Rule Count: " + getRuleChain().ruleCount() );
+                    + " Rule Count: " + getRuleChain().ruleCount());
 
             setActive();
         } catch (InvalidChainException e) {

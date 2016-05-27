@@ -43,20 +43,19 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * Test the Bukkit Built-in Chat Filter Listener
- *
+ * <p>
  * This is more of a smoke test than a Unit test.  It's difficult to test the
  * listener without testing a lot of the other components upon which it depends.
- *
+ * <p>
  * Created by Sage905 on 15-09-10.
  */
 
 public class PwnFilterSignListenerTest {
 
+    private final File resourcesDir = new File(getClass().getResource("/config.yml").getFile()).getParentFile();
     private Player mockPlayer = new MockPlayer();
     private Block mockBlock;
-
     private SignChangeEvent signChangeEvent;
-    private final File resourcesDir = new File(getClass().getResource("/config.yml").getFile()).getParentFile();
     private PwnFilterSignListener signListener;
 
 
@@ -85,8 +84,8 @@ public class PwnFilterSignListenerTest {
         signListener.loadRuleChain("blank.txt");
         signListener.onSignChange(signChangeEvent);
 
-        for (int i=0 ; i < 4 ; i++) {
-            assertEquals(input[i],signChangeEvent.getLine(i));
+        for (int i = 0; i < 4; i++) {
+            assertEquals(input[i], signChangeEvent.getLine(i));
         }
 
     }
@@ -103,8 +102,8 @@ public class PwnFilterSignListenerTest {
         signListener.onSignChange(signChangeEvent);
 
         String[] changedLines = signChangeEvent.getLines();
-        for (int i=0 ; i < 4 ; i++) {
-            assertEquals(output[i],changedLines[i]);
+        for (int i = 0; i < 4; i++) {
+            assertEquals(output[i], changedLines[i]);
         }
 
     }

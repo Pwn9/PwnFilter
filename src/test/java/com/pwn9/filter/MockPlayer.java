@@ -69,13 +69,13 @@ public class MockPlayer implements Player {
     }
 
     @Override
-    public void setCompassTarget(Location location) {
-
+    public Location getCompassTarget() {
+        return null;
     }
 
     @Override
-    public Location getCompassTarget() {
-        return null;
+    public void setCompassTarget(Location location) {
+
     }
 
     @Override
@@ -159,13 +159,13 @@ public class MockPlayer implements Player {
     }
 
     @Override
-    public void setSleepingIgnored(boolean b) {
-
+    public boolean isSleepingIgnored() {
+        return false;
     }
 
     @Override
-    public boolean isSleepingIgnored() {
-        return false;
+    public void setSleepingIgnored(boolean b) {
+
     }
 
     @Override
@@ -363,13 +363,13 @@ public class MockPlayer implements Player {
     }
 
     @Override
-    public void setPlayerWeather(WeatherType weatherType) {
-
+    public WeatherType getPlayerWeather() {
+        return null;
     }
 
     @Override
-    public WeatherType getPlayerWeather() {
-        return null;
+    public void setPlayerWeather(WeatherType weatherType) {
+
     }
 
     @Override
@@ -543,13 +543,13 @@ public class MockPlayer implements Player {
     }
 
     @Override
-    public void setVelocity(Vector vector) {
-
+    public Vector getVelocity() {
+        return null;
     }
 
     @Override
-    public Vector getVelocity() {
-        return null;
+    public void setVelocity(Vector vector) {
+
     }
 
     @Override
@@ -599,13 +599,13 @@ public class MockPlayer implements Player {
     }
 
     @Override
-    public int getMaxFireTicks() {
-        return 0;
+    public void setFireTicks(int i) {
+
     }
 
     @Override
-    public void setFireTicks(int i) {
-
+    public int getMaxFireTicks() {
+        return 0;
     }
 
     @Override
@@ -669,13 +669,13 @@ public class MockPlayer implements Player {
     }
 
     @Override
-    public void setLastDamageCause(EntityDamageEvent entityDamageEvent) {
-
+    public EntityDamageEvent getLastDamageCause() {
+        return null;
     }
 
     @Override
-    public EntityDamageEvent getLastDamageCause() {
-        return null;
+    public void setLastDamageCause(EntityDamageEvent entityDamageEvent) {
+
     }
 
     @Override
@@ -719,17 +719,12 @@ public class MockPlayer implements Player {
     }
 
     @Override
-    public void setCustomName(String s) {
-
-    }
-
-    @Override
     public String getCustomName() {
         return null;
     }
 
     @Override
-    public void setCustomNameVisible(boolean b) {
+    public void setCustomName(String s) {
 
     }
 
@@ -739,7 +734,7 @@ public class MockPlayer implements Player {
     }
 
     @Override
-    public void setGlowing(boolean b) {
+    public void setCustomNameVisible(boolean b) {
 
     }
 
@@ -749,13 +744,18 @@ public class MockPlayer implements Player {
     }
 
     @Override
-    public void setInvulnerable(boolean b) {
+    public void setGlowing(boolean b) {
 
     }
 
     @Override
     public boolean isInvulnerable() {
         return false;
+    }
+
+    @Override
+    public void setInvulnerable(boolean b) {
+
     }
 
     @Override
@@ -769,23 +769,23 @@ public class MockPlayer implements Player {
     }
 
     @Override
-    public void setFlySpeed(float v) throws IllegalArgumentException {
-
-    }
-
-    @Override
-    public void setWalkSpeed(float v) throws IllegalArgumentException {
-
-    }
-
-    @Override
     public float getFlySpeed() {
         return 0;
     }
 
     @Override
+    public void setFlySpeed(float v) throws IllegalArgumentException {
+
+    }
+
+    @Override
     public float getWalkSpeed() {
         return 0;
+    }
+
+    @Override
+    public void setWalkSpeed(float v) throws IllegalArgumentException {
+
     }
 
     @Override
@@ -820,13 +820,13 @@ public class MockPlayer implements Player {
     }
 
     @Override
-    public void setHealthScale(double v) throws IllegalArgumentException {
-
+    public double getHealthScale() {
+        return 0;
     }
 
     @Override
-    public double getHealthScale() {
-        return 0;
+    public void setHealthScale(double v) throws IllegalArgumentException {
+
     }
 
     @Override
@@ -1112,13 +1112,13 @@ public class MockPlayer implements Player {
     }
 
     @Override
-    public int _INVALID_getLastDamage() {
-        return 0;
+    public void setLastDamage(double v) {
+
     }
 
     @Override
-    public void setLastDamage(double v) {
-
+    public int _INVALID_getLastDamage() {
+        return 0;
     }
 
     @Override
@@ -1192,13 +1192,13 @@ public class MockPlayer implements Player {
     }
 
     @Override
-    public void setCanPickupItems(boolean b) {
-
+    public boolean getCanPickupItems() {
+        return false;
     }
 
     @Override
-    public boolean getCanPickupItems() {
-        return false;
+    public void setCanPickupItems(boolean b) {
+
     }
 
     @Override
@@ -1237,13 +1237,13 @@ public class MockPlayer implements Player {
     }
 
     @Override
-    public void setCollidable(boolean b) {
-
+    public boolean isCollidable() {
+        return false;
     }
 
     @Override
-    public boolean isCollidable() {
-        return false;
+    public void setCollidable(boolean b) {
+
     }
 
     @Override
@@ -1277,13 +1277,13 @@ public class MockPlayer implements Player {
     }
 
     @Override
-    public int _INVALID_getHealth() {
-        return 0;
+    public void setHealth(double v) {
+
     }
 
     @Override
-    public void setHealth(double v) {
-
+    public int _INVALID_getHealth() {
+        return 0;
     }
 
     @Override
@@ -1297,13 +1297,13 @@ public class MockPlayer implements Player {
     }
 
     @Override
-    public int _INVALID_getMaxHealth() {
-        return 0;
+    public void setMaxHealth(double v) {
+
     }
 
     @Override
-    public void setMaxHealth(double v) {
-
+    public int _INVALID_getMaxHealth() {
+        return 0;
     }
 
     @Override

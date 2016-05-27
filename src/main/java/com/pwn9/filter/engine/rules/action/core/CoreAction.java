@@ -20,67 +20,67 @@
 
 package com.pwn9.filter.engine.rules.action.core;
 
+import com.pwn9.filter.engine.FilterConfig;
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.ActionToken;
-import com.pwn9.filter.engine.FilterConfig;
 import com.pwn9.filter.engine.rules.action.InvalidActionException;
 
 /**
  * A table of Action Tokens provided by this package.
- *
+ * <p>
  * Created by Sage905 on 2016-03-18.
  */
 
 public enum CoreAction implements ActionToken {
-    ABORT{
+    ABORT {
         @Override
         public Action getAction(String s, FilterConfig filterConfig) {
             return Abort.INSTANCE;
         }
     },
-    DENY{
+    DENY {
         @Override
         public Action getAction(String s, FilterConfig filterConfig) {
             return Deny.INSTANCE;
         }
     },
-    LOG{
+    LOG {
         @Override
         public Action getAction(String s, FilterConfig filterConfig) {
             return Log.getAction(s);
         }
     },
-    LOWER{
+    LOWER {
         @Override
         public Action getAction(String s, FilterConfig filterConfig) {
             return Lower.INSTANCE;
         }
     },
-    POINTS{
+    POINTS {
         @Override
         public Action getAction(String s, FilterConfig filterConfig) throws InvalidActionException {
             return Points.getAction(s);
         }
     },
-    RANDREP{
+    RANDREP {
         @Override
         public Action getAction(String s, FilterConfig filterConfig) throws InvalidActionException {
             return RandomReplace.getAction(s);
         }
     },
-    REPLACE{
+    REPLACE {
         @Override
         public Action getAction(String s, FilterConfig filterConfig) {
             return Replace.getAction(s);
         }
     },
-    REWRITE{
+    REWRITE {
         @Override
         public Action getAction(String s, FilterConfig filterConfig) {
             return Rewrite.getAction(s);
         }
     },
-    UPPER{
+    UPPER {
         @Override
         public Action getAction(String s, FilterConfig filterConfig) {
             return Upper.INSTANCE;

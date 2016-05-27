@@ -59,17 +59,17 @@ public class LimitedRegexCharSequence implements CharSequence {
     /**
      * <p>Constructor for LimitedRegexCharSequence.</p>
      *
-     * @param inner a {@link java.lang.CharSequence} object.
+     * @param inner         a {@link java.lang.CharSequence} object.
      * @param timeoutMillis a int.
      */
 
-    public LimitedRegexCharSequence(CharSequence inner, int timeoutMillis)  {
+    public LimitedRegexCharSequence(CharSequence inner, int timeoutMillis) {
         this(inner, timeoutMillis, Ticker.systemTicker());
     }
 
-    LimitedRegexCharSequence(CharSequence inner, int timeoutMillis, Ticker ticker)  {
+    LimitedRegexCharSequence(CharSequence inner, int timeoutMillis, Ticker ticker) {
         super();
-        if ( inner == null ) {
+        if (inner == null) {
             throw new NullPointerException("CharSequence must not be null");
         }
         this.inner = inner;
@@ -81,20 +81,17 @@ public class LimitedRegexCharSequence implements CharSequence {
         accessCount = 0;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public char charAt(int index) {
-        accessCount++ ;
+        accessCount++;
         if (stopwatch.elapsed(TimeUnit.MILLISECONDS) > timeoutMillis) {
             throw new RegexTimeoutException("Timeout occurred after " + timeoutMillis + "ms");
         }
         return inner.charAt(index);
     }
 
-    public final class RegexTimeoutException extends RuntimeException {
-        RegexTimeoutException(String message) {
-            super(message);
-        }
-    }
     /**
      * <p>length.</p>
      *
@@ -104,7 +101,9 @@ public class LimitedRegexCharSequence implements CharSequence {
         return inner.length();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public CharSequence subSequence(int start, int end) {
         return new LimitedRegexCharSequence(inner.subSequence(start, end), timeoutMillis, this.ticker);
     }
@@ -118,10 +117,18 @@ public class LimitedRegexCharSequence implements CharSequence {
         return accessCount;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @NotNull
     public String toString() {
         return inner.toString();
+    }
+
+    public final class RegexTimeoutException extends RuntimeException {
+        RegexTimeoutException(String message) {
+            super(message);
+        }
     }
 }

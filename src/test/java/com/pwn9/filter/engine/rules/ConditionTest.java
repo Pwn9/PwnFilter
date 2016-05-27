@@ -40,9 +40,9 @@ import static org.junit.Assert.fail;
  */
 public class ConditionTest {
 
+    private final MessageAuthor author = new TestAuthor();
     private RuleChain rs;
     private FilterService filterService = new FilterService(new TestStatsTracker());
-    private final MessageAuthor author = new TestAuthor();
     private File testFile = new File(getClass().getResource("/conditionTests.txt").getFile());
     private File parentDir = new File(testFile.getParent());
 
@@ -69,7 +69,7 @@ public class ConditionTest {
         assertEquals("Ignore replaced baseline test.", testState.getModifiedMessage().toString());
         FilterContext state2 = new FilterContext("Ignore string qwerty test.", author, new TestClient());
         rs.execute(state2, filterService);
-        assertEquals("Ignore string qwerty test.",state2.getModifiedMessage().toString());
+        assertEquals("Ignore string qwerty test.", state2.getModifiedMessage().toString());
 
     }
 
@@ -81,26 +81,25 @@ public class ConditionTest {
 
         FilterContext testState2 = new FilterContext("/tell Ignore command test", author, new TestClient("COMMAND"));
         rs.execute(testState2, filterService);
-        assertEquals("/tell Ignore command test",testState2.getModifiedMessage().toString());
+        assertEquals("/tell Ignore command test", testState2.getModifiedMessage().toString());
     }
 
     @Test
     public void testIgnoreDoesntMatch() {
         FilterContext testState2 = new FilterContext("testestest banned", author, new TestClient());
         rs.execute(testState2, filterService);
-        assertEquals("testestest matched",testState2.getModifiedMessage().toString());
+        assertEquals("testestest matched", testState2.getModifiedMessage().toString());
     }
 
     @Test
     public void testComandConditionOnlyMatchesCommandHandler() {
         FilterContext testState = new FilterContext("tell banned", author, new TestClient());
         rs.execute(testState, filterService);
-        assertEquals("tell matched",testState.getModifiedMessage().toString());
+        assertEquals("tell matched", testState.getModifiedMessage().toString());
         FilterContext testState2 = new FilterContext("tell banned", author, new TestClient("COMMAND"));
         rs.execute(testState2, filterService);
         assertEquals("tell banned", testState2.getModifiedMessage().toString());
     }
-
 
 
 }

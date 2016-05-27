@@ -20,10 +20,10 @@
 
 package com.pwn9.filter.engine.rules.action;
 
+import com.pwn9.filter.engine.FilterConfig;
 import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.ActionToken;
-import com.pwn9.filter.engine.FilterConfig;
 import com.pwn9.filter.engine.rules.action.core.CoreAction;
 
 import java.util.ArrayList;
@@ -58,12 +58,12 @@ public final class ActionFactory {
     }
 
     public Action getAction(final String actionName, final String actionData)
-    throws InvalidActionException {
+            throws InvalidActionException {
 
         // Scan all tokens for a match
 
-        for ( Class<? extends ActionToken> tokens : actionTokens ) {
-            for (ActionToken token : tokens.getEnumConstants() ) {
+        for (Class<? extends ActionToken> tokens : actionTokens) {
+            for (ActionToken token : tokens.getEnumConstants()) {
                 if (token.toString().equals(actionName.toUpperCase())) {
                     return token.getAction(actionData, filterConfig);
                 }

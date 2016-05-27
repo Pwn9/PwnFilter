@@ -44,9 +44,9 @@ public class LimitedRegexCharSequenceTest {
 
     @Test
     public void testCharAt() throws Exception {
-        LimitedRegexCharSequence lrcs = new LimitedRegexCharSequence(simpleString,1000);
-        Assert.assertEquals(lrcs.charAt(18),'i');
-        Assert.assertEquals(lrcs.charAt(3),'s');
+        LimitedRegexCharSequence lrcs = new LimitedRegexCharSequence(simpleString, 1000);
+        Assert.assertEquals(lrcs.charAt(18), 'i');
+        Assert.assertEquals(lrcs.charAt(3), 's');
     }
 
 
@@ -67,14 +67,14 @@ public class LimitedRegexCharSequenceTest {
         TestTicker ticker = new TestTicker();
         LimitedRegexCharSequence lrcs = new LimitedRegexCharSequence(simpleString, 100, ticker);
 
-        ticker.setElapsed(TimeUnit.NANOSECONDS.convert(101,TimeUnit.MILLISECONDS));
+        ticker.setElapsed(TimeUnit.NANOSECONDS.convert(101, TimeUnit.MILLISECONDS));
         lrcs.charAt(0); // This should throw RegexTimeoutException
     }
 
     @Test(expected = LimitedRegexCharSequence.RegexTimeoutException.class)
     public void testTimeout() throws Exception {
         // demonstrates behavior for regular expression running into catastrophic backtracking for given input
-        LimitedRegexCharSequence timedString = new LimitedRegexCharSequence("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",100);
+        LimitedRegexCharSequence timedString = new LimitedRegexCharSequence("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", 100);
         Pattern pattern = Pattern.compile("(x+x+)+y");
         Matcher matcher = pattern.matcher(timedString);
         //noinspection ResultOfMethodCallIgnored

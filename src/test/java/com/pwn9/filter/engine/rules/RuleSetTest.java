@@ -46,10 +46,9 @@ import static org.junit.Assert.fail;
 
 public class RuleSetTest {
 
+    private final MessageAuthor author = new TestAuthor();
     private RuleChain rs, sc;
     private FilterService filterService = new FilterService(new TestStatsTracker());
-    private final MessageAuthor author = new TestAuthor();
-
 
     @Before
     public void setUp() {
@@ -76,7 +75,7 @@ public class RuleSetTest {
 
     @Test
     public void testDollarSignInMessage() {
-        FilterContext testState = new FilterContext("notATestPerson {test] $ (test 2}",author,new TestClient());
+        FilterContext testState = new FilterContext("notATestPerson {test] $ (test 2}", author, new TestClient());
         rs.execute(testState, filterService);
     }
 
@@ -84,7 +83,7 @@ public class RuleSetTest {
     @Test
     public void testBackslashAtEndOfLine() {
         try {
-            FilterContext testState = new FilterContext("Message that ends with \\",author,new TestClient());
+            FilterContext testState = new FilterContext("Message that ends with \\", author, new TestClient());
             rs.execute(testState, filterService);
         } catch (StringIndexOutOfBoundsException ex) {
             Assert.fail(ex.getMessage());
@@ -93,7 +92,7 @@ public class RuleSetTest {
 
     @Test
     public void testShortcuts() {
-        FilterContext testState = new FilterContext("ShortCutPattern",author,new TestClient());
+        FilterContext testState = new FilterContext("ShortCutPattern", author, new TestClient());
         sc.execute(testState, filterService);
         Assert.assertEquals("Replaced", testState.getModifiedMessage().toString());
     }

@@ -33,7 +33,11 @@ import java.util.UUID;
 public class MinecraftConsole implements MessageAuthor {
 
     private final MinecraftAPI minecraftAPI;
-    
+
+    public MinecraftConsole(MinecraftAPI minecraftAPI) {
+        this.minecraftAPI = minecraftAPI;
+    }
+
     @Override
     public boolean hasPermission(String permString) {
         return true;
@@ -51,14 +55,9 @@ public class MinecraftConsole implements MessageAuthor {
         return java.util.UUID.fromString("CONSOLE");
     }
 
-    public MinecraftConsole(MinecraftAPI minecraftAPI) {
-        this.minecraftAPI = minecraftAPI;
-    }
-    
-
     @Override
     public void sendMessage(final String message) {
-       minecraftAPI.sendConsoleMessage(message);
+        minecraftAPI.sendConsoleMessage(message);
     }
 
     @Override
@@ -67,7 +66,7 @@ public class MinecraftConsole implements MessageAuthor {
     }
 
     public void sendBroadcast(final List<String> preparedMessages) {
-       minecraftAPI.sendBroadcast(preparedMessages);
+        minecraftAPI.sendBroadcast(preparedMessages);
 
     }
 

@@ -41,7 +41,7 @@ public class PwnFilterServerCommandListener extends BaseListener {
     private final PwnFilterBukkitPlugin plugin;
 
     public PwnFilterServerCommandListener(PwnFilterBukkitPlugin plugin) {
-	    super(plugin.getFilterService());
+        super(plugin.getFilterService());
         this.plugin = plugin;
     }
 
@@ -62,7 +62,8 @@ public class PwnFilterServerCommandListener extends BaseListener {
             return;
         }
 
-        if (!BukkitConfig.getCmdlist().isEmpty() && !BukkitConfig.getCmdlist().contains(cmdmessage)) return;
+        if (!BukkitConfig.getCmdlist().isEmpty() && !BukkitConfig.getCmdlist().contains(cmdmessage))
+            return;
         if (BukkitConfig.getCmdblist().contains(cmdmessage)) return;
 
         FilterContext state = new FilterContext(new ColoredString(command), plugin.getConsole(), this);
@@ -72,7 +73,7 @@ public class PwnFilterServerCommandListener extends BaseListener {
         ruleChain.execute(state, filterService);
 
         // Only update the message if it has been changed.
-        if (state.messageChanged()){
+        if (state.messageChanged()) {
             event.setCommand(state.getModifiedMessage().getRaw());
         }
 
@@ -82,11 +83,11 @@ public class PwnFilterServerCommandListener extends BaseListener {
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * Activate this listener.  This method can be called either by the owning plugin
      * or by PwnFilter.  PwnFilter will call the shutdown / activate methods when PwnFilter
      * is enabled / disabled and whenever it is reloading its config / rules.
-     *
+     * <p>
      * These methods could either register / deregister the listener with Bukkit, or
      * they could just enable / disable the use of the filter.
      */

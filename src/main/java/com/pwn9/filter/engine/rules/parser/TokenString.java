@@ -24,7 +24,7 @@ package com.pwn9.filter.engine.rules.parser;
  * The <code>TokenString</code> class takes a <code>String</code> object
  * and provides the popToken() method for removing the first word of the
  * string and returning it.
- *
+ * <p>
  * User: Sage905
  * Date: 13-11-20
  * Time: 8:20 AM
@@ -44,7 +44,7 @@ class TokenString {
      */
     TokenString(String originalString) {
 
-        string = (originalString == null)?"":originalString;
+        string = (originalString == null) ? "" : originalString;
         this.originalString = originalString;
     }
 
@@ -61,7 +61,7 @@ class TokenString {
         String[] parts;
         parts = string.split("\\s", 2);
 
-        string = (parts.length == 2)?parts[1]:"";
+        string = (parts.length == 2) ? parts[1] : "";
 
         return parts[0];
     }

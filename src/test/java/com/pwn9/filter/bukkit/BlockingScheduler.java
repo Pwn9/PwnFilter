@@ -34,6 +34,9 @@ import java.util.concurrent.FutureTask;
 
 class BlockingScheduler implements BukkitScheduler {
 
+    private FutureTask blockedTask;
+    private Waiter waiter;
+
     @Override
     public int scheduleSyncDelayedTask(Plugin plugin, Runnable task, long delay) {
         return 0;
@@ -79,8 +82,6 @@ class BlockingScheduler implements BukkitScheduler {
         return 0;
     }
 
-    private FutureTask blockedTask;
-
     // This scheduler never runs tasks automatically..
     @Override
     @SuppressWarnings("unchecked")
@@ -89,8 +90,6 @@ class BlockingScheduler implements BukkitScheduler {
         waiter.resume(); // Continue the main thread, now that the task is scheduled.
         return blockedTask;
     }
-
-    private Waiter waiter;
 
     public Waiter getWaiter() {
         return waiter;

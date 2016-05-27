@@ -24,7 +24,7 @@ import com.pwn9.filter.engine.FilterService;
 
 /**
  * Actions are compiled into RuleChains for execution when matched by a rule.
- *
+ * <p>
  * Actions must be immutable, and only created by the newAction() method.
  *
  * @author Sage905
@@ -35,7 +35,7 @@ public interface Action {
     /**
      * <p>Execute this action on a FilterContext</p>
      *
-     * @param task a {@link FilterContext} object.
+     * @param task          a {@link FilterContext} object.
      * @param filterService {@link FilterService} object.
      */
     void execute(FilterContext task, FilterService filterService);

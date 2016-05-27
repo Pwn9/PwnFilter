@@ -20,9 +20,9 @@
 
 package com.pwn9.filter.engine.rules.parser;
 
+import com.pwn9.filter.engine.FilterConfig;
 import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.Action;
-import com.pwn9.filter.engine.FilterConfig;
 import com.pwn9.filter.engine.rules.Condition;
 import com.pwn9.filter.engine.rules.Rule;
 import com.pwn9.filter.engine.rules.ShortCutManager;
@@ -85,8 +85,8 @@ public class TextConfigParser implements FilterConfigParser {
 
         RuleStreamReader reader;
         try {
-            reader  = new RuleStreamReader(new InputStreamReader(new FileInputStream(source)));
-        } catch ( FileNotFoundException ex ) {
+            reader = new RuleStreamReader(new InputStreamReader(new FileInputStream(source)));
+        } catch (FileNotFoundException ex) {
             throw new InvalidChainException("Rule File not found: " + source.getAbsoluteFile());
         }
 
@@ -105,7 +105,7 @@ public class TextConfigParser implements FilterConfigParser {
             } else {
                 parents.add(source);
             }
-        } catch (IOException | SecurityException ex ) {
+        } catch (IOException | SecurityException ex) {
             throw new InvalidChainException(parserError(reader.getLineNumber(),
                     "IO Exception while trying to get canonical filename",
                     source.toString()));
@@ -150,7 +150,7 @@ public class TextConfigParser implements FilterConfigParser {
                     // Process an included file
                     else if (command.equalsIgnoreCase("include")) {
                         String fileName = tokenString.popToken();
-                        processIncludedFile(fileName, source.getParentFile(),builder, parents);
+                        processIncludedFile(fileName, source.getParentFile(), builder, parents);
                     }
                     // Parse a rule starting with the pattern
                     else if (command.matches("match|catch|replace|rewrite")) {
@@ -277,9 +277,10 @@ public class TextConfigParser implements FilterConfigParser {
 
     /**
      * Parse the provided strings into Condition objects, and add the group to the ruleChain.
-     *  @param groupName A String containing the name of the group
+     *
+     * @param groupName A String containing the name of the group
      * @param lines     A list of Strings containing the Conditions to parse.
-     * @param builder A RuleChain Builder object.
+     * @param builder   A RuleChain Builder object.
      */
     private void parseConditionGroup(String groupName, List<NumberedLine> lines, RuleChain.Builder builder) throws ParseException {
 
@@ -324,7 +325,7 @@ public class TextConfigParser implements FilterConfigParser {
 //        if (getParents().contains(lineData))
 //            throw new ParserException(lineNo, "Recursion error.  File: " + lineData + " has already been included.");
 
-        File child = new File(parentDir,lineData);
+        File child = new File(parentDir, lineData);
 
         parse(child, parents, parentBuilder);
 

@@ -32,19 +32,9 @@ import com.pwn9.filter.engine.api.FilterContext;
 public class Condition {
 
 
-    enum CondFlag {
-        NONE, ignore, require
-    }
-
-    enum CondType {
-        permission, user, string, command,
-    }
-
     final CondType type;
     final CondFlag flag;
     final String parameters;
-
-
     /**
      * <p>Constructor for Condition.</p>
      *
@@ -65,7 +55,7 @@ public class Condition {
      * @return a {@link com.pwn9.filter.engine.rules.Condition} object.
      */
     public static Condition newCondition(String line) {
-        String[] parts = line.split("\\s",2);
+        String[] parts = line.split("\\s", 2);
         String conditionName = parts[0];
         String conditionData;
         conditionData = ((parts.length > 1) ? parts[1] : "");
@@ -76,7 +66,7 @@ public class Condition {
     /**
      * <p>newCondition.</p>
      *
-     * @param command a {@link java.lang.String} object.
+     * @param command         a {@link java.lang.String} object.
      * @param parameterString a {@link java.lang.String} object.
      * @return a {@link com.pwn9.filter.engine.rules.Condition} object.
      */
@@ -135,21 +125,24 @@ public class Condition {
         switch (type) {
             case user:
                 for (String check : parameters.split("\\s")) {
-                    if (state.getAuthor().getName().equalsIgnoreCase(check)) matched = true;
+                    if (state.getAuthor().getName().equalsIgnoreCase(check))
+                        matched = true;
                 }
             case permission:
-                for (String check: parameters.split("\\s")) {
+                for (String check : parameters.split("\\s")) {
                     if (state.getAuthor().hasPermission(check)) matched = true;
                 }
             case string:
-                for (String check: parameters.split("\\|")) {
-                    if (state.getOriginalMessage().toString().toUpperCase().contains(check.toUpperCase())) matched=true;
+                for (String check : parameters.split("\\|")) {
+                    if (state.getOriginalMessage().toString().toUpperCase().contains(check.toUpperCase()))
+                        matched = true;
                 }
             case command:
-                for (String check: parameters.split("\\|")) {
+                for (String check : parameters.split("\\|")) {
                     if (state.getFilterClient().getShortName().equals("COMMAND")) {
-                        String command = state.getOriginalMessage().toString().split("\\s")[0].replaceFirst("^\\/","");
-                        if (command.toUpperCase().matches(check.toUpperCase())) matched = true;
+                        String command = state.getOriginalMessage().toString().split("\\s")[0].replaceFirst("^\\/", "");
+                        if (command.toUpperCase().matches(check.toUpperCase()))
+                            matched = true;
                     }
                 }
 
@@ -162,6 +155,14 @@ public class Condition {
         }
         // Well, we shouldn't be able to get here, but in case we did, return false
         return false;
+    }
+
+    enum CondFlag {
+        NONE, ignore, require
+    }
+
+    enum CondType {
+        permission, user, string, command,
     }
 
 }

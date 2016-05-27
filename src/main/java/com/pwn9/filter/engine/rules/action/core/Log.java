@@ -21,12 +21,12 @@
 package com.pwn9.filter.engine.rules.action.core;
 
 import com.pwn9.filter.engine.FilterService;
-import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.api.Action;
+import com.pwn9.filter.engine.api.FilterContext;
 
 /**
  * Log this event.
- *
+ * <p>
  * For now, the Logging is a simple switch, but in future, there may be an
  * option to specify where to log and/or at what level.
  *
@@ -39,8 +39,7 @@ class Log implements Action {
     private Log() {
     }
 
-    public static Action getAction(String s)
-    {
+    public static Action getAction(String s) {
         return new Log();
     }
 

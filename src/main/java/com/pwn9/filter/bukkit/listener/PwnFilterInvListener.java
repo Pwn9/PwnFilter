@@ -1,4 +1,3 @@
-
 /*
  *  PwnFilter - Chat and user-input filter with the power of Regex
  *  Copyright (C) 2016 Pwn9.com / Sage905 <sage905@takeflight.ca>
@@ -71,7 +70,7 @@ public class PwnFilterInvListener extends BaseListener {
 
         // Make sure that a real player is the one who clicked this.
         if (event.getWhoClicked().getType() == EntityType.PLAYER) {
-            player = (Player)event.getWhoClicked();
+            player = (Player) event.getWhoClicked();
         } else {
             return;
         }
@@ -88,7 +87,7 @@ public class PwnFilterInvListener extends BaseListener {
             if (filterTask.isCancelled()) event.setCancelled(true);
 
             // Only update the message if it has been changed.
-            if (filterTask.messageChanged()){
+            if (filterTask.messageChanged()) {
                 ItemStack newItem = new ItemStack(item);
                 ItemMeta newItemMeta = newItem.getItemMeta();
                 newItemMeta.setDisplayName(filterTask.getModifiedMessage().getRaw());
@@ -97,18 +96,16 @@ public class PwnFilterInvListener extends BaseListener {
             }
 
 
-
         }
 
     }
 
 
     /**
-     *
      * Activate this listener.  This method can be called either by the owning plugin
      * or by PwnFilter.  PwnFilter will call the shutdown / activate methods when PwnFilter
      * is enabled / disabled and whenever it is reloading its config / rules.
-     *
+     * <p>
      * These methods could either register / deregister the listener with Bukkit, or
      * they could just enable / disable the use of the filter.
      */

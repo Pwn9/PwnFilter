@@ -20,11 +20,11 @@
 
 package com.pwn9.filter.engine.rules.action.minecraft;
 
+import com.pwn9.filter.bukkit.BukkitPlayer;
 import com.pwn9.filter.engine.FilterService;
+import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.rules.action.InvalidActionException;
-import com.pwn9.filter.bukkit.BukkitPlayer;
-import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.util.tag.TagRegistry;
 
 /**
@@ -42,19 +42,23 @@ public class Command implements Action {
         this.command = s;
     }
 
-    /** {@inheritDoc} */
-    public static Action getAction(String s) throws InvalidActionException
-    {
-        if (s.isEmpty()) throw new InvalidActionException("No command was provided to 'command'");
+    /**
+     * {@inheritDoc}
+     */
+    public static Action getAction(String s) throws InvalidActionException {
+        if (s.isEmpty())
+            throw new InvalidActionException("No command was provided to 'command'");
         return new Command(s);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void execute(final FilterContext filterTask, FilterService filterService) {
         filterTask.setCancelled();
         final String cmd;
         if (filterTask.getAuthor() instanceof BukkitPlayer) {
-            BukkitPlayer player = (BukkitPlayer)filterTask.getAuthor();
+            BukkitPlayer player = (BukkitPlayer) filterTask.getAuthor();
 
             if (!command.isEmpty()) {
                 cmd = TagRegistry.replaceTags(command, filterTask);

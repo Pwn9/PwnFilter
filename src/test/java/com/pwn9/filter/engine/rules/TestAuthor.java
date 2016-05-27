@@ -29,8 +29,8 @@ import java.util.UUID;
 
 public class TestAuthor implements MessageAuthor, BurnTarget {
 
-    private boolean burnt;
     private final UUID id;
+    private boolean burnt;
 
     public TestAuthor() {
         id = UUID.randomUUID();
@@ -70,5 +70,6 @@ public class TestAuthor implements MessageAuthor, BurnTarget {
     }
 
     boolean burnt() {
-        return burnt;}
+        return burnt;
+    }
 }

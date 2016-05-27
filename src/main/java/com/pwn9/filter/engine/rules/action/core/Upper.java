@@ -21,9 +21,9 @@
 package com.pwn9.filter.engine.rules.action.core;
 
 import com.pwn9.filter.engine.FilterService;
-import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.EnhancedString;
+import com.pwn9.filter.engine.api.FilterContext;
 
 /**
  * Convert the matched text to uppercase.

@@ -27,11 +27,11 @@ import com.pwn9.filter.engine.rules.action.InvalidActionException;
 
 /**
  * ** DEBUGGING ONLY ***
- *
+ * <p>
  * This action is here only for debugging purposes.  You do NOT want to use it
  * on a production server.  It will just make your server hurt.  You have been
  * warned.
- *
+ * <p>
  * Causes the filter to wait for x milliseconds before continuing.
  *
  * @author Sage905
@@ -42,16 +42,15 @@ class Pause implements Action {
 
     private final Long waitTime;
 
-    private Pause(Long waitTime){
+    private Pause(Long waitTime) {
         this.waitTime = waitTime;
     }
 
-    static Action getAction(String s) throws InvalidActionException
-    {
+    static Action getAction(String s) throws InvalidActionException {
         Long duration;
         try {
             duration = Long.parseLong(s);
-        } catch (NumberFormatException e ) {
+        } catch (NumberFormatException e) {
             throw new InvalidActionException("'pause' action did not have a valid duration.");
         }
         return new Pause(duration);

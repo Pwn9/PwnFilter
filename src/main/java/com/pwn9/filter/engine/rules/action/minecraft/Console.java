@@ -42,15 +42,19 @@ class Console implements Action {
         this.command = s;
     }
 
-    /** {@inheritDoc} */
-    public static Action getAction(String s) throws InvalidActionException
-    {
-        if (s.isEmpty()) throw new InvalidActionException("No command was provided to 'console'");
+    /**
+     * {@inheritDoc}
+     */
+    public static Action getAction(String s) throws InvalidActionException {
+        if (s.isEmpty())
+            throw new InvalidActionException("No command was provided to 'console'");
         return new Console(s);
 
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void execute(final FilterContext filterTask, FilterService filterService) {
         final String cmd = TagRegistry.replaceTags(command, filterTask);
         MessageAuthor author = filterTask.getAuthor();

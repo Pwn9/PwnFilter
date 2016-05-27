@@ -29,20 +29,19 @@ import java.util.regex.Pattern;
 
 /**
  * FilterTask
- *
+ * <p>
  * An object to keep track of the state of a filter task through execution
  * of the rules.
- *
  */
 
 public class FilterContext {
     private final EnhancedString originalMessage; // Original message
-    private EnhancedString modifiedMessage; // Modified message string
     private final MessageAuthor author; // Author that this event is connected to.
     private final FilterClient filterClient;
     private final List<String> logMessages = new ArrayList<>(); // Rules can add strings to this array.  They will be output to log if log=true
     private final List<Rule> matchedRules = new ArrayList<>(); // An array containing all the rules we matched.
-    private final ConcurrentHashMap<String, String> notifyMessages = new ConcurrentHashMap<>(8,0.9f,1);
+    private final ConcurrentHashMap<String, String> notifyMessages = new ConcurrentHashMap<>(8, 0.9f, 1);
+    private EnhancedString modifiedMessage; // Modified message string
     private boolean logging = false;  // If true, actions will be logged
     private boolean aborted = false; // If set true by a rule, will stop further processing.
     private boolean cancelled = false; // If set true, will cancel this event.
@@ -56,8 +55,9 @@ public class FilterContext {
      * Class Constructor with the text string to act upon.  Colour codes must
      * already be converted to the section character (u00A7), otherwise they
      * will not be correctly processed.
-     *  @param m The original text string to run rules against.
-     * @param a  a {@link UUID} object.
+     *
+     * @param m The original text string to run rules against.
+     * @param a a {@link UUID} object.
      * @param l a {@link FilterClient} object.
      */
     public FilterContext(EnhancedString m, MessageAuthor a, FilterClient l) {
@@ -69,6 +69,7 @@ public class FilterContext {
 
     /**
      * A convenience Constructor that wraps a plain String
+     *
      * @param s A String containing the original text to run rules on.
      * @param a The {@link UUID } of this message
      * @param l The {@link FilterClient } that generated this message
@@ -84,7 +85,7 @@ public class FilterContext {
      *
      * @param message A string containing the log message to be output.
      */
-    public void addLogMessage (String message) {
+    public void addLogMessage(String message) {
         logMessages.add(message);
     }
 
@@ -96,6 +97,7 @@ public class FilterContext {
     public List<String> getLogMessages() {
         return logMessages;
     }
+
     /**
      * <p>messageChanged.</p>
      *
@@ -125,7 +127,6 @@ public class FilterContext {
 
     /**
      * <p>setCancelled.</p>
-     *
      */
     public void setCancelled() {
         this.cancelled = true;

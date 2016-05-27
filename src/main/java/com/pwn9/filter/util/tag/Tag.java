@@ -25,9 +25,9 @@ import com.pwn9.filter.engine.api.FilterContext;
 /**
  * During message processing, a rule can specify a %tag%, which will be replaced
  * with the content of a Tag object.
- *
+ * <p>
  * Tags are registered by calling RegisterTags.addTag("keyword", Tag )
- *
+ * <p>
  * Created by Sage905 on 15-09-04.
  */
 public interface Tag {

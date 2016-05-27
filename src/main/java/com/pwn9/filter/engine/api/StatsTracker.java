@@ -24,7 +24,7 @@ import java.util.Set;
 
 /**
  * An interface for tracking statistics about FilterService parameters
- *
+ * <p>
  * Created by Sage905 on 15-09-13.
  */
 public interface StatsTracker {

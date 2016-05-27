@@ -63,7 +63,7 @@ class RuleStreamReader extends LineNumberReader {
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * Scan the file for the next statement (a non-blank line that doesn't
      * start with a #).  If the statement ends with EOF, read and append
      * lines until an EOF on a line of its own is reached.
@@ -84,14 +84,12 @@ class RuleStreamReader extends LineNumberReader {
             if (line.matches("^#.*")) continue;
 
             if (multiline && line.equals("EOF")) {
-                result = result.substring(0,result.length()-1);
+                result = result.substring(0, result.length() - 1);
                 break;
-            }
-            else if (line.endsWith("<<EOF")) {
-                result = line.substring(0,line.length()-5);
+            } else if (line.endsWith("<<EOF")) {
+                result = line.substring(0, line.length() - 5);
                 multiline = true;
-            }
-            else if (multiline) {
+            } else if (multiline) {
                 result += line + '\n';
             } else return line;
         }

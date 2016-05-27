@@ -20,10 +20,10 @@
 
 package com.pwn9.filter.engine.rules.action.targeted;
 
+import com.pwn9.filter.bukkit.BukkitPlayer;
 import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.FilterContext;
-import com.pwn9.filter.bukkit.BukkitPlayer;
 import com.pwn9.filter.util.tag.TagRegistry;
 import net.md_5.bungee.api.ChatColor;
 
@@ -35,27 +35,29 @@ import net.md_5.bungee.api.ChatColor;
  */
 
 class Warn implements Action {
-    // Message to apply to this warn action
-    private final String messageString;
     // Default message to apply to this burn action
     private static String defaultMessage = "";
+    // Message to apply to this warn action
+    private final String messageString;
 
 
     private Warn(String messageString) {
         this.messageString = messageString;
     }
 
-    public static Action getAction(String s)
-    {
-        return new Warn((s != null && !s.isEmpty() ? ChatColor.translateAlternateColorCodes('&',s) : defaultMessage));
+    public static Action getAction(String s) {
+        return new Warn((s != null && !s.isEmpty() ? ChatColor.translateAlternateColorCodes('&', s) : defaultMessage));
     }
+
     static void setDefaultMessage(String s) {
         defaultMessage = s;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void execute(final FilterContext filterTask, FilterService filterService) {
-        if ( filterTask.getAuthor() instanceof BukkitPlayer) {
+        if (filterTask.getAuthor() instanceof BukkitPlayer) {
 
             final String message = TagRegistry.replaceTags(messageString, filterTask);
             filterTask.getAuthor().sendMessage(messageString);

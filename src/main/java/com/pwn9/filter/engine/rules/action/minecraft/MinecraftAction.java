@@ -20,9 +20,9 @@
 
 package com.pwn9.filter.engine.rules.action.minecraft;
 
+import com.pwn9.filter.engine.FilterConfig;
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.ActionToken;
-import com.pwn9.filter.engine.FilterConfig;
 import com.pwn9.filter.engine.rules.action.InvalidActionException;
 
 public enum MinecraftAction implements ActionToken {
@@ -35,7 +35,7 @@ public enum MinecraftAction implements ActionToken {
     BROADCASTFILE {
         @Override
         public Action getAction(String s, FilterConfig filterConfig) throws InvalidActionException {
-            return BroadcastFile.getAction(s,filterConfig.getTextDir());
+            return BroadcastFile.getAction(s, filterConfig.getTextDir());
         }
     },
     COMMAND {

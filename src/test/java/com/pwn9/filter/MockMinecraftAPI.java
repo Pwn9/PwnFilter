@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- *
  * Stubbed out MinecraftAPI for our tests.
  * Created by Sage905 on 15-09-11.
  */

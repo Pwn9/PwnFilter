@@ -25,7 +25,7 @@ import com.pwn9.filter.engine.PointManager;
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.rules.action.ActionFactory;
 import com.pwn9.filter.engine.rules.action.InvalidActionException;
-import com.pwn9.filter.engine.rules.action.targeted.*;
+import com.pwn9.filter.engine.rules.action.targeted.TargetedAction;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
@@ -92,7 +92,7 @@ public class BukkitConfig {
         // Setup logging
         Level logLevel;
         try {
-             logLevel = Level.parse(config.getString("loglevel", "info").toUpperCase());
+            logLevel = Level.parse(config.getString("loglevel", "info").toUpperCase());
         } catch (IllegalArgumentException ex) {
             throw new InvalidConfigurationException("Could not parse loglevel.  Must be either 'info' or 'fine'.  Found: " + config.getString("loglevel"));
         }
@@ -128,7 +128,7 @@ public class BukkitConfig {
     private static void parseThresholds(ConfigurationSection configSection,
                                         PointManager pointManager,
                                         ActionFactory actionFactory)
-    throws InvalidActionException {
+            throws InvalidActionException {
 
         for (String threshold : configSection.getKeys(false)) {
             pointManager.getFilterService().getLogger().

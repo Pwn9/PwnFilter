@@ -21,8 +21,8 @@
 package com.pwn9.filter.engine.rules.action.core;
 
 import com.pwn9.filter.engine.FilterService;
-import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.api.Action;
+import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.rules.action.InvalidActionException;
 
 import java.util.Random;
@@ -45,8 +45,7 @@ class RandomReplace implements Action {
         replacementArray = replaceArray;
     }
 
-    static Action getAction(String s) throws InvalidActionException
-    {
+    static Action getAction(String s) throws InvalidActionException {
         String[] toRand = s.split("\\|");
         if (toRand[0].isEmpty())
             throw new InvalidActionException(

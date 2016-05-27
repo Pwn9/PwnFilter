@@ -65,7 +65,7 @@ public class BukkitPlayerTest {
 
         // Now trigger a cache reset and ensure the value has been updated
         api.permReturnValue = Boolean.FALSE;
-        ticker.setElapsed(TimeUnit.SECONDS.toNanos(BukkitPlayer.MAX_CACHE_AGE_SECS+1));
+        ticker.setElapsed(TimeUnit.SECONDS.toNanos(BukkitPlayer.MAX_CACHE_AGE_SECS + 1));
         assertFalse(bukkitPlayer.hasPermission("TestTrue"));
 
     }

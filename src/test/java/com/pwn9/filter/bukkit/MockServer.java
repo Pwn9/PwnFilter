@@ -54,6 +54,8 @@ import java.util.logging.Logger;
 public class MockServer implements Server {
 
     private BukkitScheduler scheduler;
+    private Player mockPlayer;
+    private Thread primaryThread;
 
     @Override
     public String getName() {
@@ -180,7 +182,6 @@ public class MockServer implements Server {
         return 0;
     }
 
-    private Player mockPlayer;
     public void setPlayer(Player player) {
         mockPlayer = player;
     }
@@ -202,7 +203,8 @@ public class MockServer implements Server {
 
     @Override
     public Player getPlayer(UUID id) {
-        if (mockPlayer != null && mockPlayer.getUniqueId() == id) return mockPlayer;
+        if (mockPlayer != null && mockPlayer.getUniqueId() == id)
+            return mockPlayer;
         else return null;
     }
 
@@ -214,6 +216,10 @@ public class MockServer implements Server {
     @Override
     public BukkitScheduler getScheduler() {
         return scheduler;
+    }
+
+    void setScheduler(BukkitScheduler scheduler) {
+        this.scheduler = scheduler;
     }
 
     @Override
@@ -476,16 +482,14 @@ public class MockServer implements Server {
         return 0;
     }
 
-    private Thread primaryThread;
-
-    void setPrimaryThread(Thread t) {
-        primaryThread = t;
-    }
-
     @Override
     public boolean isPrimaryThread() {
 
         return Thread.currentThread().equals(primaryThread);
+    }
+
+    void setPrimaryThread(Thread t) {
+        primaryThread = t;
     }
 
     void clearPrimaryThread() {
@@ -568,13 +572,13 @@ public class MockServer implements Server {
     }
 
     @Override
-    public void setIdleTimeout(int threshold) {
-
+    public int getIdleTimeout() {
+        return 0;
     }
 
     @Override
-    public int getIdleTimeout() {
-        return 0;
+    public void setIdleTimeout(int threshold) {
+
     }
 
     @Override
@@ -605,9 +609,5 @@ public class MockServer implements Server {
     @Override
     public Set<String> getListeningPluginChannels() {
         return null;
-    }
-
-    void setScheduler(BukkitScheduler scheduler) {
-        this.scheduler = scheduler;
     }
 }

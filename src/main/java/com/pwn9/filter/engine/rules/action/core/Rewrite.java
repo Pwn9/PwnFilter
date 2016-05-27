@@ -21,8 +21,8 @@
 package com.pwn9.filter.engine.rules.action.core;
 
 import com.pwn9.filter.engine.FilterService;
-import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.api.Action;
+import com.pwn9.filter.engine.api.FilterContext;
 import org.bukkit.ChatColor;
 
 /**
@@ -37,9 +37,8 @@ class Rewrite implements Action {
         messageString = message;
     }
 
-    static Action getAction(String s)
-    {
-        return new Rewrite(ChatColor.translateAlternateColorCodes('&',s));
+    static Action getAction(String s) {
+        return new Rewrite(ChatColor.translateAlternateColorCodes('&', s));
     }
 
     @Override

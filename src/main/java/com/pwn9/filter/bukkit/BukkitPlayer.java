@@ -38,16 +38,19 @@ import java.util.concurrent.TimeUnit;
 /**
  * Author of a text string sent to us by Bukkit.  This is typically a player.
  * These objects are transient, and only last for as long as the message does.
- *
+ * <p>
  * Created by Sage905 on 15-08-31.
  */
 public class BukkitPlayer implements MessageAuthor, FineTarget, BurnTarget, KillTarget, KickTarget {
 
-    static final int MAX_CACHE_AGE_SECS = 60 ; //
+    static final int MAX_CACHE_AGE_SECS = 60; //
 
     private final MinecraftAPI minecraftAPI;
     private final UUID playerId;
     private final Stopwatch stopwatch;
+    private final ConcurrentHashMap<String, Boolean> playerPermCache =
+            new ConcurrentHashMap<>(16, 0.9f, 1); // Optimizations for Map
+    private String playerName = "";
 
     BukkitPlayer(UUID uuid, MinecraftAPI api) {
         this.playerId = uuid;
@@ -62,9 +65,6 @@ public class BukkitPlayer implements MessageAuthor, FineTarget, BurnTarget, Kill
         this.stopwatch = Stopwatch.createStarted(ticker);
     }
 
-    private final ConcurrentHashMap<String, Boolean> playerPermCache =
-            new ConcurrentHashMap<>(16, 0.9f, 1); // Optimizations for Map
-
     @Override
     public boolean hasPermission(String permString) {
 
@@ -74,7 +74,8 @@ public class BukkitPlayer implements MessageAuthor, FineTarget, BurnTarget, Kill
         // has any given perm only 1 or 2 times every MAX_CACHE_AGE_SECS
 
         if (stopwatch.elapsed(TimeUnit.SECONDS) > MAX_CACHE_AGE_SECS) {
-            stopwatch.reset(); stopwatch.start();
+            stopwatch.reset();
+            stopwatch.start();
             playerPermCache.clear();
         }
 
@@ -82,7 +83,8 @@ public class BukkitPlayer implements MessageAuthor, FineTarget, BurnTarget, Kill
 
         if (hasPerm == null) {
             Boolean newPerm = minecraftAPI.playerIdHasPermission(playerId, permString);
-            if (newPerm != null) playerPermCache.putIfAbsent(permString, newPerm);
+            if (newPerm != null)
+                playerPermCache.putIfAbsent(permString, newPerm);
         }
         // At this point, the player should be in the cache if they are online.
         // If player is offline, or there is an API failure, returns null
@@ -91,8 +93,6 @@ public class BukkitPlayer implements MessageAuthor, FineTarget, BurnTarget, Kill
 
         return hasPerm != null && hasPerm;
     }
-
-    private String playerName = "";
 
     @NotNull
     @Override

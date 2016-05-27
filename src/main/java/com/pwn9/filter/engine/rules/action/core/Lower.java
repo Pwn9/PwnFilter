@@ -21,13 +21,13 @@
 package com.pwn9.filter.engine.rules.action.core;
 
 import com.pwn9.filter.engine.FilterService;
-import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.EnhancedString;
+import com.pwn9.filter.engine.api.FilterContext;
 
 /**
  * Convert the matched text to lowercase.
- *
+ * <p>
  * Lower is a singleton, because it does not have any parameters and always
  * performs the same action on a FilterContext.
  *
@@ -39,7 +39,9 @@ enum Lower implements Action {
 
     INSTANCE;
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void execute(final FilterContext filterTask, FilterService filterService) {
         EnhancedString cs = filterTask.getModifiedMessage();
         filterTask.addLogMessage("Converting to lowercase.");
