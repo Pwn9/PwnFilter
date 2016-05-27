@@ -1,27 +1,26 @@
 Minimum Marketable Features:
- + Modularize PwnFilter Engine and Server Modules
- X Logfile Output is consistent with previous versions
- + Book & Quill Filter Support
+ * User-friendly Documentation
  - Player Name Filter Support
- - User-friendly Documentation
  - Useful Spam Filter
  - Support for Sponge
  - Web Tool for Rulefile editing.
+ - Refactor Engine into sub-module and become our own API user.
+ X Logfile Output is consistent with previous versions
+
 
 User Stories for current MMF:
- + All "then" actions work correctly
+ * Clean and correct documentation on all modules
+ - HTML Documentation to live at pwn9.github.io/PwnFilter
+ - Clear documentation on all major features
+ - Beginners Tutorial
 
 Engineering Tasks:
- + Re-implement mcstats reporting
+ * Consistent Headers for all files
+ - Correct and clean documentation on all major modules
+ - Document all API modules.
 
 To Do on Current Task:
- + Restore "notify" function
- + Create Bukkit API function to notify a perm and add function to RuleChain execution to trigger notify at end of processing.
- + Make Points Manager work.
- + Tests for Points Manager ascending/descending
- - Tests for remaining actions.
- - Tests for all Tags
-
+ - Put correct and up to date copyright on all module files.
 
 Ideas for later:
  - Refactor Parser to use more libs (eg: Scanner, Tokenizer)
@@ -30,3 +29,11 @@ Ideas for later:
  - It's powerful.  Now, make it easier.
  - Make 'base' files that users can pull in to get started quickly (eg: swearing.txt, hate.txt, etc.)
  - Multiverse-support? (Different configs for different worlds)
+
+
+Legend:
+ - Yet to be started.
+ + Complete
+ * In progress
+ / On hold
+ X Abandoned

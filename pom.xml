@@ -104,7 +104,51 @@
             </properties>
         </profile>
         <profile>
-            <id>profile-1</id>
+            <id>release</id>
+            <build>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>2.4</version>
+                    <executions>
+                        <execution>
+                            <id>attach-sources</id>
+                            <goals>
+                                <goal>jar-no-fork</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>2.10.3</version>
+                    <executions>
+                        <execution>
+                            <id>attach-javadocs</id>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>1.6</version>
+                    <executions>
+                        <execution>
+                            <id>sign-artifacts</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>sign</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </build>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
@@ -114,8 +158,6 @@
         </profile>
 
     </profiles>
-
-
 
     <build>
         <finalName>${project.name}</finalName>
@@ -181,6 +223,10 @@
                 <version>2.5.3</version>
                 <configuration>
                     <tagNameFormat>v@{project.version}</tagNameFormat>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <scmCommentPrefix xml:space="preserve">[RELEASE] </scmCommentPrefix>
+                    <goals>install deploy site-deploy</goals> <!-- install is here to fix javadoc generation in multi-module projects -->
+                    <releaseProfiles>release</releaseProfiles>
                 </configuration>
             </plugin>
             <plugin>
@@ -197,6 +243,19 @@
                     <target>1.8</target>
                     <encoding>UTF-8</encoding>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>templating-maven-plugin</artifactId>
+                <version>1.0-alpha-3</version>
+                <executions>
+                    <execution>
+                        <id>filter-src</id>
+                        <goals>
+                            <goal>filter-sources</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -225,12 +284,30 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.3</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>net.trajano.wagon</groupId>
+                        <artifactId>wagon-git</artifactId>
+                        <version>2.0.3</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.apache.maven.doxia</groupId>
+                        <artifactId>doxia-module-markdown</artifactId>
+                        <version>1.6</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
 
         </plugins>
     </build>
+
     <scm>
-        <connection>scm:git:ssh://github.com/pwn9/PwnFilter.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/pwn9/PwnFilter.git</developerConnection>
+        <connection>scm:git:ssh://github.com/${ghProject}.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/${ghProject}.git</developerConnection>
+        <url>https://github.com/${ghProject}</url>
       <tag>v3.9.0</tag>
   </scm>
 
@@ -251,8 +328,16 @@
             <name>PwnFilter Snapshot</name>
             <url>scpexe://repo.sagely.ca/home/ci/public_html/snapshots</url>
         </snapshotRepository>
+        <site>
+            <id>gh-pages</id>
+            <name>GitHub Pages</name>
+            <url>github:http://${ghUser}.github.io/${ghRepo}/${siteUrlSuffix}/</url>
+        </site>
     </distributionManagement>
 
+    <prerequisites>
+        <maven>3.0.3</maven>
+    </prerequisites>
 
     <properties>
         <siteUrlSuffix>${project.version}</siteUrlSuffix>
@@ -262,4 +347,15 @@
         <ghProject>${ghUser}/${ghRepo}</ghProject>
 
     </properties>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.3</version>
+            </plugin>
+        </plugins>
+    </reporting>
+
 </project>
