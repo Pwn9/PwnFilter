@@ -42,15 +42,13 @@ import java.util.logging.Logger;
 public class pfcls implements CommandExecutor {
     private final Logger logger;
     private final MinecraftConsole console;
-    /**
-     * <p>Constructor for pfcls.</p>
-     */
+
     public pfcls(Logger logger, MinecraftConsole console) {
         this.console = console;
         this.logger = logger;
     }
 
-    /** {@inheritDoc} */
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         sender.sendMessage(ChatColor.RED + "Clearing chat screen");

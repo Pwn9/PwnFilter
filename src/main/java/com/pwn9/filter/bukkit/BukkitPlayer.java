@@ -38,7 +38,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Author of a text string sent to us by Bukkit.  This is typically a player.
  * These objects are transient, and only last for as long as the message does.
- * <p/>
+ *
  * Created by Sage905 on 15-08-31.
  */
 public class BukkitPlayer implements MessageAuthor, FineTarget, BurnTarget, KillTarget, KickTarget {

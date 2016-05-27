@@ -29,19 +29,19 @@ import java.util.regex.Pattern;
 
 /**
  * This object is used to provide a mechanism for running regex match and replacements on a string that may
- * have Color Codes and formats (eg: &5&k) embedded in it.
- * NOTE: By default, this object works on the ampersand (&) character, but this can be specified in the constructor.
+ * have Color Codes and formats (eg: &amp;5&amp;k) embedded in it.
+ * NOTE: By default, this object works on the ampersand (&amp;) character, but this can be specified in the constructor.
  * Any valid format code will be removed from the string for matching purposes.
  *
  * Example String:
  * raw:
- * The quick &4brown fox &1&kj&2u&3m&4p&5e&6d over&7 the lazy &ldog.
+ * The quick &amp;4brown fox &amp;1&amp;kj&amp;2u&amp;3m&amp;4p&amp;5e&amp;6d over&amp;7 the lazy &amp;ldog.
  * plain:
  * The quick brown fox jumped over the lazy dog
  * codes:
- * {,,,,,,,,,,&4,,,,,,,,,&1&k,&2,&3,&4,&5,&6,,,,,&7,,,,,,,,,&l,,,}
+ * {,,,,,,,,,,&amp;4,,,,,,,,,&amp;1&amp;k,&amp;2,&amp;3,&amp;4,&amp;5,&amp;6,,,,,&amp;7,,,,,,,,,&amp;l,,,}
  *
- * The codes array maps codes to the character following it.  In the example above, plain[10] = 'b', codes[10] = "&4"
+ * The codes array maps codes to the character following it.  In the example above, plain[10] = 'b', codes[10] = "&amp;4"
  *
  * In any string modification action, the codes will be updated to reflect the new string.
  *
@@ -184,13 +184,13 @@ public final class ColoredString implements EnhancedString {
      * If the current text is done, we'll prepend the last code at the end
      * of the replacement text to the last code of the final string.
      * Example:
-     * Test &1foo
+     * Test &amp;1foo
      * replace foo with bar:
-     * Test &1bar
-     * replace bar with baz&2:
-     * Test &1baz&2
+     * Test &amp;1bar
+     * replace bar with baz&amp;2:
+     * Test &amp;1baz&amp;2
      * replace baz with nothing:
-     * Test &1&2
+     * Test &amp;1&amp;2
      *
      * @param p Regex Pattern
      * @param rText Replacement Text
@@ -280,12 +280,6 @@ public final class ColoredString implements EnhancedString {
 
     }
 
-    /**
-     * <p>patternToLower.</p>
-     *
-     * @param p a {@link java.util.regex.Pattern} object.
-     * @return a {@link ColoredString} object.
-     */
     public ColoredString patternToLower (Pattern p) {
         char[] modified = plain.clone();
 
@@ -299,12 +293,6 @@ public final class ColoredString implements EnhancedString {
         return new ColoredString(modified, codes);
     }
     
-    /**
-     * <p>patternToUpper.</p>
-     *
-     * @param p a {@link java.util.regex.Pattern} object.
-     * @return a {@link ColoredString} object.
-     */
     public ColoredString patternToUpper (Pattern p) {
         char[] modified = plain.clone();
 
@@ -334,7 +322,6 @@ public final class ColoredString implements EnhancedString {
 
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof ColoredString ) {

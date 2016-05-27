@@ -115,48 +115,23 @@ public class PointManager implements FilterClient {
     }
 
 
-    /**
-     * <p>getPointsMap.</p>
-     *
-     * @return a {@link java.util.Set} object.
-     */
     Set<UUID> getPointsMap() {
         return pointsMap.keySet();
     }
 
-    /**
-     * <p>Getter for the field <code>pointsMap</code>.</p>
-     *
-     * @return a {@link java.lang.Double} object.
-     */
     Double getPoints(UUID uuid) {
         return (pointsMap.containsKey(uuid))? pointsMap.get(uuid):0.0;
     }
 
-    /**
-     * <p>Getter for the field <code>pointsMap</code>.</p>
-     *
-     * @return a {@link java.lang.Double} object.
-     */
     public Double getPoints(MessageAuthor author) {
         return (pointsMap.containsKey(author.getId()))? pointsMap.get(author.getId()):0.0;
     }
 
-    /**
-     * <p>Setter for the field <code>pointsMap</code>. Does not execute actions.</p>
-     *
-     * @param points a {@link java.lang.Double} object.
-     */
     void setPoints(UUID id, Double points) {
         Double old = pointsMap.getOrDefault(id,0d);
         pointsMap.put(id, points);
     }
 
-    /**
-     * <p>addPoints.</p>
-     *
-     * @param points a {@link java.lang.Double} object.
-     */
     public void addPoints(UUID id, Double points) {
         Double current = pointsMap.getOrDefault(id,0d);
         Double updated = current + points;
@@ -167,11 +142,6 @@ public class PointManager implements FilterClient {
 
     }
 
-    /**
-     * <p>isEnabled.</p>
-     *
-     * @return a boolean.
-     */
     public boolean isEnabled() {
         return scheduledFuture != null;
     }
@@ -197,11 +167,6 @@ public class PointManager implements FilterClient {
 
     }
 
-    /**
-     * <p>subPoints.</p>
-     *
-     * @param points a {@link java.lang.Double} object.
-     */
     void subPoints(UUID id, Double points) {
         Double updated;
         Double current = pointsMap.getOrDefault(id,0d);
@@ -267,25 +232,21 @@ public class PointManager implements FilterClient {
         return filterService;
     }
 
-    /** {@inheritDoc} */
     @Override
     public RuleChain getRuleChain() {
         return null;
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean isActive() {
         return scheduledFuture != null ;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void activate() {
         start();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void shutdown() {
         stop();

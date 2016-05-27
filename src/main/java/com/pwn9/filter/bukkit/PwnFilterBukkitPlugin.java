@@ -153,10 +153,6 @@ public class PwnFilterBukkitPlugin extends JavaPlugin implements PwnFilterPlugin
         filterService.deregisterAuthorService(minecraftAPI);
     }
 
-
-    /**
-     * <p>configurePlugin.</p>
-     */
     public boolean configurePlugin() {
         minecraftAPI.reset();
         try {

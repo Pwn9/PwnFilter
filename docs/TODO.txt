@@ -20,7 +20,9 @@ Engineering Tasks:
  - Document all API modules.
 
 To Do on Current Task:
- - Put correct and up to date copyright on all module files.
+ + Put correct and up to date copyright on all module files.
+ + Clean up all IntelliJ warnings
+ * Fix broken JavaDocs
 
 Ideas for later:
  - Refactor Parser to use more libs (eg: Scanner, Tokenizer)

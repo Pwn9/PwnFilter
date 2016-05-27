@@ -42,7 +42,6 @@ import java.util.logging.Logger;
 /**
  * A largely static object, which serves as an interface to the PwnFilter Bukkit
  * configuration.
- * <p/>
  * Created by Sage905 on 15-09-10.
  */
 public class BukkitConfig {

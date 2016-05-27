@@ -45,16 +45,13 @@ import java.util.List;
  */
 public class PwnFilterSignListener extends BaseListener {
     private final PwnFilterPlugin plugin;
-    /**
-     * <p>Constructor for PwnFilterSignListener.</p>
-     *
-     */
+
     public PwnFilterSignListener(PwnFilterPlugin plugin) {
         super(plugin.getFilterService());
         this.plugin = plugin;
     }
 
-    /** {@inheritDoc} */
+
     @Override
     public String getShortName() {
         return "SIGN";
@@ -138,7 +135,7 @@ public class PwnFilterSignListener extends BaseListener {
      * Activate this listener.  This method can be called either by the owning plugin
      * or by PwnFilter.  PwnFilter will call the shutdown / activate methods when PwnFilter
      * is enabled / disabled and whenever it is reloading its config / rules.
-     * <p/>
+     *
      * These methods could either register / deregister the listener with Bukkit, or
      * they could just enable / disable the use of the filter.
      */

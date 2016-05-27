@@ -42,16 +42,11 @@ public class pfmute implements CommandExecutor {
     private final Logger logger;
     private final MinecraftConsole console;
 
-    /**
-     * <p>Constructor for pfmute.</p>
-     *
-     */
     public pfmute(Logger logger, MinecraftConsole console) {
         this.logger = logger;
         this.console = console;
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (BukkitConfig.globalMute()) {

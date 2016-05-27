@@ -33,8 +33,8 @@ import java.util.regex.Pattern;
 
 /**
  * Rule object
- * <p/>
- * <P>Each Rule has a single match Pattern, an ArrayList of {@link com.pwn9.filter.engine.rules.Condition}'s and an ArrayList of {@link Action}'s</P>
+ *
+ * Each Rule has a single match Pattern, an ArrayList of {@link com.pwn9.filter.engine.rules.Condition}'s and an ArrayList of {@link Action}'s
  *
  * @author Sage905
  * @version $Id: $Id

@@ -37,12 +37,12 @@ import java.util.*;
 /**
  * The RuleChain contains a compiled version of all the rules in the text file.
  * A RuleChain is a chain of Rules.  The high-level process is:
- * <p/>
+ *
  * Load a chain of rules from a text file, parse them into a chain
  * The Event Handler calls the RuleChain.apply() method with the FilterContext
  * The apply() method iterates over the rules one at a time; matching, checking
  * conditions, and executing actions based on the message and the rules.
- * <p/>
+ *
  *
  * @author Sage905
  * @version $Id: $Id
@@ -76,27 +76,15 @@ public class RuleChain implements Chain, ChainEntry {
 
     }
 
-    /**
-     * <p>Getter for the field <code>configName</code>.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
     public String getConfigName() {
         return configName;
     }
 
-    /**
-     * <p>ruleCount.</p>
-     *
-     * @return a int.
-     */
     public int ruleCount() {
         return ruleCount;
     }
 
     /**
-     * {@inheritDoc}
-     * <p/>
      * Iterate over the chain in order, checking the Rule pattern against the
      * current message.  If the text pattern matches, test the rule conditions, to
      * ensure they are all met.  If all of the conditions are met, execute the Rule's
@@ -112,12 +100,6 @@ public class RuleChain implements Chain, ChainEntry {
         }
     }
 
-    /**
-     * <p>execute.</p>
-     *
-     * @param context a {@link FilterContext} object.
-     * @param filterService The Service that is requesting this execution.
-     */
     public void execute(FilterContext context, FilterService filterService) {
         apply(context,filterService);
 
@@ -160,22 +142,10 @@ public class RuleChain implements Chain, ChainEntry {
                 .forEach(filterService.getLogger()::info);
     }
 
-
-
-    /**
-     * <p>Getter for the field <code>chain</code>.</p>
-     *
-     * @return a {@link java.util.List} object.
-     */
     public List<ChainEntry> getChain() {
         return chain;
     }
 
-    /**
-     * {@inheritDoc}
-     * <p/>
-     * Get the Set of all permissions used in this chain.
-     */
     @Override
     public Set<String> getConditionsMatching(String matchString) {
         TreeSet<String> retVal = new TreeSet<>();
@@ -186,29 +156,14 @@ public class RuleChain implements Chain, ChainEntry {
         return retVal;
     }
 
-    /**
-     * <p>Getter for the field <code>actionGroups</code>.</p>
-     *
-     * @return a {@link com.google.common.collect.Multimap} object.
-     */
     public Multimap<String, Action> getActionGroups() {
         return actionGroups;
     }
 
-    /**
-     * <p>Getter for the field <code>conditionGroups</code>.</p>
-     *
-     * @return a {@link com.google.common.collect.Multimap} object.
-     */
     public Multimap<String, Condition> getConditionGroups() {
         return conditionGroups;
     }
 
-    /**
-     * Builds an immutable RuleChain object.
-     * <p/>
-     * Created by Sage905 on 15-10-03.
-     */
     public static final class Builder {
 
         private final List<ChainEntry> chain;
@@ -222,9 +177,6 @@ public class RuleChain implements Chain, ChainEntry {
             chain = new ArrayList<>();
         }
 
-        /**
-         * {@inheritDoc}
-         */
         public void append(ChainEntry r) {
              chain.add(r); // Add the Rule to this chain
         }
@@ -240,9 +192,7 @@ public class RuleChain implements Chain, ChainEntry {
         public String getConfigName() {
             return configName;
         }
-        /**
-         * {@inheritDoc}
-         */
+
         public void addConditionGroup(String name, List<Condition> cGroup) throws InvalidObjectException {
             if (name != null && cGroup != null)
                 if (conditionGroups.get(name).isEmpty()) {
@@ -253,9 +203,6 @@ public class RuleChain implements Chain, ChainEntry {
                 }
         }
 
-        /**
-         * {@inheritDoc}
-         */
         public void addActionGroup(String name, List<Action> aGroup) throws InvalidObjectException {
             if (name != null && aGroup != null)
                 if (!actionGroups.containsKey(name)) {

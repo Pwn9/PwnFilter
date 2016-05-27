@@ -71,33 +71,26 @@ abstract class BaseListener implements FilterClient, Listener {
         ruleChain = getCompiledChain(filterService.getConfig().getRuleFile(name));
     }
 
-    /** {@inheritDoc} */
+
     @Override
     public boolean isActive() {
         return active;
     }
 
-    /**
-     * <p>Setter for the field <code>active</code>.</p>
-     */
     void setActive() {
         active = true;
     }
 
-    /**
-     * <p>setInactive.</p>
-     */
     void setInactive() {
         active = false;
     }
 
     /**
-     * {@inheritDoc}
      *
      * Shutdown this listener.  This method can be called either by the owning plugin
      * or by PwnFilter.  PwnFilter will call the activate / shutdown methods when PwnFilter
      * is enabled / disabled and whenever it is reloading its config / rules.
-     * <p/>
+     *
      * These methods could either register / deregister the listener with Bukkit, or
      * they could just enable / disable the use of the filter.
      */

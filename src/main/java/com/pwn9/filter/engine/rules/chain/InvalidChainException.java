@@ -23,7 +23,7 @@ package com.pwn9.filter.engine.rules.chain;
 /**
  * An Invalid Chain is generated from invalid configuration files, and other
  * errors.
- * <p/>
+ *
  * Created by Sage905 on 15-10-10.
  */
 public class InvalidChainException extends Exception {

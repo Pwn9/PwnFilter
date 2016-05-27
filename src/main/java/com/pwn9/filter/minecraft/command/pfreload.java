@@ -39,16 +39,12 @@ import org.bukkit.command.CommandSender;
 public class pfreload implements CommandExecutor {
     private final FilterService filterService;
     private final PwnFilterBukkitPlugin plugin;
-    /**
-     * <p>Constructor for pfreload.</p>
-     *
-     */
+
     public pfreload(FilterService filterService, PwnFilterBukkitPlugin plugin) {
         this.filterService = filterService;
         this.plugin = plugin;
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         sender.sendMessage(ChatColor.RED + "Reloading config.yml and rules/*.txt files.");

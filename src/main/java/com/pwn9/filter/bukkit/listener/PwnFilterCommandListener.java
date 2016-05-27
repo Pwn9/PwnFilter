@@ -44,17 +44,8 @@ public class PwnFilterCommandListener extends BaseListener {
     private final PwnFilterBukkitPlugin plugin;
     private RuleChain chatRuleChain;
 
-    /**
-     * <p>getShortName.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
     public String getShortName() { return "COMMAND" ;}
 
-    /**
-     * <p>Constructor for PwnFilterCommandListener.</p>
-     *
-     */
     public PwnFilterCommandListener(PwnFilterBukkitPlugin plugin) {
 	    super(plugin.getFilterService());
         this.plugin = plugin;

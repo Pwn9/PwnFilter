@@ -47,27 +47,17 @@ public class PwnFilterBookListener extends BaseListener {
 
     private final PwnFilterPlugin plugin;
 
-    /**
-     * <p>Constructor for PwnFilterBookListener.</p>
-     *
-     */
     public PwnFilterBookListener(PwnFilterPlugin plugin) {
         super(plugin.getFilterService());
         this.plugin = plugin;
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getShortName() {
         return "BOOK";
     }
 
     // This is the handler
-    /**
-     * <p>onBookEdit.</p>
-     *
-     * @param event a {@link org.bukkit.event.player.PlayerEditBookEvent} object.
-     */
     void onBookEdit(PlayerEditBookEvent event) {
         Player player;
         String message;
@@ -121,12 +111,9 @@ public class PwnFilterBookListener extends BaseListener {
 
 
     /**
-     * {@inheritDoc}
-     *
      * Activate this listener.  This method can be called either by the owning plugin
      * or by PwnFilter.  PwnFilter will call the shutdown / activate methods when PwnFilter
      * is enabled / disabled and whenever it is reloading its config / rules.
-     * <p/>
      * These methods could either register / deregister the listener with Bukkit, or
      * they could just enable / disable the use of the filter.
      */

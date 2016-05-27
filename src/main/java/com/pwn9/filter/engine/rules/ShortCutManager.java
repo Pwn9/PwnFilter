@@ -78,13 +78,7 @@ public class ShortCutManager {
 
     }
 
-    /**
-     * <p>getShortcutMap.</p>
-     *
-     * @param shortcutFile a {@link java.lang.String} object.
-     * @return a {@link java.util.Map} object.
-     */
-    public Map<String, String> getShortcutMap(File shortcutFile ) throws IOException, ParseException {
+     public Map<String, String> getShortcutMap(File shortcutFile ) throws IOException, ParseException {
         File absoluteFile = shortcutFile.getAbsoluteFile();
         Map<String, String> returnValue = shortcutFiles.get(absoluteFile);
 
