@@ -1,11 +1,21 @@
 /*
- * PwnFilter -- Regex-based User Filter Plugin for Bukkit-based Minecraft servers.
- * Copyright (c) 2013 Pwn9.com. Tremor77 <admin@pwn9.com> & Sage905 <patrick@toal.ca>
+ *  PwnFilter - Chat and user-input filter with the power of Regex
+ *  Copyright (C) 2016 Pwn9.com / Sage905 <sage905@takeflight.ca>
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 3
- * of the License, or (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
  */
 
 package com.pwn9.filter.engine.rules.parser;
@@ -32,7 +42,7 @@ class TokenString {
      *
      * @param originalString a {@link java.lang.String} object.
      */
-    public TokenString(String originalString) {
+    TokenString(String originalString) {
 
         string = (originalString == null)?"":originalString;
         this.originalString = originalString;
@@ -46,7 +56,7 @@ class TokenString {
      *
      * @return A string containing the token.
      */
-    public String popToken() {
+    String popToken() {
 
         String[] parts;
         parts = string.split("\\s", 2);
@@ -70,7 +80,7 @@ class TokenString {
      *
      * @return a {@link java.lang.String} object.
      */
-    public String getOriginalString() {
+    String getOriginalString() {
         return originalString;
     }
 

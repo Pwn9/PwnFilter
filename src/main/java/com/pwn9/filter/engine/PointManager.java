@@ -1,11 +1,21 @@
 /*
- * PwnFilter -- Regex-based User Filter Plugin for Bukkit-based Minecraft servers.
- * Copyright (c) 2013 Pwn9.com. Tremor77 <admin@pwn9.com> & Sage905 <patrick@toal.ca>
+ *  PwnFilter - Chat and user-input filter with the power of Regex
+ *  Copyright (C) 2016 Pwn9.com / Sage905 <sage905@takeflight.ca>
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 3
- * of the License, or (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
  */
 
 package com.pwn9.filter.engine;
@@ -76,13 +86,13 @@ public class PointManager implements FilterClient {
         this.leakPoints = leakPoints;
     }
 
-    public void clearThresholds() {
+    private void clearThresholds() {
         thresholds.clear();
         // Setup the 0 threshold
         addThreshold("Default", (double) 0, new ArrayList<>(), new ArrayList<>());
     }
 
-    public void leakTask(PointManager pointManager) {
+    void leakTask(PointManager pointManager) {
         //Every interval, check point balances, and if they are > 0, subtract leakPoints
         // from the players balance.  If they reach 0, remove them from the list.
         pointManager.getPointsMap().stream()
@@ -110,7 +120,7 @@ public class PointManager implements FilterClient {
      *
      * @return a {@link java.util.Set} object.
      */
-    public Set<UUID> getPointsMap() {
+    Set<UUID> getPointsMap() {
         return pointsMap.keySet();
     }
 
@@ -119,7 +129,7 @@ public class PointManager implements FilterClient {
      *
      * @return a {@link java.lang.Double} object.
      */
-    public Double getPoints(UUID uuid) {
+    Double getPoints(UUID uuid) {
         return (pointsMap.containsKey(uuid))? pointsMap.get(uuid):0.0;
     }
 
@@ -137,7 +147,7 @@ public class PointManager implements FilterClient {
      *
      * @param points a {@link java.lang.Double} object.
      */
-    public void setPoints(UUID id, Double points) {
+    void setPoints(UUID id, Double points) {
         Double old = pointsMap.getOrDefault(id,0d);
         pointsMap.put(id, points);
     }
@@ -192,7 +202,7 @@ public class PointManager implements FilterClient {
      *
      * @param points a {@link java.lang.Double} object.
      */
-    public void subPoints(UUID id, Double points) {
+    void subPoints(UUID id, Double points) {
         Double updated;
         Double current = pointsMap.getOrDefault(id,0d);
         updated = current - points;
@@ -217,7 +227,7 @@ public class PointManager implements FilterClient {
         final List<Action> actionsAscending;
         final List<Action> actionsDescending;
 
-        protected Threshold(String name, Double points, List<Action> ascending, List<Action> descending) {
+        Threshold(String name, Double points, List<Action> ascending, List<Action> descending) {
             this.name = name;
             this.points = points;
             this.actionsAscending = ascending;
@@ -229,7 +239,7 @@ public class PointManager implements FilterClient {
             return Double.compare(this.points, o.points);
         }
 
-        public void executeAscending(UUID id, FilterClient client) {
+        void executeAscending(UUID id, FilterClient client) {
             FilterContext state = new FilterContext(new SimpleString(""), getFilterService().getAuthor(id), client );
             for (Action a : actionsAscending ) {
                 client.getFilterService().getLogger().finest("Executing Action: " + a + " on " + state.getAuthor().getName());
@@ -237,7 +247,7 @@ public class PointManager implements FilterClient {
             }
         }
 
-        public void executeDescending(UUID id, FilterClient client) {
+        void executeDescending(UUID id, FilterClient client) {
             FilterContext state = new FilterContext(new SimpleString(""), getFilterService().getAuthor(id), client );
             for (Action a : actionsDescending ) {
                 client.getFilterService().getLogger().finest("Executing Action: " + a + " on " + state.getAuthor().getName());

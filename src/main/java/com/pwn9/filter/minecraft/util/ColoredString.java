@@ -1,11 +1,21 @@
 /*
- * PwnFilter -- Regex-based User Filter Plugin for Bukkit-based Minecraft servers.
- * Copyright (c) 2013 Pwn9.com. Tremor77 <admin@pwn9.com> & Sage905 <patrick@toal.ca>
+ *  PwnFilter - Chat and user-input filter with the power of Regex
+ *  Copyright (C) 2016 Pwn9.com / Sage905 <sage905@takeflight.ca>
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 3
- * of the License, or (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
  */
 
 package com.pwn9.filter.minecraft.util;
@@ -93,7 +103,7 @@ public final class ColoredString implements EnhancedString {
      * @param plain an array of char.
      * @param codes an array of {@link java.lang.String} objects.
      */
-    public ColoredString(char[] plain, String[] codes) {
+    private ColoredString(char[] plain, String[] codes) {
         this.plain = Arrays.copyOf(plain, plain.length);
         this.codes = Arrays.copyOf(codes,plain.length+1);
     }
@@ -132,7 +142,7 @@ public final class ColoredString implements EnhancedString {
      *
      * @return a {@link java.lang.String} object.
      */
-    public String getColoredString() {
+    String getColoredString() {
         StringBuilder sb = new StringBuilder();
 
         for (int i = 0 ; i < plain.length ; i++ ) {
@@ -159,7 +169,7 @@ public final class ColoredString implements EnhancedString {
      *
      * @return an array of {@link java.lang.String} objects.
      */
-    public String[] getCodeArray() {
+    String[] getCodeArray() {
         return codes;
     }
 

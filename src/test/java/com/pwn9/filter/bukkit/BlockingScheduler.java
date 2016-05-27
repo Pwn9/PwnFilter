@@ -1,11 +1,21 @@
 /*
- * PwnFilter -- Regex-based User Filter Plugin for Bukkit-based Minecraft servers.
- * Copyright (c) 2016 Pwn9.com. Tremor77 <admin@pwn9.com> & Sage905 <patrick@toal.ca>
+ *  PwnFilter - Chat and user-input filter with the power of Regex
+ *  Copyright (C) 2016 Pwn9.com / Sage905 <sage905@takeflight.ca>
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 3
- * of the License, or (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
  */
 
 package com.pwn9.filter.bukkit;
@@ -22,10 +32,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 
-/**
- * Created by Sage905 on 2016-05-10.
- */
-public class BlockingScheduler implements BukkitScheduler {
+class BlockingScheduler implements BukkitScheduler {
 
     @Override
     public int scheduleSyncDelayedTask(Plugin plugin, Runnable task, long delay) {
@@ -76,6 +83,7 @@ public class BlockingScheduler implements BukkitScheduler {
 
     // This scheduler never runs tasks automatically..
     @Override
+    @SuppressWarnings("unchecked")
     public <T> Future<T> callSyncMethod(Plugin plugin, Callable<T> task) {
         blockedTask = new FutureTask<>(task);
         waiter.resume(); // Continue the main thread, now that the task is scheduled.
@@ -88,11 +96,11 @@ public class BlockingScheduler implements BukkitScheduler {
         return waiter;
     }
 
-    public void setWaiter(Waiter waiter) {
+    void setWaiter(Waiter waiter) {
         this.waiter = waiter;
     }
 
-    public void releaseTask() {
+    void releaseTask() {
         blockedTask.run();
     }
 

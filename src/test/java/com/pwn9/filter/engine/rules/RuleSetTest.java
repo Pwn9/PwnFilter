@@ -1,3 +1,23 @@
+/*
+ *  PwnFilter - Chat and user-input filter with the power of Regex
+ *  Copyright (C) 2016 Pwn9.com / Sage905 <sage905@takeflight.ca>
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
+ */
+
 package com.pwn9.filter.engine.rules;
 
 import com.pwn9.filter.engine.FilterService;
@@ -13,7 +33,6 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Logger;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -27,22 +46,17 @@ import static org.junit.Assert.fail;
 
 public class RuleSetTest {
 
-    RuleChain rs, sc;
-    FilterService filterService = new FilterService(new TestStatsTracker());
-    Logger logger = filterService.getLogger();
-    final MessageAuthor author = new TestAuthor();
-    File parentDir;
+    private RuleChain rs, sc;
+    private FilterService filterService = new FilterService(new TestStatsTracker());
+    private final MessageAuthor author = new TestAuthor();
 
 
     @Before
     public void setUp() {
-        // For debugging purposes
-//        filterService.setLogFileHandler(new File("/tmp/pwnfilter.log"));
-//        logger.setLevel(Level.FINEST);
         filterService.getActionFactory().addActionTokens(MinecraftAction.class);
         filterService.getActionFactory().addActionTokens(TargetedAction.class);
         File testRules = new File(getClass().getResource("/testrules.txt").getFile());
-        parentDir = testRules.getParentFile();
+        File parentDir = testRules.getParentFile();
         filterService.getConfig().setRulesDir(parentDir);
         filterService.getConfig().setTextDir(parentDir);
         try {

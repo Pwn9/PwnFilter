@@ -1,3 +1,23 @@
+/*
+ *  PwnFilter - Chat and user-input filter with the power of Regex
+ *  Copyright (C) 2016 Pwn9.com / Sage905 <sage905@takeflight.ca>
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
+ */
+
 package com.pwn9.filter.engine.rules;
 
 import com.pwn9.filter.engine.FilterService;
@@ -17,17 +37,14 @@ import static org.junit.Assert.fail;
 
 /**
  * Test Conditions
- * User: Sage905
- * Date: 13-05-04
- * Time: 11:30 AM
  */
 public class ConditionTest {
 
-    RuleChain rs;
-    FilterService filterService = new FilterService(new TestStatsTracker());
-    final MessageAuthor author = new TestAuthor();
-    File testFile = new File(getClass().getResource("/conditionTests.txt").getFile());
-    File parentDir = new File(testFile.getParent());
+    private RuleChain rs;
+    private FilterService filterService = new FilterService(new TestStatsTracker());
+    private final MessageAuthor author = new TestAuthor();
+    private File testFile = new File(getClass().getResource("/conditionTests.txt").getFile());
+    private File parentDir = new File(testFile.getParent());
 
 
     @Before
