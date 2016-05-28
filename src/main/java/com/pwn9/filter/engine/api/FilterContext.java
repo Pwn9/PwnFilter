@@ -23,17 +23,25 @@ package com.pwn9.filter.engine.api;
 import com.pwn9.filter.engine.rules.Rule;
 import com.pwn9.filter.util.SimpleString;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 /**
- * FilterTask
- * <p>
- * An object to keep track of the state of a filter task through execution
- * of the rules.
+ * @author Sage905
+ *
+ * A FilterContext is passed to the FilterService with the message, author, and
+ * a reference to the calling client.
+ *
+ * Rules will be applied to the message, and actions may be taken on the author.
+ *
+ * At the end of processing, the client is responsible for taking actions such
+ * as cancelling the original event, forwarding the modified message, etc.
+ *
  */
-
 public class FilterContext {
     private final EnhancedString originalMessage; // Original message
     private final MessageAuthor author; // Author that this event is connected to.
@@ -48,52 +56,46 @@ public class FilterContext {
     private Rule rule; // Rule we currently match
     private Pattern pattern; // Pattern that we currently matched.
 
-    // NOTE: pattern should always match originalMessage, but may not match
-    // the new message, if another rule has modified it.
-
     /**
-     * Class Constructor with the text string to act upon.  Colour codes must
-     * already be converted to the section character (u00A7), otherwise they
-     * will not be correctly processed.
+     * FilterContext Constructor
      *
-     * @param m The original text string to run rules against.
-     * @param a a {@link UUID} object.
-     * @param l a {@link FilterClient} object.
+     * @param originalMessage An {@link EnhancedString} object to run rules against.
+     * @param author The {@link MessageAuthor} to perform rule actions on.
+     * @param filterClient The {@link FilterClient} source of this message.
      */
-    public FilterContext(EnhancedString m, MessageAuthor a, FilterClient l) {
-        originalMessage = m;
-        modifiedMessage = m;
-        author = a;
-        filterClient = l;
+    public FilterContext(EnhancedString originalMessage, MessageAuthor author,
+                         FilterClient filterClient) {
+        this.originalMessage = originalMessage;
+        modifiedMessage = originalMessage;
+        this.author = author;
+        this.filterClient = filterClient;
     }
 
     /**
-     * A convenience Constructor that wraps a plain String
-     *
-     * @param s A String containing the original text to run rules on.
-     * @param a The {@link UUID } of this message
-     * @param l The {@link FilterClient } that generated this message
+     * A convenience Constructor that wraps a plain String into an
+     * {@link EnhancedString} object.
+     * @param originalString A plain {@link String} to apply rules to.
+     * @param author The {@link MessageAuthor} to perform rule actions on.
+     * @param filterClient The {@link FilterClient} source of this message.
      */
-    public FilterContext(String s, MessageAuthor a, FilterClient l) {
-        this(new SimpleString(s), a, l);
+    public FilterContext(String originalString, MessageAuthor author,
+                         FilterClient filterClient) {
+        this(new SimpleString(originalString), author, filterClient);
     }
 
     /**
-     * Add a string to the list of log messages that will be written to the logfile /console.
-     * These messages will only be output if the rule has the "then log" action, or if debug &gt;= low
-     * in the comfig.yml
+     * Add a string to the list of log messages that will be written to the
+     * logfile / console.
      *
-     * @param message A string containing the log message to be output.
+     * These messages will only be output if the rule has the "then log" action,
+     * or if debug &gt;= low in the comfig.yml
+     *
+     * @param message Log message to add
      */
     public void addLogMessage(String message) {
         logMessages.add(message);
     }
 
-    /**
-     * <p>Getter for the field <code>logMessages</code>.</p>
-     *
-     * @return a {@link java.util.List} object.
-     */
     public List<String> getLogMessages() {
         return logMessages;
     }
@@ -107,54 +109,26 @@ public class FilterContext {
         return !originalMessage.equals(modifiedMessage);
     }
 
-    /**
-     * <p>Getter for the field <code>author</code>.</p>
-     *
-     * @return a {@link org.bukkit.entity.Player} object.
-     */
     public MessageAuthor getAuthor() {
         return author;
     }
 
-    /**
-     * <p>isCancelled.</p>
-     *
-     * @return a boolean.
-     */
     public boolean isCancelled() {
         return cancelled;
     }
 
-    /**
-     * <p>setCancelled.</p>
-     */
     public void setCancelled() {
         this.cancelled = true;
     }
 
-    /**
-     * <p>Getter for the field <code>originalMessage</code>.</p>
-     *
-     * @return a new Instance of ColouredString with a copy of the originalMessage.
-     */
     public EnhancedString getOriginalMessage() {
         return originalMessage;
     }
 
-    /**
-     * <p>Getter for the field <code>modifiedMessage</code>.</p>
-     *
-     * @return a {@link EnhancedString} object.
-     */
     public EnhancedString getModifiedMessage() {
         return modifiedMessage;
     }
 
-    /**
-     * <p>Setter for the field <code>modifiedMessage</code>.</p>
-     *
-     * @param newMessage a {@link EnhancedString} object.
-     */
     public void setModifiedMessage(EnhancedString newMessage) {
         modifiedMessage = newMessage;
     }
