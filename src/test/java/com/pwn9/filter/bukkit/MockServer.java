@@ -603,11 +603,6 @@ public class MockServer implements Server {
     }
 
     @Override
-    public Spigot spigot() {
-        return null;
-    }
-
-    @Override
     public Set<String> getListeningPluginChannels() {
         return null;
     }

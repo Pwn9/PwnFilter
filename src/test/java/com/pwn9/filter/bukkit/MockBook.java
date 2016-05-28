@@ -95,13 +95,13 @@ public class MockBook implements BookMeta, Cloneable {
     }
 
     @Override
-    public void setPages(List<String> pages) {
-        this.pages = new LinkedList<>(pages);
+    public void setPages(String... pages) {
+        this.pages = new LinkedList<>(Arrays.asList(pages));
     }
 
     @Override
-    public void setPages(String... pages) {
-        this.pages = new LinkedList<>(Arrays.asList(pages));
+    public void setPages(List<String> pages) {
+        this.pages = new LinkedList<>(pages);
     }
 
     @Override
@@ -207,11 +207,6 @@ public class MockBook implements BookMeta, Cloneable {
     @Override
     public boolean hasItemFlag(ItemFlag flag) {
         return false;
-    }
-
-    @Override
-    public Spigot spigot() {
-        return null;
     }
 
     @Override
