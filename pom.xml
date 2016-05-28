@@ -43,7 +43,9 @@
         </repository>
         <repository>
             <id>vault-repo</id>
-            <url>http://nexus.theyeticave.net/content/repositories/pub_releases/</url>
+            <url>
+                http://nexus.theyeticave.net/content/repositories/pub_releases/
+            </url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
@@ -122,55 +124,56 @@
                 </property>
             </activation>
             <properties>
-                <pwnfilter.version>${project.version}-b${env.BUILD_NUMBER}</pwnfilter.version>
+                <pwnfilter.version>${project.version}-b${env.BUILD_NUMBER}
+                </pwnfilter.version>
             </properties>
         </profile>
         <profile>
             <id>release</id>
             <build>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-source-plugin</artifactId>
-                    <version>2.4</version>
-                    <executions>
-                        <execution>
-                            <id>attach-sources</id>
-                            <goals>
-                                <goal>jar-no-fork</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>2.10.3</version>
-                    <executions>
-                        <execution>
-                            <id>attach-javadocs</id>
-                            <goals>
-                                <goal>jar</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-gpg-plugin</artifactId>
-                    <version>1.6</version>
-                    <executions>
-                        <execution>
-                            <id>sign-artifacts</id>
-                            <phase>verify</phase>
-                            <goals>
-                                <goal>sign</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-            </plugins>
-        </build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>2.4</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.10.3</version>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.6</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
@@ -184,7 +187,8 @@
     <build>
         <finalName>${project.name}</finalName>
         <sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
-        <testSourceDirectory>${project.basedir}/src/test/java</testSourceDirectory>
+        <testSourceDirectory>${project.basedir}/src/test/java
+        </testSourceDirectory>
         <extensions>
             <extension>
                 <groupId>org.apache.maven.wagon</groupId>
@@ -207,8 +211,8 @@
                 <directory>${project.basedir}/src/test/resources</directory>
                 <includes>
                     <include>*</include>
-                  <include>*/*</include>
-                  <include>*/*/*</include>
+                    <include>*/*</include>
+                    <include>*/*/*</include>
                 </includes>
             </testResource>
         </testResources>
@@ -235,14 +239,15 @@
                 </configuration>
             </plugin>
             <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-release-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
                 <version>2.5.3</version>
                 <configuration>
                     <tagNameFormat>v@{project.version}</tagNameFormat>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                     <scmCommentPrefix xml:space="preserve">[RELEASE] </scmCommentPrefix>
-                    <goals>install deploy site-deploy</goals> <!-- install is here to fix javadoc generation in multi-module projects -->
+                    <goals>install deploy site-deploy
+                    </goals> <!-- install is here to fix javadoc generation in multi-module projects -->
                     <releaseProfiles>release</releaseProfiles>
                 </configuration>
             </plugin>
@@ -288,7 +293,8 @@
                     <relocations>
                         <relocation>
                             <pattern>org.mcstats</pattern>
-                            <shadedPattern>com.pwn9.filter.mcstats</shadedPattern>
+                            <shadedPattern>com.pwn9.filter.mcstats
+                            </shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
@@ -323,15 +329,16 @@
 
     <scm>
         <connection>scm:git:ssh://github.com/${ghProject}.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/${ghProject}.git</developerConnection>
+        <developerConnection>scm:git:ssh://git@github.com/${ghProject}.git
+        </developerConnection>
         <url>https://github.com/${ghProject}</url>
-      <tag>v3.9.0</tag>
-  </scm>
+        <tag>v3.9.0</tag>
+    </scm>
 
-  <ciManagement>
-      <system>jenkins</system>
-      <url>https://ci.sagely.ca</url>
-  </ciManagement>
+    <ciManagement>
+        <system>jenkins</system>
+        <url>https://ci.sagely.ca</url>
+    </ciManagement>
 
     <distributionManagement>
         <downloadUrl>https://repo.sagely.ca/PwnFilter</downloadUrl>
@@ -348,7 +355,8 @@
         <site>
             <id>gh-pages</id>
             <name>GitHub Pages</name>
-            <url>github:http://${ghUser}.github.io/${ghRepo}/${siteUrlSuffix}/</url>
+            <url>github:http://${ghUser}.github.io/${ghRepo}/${siteUrlSuffix}/
+            </url>
         </site>
     </distributionManagement>
 
