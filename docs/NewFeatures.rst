@@ -2,7 +2,7 @@ Proposed New Features for PwnFilter
 ===================================
 
 Match Group References *DEFERRED*
-----------------------------------
+---------------------------------
 When doing an action, there is currently no way to get the actual string that
 matched.  This will allow a match group to be referenced in actions.  Eg::
 
@@ -42,7 +42,7 @@ Must take into consideration that some rules may not be 'bypassable'.
 
 
 Possible enhancements for 3.3
-++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++
 
 Web-based configuration. (Drag and drop with modals for config)
 

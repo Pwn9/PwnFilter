@@ -1,11 +1,21 @@
 /*
- * PwnFilter -- Regex-based User Filter Plugin for Bukkit-based Minecraft servers.
- * Copyright (c) 2015 Pwn9.com. Tremor77 <admin@pwn9.com> & Sage905 <patrick@toal.ca>
+ *  PwnFilter - Chat and user-input filter with the power of Regex
+ *  Copyright (C) 2016 Pwn9.com / Sage905 <sage905@takeflight.ca>
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 3
- * of the License, or (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
  */
 
 package com.pwn9.filter.bukkit.config;
@@ -15,7 +25,7 @@ import com.pwn9.filter.engine.PointManager;
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.rules.action.ActionFactory;
 import com.pwn9.filter.engine.rules.action.InvalidActionException;
-import com.pwn9.filter.engine.rules.action.targeted.*;
+import com.pwn9.filter.engine.rules.action.targeted.TargetedAction;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
@@ -32,7 +42,6 @@ import java.util.logging.Logger;
 /**
  * A largely static object, which serves as an interface to the PwnFilter Bukkit
  * configuration.
- * <p/>
  * Created by Sage905 on 15-09-10.
  */
 public class BukkitConfig {
@@ -83,7 +92,7 @@ public class BukkitConfig {
         // Setup logging
         Level logLevel;
         try {
-             logLevel = Level.parse(config.getString("loglevel", "info").toUpperCase());
+            logLevel = Level.parse(config.getString("loglevel", "info").toUpperCase());
         } catch (IllegalArgumentException ex) {
             throw new InvalidConfigurationException("Could not parse loglevel.  Must be either 'info' or 'fine'.  Found: " + config.getString("loglevel"));
         }
@@ -119,7 +128,7 @@ public class BukkitConfig {
     private static void parseThresholds(ConfigurationSection configSection,
                                         PointManager pointManager,
                                         ActionFactory actionFactory)
-    throws InvalidActionException {
+            throws InvalidActionException {
 
         for (String threshold : configSection.getKeys(false)) {
             pointManager.getFilterService().getLogger().

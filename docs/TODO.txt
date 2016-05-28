@@ -1,0 +1,41 @@
+Minimum Marketable Features:
+ * User-friendly Documentation
+ - Player Name Filter Support
+ - Useful Spam Filter
+ - Support for Sponge
+ - Web Tool for Rulefile editing.
+ - Refactor Engine into sub-module and become our own API user.
+ X Logfile Output is consistent with previous versions
+
+
+User Stories for current MMF:
+ * Clean and correct documentation on all modules
+ - HTML Documentation to live at pwn9.github.io/PwnFilter
+ - Clear documentation on all major features
+ - Beginners Tutorial
+
+Engineering Tasks:
+ * Consistent Headers for all files
+ - Correct and clean documentation on all major modules
+ - Document all API modules.
+
+To Do on Current Task:
+ + Put correct and up to date copyright on all module files.
+ + Clean up all IntelliJ warnings
+ * Fix broken JavaDocs
+
+Ideas for later:
+ - Refactor Parser to use more libs (eg: Scanner, Tokenizer)
+ - Add a File handling service, so parser can be more modular.
+ - Enable configuration management /pfset /pfsave
+ - It's powerful.  Now, make it easier.
+ - Make 'base' files that users can pull in to get started quickly (eg: swearing.txt, hate.txt, etc.)
+ - Multiverse-support? (Different configs for different worlds)
+
+
+Legend:
+ - Yet to be started.
+ + Complete
+ * In progress
+ / On hold
+ X Abandoned

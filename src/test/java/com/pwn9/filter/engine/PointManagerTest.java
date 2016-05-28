@@ -1,11 +1,21 @@
 /*
- * PwnFilter -- Regex-based User Filter Plugin for Bukkit-based Minecraft servers.
- * Copyright (c) 2016 Pwn9.com. Tremor77 <admin@pwn9.com> & Sage905 <patrick@toal.ca>
+ *  PwnFilter - Chat and user-input filter with the power of Regex
+ *  Copyright (C) 2016 Pwn9.com / Sage905 <sage905@takeflight.ca>
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 3
- * of the License, or (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
  */
 
 package com.pwn9.filter.engine;
@@ -37,13 +47,7 @@ public class PointManagerTest {
     private FilterService filterService;
     private PointManager pm;
     private TestAction ascending1, descending1, ascending2, descending2;
-    private AuthorService authorService = new AuthorService() {
-
-        @Override
-        public MessageAuthor getAuthorById(UUID uuid) {
-            return new TestAuthor(uuid);
-        }
-    };
+    private AuthorService authorService = TestAuthor::new;
     private UUID authorId = UUID.randomUUID();
 
     @Before
@@ -64,6 +68,7 @@ public class PointManagerTest {
         List<Action> descendingList2 = Collections.singletonList(descending2);
         pm.addThreshold("Level1", 20d, ascendingList2, descendingList2);
     }
+
     @Test
     public void testPointsLeakEachInterval() throws Exception {
         pm.setLeakPoints(4d);
@@ -87,14 +92,14 @@ public class PointManagerTest {
         assertEquals(0, descending2.getCounter());
 
         // Trigger the first threshold on the way up
-        pm.addPoints(authorId,5d);
+        pm.addPoints(authorId, 5d);
         assertEquals(1, ascending1.getCounter());
         assertEquals(0, ascending2.getCounter());
         assertEquals(0, descending1.getCounter());
         assertEquals(0, descending2.getCounter());
 
         // Trigger the second threshold on the way up
-        pm.addPoints(authorId,10d);
+        pm.addPoints(authorId, 10d);
         assertEquals(1, ascending1.getCounter());
         assertEquals(1, ascending2.getCounter());
         assertEquals(0, descending1.getCounter());
@@ -114,14 +119,14 @@ public class PointManagerTest {
         assertEquals(0, descending2.getCounter());
 
         // Trigger the second threshold on the way down
-        pm.subPoints(authorId,5d);
+        pm.subPoints(authorId, 5d);
         assertEquals(0, ascending1.getCounter());
         assertEquals(0, ascending2.getCounter());
         assertEquals(0, descending1.getCounter());
         assertEquals(1, descending2.getCounter());
 
         // Trigger the first threshold on the way down
-        pm.subPoints(authorId,10d);
+        pm.subPoints(authorId, 10d);
         assertEquals(0, ascending1.getCounter());
         assertEquals(0, ascending2.getCounter());
         assertEquals(1, descending1.getCounter());
@@ -132,9 +137,9 @@ public class PointManagerTest {
     @Test
     public void testPointsAction() throws Exception {
         MessageAuthor messageAuthor = new TestAuthor();
-        assertEquals(pm.getPoints(messageAuthor),new Double(0));
-        Action pointsAction = filterService.getActionFactory().getAction("points","7.0 Test");
-        pointsAction.execute(new FilterContext("test", messageAuthor, new TestClient("Test")),filterService);
-        assertEquals(pm.getPoints(messageAuthor),new Double(7));
+        assertEquals(pm.getPoints(messageAuthor), new Double(0));
+        Action pointsAction = filterService.getActionFactory().getAction("points", "7.0 Test");
+        pointsAction.execute(new FilterContext("test", messageAuthor, new TestClient("Test")), filterService);
+        assertEquals(pm.getPoints(messageAuthor), new Double(7));
     }
 }

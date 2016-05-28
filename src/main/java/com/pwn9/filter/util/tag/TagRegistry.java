@@ -1,11 +1,21 @@
 /*
- * PwnFilter -- Regex-based User Filter Plugin for Bukkit-based Minecraft servers.
- * Copyright (c) 2015 Pwn9.com. Tremor77 <admin@pwn9.com> & Sage905 <patrick@toal.ca>
+ *  PwnFilter - Chat and user-input filter with the power of Regex
+ *  Copyright (C) 2016 Pwn9.com / Sage905 <sage905@takeflight.ca>
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 3
- * of the License, or (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
  */
 
 package com.pwn9.filter.util.tag;
@@ -21,10 +31,10 @@ import java.util.regex.Pattern;
  * The TagRegistry is used to manage the currently active %tag% replacements.
  * These Tags are used during the substitution of strings, for example, with
  * a player named "Joe", and the following action in a rule file:
- *   then broadcast %player% has just pooped their self
+ * then broadcast %player% has just pooped their self
  * every time this rule matches, a broadcast message will be sent which reads:
- *   Joe has just pooped their self
- *
+ * Joe has just pooped their self
+ * <p>
  * Created by Sage905 on 15-09-04.
  */
 public class TagRegistry {
@@ -32,7 +42,7 @@ public class TagRegistry {
     private static final HashMap<String, Tag> tagMap
             = new HashMap<>();
 
-    public static void addTag(String name, Tag tag) {
+    static void addTag(String name, Tag tag) {
         if (tagMap.containsKey(name)) {
             if (tagMap.get(name).getClass() != tag.getClass()) {
                 throw new RuntimeException("Duplicate Tag value.");
@@ -42,14 +52,14 @@ public class TagRegistry {
     }
 
     @Nullable
-    public static Tag getTag(String name) {
+    private static Tag getTag(String name) {
         return tagMap.get(name);
     }
 
     /**
      * <p>replaceTags.</p>
      *
-     * @param line a {@link StringTag} object.
+     * @param line       a {@link StringTag} object.
      * @param filterTask a {@link FilterContext} object.
      * @return a {@link StringTag} object.
      */
@@ -80,6 +90,6 @@ public class TagRegistry {
     private static String wrapReplacement(String s) {
         // Wrap the replacement text, so it isn't processed as regex.  Also,
         // Replace null values with a '-'.
-        return (s != null)?Matcher.quoteReplacement(s):"-";
+        return (s != null) ? Matcher.quoteReplacement(s) : "-";
     }
 }

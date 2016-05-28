@@ -1,11 +1,21 @@
 /*
- * PwnFilter -- Regex-based User Filter Plugin for Bukkit-based Minecraft servers.
- * Copyright (c) 2016 Pwn9.com. Tremor77 <admin@pwn9.com> & Sage905 <patrick@toal.ca>
+ *  PwnFilter - Chat and user-input filter with the power of Regex
+ *  Copyright (C) 2016 Pwn9.com / Sage905 <sage905@takeflight.ca>
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 3
- * of the License, or (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
  */
 
 package com.pwn9.filter.bukkit;
@@ -28,16 +38,19 @@ import java.util.concurrent.TimeUnit;
 /**
  * Author of a text string sent to us by Bukkit.  This is typically a player.
  * These objects are transient, and only last for as long as the message does.
- * <p/>
+ * <p>
  * Created by Sage905 on 15-08-31.
  */
 public class BukkitPlayer implements MessageAuthor, FineTarget, BurnTarget, KillTarget, KickTarget {
 
-    public static final int MAX_CACHE_AGE_SECS = 60 ; //
+    static final int MAX_CACHE_AGE_SECS = 60; //
 
     private final MinecraftAPI minecraftAPI;
     private final UUID playerId;
     private final Stopwatch stopwatch;
+    private final ConcurrentHashMap<String, Boolean> playerPermCache =
+            new ConcurrentHashMap<>(16, 0.9f, 1); // Optimizations for Map
+    private String playerName = "";
 
     BukkitPlayer(UUID uuid, MinecraftAPI api) {
         this.playerId = uuid;
@@ -52,9 +65,6 @@ public class BukkitPlayer implements MessageAuthor, FineTarget, BurnTarget, Kill
         this.stopwatch = Stopwatch.createStarted(ticker);
     }
 
-    private final ConcurrentHashMap<String, Boolean> playerPermCache =
-            new ConcurrentHashMap<>(16, 0.9f, 1); // Optimizations for Map
-
     @Override
     public boolean hasPermission(String permString) {
 
@@ -64,7 +74,8 @@ public class BukkitPlayer implements MessageAuthor, FineTarget, BurnTarget, Kill
         // has any given perm only 1 or 2 times every MAX_CACHE_AGE_SECS
 
         if (stopwatch.elapsed(TimeUnit.SECONDS) > MAX_CACHE_AGE_SECS) {
-            stopwatch.reset(); stopwatch.start();
+            stopwatch.reset();
+            stopwatch.start();
             playerPermCache.clear();
         }
 
@@ -72,7 +83,8 @@ public class BukkitPlayer implements MessageAuthor, FineTarget, BurnTarget, Kill
 
         if (hasPerm == null) {
             Boolean newPerm = minecraftAPI.playerIdHasPermission(playerId, permString);
-            if (newPerm != null) playerPermCache.putIfAbsent(permString, newPerm);
+            if (newPerm != null)
+                playerPermCache.putIfAbsent(permString, newPerm);
         }
         // At this point, the player should be in the cache if they are online.
         // If player is offline, or there is an API failure, returns null
@@ -81,8 +93,6 @@ public class BukkitPlayer implements MessageAuthor, FineTarget, BurnTarget, Kill
 
         return hasPerm != null && hasPerm;
     }
-
-    private String playerName = "";
 
     @NotNull
     @Override

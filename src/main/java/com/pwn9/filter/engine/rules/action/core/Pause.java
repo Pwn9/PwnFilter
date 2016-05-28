@@ -1,11 +1,21 @@
 /*
- * PwnFilter -- Regex-based User Filter Plugin for Bukkit-based Minecraft servers.
- * Copyright (c) 2016 Pwn9.com. Tremor77 <admin@pwn9.com> & Sage905 <patrick@toal.ca>
+ *  PwnFilter - Chat and user-input filter with the power of Regex
+ *  Copyright (C) 2016 Pwn9.com / Sage905 <sage905@takeflight.ca>
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 3
- * of the License, or (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
  */
 
 package com.pwn9.filter.engine.rules.action.core;
@@ -17,31 +27,30 @@ import com.pwn9.filter.engine.rules.action.InvalidActionException;
 
 /**
  * ** DEBUGGING ONLY ***
- *
+ * <p>
  * This action is here only for debugging purposes.  You do NOT want to use it
  * on a production server.  It will just make your server hurt.  You have been
  * warned.
- *
+ * <p>
  * Causes the filter to wait for x milliseconds before continuing.
  *
  * @author Sage905
  * @version $Id: $Id
  */
-@SuppressWarnings("UnusedDeclaration")
-public class Pause implements Action {
+
+class Pause implements Action {
 
     private final Long waitTime;
 
-    private Pause(Long waitTime){
+    private Pause(Long waitTime) {
         this.waitTime = waitTime;
     }
 
-    static Action getAction(String s) throws InvalidActionException
-    {
+    static Action getAction(String s) throws InvalidActionException {
         Long duration;
         try {
             duration = Long.parseLong(s);
-        } catch (NumberFormatException e ) {
+        } catch (NumberFormatException e) {
             throw new InvalidActionException("'pause' action did not have a valid duration.");
         }
         return new Pause(duration);

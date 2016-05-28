@@ -1,11 +1,21 @@
 /*
- * PwnFilter -- Regex-based User Filter Plugin for Bukkit-based Minecraft servers.
- * Copyright (c) 2013 Pwn9.com. Tremor77 <admin@pwn9.com> & Sage905 <patrick@toal.ca>
+ *  PwnFilter - Chat and user-input filter with the power of Regex
+ *  Copyright (C) 2016 Pwn9.com / Sage905 <sage905@takeflight.ca>
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 3
- * of the License, or (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
  */
 
 package com.pwn9.filter.engine.rules;
@@ -28,8 +38,8 @@ import java.util.regex.Pattern;
  * @version $Id: $Id
  */
 public class ShortCutManager {
-    private static ShortCutManager _instance;
     private static final Map<File, Map<String, String>> shortcutFiles = new HashMap<>();
+    private static ShortCutManager _instance;
 
     private ShortCutManager() {
     }
@@ -45,7 +55,7 @@ public class ShortCutManager {
         // If we don't have a shortcuts file to process, just return what we were given.
         if (shortcuts == null) return lineData;
 
-        Pattern shortcutMatch = Pattern.compile("<[a-zA-Z_]{0,3}>",Pattern.CASE_INSENSITIVE);
+        Pattern shortcutMatch = Pattern.compile("<[a-zA-Z_]{0,3}>", Pattern.CASE_INSENSITIVE);
         Matcher matcher = shortcutMatch.matcher(lineData);
         StringBuffer newLineData = new StringBuffer();
         while (matcher.find()) {
@@ -68,13 +78,7 @@ public class ShortCutManager {
 
     }
 
-    /**
-     * <p>getShortcutMap.</p>
-     *
-     * @param shortcutFile a {@link java.lang.String} object.
-     * @return a {@link java.util.Map} object.
-     */
-    public Map<String, String> getShortcutMap(File shortcutFile ) throws IOException, ParseException {
+    public Map<String, String> getShortcutMap(File shortcutFile) throws IOException, ParseException {
         File absoluteFile = shortcutFile.getAbsoluteFile();
         Map<String, String> returnValue = shortcutFiles.get(absoluteFile);
 

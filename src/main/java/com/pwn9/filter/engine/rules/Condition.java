@@ -1,11 +1,21 @@
 /*
- * PwnFilter -- Regex-based User Filter Plugin for Bukkit-based Minecraft servers.
- * Copyright (c) 2013 Pwn9.com. Tremor77 <admin@pwn9.com> & Sage905 <patrick@toal.ca>
+ *  PwnFilter - Chat and user-input filter with the power of Regex
+ *  Copyright (C) 2016 Pwn9.com / Sage905 <sage905@takeflight.ca>
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 3
- * of the License, or (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
  */
 
 package com.pwn9.filter.engine.rules;
@@ -22,19 +32,9 @@ import com.pwn9.filter.engine.api.FilterContext;
 public class Condition {
 
 
-    public enum CondFlag {
-        NONE, ignore, require
-    }
-
-    public enum CondType {
-        permission, user, string, command,
-    }
-
     final CondType type;
     final CondFlag flag;
     final String parameters;
-
-
     /**
      * <p>Constructor for Condition.</p>
      *
@@ -55,7 +55,7 @@ public class Condition {
      * @return a {@link com.pwn9.filter.engine.rules.Condition} object.
      */
     public static Condition newCondition(String line) {
-        String[] parts = line.split("\\s",2);
+        String[] parts = line.split("\\s", 2);
         String conditionName = parts[0];
         String conditionData;
         conditionData = ((parts.length > 1) ? parts[1] : "");
@@ -66,7 +66,7 @@ public class Condition {
     /**
      * <p>newCondition.</p>
      *
-     * @param command a {@link java.lang.String} object.
+     * @param command         a {@link java.lang.String} object.
      * @param parameterString a {@link java.lang.String} object.
      * @return a {@link com.pwn9.filter.engine.rules.Condition} object.
      */
@@ -125,21 +125,24 @@ public class Condition {
         switch (type) {
             case user:
                 for (String check : parameters.split("\\s")) {
-                    if (state.getAuthor().getName().equalsIgnoreCase(check)) matched = true;
+                    if (state.getAuthor().getName().equalsIgnoreCase(check))
+                        matched = true;
                 }
             case permission:
-                for (String check: parameters.split("\\s")) {
+                for (String check : parameters.split("\\s")) {
                     if (state.getAuthor().hasPermission(check)) matched = true;
                 }
             case string:
-                for (String check: parameters.split("\\|")) {
-                    if (state.getOriginalMessage().toString().toUpperCase().contains(check.toUpperCase())) matched=true;
+                for (String check : parameters.split("\\|")) {
+                    if (state.getOriginalMessage().toString().toUpperCase().contains(check.toUpperCase()))
+                        matched = true;
                 }
             case command:
-                for (String check: parameters.split("\\|")) {
+                for (String check : parameters.split("\\|")) {
                     if (state.getFilterClient().getShortName().equals("COMMAND")) {
-                        String command = state.getOriginalMessage().toString().split("\\s")[0].replaceFirst("^\\/","");
-                        if (command.toUpperCase().matches(check.toUpperCase())) matched = true;
+                        String command = state.getOriginalMessage().toString().split("\\s")[0].replaceFirst("^\\/", "");
+                        if (command.toUpperCase().matches(check.toUpperCase()))
+                            matched = true;
                     }
                 }
 
@@ -152,6 +155,14 @@ public class Condition {
         }
         // Well, we shouldn't be able to get here, but in case we did, return false
         return false;
+    }
+
+    enum CondFlag {
+        NONE, ignore, require
+    }
+
+    enum CondType {
+        permission, user, string, command,
     }
 
 }

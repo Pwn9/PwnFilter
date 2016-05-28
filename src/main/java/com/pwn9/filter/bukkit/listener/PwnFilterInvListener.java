@@ -1,12 +1,21 @@
-
 /*
- * PwnFilter -- Regex-based User Filter Plugin for Bukkit-based Minecraft servers.
- * Copyright (c) 2013 Pwn9.com. Tremor77 <admin@pwn9.com> & Sage905 <patrick@toal.ca>
+ *  PwnFilter - Chat and user-input filter with the power of Regex
+ *  Copyright (C) 2016 Pwn9.com / Sage905 <sage905@takeflight.ca>
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 3
- * of the License, or (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
  */
 
 package com.pwn9.filter.bukkit.listener;
@@ -37,27 +46,18 @@ public class PwnFilterInvListener extends BaseListener {
 
     private final PwnFilterBukkitPlugin plugin;
 
-    /**
-     * <p>Constructor for PwnFilterInvListener.</p>
-     **/
     public PwnFilterInvListener(PwnFilterBukkitPlugin plugin) {
         super(plugin.getFilterService());
         this.plugin = plugin;
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getShortName() {
         return "ITEM";
     }
 
     // This is the handler
-    /**
-     * <p>onInventoryEvent.</p>
-     *
-     * @param event a {@link org.bukkit.event.inventory.InventoryClickEvent} object.
-     */
-    public void onInventoryEvent(InventoryClickEvent event) {
+    private void onInventoryEvent(InventoryClickEvent event) {
         Player player;
         String message;
         // Don't process already cancelled events.
@@ -70,7 +70,7 @@ public class PwnFilterInvListener extends BaseListener {
 
         // Make sure that a real player is the one who clicked this.
         if (event.getWhoClicked().getType() == EntityType.PLAYER) {
-            player = (Player)event.getWhoClicked();
+            player = (Player) event.getWhoClicked();
         } else {
             return;
         }
@@ -87,7 +87,7 @@ public class PwnFilterInvListener extends BaseListener {
             if (filterTask.isCancelled()) event.setCancelled(true);
 
             // Only update the message if it has been changed.
-            if (filterTask.messageChanged()){
+            if (filterTask.messageChanged()) {
                 ItemStack newItem = new ItemStack(item);
                 ItemMeta newItemMeta = newItem.getItemMeta();
                 newItemMeta.setDisplayName(filterTask.getModifiedMessage().getRaw());
@@ -96,19 +96,16 @@ public class PwnFilterInvListener extends BaseListener {
             }
 
 
-
         }
 
     }
 
 
     /**
-     * {@inheritDoc}
-     *
      * Activate this listener.  This method can be called either by the owning plugin
      * or by PwnFilter.  PwnFilter will call the shutdown / activate methods when PwnFilter
      * is enabled / disabled and whenever it is reloading its config / rules.
-     * <p/>
+     * <p>
      * These methods could either register / deregister the listener with Bukkit, or
      * they could just enable / disable the use of the filter.
      */

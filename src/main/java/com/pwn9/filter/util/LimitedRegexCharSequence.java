@@ -1,11 +1,21 @@
 /*
- * PwnFilter -- Regex-based User Filter Plugin for Bukkit-based Minecraft servers.
- * Copyright (c) 2013 Pwn9.com. Tremor77 <admin@pwn9.com> & Sage905 <patrick@toal.ca>
+ *  PwnFilter - Chat and user-input filter with the power of Regex
+ *  Copyright (C) 2016 Pwn9.com / Sage905 <sage905@takeflight.ca>
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 3
- * of the License, or (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
  */
 
 package com.pwn9.filter.util;
@@ -49,17 +59,17 @@ public class LimitedRegexCharSequence implements CharSequence {
     /**
      * <p>Constructor for LimitedRegexCharSequence.</p>
      *
-     * @param inner a {@link java.lang.CharSequence} object.
+     * @param inner         a {@link java.lang.CharSequence} object.
      * @param timeoutMillis a int.
      */
 
-    public LimitedRegexCharSequence(CharSequence inner, int timeoutMillis)  {
+    public LimitedRegexCharSequence(CharSequence inner, int timeoutMillis) {
         this(inner, timeoutMillis, Ticker.systemTicker());
     }
 
-    public LimitedRegexCharSequence(CharSequence inner, int timeoutMillis, Ticker ticker)  {
+    LimitedRegexCharSequence(CharSequence inner, int timeoutMillis, Ticker ticker) {
         super();
-        if ( inner == null ) {
+        if (inner == null) {
             throw new NullPointerException("CharSequence must not be null");
         }
         this.inner = inner;
@@ -71,20 +81,17 @@ public class LimitedRegexCharSequence implements CharSequence {
         accessCount = 0;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public char charAt(int index) {
-        accessCount++ ;
+        accessCount++;
         if (stopwatch.elapsed(TimeUnit.MILLISECONDS) > timeoutMillis) {
             throw new RegexTimeoutException("Timeout occurred after " + timeoutMillis + "ms");
         }
         return inner.charAt(index);
     }
 
-    public final class RegexTimeoutException extends RuntimeException {
-        public RegexTimeoutException(String message) {
-            super(message);
-        }
-    }
     /**
      * <p>length.</p>
      *
@@ -94,7 +101,9 @@ public class LimitedRegexCharSequence implements CharSequence {
         return inner.length();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public CharSequence subSequence(int start, int end) {
         return new LimitedRegexCharSequence(inner.subSequence(start, end), timeoutMillis, this.ticker);
     }
@@ -104,14 +113,22 @@ public class LimitedRegexCharSequence implements CharSequence {
      *
      * @return a long.
      */
-    public long getAccessCount() {
+    long getAccessCount() {
         return accessCount;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @NotNull
     public String toString() {
         return inner.toString();
+    }
+
+    public final class RegexTimeoutException extends RuntimeException {
+        RegexTimeoutException(String message) {
+            super(message);
+        }
     }
 }

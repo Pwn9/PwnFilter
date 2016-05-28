@@ -1,11 +1,21 @@
 /*
- * PwnFilter -- Regex-based User Filter Plugin for Bukkit-based Minecraft servers.
- * Copyright (c) 2013 Pwn9.com. Tremor77 <admin@pwn9.com> & Sage905 <patrick@toal.ca>
+ *  PwnFilter - Chat and user-input filter with the power of Regex
+ *  Copyright (C) 2016 Pwn9.com / Sage905 <sage905@takeflight.ca>
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 3
- * of the License, or (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
  */
 
 package com.pwn9.filter.engine;
@@ -23,10 +33,10 @@ import java.util.concurrent.*;
 
 /**
  * Mange the Points system of PwnFilter.
- *
+ * <p>
  * Each entity that is capable of having points assigned must have a UUID.
  * This manager will track the points assigned to a particular UUID.
- *
+ * <p>
  * User: Sage905
  * Date: 13-10-31
  * Time: 3:49 PM
@@ -37,16 +47,14 @@ import java.util.concurrent.*;
 @SuppressWarnings("UnusedDeclaration")
 public class PointManager implements FilterClient {
 
-    private final Map<UUID,Double> pointsMap = new ConcurrentHashMap<>(8, 0.75f, 2);
+    private final Map<UUID, Double> pointsMap = new ConcurrentHashMap<>(8, 0.75f, 2);
     private final TreeMap<Double, Threshold> thresholds = new TreeMap<>();
-
-    private int leakInterval = 10;
-
-    private Double leakPoints = 1.0;
-    private ScheduledFuture<?> scheduledFuture;
     private final ScheduledExecutorService scheduler =
             Executors.newScheduledThreadPool(1);
     private final FilterService filterService;
+    private int leakInterval = 10;
+    private Double leakPoints = 1.0;
+    private ScheduledFuture<?> scheduledFuture;
 
     PointManager(FilterService filterService) {
         this.filterService = filterService;
@@ -76,13 +84,13 @@ public class PointManager implements FilterClient {
         this.leakPoints = leakPoints;
     }
 
-    public void clearThresholds() {
+    private void clearThresholds() {
         thresholds.clear();
         // Setup the 0 threshold
         addThreshold("Default", (double) 0, new ArrayList<>(), new ArrayList<>());
     }
 
-    public void leakTask(PointManager pointManager) {
+    void leakTask(PointManager pointManager) {
         //Every interval, check point balances, and if they are > 0, subtract leakPoints
         // from the players balance.  If they reach 0, remove them from the list.
         pointManager.getPointsMap().stream()
@@ -105,50 +113,25 @@ public class PointManager implements FilterClient {
     }
 
 
-    /**
-     * <p>getPointsMap.</p>
-     *
-     * @return a {@link java.util.Set} object.
-     */
-    public Set<UUID> getPointsMap() {
+    Set<UUID> getPointsMap() {
         return pointsMap.keySet();
     }
 
-    /**
-     * <p>Getter for the field <code>pointsMap</code>.</p>
-     *
-     * @return a {@link java.lang.Double} object.
-     */
-    public Double getPoints(UUID uuid) {
-        return (pointsMap.containsKey(uuid))? pointsMap.get(uuid):0.0;
+    Double getPoints(UUID uuid) {
+        return (pointsMap.containsKey(uuid)) ? pointsMap.get(uuid) : 0.0;
     }
 
-    /**
-     * <p>Getter for the field <code>pointsMap</code>.</p>
-     *
-     * @return a {@link java.lang.Double} object.
-     */
     public Double getPoints(MessageAuthor author) {
-        return (pointsMap.containsKey(author.getId()))? pointsMap.get(author.getId()):0.0;
+        return (pointsMap.containsKey(author.getId())) ? pointsMap.get(author.getId()) : 0.0;
     }
 
-    /**
-     * <p>Setter for the field <code>pointsMap</code>. Does not execute actions.</p>
-     *
-     * @param points a {@link java.lang.Double} object.
-     */
-    public void setPoints(UUID id, Double points) {
-        Double old = pointsMap.getOrDefault(id,0d);
+    void setPoints(UUID id, Double points) {
+        Double old = pointsMap.getOrDefault(id, 0d);
         pointsMap.put(id, points);
     }
 
-    /**
-     * <p>addPoints.</p>
-     *
-     * @param points a {@link java.lang.Double} object.
-     */
     public void addPoints(UUID id, Double points) {
-        Double current = pointsMap.getOrDefault(id,0d);
+        Double current = pointsMap.getOrDefault(id, 0d);
         Double updated = current + points;
 
         pointsMap.put(id, updated);
@@ -157,11 +140,6 @@ public class PointManager implements FilterClient {
 
     }
 
-    /**
-     * <p>isEnabled.</p>
-     *
-     * @return a boolean.
-     */
     public boolean isEnabled() {
         return scheduledFuture != null;
     }
@@ -187,16 +165,11 @@ public class PointManager implements FilterClient {
 
     }
 
-    /**
-     * <p>subPoints.</p>
-     *
-     * @param points a {@link java.lang.Double} object.
-     */
-    public void subPoints(UUID id, Double points) {
+    void subPoints(UUID id, Double points) {
         Double updated;
-        Double current = pointsMap.getOrDefault(id,0d);
+        Double current = pointsMap.getOrDefault(id, 0d);
         updated = current - points;
-        if ( updated <=0 ) {
+        if (updated <= 0) {
             pointsMap.remove(id);
             updated = 0.0;
         } else {
@@ -211,13 +184,43 @@ public class PointManager implements FilterClient {
         thresholds.put(points, new Threshold(name, points, ascending, descending));
     }
 
+    @Override
+    public String getShortName() {
+        return "POINTS";
+    }
+
+    @Override
+    public FilterService getFilterService() {
+        return filterService;
+    }
+
+    @Override
+    public RuleChain getRuleChain() {
+        return null;
+    }
+
+    @Override
+    public boolean isActive() {
+        return scheduledFuture != null;
+    }
+
+    @Override
+    public void activate() {
+        start();
+    }
+
+    @Override
+    public void shutdown() {
+        stop();
+    }
+
     class Threshold implements Comparable<Threshold> {
         final String name;
         final Double points;
         final List<Action> actionsAscending;
         final List<Action> actionsDescending;
 
-        protected Threshold(String name, Double points, List<Action> ascending, List<Action> descending) {
+        Threshold(String name, Double points, List<Action> ascending, List<Action> descending) {
             this.name = name;
             this.points = points;
             this.actionsAscending = ascending;
@@ -229,55 +232,21 @@ public class PointManager implements FilterClient {
             return Double.compare(this.points, o.points);
         }
 
-        public void executeAscending(UUID id, FilterClient client) {
-            FilterContext state = new FilterContext(new SimpleString(""), getFilterService().getAuthor(id), client );
-            for (Action a : actionsAscending ) {
+        void executeAscending(UUID id, FilterClient client) {
+            FilterContext state = new FilterContext(new SimpleString(""), getFilterService().getAuthor(id), client);
+            for (Action a : actionsAscending) {
                 client.getFilterService().getLogger().finest("Executing Action: " + a + " on " + state.getAuthor().getName());
                 a.execute(state, filterService);
             }
         }
 
-        public void executeDescending(UUID id, FilterClient client) {
-            FilterContext state = new FilterContext(new SimpleString(""), getFilterService().getAuthor(id), client );
-            for (Action a : actionsDescending ) {
+        void executeDescending(UUID id, FilterClient client) {
+            FilterContext state = new FilterContext(new SimpleString(""), getFilterService().getAuthor(id), client);
+            for (Action a : actionsDescending) {
                 client.getFilterService().getLogger().finest("Executing Action: " + a + " on " + state.getAuthor().getName());
                 a.execute(state, filterService);
             }
         }
 
-    }
-
-    @Override
-    public String getShortName() {
-        return "POINTS";
-    }
-
-    @Override
-    public FilterService getFilterService() {
-        return filterService;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public RuleChain getRuleChain() {
-        return null;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean isActive() {
-        return scheduledFuture != null ;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void activate() {
-        start();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void shutdown() {
-        stop();
     }
 }

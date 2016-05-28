@@ -329,7 +329,7 @@ As of 3.2.0, the valid actions are:
    phat" would cause the same result as if they player had done: "/me is
    phat".
 
--  cmdchain [command]\|[command]\|[command]...
+-  cmdchain [command] | [command] | [command]...
 
    Same as above, but allows multiple commands (separated by \| ) to be
    executed. Note: using multiple "then command" lines is preferred. The
@@ -342,7 +342,7 @@ As of 3.2.0, the valid actions are:
    that this example presumes you have a plugin like Ban Management to
    actually handle the "tempban" command.
 
--  conchain [command]\|[command]\|[command]...
+-  conchain [command] | [command] | [command]...
 
    Similar to cmdchain, except allows multiple commands to be executed
    as the *console*. Also likely to be deprecated in the future. Please

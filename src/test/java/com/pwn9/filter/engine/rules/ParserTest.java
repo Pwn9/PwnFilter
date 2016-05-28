@@ -1,18 +1,27 @@
 /*
- * PwnFilter -- Regex-based User Filter Plugin for Bukkit-based Minecraft servers.
- * Copyright (c) 2013 Pwn9.com. Tremor77 <admin@pwn9.com> & Sage905 <patrick@toal.ca>
+ *  PwnFilter - Chat and user-input filter with the power of Regex
+ *  Copyright (C) 2016 Pwn9.com / Sage905 <sage905@takeflight.ca>
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 3
- * of the License, or (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
  */
 
 package com.pwn9.filter.engine.rules;
 
 import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.Action;
-import com.pwn9.filter.engine.api.MessageAuthor;
 import com.pwn9.filter.engine.rules.action.core.Deny;
 import com.pwn9.filter.engine.rules.action.minecraft.MinecraftAction;
 import com.pwn9.filter.engine.rules.action.targeted.Respond;
@@ -27,7 +36,6 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Logger;
 
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.*;
@@ -41,18 +49,13 @@ import static org.junit.Assert.*;
 
 public class ParserTest {
 
-    RuleChain rs, sc;
-    FilterService filterService = new FilterService(new TestStatsTracker());
-    Logger logger = filterService.getLogger();
-    final MessageAuthor author = new TestAuthor();
-    File testFile = new File(getClass().getResource("/testrules.txt").getFile());
-    File parentDir = new File(testFile.getParent());
+    private RuleChain rs;
+    private FilterService filterService = new FilterService(new TestStatsTracker());
+    private File testFile = new File(getClass().getResource("/testrules.txt").getFile());
+    private File parentDir = new File(testFile.getParent());
 
     @Before
     public void setUp() {
-        // For debugging purposes
-//        filterService.setLogFileHandler(new File("/tmp/pwnfilter.log"));
-//        logger.setLevel(Level.FINEST);
         filterService.getActionFactory().addActionTokens(MinecraftAction.class);
         filterService.getActionFactory().addActionTokens(TargetedAction.class);
         filterService.getConfig().setRulesDir(parentDir);
@@ -70,14 +73,14 @@ public class ParserTest {
     public void testSimple() throws InvalidChainException {
         File simpleFile = new File(getClass().getResource("/rules/simpleTest.txt").getFile());
         RuleChain simple = filterService.parseRules(simpleFile);
-        Assert.assertEquals(simple.ruleCount(),1);
+        Assert.assertEquals(simple.ruleCount(), 1);
     }
 
     @Test
     public void testShortcuts() {
         List<ChainEntry> ruleChain = rs.getChain();
         for (ChainEntry e : ruleChain) {
-            if(e.toString().equals("ShortCutPattern")) {
+            if (e.toString().equals("ShortCutPattern")) {
                 return;
             }
         }
@@ -94,7 +97,7 @@ public class ParserTest {
 
             assertTrue(ruleChain.getActionGroups().containsKey("aGroupTest"));
 
-            Rule rule = (Rule)ruleChain.getChain().get(0);
+            Rule rule = (Rule) ruleChain.getChain().get(0);
             List<Action> actionList = rule.getActions();
 
             assertTrue(actionList.remove(0) instanceof Deny);
@@ -116,7 +119,7 @@ public class ParserTest {
 
             assertTrue(ruleChain.getConditionGroups().containsKey("cGroupTest"));
 
-            Rule rule = (Rule)ruleChain.getChain().get(0);
+            Rule rule = (Rule) ruleChain.getChain().get(0);
             List<Condition> conditionList = rule.getConditions();
 
             Condition cTest = conditionList.remove(0);
@@ -142,7 +145,6 @@ public class ParserTest {
             fail(e.getMessage());
         }
     }
-
 
 
 }

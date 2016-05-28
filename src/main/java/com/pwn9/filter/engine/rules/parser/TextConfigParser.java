@@ -1,18 +1,28 @@
 /*
- * PwnFilter -- Regex-based User Filter Plugin for Bukkit-based Minecraft servers.
- * Copyright (c) 2013 Pwn9.com. Tremor77 <admin@pwn9.com> & Sage905 <patrick@toal.ca>
+ *  PwnFilter - Chat and user-input filter with the power of Regex
+ *  Copyright (C) 2016 Pwn9.com / Sage905 <sage905@takeflight.ca>
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 3
- * of the License, or (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
  */
 
 package com.pwn9.filter.engine.rules.parser;
 
+import com.pwn9.filter.engine.FilterConfig;
 import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.Action;
-import com.pwn9.filter.engine.FilterConfig;
 import com.pwn9.filter.engine.rules.Condition;
 import com.pwn9.filter.engine.rules.Rule;
 import com.pwn9.filter.engine.rules.ShortCutManager;
@@ -71,12 +81,12 @@ public class TextConfigParser implements FilterConfigParser {
      *
      * @return Chain containing new chain, or InvalidChainException on failure.
      */
-    RuleChain parse(File source, List<File> parents, RuleChain.Builder builder ) throws InvalidChainException {
+    private RuleChain parse(File source, List<File> parents, RuleChain.Builder builder) throws InvalidChainException {
 
         RuleStreamReader reader;
         try {
-            reader  = new RuleStreamReader(new InputStreamReader(new FileInputStream(source)));
-        } catch ( FileNotFoundException ex ) {
+            reader = new RuleStreamReader(new InputStreamReader(new FileInputStream(source)));
+        } catch (FileNotFoundException ex) {
             throw new InvalidChainException("Rule File not found: " + source.getAbsoluteFile());
         }
 
@@ -95,7 +105,7 @@ public class TextConfigParser implements FilterConfigParser {
             } else {
                 parents.add(source);
             }
-        } catch (IOException | SecurityException ex ) {
+        } catch (IOException | SecurityException ex) {
             throw new InvalidChainException(parserError(reader.getLineNumber(),
                     "IO Exception while trying to get canonical filename",
                     source.toString()));
@@ -140,7 +150,7 @@ public class TextConfigParser implements FilterConfigParser {
                     // Process an included file
                     else if (command.equalsIgnoreCase("include")) {
                         String fileName = tokenString.popToken();
-                        processIncludedFile(fileName, source.getParentFile(),builder, parents);
+                        processIncludedFile(fileName, source.getParentFile(), builder, parents);
                     }
                     // Parse a rule starting with the pattern
                     else if (command.matches("match|catch|replace|rewrite")) {
@@ -267,9 +277,10 @@ public class TextConfigParser implements FilterConfigParser {
 
     /**
      * Parse the provided strings into Condition objects, and add the group to the ruleChain.
-     *  @param groupName A String containing the name of the group
+     *
+     * @param groupName A String containing the name of the group
      * @param lines     A list of Strings containing the Conditions to parse.
-     * @param builder A RuleChain Builder object.
+     * @param builder   A RuleChain Builder object.
      */
     private void parseConditionGroup(String groupName, List<NumberedLine> lines, RuleChain.Builder builder) throws ParseException {
 
@@ -314,7 +325,7 @@ public class TextConfigParser implements FilterConfigParser {
 //        if (getParents().contains(lineData))
 //            throw new ParserException(lineNo, "Recursion error.  File: " + lineData + " has already been included.");
 
-        File child = new File(parentDir,lineData);
+        File child = new File(parentDir, lineData);
 
         parse(child, parents, parentBuilder);
 

@@ -1,11 +1,21 @@
 /*
- * PwnFilter -- Regex-based User Filter Plugin for Bukkit-based Minecraft servers.
- * Copyright (c) 2013 Pwn9.com. Tremor77 <admin@pwn9.com> & Sage905 <patrick@toal.ca>
+ *  PwnFilter - Chat and user-input filter with the power of Regex
+ *  Copyright (C) 2016 Pwn9.com / Sage905 <sage905@takeflight.ca>
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 3
- * of the License, or (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
  */
 
 package com.pwn9.filter.bukkit.listener;
@@ -30,27 +40,17 @@ public class PwnFilterServerCommandListener extends BaseListener {
 
     private final PwnFilterBukkitPlugin plugin;
 
-    /**
-     * <p>Constructor for PwnFilterServerCommandListener.</p>
-     *
-     */
     public PwnFilterServerCommandListener(PwnFilterBukkitPlugin plugin) {
-	    super(plugin.getFilterService());
+        super(plugin.getFilterService());
         this.plugin = plugin;
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getShortName() {
         return "CONSOLE";
     }
 
-    /**
-     * <p>onServerCommandEvent.</p>
-     *
-     * @param event a {@link org.bukkit.event.server.ServerCommandEvent} object.
-     */
-    public void onServerCommandEvent(ServerCommandEvent event) {
+    private void onServerCommandEvent(ServerCommandEvent event) {
 
         String command = event.getCommand();
 
@@ -62,7 +62,8 @@ public class PwnFilterServerCommandListener extends BaseListener {
             return;
         }
 
-        if (!BukkitConfig.getCmdlist().isEmpty() && !BukkitConfig.getCmdlist().contains(cmdmessage)) return;
+        if (!BukkitConfig.getCmdlist().isEmpty() && !BukkitConfig.getCmdlist().contains(cmdmessage))
+            return;
         if (BukkitConfig.getCmdblist().contains(cmdmessage)) return;
 
         FilterContext state = new FilterContext(new ColoredString(command), plugin.getConsole(), this);
@@ -72,7 +73,7 @@ public class PwnFilterServerCommandListener extends BaseListener {
         ruleChain.execute(state, filterService);
 
         // Only update the message if it has been changed.
-        if (state.messageChanged()){
+        if (state.messageChanged()) {
             event.setCommand(state.getModifiedMessage().getRaw());
         }
 
@@ -82,11 +83,11 @@ public class PwnFilterServerCommandListener extends BaseListener {
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * Activate this listener.  This method can be called either by the owning plugin
      * or by PwnFilter.  PwnFilter will call the shutdown / activate methods when PwnFilter
      * is enabled / disabled and whenever it is reloading its config / rules.
-     * <p/>
+     * <p>
      * These methods could either register / deregister the listener with Bukkit, or
      * they could just enable / disable the use of the filter.
      */

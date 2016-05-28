@@ -1,11 +1,21 @@
 /*
- * PwnFilter -- Regex-based User Filter Plugin for Bukkit-based Minecraft servers.
- * Copyright (c) 2016 Pwn9.com. Tremor77 <admin@pwn9.com> & Sage905 <patrick@toal.ca>
+ *  PwnFilter - Chat and user-input filter with the power of Regex
+ *  Copyright (C) 2016 Pwn9.com / Sage905 <sage905@takeflight.ca>
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 3
- * of the License, or (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
  */
 
 package com.pwn9.filter.bukkit;
@@ -25,9 +35,6 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.Assert.*;
 
-/**
- * Created by Sage905 on 2016-04-22.
- */
 public class BukkitAPITest {
 
     private PwnFilterPlugin testPlugin = new MockPlugin();
@@ -42,7 +49,7 @@ public class BukkitAPITest {
            Load a different server object.  Maybe wrap the Bukkit class?
          */
 
-        if (Bukkit.getServer() == null ) {
+        if (Bukkit.getServer() == null) {
             Bukkit.setServer(new MockServer());
         }
         server = (MockServer) Bukkit.getServer();
@@ -94,7 +101,7 @@ public class BukkitAPITest {
     3. Execute the getAuthorById() method from a different thread.
     4. If the method is blocking, this will block both threads.  If not, both will return.
      */
-    @Test(timeout=100)
+    @Test(timeout = 100)
     public void testCacheLoadDoesNotBlock() throws Throwable {
         final BlockingScheduler scheduler = new BlockingScheduler();
         server.setScheduler(scheduler);
@@ -128,7 +135,7 @@ public class BukkitAPITest {
 
     }
 
-    @Test(timeout=100)
+    @Test(timeout = 100)
     public void testPermissionLoadDoesNotBlock() throws Throwable {
         final BlockingScheduler scheduler = new BlockingScheduler();
         server.setScheduler(scheduler);

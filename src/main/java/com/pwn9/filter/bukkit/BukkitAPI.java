@@ -1,11 +1,21 @@
 /*
- * PwnFilter -- Regex-based User Filter Plugin for Bukkit-based Minecraft servers.
- * Copyright (c) 2013 Pwn9.com. Tremor77 <admin@pwn9.com> & Sage905 <patrick@toal.ca>
+ *  PwnFilter - Chat and user-input filter with the power of Regex
+ *  Copyright (C) 2016 Pwn9.com / Sage905 <sage905@takeflight.ca>
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 3
- * of the License, or (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
  */
 
 package com.pwn9.filter.bukkit;
@@ -39,25 +49,22 @@ import java.util.concurrent.*;
  * This will cache data about players for 10s.
  */
 
-@SuppressWarnings("UnusedDeclaration")
-public class BukkitAPI implements MinecraftAPI, AuthorService, NotifyTarget {
+class BukkitAPI implements MinecraftAPI, AuthorService, NotifyTarget {
 
     private final PwnFilterPlugin plugin;
-
-    BukkitAPI(PwnFilterPlugin p) {
-        plugin = p;
-    }
-
     private final MinecraftAPI playerAPI = this;
+    private final Cache<UUID, BukkitPlayer> playerCache = CacheBuilder.newBuilder()
+            .maximumSize(100)
+            .build();
 
     /*
     Note: The "load" call can cause blocking of the main Bukkit thread, if it is called
     from the main thread while there is an outstanding request.
      */
 
-    private final Cache<UUID, BukkitPlayer> playerCache = CacheBuilder.newBuilder()
-            .maximumSize(100)
-            .build();
+    BukkitAPI(PwnFilterPlugin p) {
+        plugin = p;
+    }
 
     public BukkitPlayer getAuthorById(final UUID u) {
         /* Not sure if this is the best way of doing this, but we need to make
@@ -104,7 +111,7 @@ public class BukkitAPI implements MinecraftAPI, AuthorService, NotifyTarget {
             // cache.
             if (plugin instanceof Plugin) {
                 Future<T> task =
-                        Bukkit.getScheduler().callSyncMethod((Plugin)plugin, callable);
+                        Bukkit.getScheduler().callSyncMethod((Plugin) plugin, callable);
                 try {
                     // This will block the current thread for up to 3s
                     return task.get(3, TimeUnit.SECONDS);
@@ -134,7 +141,7 @@ public class BukkitAPI implements MinecraftAPI, AuthorService, NotifyTarget {
             // thread to execute these calls, and return the Player data to
             // cache.
             if (plugin instanceof Plugin) {
-                Bukkit.getScheduler().runTask((Plugin)plugin, runnable);
+                Bukkit.getScheduler().runTask((Plugin) plugin, runnable);
             } else throw new IllegalPluginAccessException();
         }
     }
@@ -332,7 +339,7 @@ public class BukkitAPI implements MinecraftAPI, AuthorService, NotifyTarget {
                 public void run() {
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
                 }
-            }.runTask((Plugin)plugin);
+            }.runTask((Plugin) plugin);
         } else throw new IllegalPluginAccessException();
     }
 
@@ -351,6 +358,7 @@ public class BukkitAPI implements MinecraftAPI, AuthorService, NotifyTarget {
 
     }
 
-    public class PlayerNotFound extends Exception {}
+    public class PlayerNotFound extends Exception {
+    }
 
 }

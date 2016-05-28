@@ -1,12 +1,21 @@
-
 /*
- * PwnFilter -- Regex-based User Filter Plugin for Bukkit-based Minecraft servers.
- * Copyright (c) 2013 Pwn9.com. Tremor77 <admin@pwn9.com> & Sage905 <patrick@toal.ca>
+ *  PwnFilter - Chat and user-input filter with the power of Regex
+ *  Copyright (C) 2016 Pwn9.com / Sage905 <sage905@takeflight.ca>
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 3
- * of the License, or (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
  */
 
 package com.pwn9.filter.bukkit.listener;
@@ -38,28 +47,18 @@ public class PwnFilterBookListener extends BaseListener {
 
     private final PwnFilterPlugin plugin;
 
-    /**
-     * <p>Constructor for PwnFilterBookListener.</p>
-     *
-     */
     public PwnFilterBookListener(PwnFilterPlugin plugin) {
         super(plugin.getFilterService());
         this.plugin = plugin;
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getShortName() {
         return "BOOK";
     }
 
     // This is the handler
-    /**
-     * <p>onBookEdit.</p>
-     *
-     * @param event a {@link org.bukkit.event.player.PlayerEditBookEvent} object.
-     */
-    public void onBookEdit(PlayerEditBookEvent event) {
+    void onBookEdit(PlayerEditBookEvent event) {
         Player player;
         String message;
         // Don't process already cancelled events.
@@ -67,17 +66,10 @@ public class PwnFilterBookListener extends BaseListener {
 
         player = event.getPlayer();
 
-        if (plugin.getFilterService().getAuthor(player.getUniqueId()).hasPermission("pwnfilter.bypass.book")) return;
+        if (plugin.getFilterService().getAuthor(player.getUniqueId()).hasPermission("pwnfilter.bypass.book"))
+            return;
 
         BookMeta bookMeta = event.getNewBookMeta();
-
-        String onepage = bookMeta.getPages().get(0);
-
-        StringBuilder b = new StringBuilder();
-        for (int i=0; i < onepage.length() ; i++ ) {
-            b.append(onepage.charAt(i)).append("(").append(onepage.codePointAt(i)).append(") ");
-        }
-        plugin.getLogger().info(b.toString());
 
         // Process Book Title
         if (bookMeta.hasTitle()) {
@@ -110,7 +102,7 @@ public class PwnFilterBookListener extends BaseListener {
                 }
                 newPages.add(page);
             }
-            if (modified)  {
+            if (modified) {
                 bookMeta.setPages(newPages);
                 event.setNewBookMeta(bookMeta);
             }
@@ -120,12 +112,9 @@ public class PwnFilterBookListener extends BaseListener {
 
 
     /**
-     * {@inheritDoc}
-     *
      * Activate this listener.  This method can be called either by the owning plugin
      * or by PwnFilter.  PwnFilter will call the shutdown / activate methods when PwnFilter
      * is enabled / disabled and whenever it is reloading its config / rules.
-     * <p/>
      * These methods could either register / deregister the listener with Bukkit, or
      * they could just enable / disable the use of the filter.
      */
@@ -137,7 +126,7 @@ public class PwnFilterBookListener extends BaseListener {
         PluginManager pm = Bukkit.getPluginManager();
         EventPriority priority = BukkitConfig.getBookpriority();
 
-        if (BukkitConfig.bookfilterEnabled()  ) {
+        if (BukkitConfig.bookfilterEnabled()) {
             try {
                 ruleChain = getCompiledChain(filterService.getConfig().getRuleFile("book.txt"));
                 pm.registerEvent(PlayerEditBookEvent.class, this, priority,
@@ -145,7 +134,7 @@ public class PwnFilterBookListener extends BaseListener {
                         PwnFilterBukkitPlugin.getInstance());
                 setActive();
                 plugin.getLogger().info("Activated BookListener with Priority Setting: " + priority.toString()
-                        + " Rule Count: " + getRuleChain().ruleCount() );
+                        + " Rule Count: " + getRuleChain().ruleCount());
             } catch (InvalidChainException e) {
                 plugin.getLogger().severe("Unable to activate BookListener.  Error: " + e.getMessage());
                 setInactive();

@@ -1,11 +1,21 @@
 /*
- * PwnFilter -- Regex-based User Filter Plugin for Bukkit-based Minecraft servers.
- * Copyright (c) 2016 Pwn9.com. Tremor77 <admin@pwn9.com> & Sage905 <patrick@toal.ca>
+ *  PwnFilter - Chat and user-input filter with the power of Regex
+ *  Copyright (C) 2016 Pwn9.com / Sage905 <sage905@takeflight.ca>
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 3
- * of the License, or (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
  */
 
 package com.pwn9.filter.bukkit;
@@ -16,9 +26,6 @@ import org.bukkit.inventory.meta.BookMeta;
 
 import java.util.*;
 
-/**
- * Created by Sage905 on 2016-04-18.
- */
 public class MockBook implements BookMeta, Cloneable {
 
     private String title, author;
@@ -88,13 +95,13 @@ public class MockBook implements BookMeta, Cloneable {
     }
 
     @Override
-    public void setPages(List<String> pages) {
-        this.pages = new LinkedList<>(pages);
+    public void setPages(String... pages) {
+        this.pages = new LinkedList<>(Arrays.asList(pages));
     }
 
     @Override
-    public void setPages(String... pages) {
-        this.pages = new LinkedList<>(Arrays.asList(pages));
+    public void setPages(List<String> pages) {
+        this.pages = new LinkedList<>(pages);
     }
 
     @Override
@@ -110,8 +117,8 @@ public class MockBook implements BookMeta, Cloneable {
     @Override
     public BookMeta clone() {
         try {
-            return (BookMeta)super.clone();
-        } catch ( CloneNotSupportedException ex ) {
+            return (BookMeta) super.clone();
+        } catch (CloneNotSupportedException ex) {
             // Should never be reached
         }
         return null;
@@ -200,11 +207,6 @@ public class MockBook implements BookMeta, Cloneable {
     @Override
     public boolean hasItemFlag(ItemFlag flag) {
         return false;
-    }
-
-    @Override
-    public Spigot spigot() {
-        return null;
     }
 
     @Override

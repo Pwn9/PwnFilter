@@ -1,13 +1,21 @@
-
-
 /*
- * PwnFilter -- Regex-based User Filter Plugin for Bukkit-based Minecraft servers.
- * Copyright (c) 2013 Pwn9.com. Tremor77 <admin@pwn9.com> & Sage905 <patrick@toal.ca>
+ *  PwnFilter - Chat and user-input filter with the power of Regex
+ *  Copyright (C) 2016 Pwn9.com / Sage905 <sage905@takeflight.ca>
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 3
- * of the License, or (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
  */
 
 package com.pwn9.filter.engine;
@@ -53,6 +61,14 @@ public class FilterService {
     private final Set<NotifyTarget> notifyTargets = Sets.newCopyOnWriteArraySet();
     private final ActionFactory actionFactory;
     private final Logger logger;
+    private final PointManager pointManager = new PointManager(this);
+    // Author Lookup Service
+    private final List<AuthorService> authorServices = new CopyOnWriteArrayList<>();
+    /*
+     * Logfile Handling
+     * TODO: Maybe these should be moved into their own class in the future.
+     */
+    private FileHandler logfileHandler;
 
     public FilterService(StatsTracker statsTracker) {
         this(statsTracker, Logger.getLogger("com.pwn9.filter"));
@@ -64,8 +80,6 @@ public class FilterService {
         this.actionFactory = new ActionFactory(this);
         this.logger = logger;
     }
-
-    private final PointManager pointManager = new PointManager(this);
 
     public PointManager getPointManager() {
         return pointManager;
@@ -88,9 +102,10 @@ public class FilterService {
      *
      * @return a {@link java.util.Map} object.
      */
-    public Set<FilterClient> getRegisteredClients() {
+    Set<FilterClient> getRegisteredClients() {
         return Collections.unmodifiableSet(registeredClients);
     }
+
     public FilterConfig getConfig() {
         return config;
     }
@@ -109,7 +124,7 @@ public class FilterService {
      * to notify the listener when it should try to activate or shutdown.
      * PwnFilter will call the activate / shutdown methods when reloading
      * rules configs.
-     *
+     * <p>
      * The FilterListener must register *before* attempting to use any other
      * PwnFilter resources.
      *
@@ -158,7 +173,7 @@ public class FilterService {
      * <p>unregisterAllClients.</p>
      */
     private void unregisterAllClients() {
-        for (FilterClient f : registeredClients ) {
+        for (FilterClient f : registeredClients) {
             f.shutdown();
             registeredClients.remove(f);
         }
@@ -170,16 +185,10 @@ public class FilterService {
         disableClients();
     }
 
-    /*
-     * Logfile Handling
-     * TODO: Maybe these should be moved into their own class in the future.
-     */
-    private FileHandler logfileHandler;
-
     public void setLogFileHandler(File logFile) {
         try {
             // For now, one logfile, like the old way.
-            String fileName =  logFile.toString();
+            String fileName = logFile.toString();
             logfileHandler = new FileHandler(fileName, true);
             SimpleFormatter f = new PwnFormatter();
             logfileHandler.setFormatter(f);
@@ -207,6 +216,7 @@ public class FilterService {
 
         return parser.parse(ruleFile);
     }
+
     /*
      * Set the level that the LogFile will listen to, based on the Debug
      * setting.
@@ -236,10 +246,9 @@ public class FilterService {
         return actionFactory;
     }
 
-    public Logger getLogger() { return logger; }
-
-    // Author Lookup Service
-    private final List<AuthorService> authorServices = new CopyOnWriteArrayList<>();
+    public Logger getLogger() {
+        return logger;
+    }
 
     public void registerAuthorService(AuthorService authorService) {
         authorServices.add(authorService);
@@ -256,9 +265,11 @@ public class FilterService {
     public List<AuthorService> getAuthorServices() {
         return Collections.unmodifiableList(authorServices);
     }
+
     public MessageAuthor getAuthor(UUID uuid) {
-        if (authorServices.isEmpty()) throw new RuntimeException("No AuthorServices Registered. This should not happen!");
-        for ( AuthorService a : authorServices) {
+        if (authorServices.isEmpty())
+            throw new RuntimeException("No AuthorServices Registered. This should not happen!");
+        for (AuthorService a : authorServices) {
             MessageAuthor author = a.getAuthorById(uuid);
             if (author != null) {
                 return author;

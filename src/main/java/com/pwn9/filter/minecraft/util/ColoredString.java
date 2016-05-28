@@ -1,11 +1,21 @@
 /*
- * PwnFilter -- Regex-based User Filter Plugin for Bukkit-based Minecraft servers.
- * Copyright (c) 2013 Pwn9.com. Tremor77 <admin@pwn9.com> & Sage905 <patrick@toal.ca>
+ *  PwnFilter - Chat and user-input filter with the power of Regex
+ *  Copyright (C) 2016 Pwn9.com / Sage905 <sage905@takeflight.ca>
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 3
- * of the License, or (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
  */
 
 package com.pwn9.filter.minecraft.util;
@@ -19,20 +29,20 @@ import java.util.regex.Pattern;
 
 /**
  * This object is used to provide a mechanism for running regex match and replacements on a string that may
- * have Color Codes and formats (eg: &5&k) embedded in it.
- * NOTE: By default, this object works on the ampersand (&) character, but this can be specified in the constructor.
+ * have Color Codes and formats (eg: &amp;5&amp;k) embedded in it.
+ * NOTE: By default, this object works on the ampersand (&amp;) character, but this can be specified in the constructor.
  * Any valid format code will be removed from the string for matching purposes.
- *
+ * <p>
  * Example String:
  * raw:
- * The quick &4brown fox &1&kj&2u&3m&4p&5e&6d over&7 the lazy &ldog.
+ * The quick &amp;4brown fox &amp;1&amp;kj&amp;2u&amp;3m&amp;4p&amp;5e&amp;6d over&amp;7 the lazy &amp;ldog.
  * plain:
  * The quick brown fox jumped over the lazy dog
  * codes:
- * {,,,,,,,,,,&4,,,,,,,,,&1&k,&2,&3,&4,&5,&6,,,,,&7,,,,,,,,,&l,,,}
- *
- * The codes array maps codes to the character following it.  In the example above, plain[10] = 'b', codes[10] = "&4"
- *
+ * {,,,,,,,,,,&amp;4,,,,,,,,,&amp;1&amp;k,&amp;2,&amp;3,&amp;4,&amp;5,&amp;6,,,,,&amp;7,,,,,,,,,&amp;l,,,}
+ * <p>
+ * The codes array maps codes to the character following it.  In the example above, plain[10] = 'b', codes[10] = "&amp;4"
+ * <p>
  * In any string modification action, the codes will be updated to reflect the new string.
  *
  * @author Sage905
@@ -55,12 +65,12 @@ public final class ColoredString implements EnhancedString {
     public ColoredString(String s) {
         char[] raw = s.toCharArray();
         char[] tmpPlain = new char[raw.length];
-        String[] tmpCodes = new String[raw.length+1];
+        String[] tmpCodes = new String[raw.length + 1];
 
         int textpos = 0;
 
-        for (int i = 0; i < raw.length ; i++) {
-            if (i != raw.length-1 && FORMATPREFIXES.indexOf(raw[i]) > -1
+        for (int i = 0; i < raw.length; i++) {
+            if (i != raw.length - 1 && FORMATPREFIXES.indexOf(raw[i]) > -1
                     && COLORCODES.indexOf(raw[i + 1]) > -1) {
                 if (tmpCodes[textpos] == null) {
                     tmpCodes[textpos] = new String(raw, i, 2);
@@ -81,10 +91,10 @@ public final class ColoredString implements EnhancedString {
             }
 
         }
-        plain = Arrays.copyOf(tmpPlain,textpos);
+        plain = Arrays.copyOf(tmpPlain, textpos);
         // Copy one more code than the plain string
         // so we can capture any trailing format codes.
-        codes = Arrays.copyOf(tmpCodes,textpos+1);
+        codes = Arrays.copyOf(tmpCodes, textpos + 1);
     }
 
     /**
@@ -93,12 +103,13 @@ public final class ColoredString implements EnhancedString {
      * @param plain an array of char.
      * @param codes an array of {@link java.lang.String} objects.
      */
-    public ColoredString(char[] plain, String[] codes) {
+    private ColoredString(char[] plain, String[] codes) {
         this.plain = Arrays.copyOf(plain, plain.length);
-        this.codes = Arrays.copyOf(codes,plain.length+1);
+        this.codes = Arrays.copyOf(codes, plain.length + 1);
     }
 
     /* CharSequence methods */
+
     /**
      * <p>length.</p>
      *
@@ -107,17 +118,24 @@ public final class ColoredString implements EnhancedString {
     public int length() {
         return plain.length;
     }
-    /** {@inheritDoc} */
+
+    /**
+     * {@inheritDoc}
+     */
     public char charAt(int i) {
         return plain[i];
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public CharSequence subSequence(int i, int j) {
-        return new String(Arrays.copyOfRange(plain,i,j));
+        return new String(Arrays.copyOfRange(plain, i, j));
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @NotNull
     public String toString() {
@@ -125,6 +143,7 @@ public final class ColoredString implements EnhancedString {
     }
 
     // Return a string with color codes interleaved.
+
     /**
      * Reassemble a colord string by inserting codes found in the array before the
      * character in that spot.  If the code is a CR/LF, discard the temporary
@@ -132,11 +151,11 @@ public final class ColoredString implements EnhancedString {
      *
      * @return a {@link java.lang.String} object.
      */
-    public String getColoredString() {
+    String getColoredString() {
         StringBuilder sb = new StringBuilder();
 
-        for (int i = 0 ; i < plain.length ; i++ ) {
-            if ( codes[i] != null ) {
+        for (int i = 0; i < plain.length; i++) {
+            if (codes[i] != null) {
                 if (codes[i].indexOf(CR) > -1 || codes[i].indexOf(LF) > -1) {
                     sb.append(codes[i]);
                 } else {
@@ -148,18 +167,19 @@ public final class ColoredString implements EnhancedString {
         }
         // Check to see if there is a code at the end of the text
         // If so, append it to the end of the string.
-        if (codes[codes.length-1] != null)
-            sb.append(codes[codes.length-1]);
+        if (codes[codes.length - 1] != null)
+            sb.append(codes[codes.length - 1]);
         return sb.toString();
     }
 
     // Return the char array with the code information.
+
     /**
      * <p>getCodeArray.</p>
      *
      * @return an array of {@link java.lang.String} objects.
      */
-    public String[] getCodeArray() {
+    String[] getCodeArray() {
         return codes;
     }
 
@@ -168,21 +188,21 @@ public final class ColoredString implements EnhancedString {
      * Replace all occurrences of Regex pattern with replacement String.
      * If the replacement string has codes embedded, separate them and
      * add them to the code array.
-     *
+     * <p>
      * This is a tricky bit of code.  We will copy the last code before
      * a replacement and prepend it to the next code of the current text.
      * If the current text is done, we'll prepend the last code at the end
      * of the replacement text to the last code of the final string.
      * Example:
-     * Test &1foo
+     * Test &amp;1foo
      * replace foo with bar:
-     * Test &1bar
-     * replace bar with baz&2:
-     * Test &1baz&2
+     * Test &amp;1bar
+     * replace bar with baz&amp;2:
+     * Test &amp;1baz&amp;2
      * replace baz with nothing:
-     * Test &1&2
+     * Test &amp;1&amp;2
      *
-     * @param p Regex Pattern
+     * @param p     Regex Pattern
      * @param rText Replacement Text
      * @return a {@link ColoredString} object.
      */
@@ -208,15 +228,15 @@ public final class ColoredString implements EnhancedString {
             int newLength = lastMatchTextLength + middleLen + replacement.length();
 
             char[] currentText = new char[newLength];
-            String[] currentCodes = new String[newLength+1];
+            String[] currentCodes = new String[newLength + 1];
 
             // Copy all of the text up to the end of the last match.
-            System.arraycopy(lastMatchText,0,currentText,0,lastMatchTextLength);
+            System.arraycopy(lastMatchText, 0, currentText, 0, lastMatchTextLength);
             // Copy any text between the end of the last match and the start
             // of this match.
-            System.arraycopy(plain,currentPosition,currentText,lastMatchTextLength ,middleLen);
+            System.arraycopy(plain, currentPosition, currentText, lastMatchTextLength, middleLen);
             // Append replacement text in place of current text.
-            System.arraycopy(replacement.plain,0,currentText,lastMatchTextLength+middleLen,replacement.length());
+            System.arraycopy(replacement.plain, 0, currentText, lastMatchTextLength + middleLen, replacement.length());
 
             /*
              Now, copy the format codes.  If there are "trailing" format codes
@@ -224,20 +244,20 @@ public final class ColoredString implements EnhancedString {
             */
 
             // First, the codes up to the end of the last match, including any trailing codes.
-            System.arraycopy(lastMatchCodes,0,currentCodes,0,lastMatchTextLength+1);
+            System.arraycopy(lastMatchCodes, 0, currentCodes, 0, lastMatchTextLength + 1);
 
             // Append the first code to the trailing code.
-            currentCodes[lastMatchTextLength] = mergeCodes(currentCodes[lastMatchTextLength],codes[currentPosition]);
+            currentCodes[lastMatchTextLength] = mergeCodes(currentCodes[lastMatchTextLength], codes[currentPosition]);
 
             // Copy the codes from between the last match and this one.
-            System.arraycopy(codes,currentPosition+1,currentCodes,lastMatchTextLength+1,middleLen);
+            System.arraycopy(codes, currentPosition + 1, currentCodes, lastMatchTextLength + 1, middleLen);
 
             // Append the first replacement code to the trailing code.
-            currentCodes[lastMatchTextLength+middleLen] = mergeCodes(currentCodes[lastMatchTextLength+middleLen],replacement.codes[0]);
+            currentCodes[lastMatchTextLength + middleLen] = mergeCodes(currentCodes[lastMatchTextLength + middleLen], replacement.codes[0]);
 
             // Copy the codes from the replacement text.
             if (replacement.codes.length > 1)
-                System.arraycopy(replacement.codes,1,currentCodes,lastMatchTextLength+1+middleLen,replacement.length());
+                System.arraycopy(replacement.codes, 1, currentCodes, lastMatchTextLength + 1 + middleLen, replacement.length());
 
 
             currentPosition = mEnd; // Set the position in the original string to the end of the match
@@ -248,35 +268,29 @@ public final class ColoredString implements EnhancedString {
         }
 
         char[] tempText = new char[lastMatchText.length + plain.length - currentPosition];
-        String[] tempCodes = new String[lastMatchText.length + plain.length - currentPosition + 1 ];
+        String[] tempCodes = new String[lastMatchText.length + plain.length - currentPosition + 1];
 
         // Copy the text we've processed in previous matches.
-        System.arraycopy(lastMatchText,0,tempText,0,lastMatchText.length);
+        System.arraycopy(lastMatchText, 0, tempText, 0, lastMatchText.length);
         // ... and copy the formats
-        System.arraycopy(lastMatchCodes,0,tempCodes,0,lastMatchText.length);
+        System.arraycopy(lastMatchCodes, 0, tempCodes, 0, lastMatchText.length);
 
         // Copy the original text from the end of the last match to the end
         // of the string.
-        System.arraycopy(plain,currentPosition,tempText,lastMatchText.length,plain.length - currentPosition);
+        System.arraycopy(plain, currentPosition, tempText, lastMatchText.length, plain.length - currentPosition);
 
         // Merge the codes from the end of the last segment and the beginning of this one
-        tempCodes[lastMatchText.length] = mergeCodes(lastMatchCodes[lastMatchText.length],codes[currentPosition]);
+        tempCodes[lastMatchText.length] = mergeCodes(lastMatchCodes[lastMatchText.length], codes[currentPosition]);
 
         // Copy the remaining codes (not the first one, it was already appended),
         // as well as the trailing code.
-        System.arraycopy(codes,currentPosition+1,tempCodes,lastMatchText.length+1,plain.length - currentPosition);
+        System.arraycopy(codes, currentPosition + 1, tempCodes, lastMatchText.length + 1, plain.length - currentPosition);
 
         return new ColoredString(tempText, tempCodes);
 
     }
 
-    /**
-     * <p>patternToLower.</p>
-     *
-     * @param p a {@link java.util.regex.Pattern} object.
-     * @return a {@link ColoredString} object.
-     */
-    public ColoredString patternToLower (Pattern p) {
+    public ColoredString patternToLower(Pattern p) {
         char[] modified = plain.clone();
 
         Matcher m = p.matcher(new String(plain));
@@ -288,14 +302,8 @@ public final class ColoredString implements EnhancedString {
         }
         return new ColoredString(modified, codes);
     }
-    
-    /**
-     * <p>patternToUpper.</p>
-     *
-     * @param p a {@link java.util.regex.Pattern} object.
-     * @return a {@link ColoredString} object.
-     */
-    public ColoredString patternToUpper (Pattern p) {
+
+    public ColoredString patternToUpper(Pattern p) {
         char[] modified = plain.clone();
 
         Matcher m = p.matcher(new String(plain));
@@ -306,28 +314,28 @@ public final class ColoredString implements EnhancedString {
             }
         }
         return new ColoredString(modified, codes);
-    }    
+    }
 
     /**
      * Returns a concatenation of two strings, a + b.  If a or b are null, they
      * are converted to an empty string.  If both a and b are null, returns null.
+     *
      * @param a First string to concatenate
      * @param b Second string to concatenate
      * @return Concatenation of a and b, or null if they are both null.
      */
     private String mergeCodes(String a, String b) {
-        String result = (a == null)?"":a;
+        String result = (a == null) ? "" : a;
         if (b != null) {
             result += b;
         }
-        return (result.isEmpty())?null:result;
+        return (result.isEmpty()) ? null : result;
 
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof ColoredString ) {
+        if (obj instanceof ColoredString) {
             return ((ColoredString) obj).getColoredString().equals(getColoredString());
         } else {
             return getColoredString().equals(obj);

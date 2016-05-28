@@ -1,3 +1,23 @@
+/*
+ *  PwnFilter - Chat and user-input filter with the power of Regex
+ *  Copyright (C) 2016 Pwn9.com / Sage905 <sage905@takeflight.ca>
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
+ */
+
 package com.pwn9.filter.engine.rules;
 
 import com.pwn9.filter.engine.FilterService;
@@ -17,17 +37,14 @@ import static org.junit.Assert.fail;
 
 /**
  * Test Conditions
- * User: Sage905
- * Date: 13-05-04
- * Time: 11:30 AM
  */
 public class ConditionTest {
 
-    RuleChain rs;
-    FilterService filterService = new FilterService(new TestStatsTracker());
-    final MessageAuthor author = new TestAuthor();
-    File testFile = new File(getClass().getResource("/conditionTests.txt").getFile());
-    File parentDir = new File(testFile.getParent());
+    private final MessageAuthor author = new TestAuthor();
+    private RuleChain rs;
+    private FilterService filterService = new FilterService(new TestStatsTracker());
+    private File testFile = new File(getClass().getResource("/conditionTests.txt").getFile());
+    private File parentDir = new File(testFile.getParent());
 
 
     @Before
@@ -52,7 +69,7 @@ public class ConditionTest {
         assertEquals("Ignore replaced baseline test.", testState.getModifiedMessage().toString());
         FilterContext state2 = new FilterContext("Ignore string qwerty test.", author, new TestClient());
         rs.execute(state2, filterService);
-        assertEquals("Ignore string qwerty test.",state2.getModifiedMessage().toString());
+        assertEquals("Ignore string qwerty test.", state2.getModifiedMessage().toString());
 
     }
 
@@ -64,26 +81,25 @@ public class ConditionTest {
 
         FilterContext testState2 = new FilterContext("/tell Ignore command test", author, new TestClient("COMMAND"));
         rs.execute(testState2, filterService);
-        assertEquals("/tell Ignore command test",testState2.getModifiedMessage().toString());
+        assertEquals("/tell Ignore command test", testState2.getModifiedMessage().toString());
     }
 
     @Test
     public void testIgnoreDoesntMatch() {
         FilterContext testState2 = new FilterContext("testestest banned", author, new TestClient());
         rs.execute(testState2, filterService);
-        assertEquals("testestest matched",testState2.getModifiedMessage().toString());
+        assertEquals("testestest matched", testState2.getModifiedMessage().toString());
     }
 
     @Test
     public void testComandConditionOnlyMatchesCommandHandler() {
         FilterContext testState = new FilterContext("tell banned", author, new TestClient());
         rs.execute(testState, filterService);
-        assertEquals("tell matched",testState.getModifiedMessage().toString());
+        assertEquals("tell matched", testState.getModifiedMessage().toString());
         FilterContext testState2 = new FilterContext("tell banned", author, new TestClient("COMMAND"));
         rs.execute(testState2, filterService);
         assertEquals("tell banned", testState2.getModifiedMessage().toString());
     }
-
 
 
 }

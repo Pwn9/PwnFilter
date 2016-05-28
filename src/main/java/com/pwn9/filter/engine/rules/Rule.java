@@ -1,11 +1,21 @@
 /*
- * PwnFilter -- Regex-based User Filter Plugin for Bukkit-based Minecraft servers.
- * Copyright (c) 2013 Pwn9.com. Tremor77 <admin@pwn9.com> & Sage905 <patrick@toal.ca>
+ *  PwnFilter - Chat and user-input filter with the power of Regex
+ *  Copyright (C) 2016 Pwn9.com / Sage905 <sage905@takeflight.ca>
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 3
- * of the License, or (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
  */
 
 package com.pwn9.filter.engine.rules;
@@ -23,27 +33,27 @@ import java.util.regex.Pattern;
 
 /**
  * Rule object
- * <p/>
- * <P>Each Rule has a single match Pattern, an ArrayList of {@link com.pwn9.filter.engine.rules.Condition}'s and an ArrayList of {@link Action}'s</P>
+ * <p>
+ * Each Rule has a single match Pattern, an ArrayList of {@link com.pwn9.filter.engine.rules.Condition}'s and an ArrayList of {@link Action}'s
  *
  * @author Sage905
  * @version $Id: $Id
  */
 public class Rule implements ChainEntry {
+    public static int matches = 0;
+    private final List<Condition> conditions = new ArrayList<>();
+    private final List<Action> actions = new ArrayList<>();
     private Pattern pattern;
     private String description = "";
     private String id = "";
-    public static int matches = 0;
-
-    private final List<Condition> conditions = new ArrayList<>();
-    private final List<Action> actions = new ArrayList<>();
 
         /* Constructors */
 
     /**
      * <p>Constructor for Rule.</p>
      */
-    public Rule() {}
+    public Rule() {
+    }
 
     /**
      * <p>Constructor for Rule.</p>
@@ -57,7 +67,7 @@ public class Rule implements ChainEntry {
     /**
      * <p>Constructor for Rule.</p>
      *
-     * @param id a {@link java.lang.String} object.
+     * @param id          a {@link java.lang.String} object.
      * @param description a {@link java.lang.String} object.
      */
     public Rule(String id, String description) {
@@ -75,30 +85,21 @@ public class Rule implements ChainEntry {
     }
 
     /**
-     * <p>Getter for the field <code>description</code>.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
-    public String getDescription() {
-        return description;
-    }
-
-    /**
-     * <p>Getter for the field <code>id</code>.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
-    public String getId() {
-        return id;
-    }
-
-    /**
      * <p>Setter for the field <code>pattern</code>.</p>
      *
      * @param pattern a {@link java.lang.String} object.
      */
     public void setPattern(String pattern) {
         this.pattern = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
+    }
+
+    /**
+     * <p>Getter for the field <code>description</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
+    public String getDescription() {
+        return description;
     }
 
     /**
@@ -111,6 +112,15 @@ public class Rule implements ChainEntry {
     }
 
     /**
+     * <p>Getter for the field <code>id</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
+    public String getId() {
+        return id;
+    }
+
+    /**
      * <p>Setter for the field <code>id</code>.</p>
      *
      * @param id a {@link java.lang.String} object.
@@ -119,7 +129,9 @@ public class Rule implements ChainEntry {
         this.id = id;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Set<String> getConditionsMatching(String matchString) {
         Set<String> retVal = new HashSet<>();
@@ -141,9 +153,8 @@ public class Rule implements ChainEntry {
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * apply this action to the current message / event.  May trigger other bukkit events.
-     *
      */
     public void apply(FilterContext filterContext, FilterService filterService) {
 
@@ -152,11 +163,11 @@ public class Rule implements ChainEntry {
         // If finest logging is set, then generate our logging info. (This is a
         // lambda + Supplier pattern.)
         logger.finest(() -> "Testing Pattern: '" + pattern.toString() + "' on string: '" +
-                filterContext.getModifiedMessage().toString()+"'");
+                filterContext.getModifiedMessage().toString() + "'");
 
         // Check if action matches the current state of the message
         LimitedRegexCharSequence limitedRegexCharSequence =
-                new LimitedRegexCharSequence(filterContext.getModifiedMessage().toString(),1000);
+                new LimitedRegexCharSequence(filterContext.getModifiedMessage().toString(), 1000);
         final Matcher matcher = pattern.matcher(limitedRegexCharSequence);
 
         // If we don't match, return immediately with the original message
@@ -196,7 +207,7 @@ public class Rule implements ChainEntry {
 
         // If we get this far, execute the actions
         for (Action a : actions) {
-            a.execute(filterContext, filterService );
+            a.execute(filterContext, filterService);
         }
 
     }
@@ -229,6 +240,7 @@ public class Rule implements ChainEntry {
     public boolean addCondition(Condition c) {
         return c != null && conditions.add(c);
     }
+
     /**
      * <p>addConditions.</p>
      *
