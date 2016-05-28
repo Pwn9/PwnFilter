@@ -1,33 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  ~  PwnFilter - Chat and user-input filter with the power of Regex
-  ~  Copyright (C) 2016 Pwn9.com / Sage905 <sage905@takeflight.ca>
-  ~
-  ~  This program is free software: you can redistribute it and/or modify
-  ~  it under the terms of the GNU General Public License as published by
-  ~  the Free Software Foundation, either version 3 of the License, or
-  ~  (at your option) any later version.
-  ~
-  ~  This program is distributed in the hope that it will be useful,
-  ~  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~  GNU General Public License for more details.
-  ~
-  ~  You should have received a copy of the GNU General Public License
-  ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  ~
-  ~
-  -->
-
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.pwn9.PwnFilter</groupId>
     <artifactId>PwnFilter</artifactId>
-    <version>3.9.3-SNAPSHOT</version>
+    <version>3.9.2-SNAPSHOT</version>
     <name>PwnFilter</name>
     <description>Complete chat control with the power of regex.</description>
     <url>http://dev.bukkit.org/server-mods/pwnfilter/</url>
@@ -43,9 +21,7 @@
         </repository>
         <repository>
             <id>vault-repo</id>
-            <url>
-                http://nexus.theyeticave.net/content/repositories/pub_releases/
-            </url>
+            <url>http://nexus.theyeticave.net/content/repositories/pub_releases/</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
@@ -70,11 +46,11 @@
             <version>4.0.3</version>
             <scope>provided</scope>
         </dependency>
-        <!--<dependency>-->
-        <!--<groupId>org.spigotmc</groupId>-->
-        <!--<artifactId>spigot-api</artifactId>-->
-        <!--<version>1.9.2-R0.1-SNAPSHOT</version>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>1.9.2-R0.1-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>commons-chain</groupId>
             <artifactId>commons-chain</artifactId>
@@ -124,56 +100,11 @@
                 </property>
             </activation>
             <properties>
-                <pwnfilter.version>${project.version}-b${env.BUILD_NUMBER}
-                </pwnfilter.version>
+                <pwnfilter.version>${project.version}-b${env.BUILD_NUMBER}</pwnfilter.version>
             </properties>
         </profile>
         <profile>
-            <id>release</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-source-plugin</artifactId>
-                        <version>2.4</version>
-                        <executions>
-                            <execution>
-                                <id>attach-sources</id>
-                                <goals>
-                                    <goal>jar-no-fork</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>2.10.3</version>
-                        <executions>
-                            <execution>
-                                <id>attach-javadocs</id>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.6</version>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
+            <id>profile-1</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
@@ -184,11 +115,12 @@
 
     </profiles>
 
+
+
     <build>
         <finalName>${project.name}</finalName>
         <sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
-        <testSourceDirectory>${project.basedir}/src/test/java
-        </testSourceDirectory>
+        <testSourceDirectory>${project.basedir}/src/test/java</testSourceDirectory>
         <extensions>
             <extension>
                 <groupId>org.apache.maven.wagon</groupId>
@@ -211,12 +143,17 @@
                 <directory>${project.basedir}/src/test/resources</directory>
                 <includes>
                     <include>*</include>
-                    <include>*/*</include>
-                    <include>*/*/*</include>
+                  <include>*/*</include>
+                  <include>*/*/*</include>
                 </includes>
             </testResource>
         </testResources>
         <plugins>
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-javadoc-plugin</artifactId>-->
+                <!--<version>2.9</version>-->
+            <!--</plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -239,16 +176,11 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-release-plugin</artifactId>
                 <version>2.5.3</version>
                 <configuration>
                     <tagNameFormat>v@{project.version}</tagNameFormat>
-                    <autoVersionSubmodules>true</autoVersionSubmodules>
-                    <scmCommentPrefix xml:space="preserve">[RELEASE] </scmCommentPrefix>
-                    <goals>install deploy site-deploy
-                    </goals> <!-- install is here to fix javadoc generation in multi-module projects -->
-                    <releaseProfiles>release</releaseProfiles>
                 </configuration>
             </plugin>
             <plugin>
@@ -267,19 +199,6 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>templating-maven-plugin</artifactId>
-                <version>1.0-alpha-3</version>
-                <executions>
-                    <execution>
-                        <id>filter-src</id>
-                        <goals>
-                            <goal>filter-sources</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>2.4.3</version>
@@ -293,8 +212,7 @@
                     <relocations>
                         <relocation>
                             <pattern>org.mcstats</pattern>
-                            <shadedPattern>com.pwn9.filter.mcstats
-                            </shadedPattern>
+                            <shadedPattern>com.pwn9.filter.mcstats</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
@@ -307,38 +225,19 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <artifactId>maven-site-plugin</artifactId>
-                <version>3.3</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>net.trajano.wagon</groupId>
-                        <artifactId>wagon-git</artifactId>
-                        <version>2.0.3</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.apache.maven.doxia</groupId>
-                        <artifactId>doxia-module-markdown</artifactId>
-                        <version>1.6</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
 
         </plugins>
     </build>
-
     <scm>
-        <connection>scm:git:ssh://github.com/${ghProject}.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/${ghProject}.git
-        </developerConnection>
-        <url>https://github.com/${ghProject}</url>
-        <tag>v3.9.0</tag>
-    </scm>
+        <connection>scm:git:ssh://github.com/pwn9/PwnFilter.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/pwn9/PwnFilter.git</developerConnection>
+      <tag>v3.9.0</tag>
+  </scm>
 
-    <ciManagement>
-        <system>jenkins</system>
-        <url>https://ci.sagely.ca</url>
-    </ciManagement>
+  <ciManagement>
+      <system>jenkins</system>
+      <url>https://ci.sagely.ca</url>
+  </ciManagement>
 
     <distributionManagement>
         <downloadUrl>https://repo.sagely.ca/PwnFilter</downloadUrl>
@@ -352,17 +251,8 @@
             <name>PwnFilter Snapshot</name>
             <url>scpexe://repo.sagely.ca/home/ci/public_html/snapshots</url>
         </snapshotRepository>
-        <site>
-            <id>gh-pages</id>
-            <name>GitHub Pages</name>
-            <url>github:http://${ghUser}.github.io/${ghRepo}/${siteUrlSuffix}/
-            </url>
-        </site>
     </distributionManagement>
 
-    <prerequisites>
-        <maven>3.0.3</maven>
-    </prerequisites>
 
     <properties>
         <siteUrlSuffix>${project.version}</siteUrlSuffix>
@@ -372,15 +262,4 @@
         <ghProject>${ghUser}/${ghRepo}</ghProject>
 
     </properties>
-
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.10.3</version>
-            </plugin>
-        </plugins>
-    </reporting>
-
 </project>
