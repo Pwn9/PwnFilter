@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<!--
+  ~  PwnFilter - Chat and user-input filter with the power of Regex
+  ~  Copyright (C) 2016 Pwn9.com / Sage905 <sage905@takeflight.ca>
+  ~
+  ~  This program is free software: you can redistribute it and/or modify
+  ~  it under the terms of the GNU General Public License as published by
+  ~  the Free Software Foundation, either version 3 of the License, or
+  ~  (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful,
+  ~  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  GNU General Public License for more details.
+  ~
+  ~  You should have received a copy of the GNU General Public License
+  ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  ~
+  -->
+
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.pwn9.PwnFilter</groupId>
     <artifactId>PwnFilter</artifactId>
-    <version>3.9.2-SNAPSHOT</version>
+    <version>3.9.2</version>
     <name>PwnFilter</name>
     <description>Complete chat control with the power of regex.</description>
     <url>http://dev.bukkit.org/server-mods/pwnfilter/</url>
@@ -45,11 +67,6 @@
             <artifactId>spongeapi</artifactId>
             <version>4.0.3</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>1.9.2-R0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>commons-chain</groupId>
@@ -231,7 +248,7 @@
     <scm>
         <connection>scm:git:ssh://github.com/pwn9/PwnFilter.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/pwn9/PwnFilter.git</developerConnection>
-      <tag>v3.9.0</tag>
+        <tag>v3.9.2</tag>
   </scm>
 
   <ciManagement>
