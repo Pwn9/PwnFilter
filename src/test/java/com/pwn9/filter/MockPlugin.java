@@ -23,7 +23,6 @@ package com.pwn9.filter;
 import com.avaje.ebean.EbeanServer;
 import com.pwn9.filter.bukkit.PwnFilterPlugin;
 import com.pwn9.filter.engine.FilterService;
-import com.pwn9.filter.engine.rules.TestStatsTracker;
 import com.pwn9.filter.minecraft.api.MinecraftAPI;
 import com.pwn9.filter.minecraft.api.MinecraftConsole;
 import org.bukkit.Server;
@@ -42,7 +41,7 @@ import java.util.logging.Logger;
 
 public class MockPlugin implements PwnFilterPlugin, Plugin {
 
-    private final FilterService filterService = new FilterService(new TestStatsTracker());
+    private final FilterService filterService = new FilterService();
     private final MinecraftAPI minecraftAPI = new MockMinecraftAPI();
 
     @Override

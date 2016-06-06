@@ -48,7 +48,7 @@ public class RuleSetTest {
 
     private final MessageAuthor author = new TestAuthor();
     private RuleChain rs, sc;
-    private FilterService filterService = new FilterService(new TestStatsTracker());
+    private FilterService filterService = new FilterService();
 
     @Before
     public void setUp() {

@@ -55,7 +55,6 @@ import java.util.stream.Collectors;
 @SuppressWarnings("UnusedDeclaration")
 public class FilterService {
 
-    private final StatsTracker statsTracker;
     private final FilterConfig config;
     private final Set<FilterClient> registeredClients = Sets.newCopyOnWriteArraySet();
     private final Set<NotifyTarget> notifyTargets = Sets.newCopyOnWriteArraySet();
@@ -70,12 +69,11 @@ public class FilterService {
      */
     private FileHandler logfileHandler;
 
-    public FilterService(StatsTracker statsTracker) {
-        this(statsTracker, Logger.getLogger("com.pwn9.filter"));
+    public FilterService() {
+        this(Logger.getLogger("com.pwn9.filter"));
     }
 
-    public FilterService(StatsTracker statsTracker, Logger logger) {
-        this.statsTracker = statsTracker;
+    public FilterService(Logger logger) {
         this.config = new FilterConfig(logger);
         this.actionFactory = new ActionFactory(this);
         this.logger = logger;
@@ -135,7 +133,6 @@ public class FilterService {
             return;
         }
         registeredClients.add(f);
-        statsTracker.updateClients(getActiveClients());
     }
 
     /**
@@ -152,7 +149,6 @@ public class FilterService {
     public boolean unregisterClient(FilterClient f) {
         if (registeredClients.contains(f)) {
             registeredClients.remove(f);
-            statsTracker.updateClients(getActiveClients());
             return true;
         } else {
             return false;
@@ -276,10 +272,6 @@ public class FilterService {
             }
         }
         return new UnknownAuthor(uuid);
-    }
-
-    public StatsTracker getStatsTracker() {
-        return statsTracker;
     }
 
 }

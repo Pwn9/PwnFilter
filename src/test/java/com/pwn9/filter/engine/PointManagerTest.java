@@ -27,7 +27,6 @@ import com.pwn9.filter.engine.api.MessageAuthor;
 import com.pwn9.filter.engine.rules.TestAction;
 import com.pwn9.filter.engine.rules.TestAuthor;
 import com.pwn9.filter.engine.rules.TestClient;
-import com.pwn9.filter.engine.rules.TestStatsTracker;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -52,7 +51,7 @@ public class PointManagerTest {
 
     @Before
     public void setup() {
-        filterService = new FilterService(new TestStatsTracker());
+        filterService = new FilterService();
         pm = filterService.getPointManager();
         pm.start();
         filterService.registerAuthorService(authorService);

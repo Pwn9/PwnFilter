@@ -106,8 +106,6 @@ public class RuleChain implements Chain, ChainEntry {
 
         if (!context.getMatchedRules().isEmpty()) {
 
-            filterService.getStatsTracker().incrementMatch();
-
             filterService.getLogger().finest(() ->
                     {
                         StringBuilder sb = new StringBuilder();

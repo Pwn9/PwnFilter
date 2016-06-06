@@ -40,7 +40,7 @@ public class NotifyTest {
 
     private final TestAuthor author = new TestAuthor();
     private RuleChain rs;
-    private FilterService filterService = new FilterService(new TestStatsTracker());
+    private FilterService filterService = new FilterService();
 
     @BeforeClass
     public static void init() {

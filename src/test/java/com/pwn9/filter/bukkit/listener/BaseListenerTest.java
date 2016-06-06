@@ -21,13 +21,12 @@
 package com.pwn9.filter.bukkit.listener;
 
 import com.pwn9.filter.engine.FilterService;
-import com.pwn9.filter.engine.rules.TestStatsTracker;
 import org.junit.Before;
 
 public class BaseListenerTest {
 
     private BaseListener test;
-    private FilterService filterService = new FilterService(new TestStatsTracker());
+    private FilterService filterService = new FilterService();
 
     @Before
     public void setup() {

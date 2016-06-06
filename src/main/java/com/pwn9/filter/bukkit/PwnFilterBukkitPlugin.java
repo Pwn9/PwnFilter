@@ -73,7 +73,7 @@ public class PwnFilterBukkitPlugin extends JavaPlugin implements PwnFilterPlugin
         minecraftAPI = new BukkitAPI(this);
         console = new MinecraftConsole(minecraftAPI);
         statsTracker = new MCStatsTracker(this);
-        filterService = new FilterService(statsTracker, getLogger());
+        filterService = new FilterService(getLogger());
         filterService.getActionFactory().addActionTokens(MinecraftAction.class);
         filterService.getActionFactory().addActionTokens(TargetedAction.class);
         filterService.getConfig().setTemplateProvider(this);

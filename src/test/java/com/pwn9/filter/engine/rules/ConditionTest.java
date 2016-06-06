@@ -42,7 +42,7 @@ public class ConditionTest {
 
     private final MessageAuthor author = new TestAuthor();
     private RuleChain rs;
-    private FilterService filterService = new FilterService(new TestStatsTracker());
+    private FilterService filterService = new FilterService();
     private File testFile = new File(getClass().getResource("/conditionTests.txt").getFile());
     private File parentDir = new File(testFile.getParent());
 

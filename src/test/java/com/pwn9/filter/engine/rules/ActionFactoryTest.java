@@ -33,7 +33,7 @@ public class ActionFactoryTest {
 
     @Test
     public void testActionFactoryReturnsAction() {
-        ActionFactory actionFactory = new ActionFactory(new FilterService(new TestStatsTracker()));
+        ActionFactory actionFactory = new ActionFactory(new FilterService());
         try {
             Action result = actionFactory.getActionFromString("abort");
             assertEquals(result, Abort.INSTANCE);

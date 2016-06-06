@@ -21,7 +21,6 @@
 package com.pwn9.filter.engine;
 
 import com.pwn9.filter.engine.rules.TestClient;
-import com.pwn9.filter.engine.rules.TestStatsTracker;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -36,7 +35,7 @@ public class FilterServiceTest {
     @Before
     public void setup() {
         client = new TestClient();
-        service = new FilterService(new TestStatsTracker());
+        service = new FilterService();
     }
 
     @Test
