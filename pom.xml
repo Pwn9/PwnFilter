@@ -130,8 +130,7 @@
                 </property>
             </activation>
             <properties>
-                <pwnfilter.version>${project.version}-${env.BUILD_NUMBER}
-                </pwnfilter.version>
+                <pwnfilter.version>${project.version}-${env.BUILD_NUMBER}</pwnfilter.version>
             </properties>
         </profile>
         <profile>
@@ -419,6 +418,8 @@
     <properties>
         <siteUrlSuffix>${project.version}</siteUrlSuffix>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spigot.api.version>1.9.2-R0.1-SNAPSHOT</spigot.api.version>
+        <vault.api.version>1.5</vault.api.version>
         <ghUser>AddstarMC</ghUser>
         <ghRepo>PwnFilter</ghRepo>
         <ghProject>${ghUser}/${ghRepo}</ghProject>
