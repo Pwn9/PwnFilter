@@ -53,19 +53,12 @@
 
     <repositories>
         <repository>
-            <id>sponge</id>
-            <url>http://repo.spongepowered.org/maven</url>
+            <id>engine</id>
+            <url>https://maven.enginehub.org/artifactory/repo/</url>
         </repository>
         <repository>
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
-        </repository>
-        <repository>
-            <id>vault-repo</id>
-            <url>http://nexus.theyeticave.net/content/repositories/pub_releases/</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
         </repository>
         <repository>
             <id>central</id>
@@ -90,12 +83,18 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.9.2-R0.1-SNAPSHOT</version>
+            <version>${spigot.api.version}</version>
         </dependency>
         <dependency>
             <groupId>net.milkbowl.vault</groupId>
             <artifactId>VaultAPI</artifactId>
-            <version>1.5</version>
+            <version>${vault.api.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.bukkit</groupId>
+                    <artifactId>bukkit</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.jetbrains</groupId>
@@ -111,15 +110,15 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.8.1</version>
+            <version>4.13</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>net.jodah</groupId>
             <artifactId>concurrentunit</artifactId>
             <version>0.4.2</version>
+            <scope>test</scope>
         </dependency>
-
     </dependencies>
 
     <profiles>
@@ -197,7 +196,56 @@
                 <pwnfilter.version>${project.version}</pwnfilter.version>
             </properties>
         </profile>
+        <profile>
+            <id>1_9</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <spigot.api.version>1.9.2-R0.1-SNAPSHOT</spigot.api.version>
+                <vault.api.version>1.5</vault.api.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>1_8</id>
+            <properties>
+                <spigot.api.version>1.8.3-R0.1-SNAPSHOT</spigot.api.version>
+                <vault.api.version>1.4</vault.api.version>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <skipTests>true</skipTests>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
 
+        </profile>
+        <profile>
+            <id>1_13</id>
+            <properties>
+                <spigot.api.version>1.13.2-R0.1-SNAPSHOT</spigot.api.version>
+                <vault.api.version>1.6</vault.api.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>1_15</id>
+            <properties>
+                <spigot.api.version>1.15.2-R0.1-SNAPSHOT</spigot.api.version>
+                <vault.api.version>1.6</vault.api.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>1_16</id>
+            <properties>
+                <spigot.api.version>1.16.1-R0.1-SNAPSHOT</spigot.api.version>
+                <vault.api.version>1.7</vault.api.version>
+            </properties>
+        </profile>
     </profiles>
 
     <build>
@@ -376,7 +424,6 @@
         <ghProject>${ghUser}/${ghRepo}</ghProject>
         <github.global.server>github</github.global.server>
     </properties>
-
     <reporting>
         <plugins>
             <plugin>
