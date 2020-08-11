@@ -38,33 +38,33 @@ public class ColoredStringTest {
     private final ColoredString testCs = new ColoredString(original);
 
     @Test
-    public void testLength() throws Exception {
+    public void testLength() {
         assertEquals(plain.length(), testCs.length());
     }
 
     @Test
-    public void testCharAt() throws Exception {
+    public void testCharAt() {
         assertEquals(plain.charAt(5), testCs.charAt(5));
     }
 
     @Test
-    public void testSubSequence() throws Exception {
+    public void testSubSequence(){
         assertEquals(plain.subSequence(5, 9), testCs.subSequence(5, 9));
     }
 
     @Test
-    public void testToString() throws Exception {
+    public void testToString() {
         assertEquals(plain, testCs.toString());
     }
 
     @Test
-    public void testGetColoredString() throws Exception {
+    public void testGetColoredString() {
         assertEquals(original, testCs.getColoredString());
 
     }
 
     @Test
-    public void testGetCodeArray() throws Exception {
+    public void testGetCodeArray() {
         String[] array = testCs.getCodeArray();
         assertEquals(array[4], "&0");
         assertEquals(array[19], "&8");
@@ -108,6 +108,18 @@ public class ColoredStringTest {
         assertEquals("&7This &9is&l the &1&3r&4a&5i&6n&7b&8o&9w&3 under test.", modified.getColoredString());
 
     }
+
+    @Test
+    public void testColourStringRGB(){
+        String test = "§x§f§f§e§f§d§5Kittens! are §x§d§d§0§0§0§0smelly";
+        ColoredString coloredString = new ColoredString(test);
+        assertEquals("Kittens! are smelly",coloredString.toString());
+        assertEquals(test,coloredString.getColoredString());
+        coloredString = coloredString.replaceText(Pattern.compile("are smelly"),"may not be funny");
+        assertEquals("Kittens! may not be funny",coloredString.toString());
+        assertEquals("§x§f§f§e§f§d§5Kittens! may not be funny",coloredString.getColoredString());
+    }
+
 
     @Test
     public void testColoredStringWithDoubleFormatting() {
@@ -177,19 +189,19 @@ public class ColoredStringTest {
     }
 
     @Test
-    public void testPatternToLower() throws Exception {
+    public void testPatternToLower() {
         assertEquals(new ColoredString("this&0 is the string &8to test"),
                 testCs.patternToLower(Pattern.compile("This")));
     }
 
     @Test
-    public void testPatternToUpper() throws Exception {
+    public void testPatternToUpper(){
         assertEquals(new ColoredString("THIS&0 is the string &8to test"),
                 testCs.patternToUpper(Pattern.compile("This")));
     }
 
     @Test
-    public void testGetRaw() throws Exception {
+    public void testGetRaw() {
         assertEquals(testCs.getRaw(), original);
     }
 

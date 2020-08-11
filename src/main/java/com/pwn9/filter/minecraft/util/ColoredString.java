@@ -52,7 +52,7 @@ public final class ColoredString implements EnhancedString {
 
     private final String[] codes; // The String array containing the color / formatting codes
     private final char[] plain; // the plain text
-    private final String COLORCODES = "0123456789AaBbCcDdEeFfKkLlMmNnOoRr";
+    private final String COLORCODES = "0123456789AaBbCcDdEeFfKkLlMmNnOoRrx";
     private final char CR = '\r';
     private final char LF = '\n';
     private final String FORMATPREFIXES = "§&";

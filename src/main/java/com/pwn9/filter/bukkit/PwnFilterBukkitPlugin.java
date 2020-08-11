@@ -24,6 +24,7 @@ import com.google.common.collect.MapMaker;
 import com.pwn9.filter.bukkit.config.BukkitConfig;
 import com.pwn9.filter.bukkit.listener.*;
 import com.pwn9.filter.engine.FilterService;
+import com.pwn9.filter.engine.api.FilterClient;
 import com.pwn9.filter.engine.rules.action.minecraft.MinecraftAction;
 import com.pwn9.filter.engine.rules.action.targeted.TargetedAction;
 import com.pwn9.filter.minecraft.api.MinecraftConsole;
@@ -32,6 +33,7 @@ import com.pwn9.filter.minecraft.command.pfmute;
 import com.pwn9.filter.minecraft.command.pfreload;
 import com.pwn9.filter.util.tag.RegisterTags;
 import net.milkbowl.vault.economy.Economy;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.HandlerList;
@@ -40,6 +42,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentMap;
 
@@ -57,8 +61,9 @@ public class PwnFilterBukkitPlugin extends JavaPlugin implements PwnFilterPlugin
     private static PwnFilterBukkitPlugin _instance;
     private BukkitAPI minecraftAPI;
     private MinecraftConsole console;
-    private MCStatsTracker statsTracker;
     private FilterService filterService;
+    private final Map<String, Integer > eventRules = new HashMap<>();
+
 
     /**
      * <p>Constructor for PwnFilter.</p>
@@ -72,7 +77,6 @@ public class PwnFilterBukkitPlugin extends JavaPlugin implements PwnFilterPlugin
         }
         minecraftAPI = new BukkitAPI(this);
         console = new MinecraftConsole(minecraftAPI);
-        statsTracker = new MCStatsTracker(this);
         filterService = new FilterService(getLogger());
         filterService.getActionFactory().addActionTokens(MinecraftAction.class);
         filterService.getActionFactory().addActionTokens(TargetedAction.class);
@@ -110,9 +114,6 @@ public class PwnFilterBukkitPlugin extends JavaPlugin implements PwnFilterPlugin
         // Now get our configuration
         if (!configurePlugin()) return;
 
-        // Activate Statistics Tracking
-        statsTracker.startTracking();
-
         filterService.registerAuthorService(minecraftAPI);
         filterService.registerNotifyTarget(minecraftAPI);
 
@@ -139,7 +140,14 @@ public class PwnFilterBukkitPlugin extends JavaPlugin implements PwnFilterPlugin
         getCommand("pfreload").setExecutor(new pfreload(filterService, this));
         getCommand("pfcls").setExecutor(new pfcls(getLogger(), console));
         getCommand("pfmute").setExecutor(new pfmute(getLogger(), console));
-
+        for (final FilterClient f : filterService.getActiveClients()) {
+            final String eventName = f.getShortName();
+            int value = f.getRuleChain().ruleCount();
+            eventRules.put(eventName,value);
+        }
+        Metrics metrics = new Metrics(this, 8480);
+        Metrics.AdvancedPie pie = new Metrics.AdvancedPie("Rules by Event", () -> eventRules);
+        metrics.addCustomChart(pie);
     }
 
     /**
