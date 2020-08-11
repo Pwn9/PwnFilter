@@ -49,7 +49,7 @@ public class ActionTest {
         filterService.getActionFactory().addActionTokens(TargetedAction.class);
         File rulesDir = new File(getClass().getResource("/rules").getFile());
         filterService.getConfig().setRulesDir(rulesDir);
-        filterService.getConfig().setTextDir(new File(getClass().getResource("/textfiles").getFile()));
+        //filterService.getConfig().setTextDir(new File(getClass().getResource("/textfiles").getFile()));
         try {
             rs = filterService.parseRules(new File(rulesDir, "actionTests.txt"));
         } catch (InvalidChainException ex) {
