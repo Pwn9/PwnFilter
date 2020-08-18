@@ -20,13 +20,3 @@ jobs:
         java-version: 1.8
     - name: Build with Maven
       run: mvn -B verify --file pom.xml
-    - name: Run codacy-coverage-reporter
-      uses: codacy/codacy-coverage-reporter-action@master
-      with:
-        project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
-        coverage-reports: target/site/jacoco/jacoco.xml
-    - run: mkdir staging && cp target/*.jar staging
-    - uses: actions/upload-artifact@v2
-      with:
-        name: Package
-        path: staging
