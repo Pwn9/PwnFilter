@@ -1,7 +1,7 @@
 main: com.pwn9.filter.bukkit.PwnFilterBukkitPlugin
 name: PwnFilter
 version: ${pwnfilter.version}
-authors: tremor77 Narimm
+authors: [tremor77, Sage, Narimm]
 description: Complete chat control with the power of RegEx
 website: http://pwn9.com
 api-version: ${api.version}

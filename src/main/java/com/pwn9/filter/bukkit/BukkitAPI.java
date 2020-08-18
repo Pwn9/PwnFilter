@@ -52,7 +52,6 @@ import java.util.concurrent.*;
 class BukkitAPI implements MinecraftAPI, AuthorService, NotifyTarget {
 
     private final PwnFilterPlugin plugin;
-    private final MinecraftAPI playerAPI = this;
     private final Cache<UUID, BukkitPlayer> playerCache = CacheBuilder.newBuilder()
             .maximumSize(100)
             .build();
