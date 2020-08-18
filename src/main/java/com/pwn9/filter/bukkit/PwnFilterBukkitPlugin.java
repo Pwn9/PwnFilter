@@ -146,7 +146,7 @@ public class PwnFilterBukkitPlugin extends JavaPlugin implements PwnFilterPlugin
             eventRules.put(eventName,value);
         }
         Metrics metrics = new Metrics(this, 8480);
-        Metrics.AdvancedPie pie = new Metrics.AdvancedPie("Rules by Event", () -> eventRules);
+        Metrics.AdvancedPie pie = new Metrics.AdvancedPie("rules_by_event", () -> eventRules);
         metrics.addCustomChart(pie);
     }
 

@@ -3,7 +3,7 @@ name: PwnFilter
 version: ${pwnfilter.version}
 authors: [tremor77, Sage, Narimm]
 description: Complete chat control with the power of RegEx
-website: http://pwn9.com
+website: http://pwn9.github.io/PwnFilter/
 api-version: ${api.version}
 softdepend: [Vault]
 
