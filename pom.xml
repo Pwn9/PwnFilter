@@ -30,6 +30,7 @@
     <version>3.9.3-SNAPSHOT</version>
     <name>PwnFilter</name>
     <description>Complete chat control with the power of regex.</description>
+    <url>https://pwn9.github.io/PwnFilter/</url>
     <contributors>
         <contributor>
             <name>tremor77</name>
@@ -49,8 +50,41 @@
             </roles>
             <timezone>America/Toronto</timezone>
         </contributor>
+        <contributor>
+            <name>Narimm</name>
+            <organization>AddstarMC</organization>
+            <organizationUrl>https://addstarmc.com.au</organizationUrl>
+            <roles>
+                <role>contributor</role>
+            </roles>
+            <timezone>+10</timezone>
+        </contributor>
     </contributors>
-
+    <scm>
+        <connection>scm:git:ssh://github.com/${ghProject}.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/${ghProject}.git</developerConnection>
+        <url>https://github.com/${ghProject}</url>
+        <tag>HEAD</tag>
+    </scm>
+    <ciManagement>
+        <system>jenkins</system>
+        <url>https://jenkins.addstar.com.au/jobs/PwnFilter</url>
+    </ciManagement>
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/AddstarMC/PwnFilter/issues</url>
+    </issueManagement>
+    <properties>
+        <siteUrlSuffix>${project.version}</siteUrlSuffix>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spigot.api.version>1.9.2-R0.1-SNAPSHOT</spigot.api.version>
+        <api.version>1.13</api.version> <!-- avoid triggering legacy materials -->
+        <vault.api.version>1.5</vault.api.version>
+        <ghUser>AddstarMC</ghUser>
+        <ghRepo>PwnFilter</ghRepo>
+        <ghProject>${ghUser}/${ghRepo}</ghProject>
+        <github.global.server>github</github.global.server>
+    </properties>
     <repositories>
         <repository>
             <id>engine</id>
@@ -120,7 +154,6 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
     <profiles>
         <profile>
             <id>jenkins</id>
@@ -129,9 +162,90 @@
                     <name>env.BUILD_NUMBER</name>
                 </property>
             </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <version>0.8.5</version>
+                        <executions>
+                            <execution>
+                                <id>coverage-initialize</id>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>coverage-report</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
+                            </execution>
+                            <!-- Threshold -->
+                            <execution>
+                                <id>coverage-check</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                                <configuration>
+                                    <includes>
+                                        <include>com.pwn9.*</include>
+                                    </includes>
+                                    <rules>
+                                        <rule>
+                                            <element>CLASS</element>
+                                            <limits>
+                                                <limit>
+                                                    <counter>LINE</counter>
+                                                    <value>COVEREDRATIO</value>
+                                                    <minimum>0%</minimum>
+                                                </limit>
+                                            </limits>
+                                        </rule>
+                                    </rules>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.gavinmogan</groupId>
+                        <artifactId>codacy-maven-plugin</artifactId>
+                        <version>1.2.0</version>
+                        <configuration>
+                            <apiToken>${codacy.api.token}</apiToken>
+                            <projectToken>${codacy.project.token}</projectToken>
+                            <coverageReportFile>target/site/jacoco/jacoco.xml</coverageReportFile>
+                            <commit>${codacy.commit}</commit>
+                            <codacyApiBaseUrl>https://api.codacy.com</codacyApiBaseUrl>
+                            <failOnMissingReportFile>false</failOnMissingReportFile>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>post-test</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>coverage</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
             <properties>
+                <codacy.api.token>${env.CODACY_API_TOKEN}</codacy.api.token>
+                <codacy.projectToken>${env.CODACY_PROJECT_TOKEN}</codacy.projectToken>
+                <codacy.commit>${env.TRAVIS_COMMIT}</codacy.commit>
                 <pwnfilter.version>${project.version}-${env.BUILD_NUMBER}</pwnfilter.version>
             </properties>
+        </profile>
+        <profile>
+            <id>codecoverage</id>
+            <activation>
+                <property><name>env.TRAVIS</name></property>
+            </activation>
+
         </profile>
         <profile>
             <id>default</id>
@@ -303,9 +417,8 @@
                 <configuration>
                     <tagNameFormat>v@{project.version}</tagNameFormat>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
-                    <scmCommentPrefix xml:space="preserve">[RELEASE] </scmCommentPrefix>
-                    <goals>install deploy site-deploy
-                    </goals> <!-- install is here to fix javadoc generation in multi-module projects -->
+                    <scmCommentPrefix xml:space="preserve">[RELEASE]</scmCommentPrefix>
+                    <goals>install deploy site-deploy</goals> <!-- install is here to fix javadoc generation in multi-module projects -->
                     <releaseProfiles>release</releaseProfiles>
                 </configuration>
             </plugin>
@@ -343,6 +456,14 @@
                 <version>3.2.4</version>
                 <configuration>
                     <minimizeJar>true</minimizeJar>
+                    <filters>
+                        <filter>
+                            <artifact>*:*</artifact>
+                            <excludes>
+                                <exclude>**/MANIFEST.MF</exclude>
+                            </excludes>
+                        </filter>
+                    </filters>
                     <artifactSet>
                         <includes>
                             <include>org.bstats:bstats-bukkit</include>
@@ -392,34 +513,6 @@
             </plugin>
         </plugins>
     </build>
-
-    <scm>
-        <connection>scm:git:ssh://github.com/${ghProject}.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/${ghProject}.git
-        </developerConnection>
-        <url>https://github.com/${ghProject}</url>
-        <tag>HEAD</tag>
-    </scm>
-
-    <ciManagement>
-        <system>jenkins</system>
-        <url>https://jenkins.addstar.com.au</url>
-    </ciManagement>
-
-    <issueManagement>
-        <system>GitHub</system>
-        <url>https://github.com/AddstarMC/PwnFilter/issues</url>
-    </issueManagement>
-    <properties>
-        <siteUrlSuffix>${project.version}</siteUrlSuffix>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spigot.api.version>1.9.2-R0.1-SNAPSHOT</spigot.api.version>
-        <vault.api.version>1.5</vault.api.version>
-        <ghUser>AddstarMC</ghUser>
-        <ghRepo>PwnFilter</ghRepo>
-        <ghProject>${ghUser}/${ghRepo}</ghProject>
-        <github.global.server>github</github.global.server>
-    </properties>
     <reporting>
         <plugins>
             <plugin>

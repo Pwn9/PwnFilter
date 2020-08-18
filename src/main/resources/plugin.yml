@@ -1,9 +1,10 @@
 main: com.pwn9.filter.bukkit.PwnFilterBukkitPlugin
 name: PwnFilter
 version: ${pwnfilter.version}
-author: tremor77
+authors: tremor77 Narimm
 description: Complete chat control with the power of RegEx
 website: http://pwn9.com
+api-version: ${api.version}
 softdepend: [Vault]
 
 commands:
