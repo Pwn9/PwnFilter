@@ -84,6 +84,7 @@
         <ghRepo>PwnFilter</ghRepo>
         <ghProject>${ghUser}/${ghRepo}</ghProject>
         <github.global.server>github</github.global.server>
+        <pwnfilter.version>${project.version}</pwnfilter.version>
     </properties>
     <repositories>
         <repository>
@@ -214,10 +215,13 @@
                         <artifactId>codacy-maven-plugin</artifactId>
                         <version>1.2.0</version>
                         <configuration>
-                            <apiToken>${codacy.api.token}</apiToken>
-                            <projectToken>${codacy.project.token}</projectToken>
+                            <!--suppress UnresolvedMavenProperty -->
+                            <apiToken>${env.CODACY_API_TOKEN}</apiToken>
+                            <!--suppress UnresolvedMavenProperty -->
+                            <projectToken>${env.CODACY_PROJECT_TOKEN}</projectToken>
                             <coverageReportFile>target/site/jacoco/jacoco.xml</coverageReportFile>
-                            <commit>${codacy.commit}</commit>
+                            <!--suppress UnresolvedMavenProperty -->
+                            <commit>${env.TRAVIS_COMMIT}</commit>
                             <codacyApiBaseUrl>https://api.codacy.com</codacyApiBaseUrl>
                             <failOnMissingReportFile>false</failOnMissingReportFile>
                         </configuration>
@@ -234,18 +238,8 @@
                 </plugins>
             </build>
             <properties>
-                <codacy.api.token>${env.CODACY_API_TOKEN}</codacy.api.token>
-                <codacy.projectToken>${env.CODACY_PROJECT_TOKEN}</codacy.projectToken>
-                <codacy.commit>${env.TRAVIS_COMMIT}</codacy.commit>
                 <pwnfilter.version>${project.version}-${env.BUILD_NUMBER}</pwnfilter.version>
             </properties>
-        </profile>
-        <profile>
-            <id>codecoverage</id>
-            <activation>
-                <property><name>env.TRAVIS</name></property>
-            </activation>
-
         </profile>
         <profile>
             <id>default</id>
@@ -364,14 +358,6 @@
     <build>
         <sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
         <testSourceDirectory>${project.basedir}/src/test/java</testSourceDirectory>
-        <extensions>
-            <extension>
-                <groupId>org.apache.maven.wagon</groupId>
-                <artifactId>wagon-ssh-external</artifactId>
-                <version>2.10</version>
-            </extension>
-        </extensions>
-
         <resources>
             <resource>
                 <directory>${project.basedir}/src/main/resources</directory>
@@ -384,6 +370,7 @@
         <testResources>
             <testResource>
                 <directory>${project.basedir}/src/test/resources</directory>
+                <filtering>true</filtering>
                 <includes>
                     <include>*</include>
                     <include>*/*</include>
