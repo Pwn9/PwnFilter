@@ -23,8 +23,8 @@ package com.pwn9.filter.engine.rules.action.core;
 import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.FilterContext;
+import com.pwn9.filter.util.PwnFormatter;
 import com.pwn9.filter.util.SimpleString;
-import org.bukkit.ChatColor;
 
 /**
  * De-color the whole string and replace the matched text with the replacement string.
@@ -42,7 +42,7 @@ class Replace implements Action {
     }
 
     static Action getAction(String s) {
-        String message = ChatColor.translateAlternateColorCodes('&', s).
+        String message = PwnFormatter.legacyTextConverter(s).
                 replaceAll("\"", "");
         return new Replace(message);
     }

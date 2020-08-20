@@ -24,4 +24,5 @@ import java.util.UUID;
 
 public interface AuthorService {
     MessageAuthor getAuthorById(UUID uuid);
+    CommandSender getSenderById(UUID uuid);
 }

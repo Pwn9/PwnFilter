@@ -21,7 +21,10 @@
 package com.pwn9.filter;
 
 import com.pwn9.filter.minecraft.api.MinecraftAPI;
+import net.kyori.adventure.platform.AudienceProvider;
+import net.kyori.adventure.text.TextComponent;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,6 +37,12 @@ public class MockMinecraftAPI implements MinecraftAPI {
     // Simple flag to set what we want permission checks to return.
     public Boolean permReturnValue = false;
     private String executedCommand = "";
+    private boolean muteStatus = false;
+    private final List<MockPlayer> onlinePlayers = new ArrayList<>();
+
+    public void addPlayer(MockPlayer player){
+        onlinePlayers.add(player);
+    }
 
     @Override
     public void reset() {
@@ -56,12 +65,20 @@ public class MockMinecraftAPI implements MinecraftAPI {
 
     @Override
     public void sendMessage(java.util.UUID uuid, String message) {
-
+        for(MockPlayer player: onlinePlayers){
+            if (player.getUniqueId().equals(uuid)){
+                player.sendMessage(message);
+            }
+        }
     }
 
     @Override
     public void sendMessages(java.util.UUID uuid, List<String> messages) {
-
+        for(MockPlayer player: onlinePlayers){
+            if (player.getUniqueId().equals(uuid)){
+                messages.forEach(player::sendMessage);
+            }
+        }
     }
 
     @Override
@@ -91,22 +108,32 @@ public class MockMinecraftAPI implements MinecraftAPI {
 
     @Override
     public void sendConsoleMessage(String message) {
+        //todo
+    }
 
+    @Override
+    public void sendConsoleMessage(TextComponent message) {
+       //todo
     }
 
     @Override
     public void sendConsoleMessages(List<String> messageList) {
-
+        //todo
     }
 
     @Override
     public void sendBroadcast(String message) {
+        onlinePlayers.forEach(mockPlayer -> mockPlayer.sendMessage(message));
+    }
 
+    @Override
+    public void sendBroadCast(TextComponent component) {
+        onlinePlayers.forEach(mockPlayer -> mockPlayer.sendMessage(component));
     }
 
     @Override
     public void sendBroadcast(List<String> messageList) {
-
+        onlinePlayers.forEach(mockPlayer ->  messageList.forEach(mockPlayer::sendMessage));
     }
 
     @Override
@@ -114,8 +141,21 @@ public class MockMinecraftAPI implements MinecraftAPI {
         executedCommand = command;
     }
 
+    @Override
+    public boolean globalMute() {
+        return muteStatus;
+    }
+
+    @Override
+    public void setMutStatus(boolean status) {
+        this.muteStatus = status;
+    }
+
     public String getExecutedCommand() {
         return executedCommand;
     }
 
+    public AudienceProvider audiences(){
+        return new MockAudienceProvider();
+    }
 }

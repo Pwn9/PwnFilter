@@ -24,7 +24,7 @@ import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.api.MessageAuthor;
-import org.bukkit.ChatColor;
+import com.pwn9.filter.util.PwnFormatter;
 
 /**
  * Burns a player to death.
@@ -47,7 +47,7 @@ class Burn implements Action {
     }
 
     public static Action getAction(String s) {
-        return new Burn((s != null && !s.isEmpty() ? ChatColor.translateAlternateColorCodes('&', s) : defaultMessage));
+        return new Burn((s != null && !s.isEmpty() ? PwnFormatter.legacyTextConverter(s) : defaultMessage));
     }
 
     static void setDefaultMessage(String s) {

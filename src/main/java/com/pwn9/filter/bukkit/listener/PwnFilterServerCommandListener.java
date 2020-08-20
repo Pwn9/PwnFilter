@@ -21,6 +21,7 @@
 package com.pwn9.filter.bukkit.listener;
 
 import com.pwn9.filter.bukkit.PwnFilterBukkitPlugin;
+import com.pwn9.filter.bukkit.PwnFilterPlugin;
 import com.pwn9.filter.bukkit.config.BukkitConfig;
 import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.rules.chain.InvalidChainException;
@@ -36,13 +37,10 @@ import org.bukkit.plugin.PluginManager;
  * @author Sage905
  * @version $Id: $Id
  */
-public class PwnFilterServerCommandListener extends BaseListener {
+public class PwnFilterServerCommandListener extends AbstractBukkitListener {
 
-    private final PwnFilterBukkitPlugin plugin;
-
-    public PwnFilterServerCommandListener(PwnFilterBukkitPlugin plugin) {
-        super(plugin.getFilterService());
-        this.plugin = plugin;
+    public PwnFilterServerCommandListener(PwnFilterPlugin plugin) {
+        super(plugin);
     }
 
     @Override

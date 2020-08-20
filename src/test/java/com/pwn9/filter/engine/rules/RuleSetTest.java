@@ -27,7 +27,7 @@ import com.pwn9.filter.engine.rules.action.minecraft.MinecraftAction;
 import com.pwn9.filter.engine.rules.action.targeted.TargetedAction;
 import com.pwn9.filter.engine.rules.chain.InvalidChainException;
 import com.pwn9.filter.engine.rules.chain.RuleChain;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -48,7 +48,7 @@ public class RuleSetTest {
 
     private final MessageAuthor author = new TestAuthor();
     private RuleChain rs, sc;
-    private FilterService filterService = new FilterService();
+    private final FilterService filterService = new FilterService();
 
     @Before
     public void setUp() {

@@ -23,7 +23,7 @@ package com.pwn9.filter.engine.rules.action.core;
 import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.FilterContext;
-import org.bukkit.ChatColor;
+import com.pwn9.filter.util.PwnFormatter;
 
 /**
  * Rewrite the string by replacing the matched text with the provided string.
@@ -38,7 +38,7 @@ class Rewrite implements Action {
     }
 
     static Action getAction(String s) {
-        return new Rewrite(ChatColor.translateAlternateColorCodes('&', s));
+        return new Rewrite(PwnFormatter.legacyTextConverter(s));
     }
 
     @Override

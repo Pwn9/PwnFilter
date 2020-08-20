@@ -45,7 +45,7 @@ public class PlayerCacheListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerQuit(PlayerQuitEvent event) {
         // Cleanup player messages on quit
-        if (event.getPlayer() != null && PwnFilterBukkitPlugin.lastMessage.containsKey(event.getPlayer().getUniqueId())) {
+        if (event.getPlayer() != null) {
             PwnFilterBukkitPlugin.lastMessage.remove(event.getPlayer().getUniqueId());
         }
     }

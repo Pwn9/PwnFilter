@@ -20,12 +20,11 @@
 
 package com.pwn9.filter.util;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.regex.Pattern;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
 
 /**
  * Tests for the SimpleString object
@@ -37,52 +36,52 @@ public class SimpleStringTest {
     private final SimpleString testSs = new SimpleString(original);
 
     @Test
-    public void testReplaceText() throws Exception {
-        assertEquals(testSs.replaceText(Pattern.compile("string"), "toast"),
+    public void testReplaceText() {
+        Assert.assertEquals(testSs.replaceText(Pattern.compile("string"), "toast"),
                 new SimpleString("This is the toast under test"));
     }
 
     @Test
-    public void testPatternToLower() throws Exception {
-        assertEquals(testSs.patternToLower(Pattern.compile("This")),
+    public void testPatternToLower() {
+        Assert.assertEquals(testSs.patternToLower(Pattern.compile("This")),
                 new SimpleString("this is the string under test"));
     }
 
     @Test
-    public void testPatternToUpper() throws Exception {
-        assertEquals(testSs.patternToUpper(Pattern.compile("This")),
+    public void testPatternToUpper() {
+        Assert.assertEquals(testSs.patternToUpper(Pattern.compile("This")),
                 new SimpleString("THIS is the string under test"));
 
     }
 
     @Test
-    public void testLength() throws Exception {
-        assertEquals(testSs.length(), original.length());
+    public void testLength() {
+        Assert.assertEquals(testSs.length(), original.length());
     }
 
     @Test
-    public void testCharAt() throws Exception {
-        assertEquals(testSs.charAt(5), original.charAt(5));
+    public void testCharAt() {
+        Assert.assertEquals(testSs.charAt(5), original.charAt(5));
     }
 
     @Test
-    public void testSubSequence() throws Exception {
-        assertEquals(testSs.subSequence(4, 12),
+    public void testSubSequence() {
+        Assert.assertEquals(testSs.subSequence(4, 12),
                 original.subSequence(4, 12));
     }
 
     @Test
-    public void testEquals() throws Exception {
-        assertTrue(testSs.equals(new SimpleString(original)));
+    public void testEquals()  {
+        Assert.assertEquals(testSs, new SimpleString(original));
     }
 
     @Test
-    public void testGetRaw() throws Exception {
-        assertEquals(testSs.getRaw(), original);
+    public void testGetRaw() {
+        Assert.assertEquals(testSs.getRaw(), original);
     }
 
     @Test
-    public void testToString() throws Exception {
-        assertEquals(testSs.toString(), original);
+    public void testToString() {
+        Assert.assertEquals(testSs.toString(), original);
     }
 }

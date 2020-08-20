@@ -21,8 +21,10 @@
 package com.pwn9.filter.bukkit;
 
 import com.pwn9.filter.engine.FilterService;
+import com.pwn9.filter.minecraft.api.MinecraftAPI;
 import com.pwn9.filter.minecraft.api.MinecraftConsole;
 
+import java.util.UUID;
 import java.util.logging.Logger;
 
 public interface PwnFilterPlugin {
@@ -32,4 +34,21 @@ public interface PwnFilterPlugin {
     MinecraftConsole getConsole();
 
     Logger getLogger();
+
+    MinecraftAPI getApi();
+
+    boolean configurePlugin();
+
+    /**
+     * Provide a method to check a recent Message isnt a duplicate
+     * @return boolean
+     */
+    boolean checkRecentMessage(UUID uuid, String string);
+
+    /**
+     * Store a recent message for later checking.
+     * @param uuid UUID
+     * @param string Message
+     */
+    void addRecentMessage(UUID uuid, String string);
 }

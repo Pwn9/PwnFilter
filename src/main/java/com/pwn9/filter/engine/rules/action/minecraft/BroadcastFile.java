@@ -27,8 +27,8 @@ import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.api.MessageAuthor;
 import com.pwn9.filter.engine.rules.action.InvalidActionException;
+import com.pwn9.filter.util.PwnFormatter;
 import com.pwn9.filter.util.tag.TagRegistry;
-import org.bukkit.ChatColor;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -59,7 +59,7 @@ class BroadcastFile implements Action {
         Path filePath = sourceDir.toPath().resolve(s);
         try (Stream<String> sourceLines = Files.lines(filePath)) {
             sourceLines.forEach((String message) ->
-                    messages.add(ChatColor.translateAlternateColorCodes('&', message)));
+                    messages.add(PwnFormatter.legacyTextConverter(message)));
         } catch (FileNotFoundException ex) {
             throw new InvalidActionException("File not found while trying to add Action: " + ex.getMessage());
         } catch (IOException ex) {

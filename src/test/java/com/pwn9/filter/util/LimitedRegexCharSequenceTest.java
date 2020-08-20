@@ -21,7 +21,7 @@
 package com.pwn9.filter.util;
 
 import com.pwn9.filter.bukkit.TestTicker;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.concurrent.TimeUnit;

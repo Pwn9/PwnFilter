@@ -24,7 +24,7 @@ import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.rules.action.InvalidActionException;
-import org.bukkit.ChatColor;
+import com.pwn9.filter.util.PwnFormatter;
 
 /**
  * Fine the user by extracting money from his economy account.
@@ -50,7 +50,7 @@ class Fine implements Action {
      */
     public static Action getAction(String s) throws InvalidActionException {
         String[] parts;
-        Double fineAmount;
+        double fineAmount;
 
         parts = s.split("\\s", 2);
         try {
@@ -59,7 +59,7 @@ class Fine implements Action {
             throw new InvalidActionException("'fine' action did not have a valid amount.");
         }
 
-        return new Fine((parts.length > 1) ? ChatColor.translateAlternateColorCodes('&', parts[1]) : defaultMessage, fineAmount);
+        return new Fine((parts.length > 1) ? PwnFormatter.legacyTextConverter(parts[1]) : defaultMessage, fineAmount);
     }
 
     static void setDefaultMessage(String s) {

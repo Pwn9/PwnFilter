@@ -20,11 +20,15 @@
 
 package com.pwn9.filter.bukkit.listener;
 
+import com.pwn9.filter.bukkit.PwnFilterPlugin;
 import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.FilterClient;
-import com.pwn9.filter.engine.rules.chain.Chain;
+import com.pwn9.filter.engine.api.MessageAuthor;
 import com.pwn9.filter.engine.rules.chain.InvalidChainException;
 import com.pwn9.filter.engine.rules.chain.RuleChain;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
@@ -38,18 +42,19 @@ import java.io.File;
  * @author Sage905
  * @version $Id: $Id
  */
-abstract class BaseListener implements FilterClient, Listener {
+abstract class AbstractBukkitListener implements FilterClient, Listener {
     protected final FilterService filterService;
     volatile RuleChain ruleChain;
     private boolean active;
+    protected final PwnFilterPlugin plugin;
 
-    BaseListener(FilterService filterService) {
-        this.filterService = filterService;
+    AbstractBukkitListener(PwnFilterPlugin plugin) {
+        this.filterService = plugin.getFilterService();
+        this.plugin = plugin;
     }
 
     RuleChain getCompiledChain(File ruleFile) throws InvalidChainException {
-        Chain newChain = filterService.parseRules(ruleFile);
-        return (RuleChain) newChain;
+        return filterService.parseRules(ruleFile);
     }
 
     @Override
@@ -62,9 +67,11 @@ abstract class BaseListener implements FilterClient, Listener {
         return ruleChain;
     }
 
-    public void loadRuleChain(File path) throws InvalidChainException {
-        ruleChain = getCompiledChain(path);
-    }
+// --Commented out by Inspection START (20/08/2020 2:38 am):
+//    public void loadRuleChain(File path) throws InvalidChainException {
+//        ruleChain = getCompiledChain(path);
+//    }
+// --Commented out by Inspection STOP (20/08/2020 2:38 am)
 
     void loadRuleChain(String name) throws InvalidChainException {
         ruleChain = getCompiledChain(filterService.getConfig().getRuleFile(name));
@@ -100,4 +107,15 @@ abstract class BaseListener implements FilterClient, Listener {
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
+    protected boolean checkIfSpam(MessageAuthor minecraftPlayer, String message, Cancellable event){
+        if (plugin.checkRecentMessage(minecraftPlayer.getId(),message)) {
+            event.setCancelled(true);
+            minecraftPlayer.sendMessage(TextComponent.of("[PwnFilter] ").color(NamedTextColor.DARK_RED)
+                  .append(TextComponent.of("Repeated command blocked by spam filter.").color(NamedTextColor.RED)));
+            return true;
+        }
+        plugin.addRecentMessage(minecraftPlayer.getId(), message);
+        return false;
+    }
 }

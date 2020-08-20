@@ -27,7 +27,6 @@ import com.pwn9.filter.bukkit.MockServer;
 import com.pwn9.filter.bukkit.PwnFilterPlugin;
 import com.pwn9.filter.bukkit.config.BukkitConfig;
 import com.pwn9.filter.engine.FilterService;
-import com.pwn9.filter.engine.rules.TestAuthor;
 import com.pwn9.filter.engine.rules.action.minecraft.MinecraftAction;
 import com.pwn9.filter.engine.rules.action.targeted.TargetedAction;
 import org.bukkit.Bukkit;
@@ -61,7 +60,7 @@ public class PwnFilterBookListenerTest {
             "This is the second page",
             "This is the third page",
             "This is the final page"};
-    private Player mockPlayer = new MockPlayer();
+    private final Player mockPlayer = new MockPlayer();
     private PlayerEditBookEvent event;
     private PwnFilterBookListener bookListener;
 
@@ -78,7 +77,7 @@ public class PwnFilterBookListenerTest {
         Configuration testConfig = YamlConfiguration.loadConfiguration(new File(getClass().getResource("/config.yml").getFile()));
         filterService.getActionFactory().addActionTokens(MinecraftAction.class);
         filterService.getActionFactory().addActionTokens(TargetedAction.class);
-        filterService.registerAuthorService(uuid -> new TestAuthor());
+        filterService.registerAuthorService(MockPlugin.getMockAuthorService());
         BukkitConfig.loadConfiguration(testConfig, resourcesDir, filterService);
         BukkitConfig.setGlobalMute(false); // To ensure it gets reset between tests.
     }

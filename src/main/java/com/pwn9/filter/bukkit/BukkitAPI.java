@@ -22,11 +22,17 @@ package com.pwn9.filter.bukkit;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.pwn9.filter.bukkit.config.BukkitConfig;
 import com.pwn9.filter.engine.api.AuthorService;
+import com.pwn9.filter.engine.api.CommandSender;
 import com.pwn9.filter.engine.api.NotifyTarget;
 import com.pwn9.filter.minecraft.DeathMessages;
 import com.pwn9.filter.minecraft.api.MinecraftAPI;
 import com.pwn9.filter.minecraft.api.MinecraftConsole;
+import net.kyori.adventure.platform.AudienceProvider;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -38,7 +44,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Handles keeping a cache of data that we need during Async event handling.
@@ -49,8 +59,9 @@ import java.util.concurrent.*;
  * This will cache data about players for 10s.
  */
 
-class BukkitAPI implements MinecraftAPI, AuthorService, NotifyTarget {
+public class BukkitAPI implements MinecraftAPI, AuthorService, NotifyTarget {
 
+    private static BukkitAudiences audiences;
     private final PwnFilterPlugin plugin;
     private final Cache<UUID, BukkitPlayer> playerCache = CacheBuilder.newBuilder()
             .maximumSize(100)
@@ -61,9 +72,20 @@ class BukkitAPI implements MinecraftAPI, AuthorService, NotifyTarget {
     from the main thread while there is an outstanding request.
      */
 
-    BukkitAPI(PwnFilterPlugin p) {
-        plugin = p;
+    @SuppressWarnings("WeakerAccess")
+    protected BukkitAPI(PwnFilterPlugin p) {
+        this.plugin = p;
+        setup();
     }
+
+    protected void setup(){
+        if(plugin instanceof PwnFilterBukkitPlugin){ //avoid testing
+            audiences = BukkitAudiences.create((Plugin) this.plugin);
+        } else  {
+            audiences = null;
+        }
+    }
+
 
     public BukkitPlayer getAuthorById(final UUID u) {
         /* Not sure if this is the best way of doing this, but we need to make
@@ -82,6 +104,11 @@ class BukkitAPI implements MinecraftAPI, AuthorService, NotifyTarget {
         // If player is offline, returns null
         return playerCache.getIfPresent(u);
 
+    }
+
+    @Override
+    public CommandSender getSenderById(UUID uuid) {
+        return getAuthorById(uuid);
     }
 
     public MinecraftConsole getConsole() {
@@ -196,7 +223,7 @@ class BukkitAPI implements MinecraftAPI, AuthorService, NotifyTarget {
                         Player bukkitPlayer = Bukkit.getPlayer(uuid);
                         if (bukkitPlayer != null) {
                             bukkitPlayer.setFireTicks(duration);
-                            bukkitPlayer.sendMessage(messageString);
+                            audiences.audience(bukkitPlayer).sendMessage(LegacyComponentSerializer.legacySection().deserialize(messageString));
                         }
                     }
                 });
@@ -206,35 +233,13 @@ class BukkitAPI implements MinecraftAPI, AuthorService, NotifyTarget {
 
     @Override
     public void sendMessage(final UUID uuid, final String message) {
-        safeBukkitDispatch(
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        Player bukkitPlayer = Bukkit.getPlayer(uuid);
-                        if (bukkitPlayer != null) {
-                            bukkitPlayer.sendMessage(message);
-                        }
-                    }
-                }
-        );
-
+        audiences.player(uuid).sendMessage(LegacyComponentSerializer.legacySection().deserialize(message));
     }
 
     @Override
     public void sendMessages(final UUID uuid, final List<String> messages) {
-        safeBukkitDispatch(
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        Player bukkitPlayer = Bukkit.getPlayer(uuid);
-                        if (bukkitPlayer != null) {
-                            for (String m : messages) {
-                                bukkitPlayer.sendMessage(m);
-                            }
-                        }
-                    }
-                }
-        );
+        messages.forEach(message ->
+                audiences.player(uuid).sendMessage(LegacyComponentSerializer.legacySection().deserialize(message)));
     }
 
     @Override
@@ -306,28 +311,35 @@ class BukkitAPI implements MinecraftAPI, AuthorService, NotifyTarget {
 
     @Override
     public void sendConsoleMessage(final String message) {
-        safeBukkitDispatch(() -> Bukkit.getConsoleSender().sendMessage(message));
+        audiences.audience(Bukkit.getConsoleSender()).sendMessage(LegacyComponentSerializer.legacySection().deserialize(message));
+    }
+
+    @Override
+    public void sendConsoleMessage(TextComponent message) {
+        audiences.console().sendMessage(message);
     }
 
     @Override
     public void sendConsoleMessages(final List<String> messageList) {
-        safeBukkitDispatch(() -> {
-            for (String message : messageList) {
-                Bukkit.getConsoleSender().sendMessage(message);
-            }
-        });
-
+        messageList.forEach(message->
+              audiences.audience(Bukkit.getConsoleSender())
+                        .sendMessage(LegacyComponentSerializer.legacySection().deserialize(message)));
     }
 
     @Override
     public void sendBroadcast(final String message) {
-        safeBukkitDispatch(() -> Bukkit.broadcastMessage(message));
+        audiences.all().sendMessage(LegacyComponentSerializer.legacySection().deserialize(message));
+    }
+
+    @Override
+    public void sendBroadCast(TextComponent component) {
+        audiences.all().sendMessage(component);
     }
 
     @Override
     public void sendBroadcast(final List<String> messageList) {
-        safeBukkitDispatch(() -> messageList.forEach(Bukkit::broadcastMessage)
-        );
+        messageList.forEach(message->
+                audiences.all().sendMessage(LegacyComponentSerializer.legacySection().deserialize(message)));
     }
 
     @Override
@@ -340,6 +352,16 @@ class BukkitAPI implements MinecraftAPI, AuthorService, NotifyTarget {
                 }
             }.runTask((Plugin) plugin);
         } else throw new IllegalPluginAccessException();
+    }
+
+    @Override
+    public boolean globalMute() {
+        return BukkitConfig.globalMute();
+    }
+
+    @Override
+    public void setMutStatus(boolean status) {
+        BukkitConfig.setGlobalMute(status);
     }
 
     @Override
@@ -356,8 +378,16 @@ class BukkitAPI implements MinecraftAPI, AuthorService, NotifyTarget {
         });
 
     }
+    @SuppressWarnings("WeakerAccess")
+    public static BukkitAudiences bukkitAudiences(){
+        return audiences;
+    }
 
-    public class PlayerNotFound extends Exception {
+    public AudienceProvider audiences() {
+        return bukkitAudiences();
+    }
+
+    public static class PlayerNotFound extends Exception {
     }
 
 }

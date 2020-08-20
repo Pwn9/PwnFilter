@@ -21,7 +21,11 @@
 package com.pwn9.filter.engine;
 
 import com.google.common.collect.Sets;
-import com.pwn9.filter.engine.api.*;
+import com.pwn9.filter.engine.api.AuthorService;
+import com.pwn9.filter.engine.api.FilterClient;
+import com.pwn9.filter.engine.api.MessageAuthor;
+import com.pwn9.filter.engine.api.NotifyTarget;
+import com.pwn9.filter.engine.api.UnknownAuthor;
 import com.pwn9.filter.engine.rules.action.ActionFactory;
 import com.pwn9.filter.engine.rules.chain.InvalidChainException;
 import com.pwn9.filter.engine.rules.chain.RuleChain;
@@ -52,7 +56,6 @@ import java.util.stream.Collectors;
  * @author Sage905
  * @version $Id: $Id
  */
-@SuppressWarnings("UnusedDeclaration")
 public class FilterService {
 
     private final FilterConfig config;
@@ -161,8 +164,7 @@ public class FilterService {
 
     public void notifyTargets(String perm, String message) {
         logger.finest(() -> "Notify perm: " + perm + " Message: " + message);
-        notifyTargets.stream()
-                .forEach(target -> target.notifyWithPerm(perm, message));
+        notifyTargets.forEach(target -> target.notifyWithPerm(perm, message));
     }
 
     /**

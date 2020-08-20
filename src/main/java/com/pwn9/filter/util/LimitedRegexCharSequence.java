@@ -126,7 +126,7 @@ public class LimitedRegexCharSequence implements CharSequence {
         return inner.toString();
     }
 
-    public final class RegexTimeoutException extends RuntimeException {
+    public final static class RegexTimeoutException extends RuntimeException {
         RegexTimeoutException(String message) {
             super(message);
         }

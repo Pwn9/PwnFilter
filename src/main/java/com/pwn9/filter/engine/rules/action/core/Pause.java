@@ -47,7 +47,7 @@ class Pause implements Action {
     }
 
     static Action getAction(String s) throws InvalidActionException {
-        Long duration;
+        long duration;
         try {
             duration = Long.parseLong(s);
         } catch (NumberFormatException e) {

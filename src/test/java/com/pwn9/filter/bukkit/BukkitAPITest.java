@@ -23,7 +23,6 @@ package com.pwn9.filter.bukkit;
 import com.pwn9.filter.MockPlayer;
 import com.pwn9.filter.MockPlugin;
 import com.pwn9.filter.engine.FilterService;
-import com.pwn9.filter.engine.rules.TestAuthor;
 import net.jodah.concurrentunit.Waiter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -37,7 +36,7 @@ import static org.junit.Assert.*;
 
 public class BukkitAPITest {
 
-    private PwnFilterPlugin testPlugin = new MockPlugin();
+    private final PwnFilterPlugin testPlugin = new MockPlugin();
     private MockServer server;
     private Player testPlayer;
     private BukkitAPI api;
@@ -57,11 +56,11 @@ public class BukkitAPITest {
         api = new BukkitAPI(testPlugin);
 
         FilterService filterService = testPlugin.getFilterService();
-        filterService.registerAuthorService(uuid -> new TestAuthor());
+        filterService.registerAuthorService(MockPlugin.getMockAuthorService());
     }
 
     @Test
-    public void getAuthorByIdReturnsNullForNoMatch() throws Exception {
+    public void getAuthorByIdReturnsNullForNoMatch() {
         server.setPrimaryThread(Thread.currentThread());
         server.setScheduler(new WorkingScheduler());
         server.setPlayer(null);
@@ -131,7 +130,7 @@ public class BukkitAPITest {
         scheduler.releaseTask();
         waiter.await();
 
-        assertTrue(asyncPlayer.get().equals(myPlayer));
+        assertEquals(asyncPlayer.get(), myPlayer);
 
     }
 

@@ -31,7 +31,7 @@ import static org.junit.Assert.assertTrue;
 
 public class BukkitPlayerTest {
 
-    private TestTicker ticker = new TestTicker();
+    private final TestTicker ticker = new TestTicker();
 
     @Test
     public void hasPermissionWorksWithNull() throws Exception {

@@ -85,7 +85,6 @@ public class SimpleString implements EnhancedString {
         return value.subSequence(start, end);
     }
 
-    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof SimpleString) {

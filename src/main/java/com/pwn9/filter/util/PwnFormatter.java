@@ -20,6 +20,8 @@
 
 package com.pwn9.filter.util;
 
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -42,5 +44,9 @@ public class PwnFormatter extends SimpleFormatter {
         formatter = new SimpleDateFormat("[yyyy/MM/dd HH:mm:ss]");
         dateStr = formatter.format(date);
         return dateStr + " " + record.getMessage() + "\n";
+    }
+
+    public static String legacyTextConverter(String message){
+        return LegacyComponentSerializer.legacySection().serialize(LegacyComponentSerializer.legacyAmpersand().deserialize(message));
     }
 }

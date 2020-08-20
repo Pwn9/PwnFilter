@@ -32,7 +32,7 @@ import org.junit.Test;
 
 import java.io.File;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 /**
@@ -42,9 +42,9 @@ public class ConditionTest {
 
     private final MessageAuthor author = new TestAuthor();
     private RuleChain rs;
-    private FilterService filterService = new FilterService();
-    private File testFile = new File(getClass().getResource("/conditionTests.txt").getFile());
-    private File parentDir = new File(testFile.getParent());
+    private final FilterService filterService = new FilterService();
+    private final File testFile = new File(getClass().getResource("/conditionTests.txt").getFile());
+    private final File parentDir = new File(testFile.getParent());
 
 
     @Before

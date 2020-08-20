@@ -22,7 +22,11 @@ package com.pwn9.filter.engine;
 
 import com.pwn9.filter.bukkit.TemplateProvider;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

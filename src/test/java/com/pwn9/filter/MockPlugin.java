@@ -21,8 +21,13 @@
 package com.pwn9.filter;
 
 import com.avaje.ebean.EbeanServer;
+import com.google.common.collect.MapMaker;
+import com.pwn9.filter.bukkit.PwnFilterBukkitPlugin;
 import com.pwn9.filter.bukkit.PwnFilterPlugin;
 import com.pwn9.filter.engine.FilterService;
+import com.pwn9.filter.engine.api.AuthorService;
+import com.pwn9.filter.engine.api.MessageAuthor;
+import com.pwn9.filter.engine.rules.TestAuthor;
 import com.pwn9.filter.minecraft.api.MinecraftAPI;
 import com.pwn9.filter.minecraft.api.MinecraftConsole;
 import org.bukkit.Server;
@@ -37,12 +42,27 @@ import org.bukkit.plugin.PluginLoader;
 import java.io.File;
 import java.io.InputStream;
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentMap;
 import java.util.logging.Logger;
 
 public class MockPlugin implements PwnFilterPlugin, Plugin {
 
+    public static final ConcurrentMap<UUID, String> lastMessage = new MapMaker().concurrencyLevel(2).weakKeys().makeMap();
     private final FilterService filterService = new FilterService();
     private final MinecraftAPI minecraftAPI = new MockMinecraftAPI();
+    private final static AuthorService authorService = new AuthorService() {
+        final TestAuthor author = new TestAuthor();
+        @Override
+        public MessageAuthor getAuthorById(UUID uuid) {
+            return author;
+        }
+
+        @Override
+        public com.pwn9.filter.engine.api.CommandSender getSenderById(UUID uuid) {
+            return author;
+        }
+    };
 
     @Override
     public FilterService getFilterService() {
@@ -54,9 +74,33 @@ public class MockPlugin implements PwnFilterPlugin, Plugin {
         return new MinecraftConsole(minecraftAPI);
     }
 
+    public static AuthorService getMockAuthorService() {
+        return authorService;
+    }
     @Override
     public Logger getLogger() {
         return Logger.getAnonymousLogger();
+    }
+
+    @Override
+    public MinecraftAPI getApi() {
+        return minecraftAPI;
+    }
+
+    @Override
+    public boolean configurePlugin() {
+        return true;
+    }
+
+    @Override
+    public boolean checkRecentMessage(UUID uuid, String string) {
+        return (lastMessage.containsKey(uuid) && PwnFilterBukkitPlugin.lastMessage.get(uuid).equals(string));
+
+    }
+
+    @Override
+    public void addRecentMessage(UUID uuid, String string) {
+        lastMessage.put(uuid,string);
     }
 
     @Override

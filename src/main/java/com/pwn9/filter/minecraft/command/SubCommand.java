@@ -20,7 +20,9 @@
 
 package com.pwn9.filter.minecraft.command;
 
-import org.bukkit.command.Command;
+import com.pwn9.filter.engine.api.CommandSender;
+
+import java.util.List;
 
 /**
  * SubCommand adds the plugin to the instance of Command.
@@ -32,17 +34,41 @@ import org.bukkit.command.Command;
  * @author Sage905
  * @version $Id: $Id
  */
-abstract class SubCommand extends Command {
+abstract class SubCommand {
+
+    private final String name;
+    private final String permission;
+    private final String usageMessage;
+    private final String description;
 
     /**
      * <p>Constructor for SubCommand.</p>
      *
      * @param name a {@link java.lang.String} object.
      */
-    public SubCommand(String name) {
-        super(name);
+    public SubCommand(String name,String permission,String usage, String description) {
+        this.name = name;
+        this.permission = permission;
+        this.usageMessage = usage;
+        this.description = description;
+
     }
 
+    public String getName() {
+        return this.name;
+    }
+
+    public String getPermission() {
+        return this.permission;
+    }
+
+    public String getUsage() {
+        return this.usageMessage;
+    }
+
+    public String getDescription(){
+        return this.description;
+    }
     /**
      * <p>getHelpMessage.</p>
      *
@@ -60,4 +86,8 @@ abstract class SubCommand extends Command {
         }
         return message;
     }
+
+    public abstract boolean execute(CommandSender sender, String alias, String[] args);
+
+    public abstract List<String> onTabComplete(CommandSender sender,String alias,String[] args);
 }

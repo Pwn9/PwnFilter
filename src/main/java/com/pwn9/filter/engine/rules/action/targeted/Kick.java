@@ -23,7 +23,7 @@ package com.pwn9.filter.engine.rules.action.targeted;
 import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.FilterContext;
-import org.bukkit.ChatColor;
+import com.pwn9.filter.util.PwnFormatter;
 
 import static com.pwn9.filter.util.tag.TagRegistry.replaceTags;
 
@@ -48,7 +48,7 @@ class Kick implements Action {
      * {@inheritDoc}
      */
     public static Action getAction(String s) {
-        return new Kick((s != null && !s.isEmpty() ? ChatColor.translateAlternateColorCodes('&', s) : defaultMessage));
+        return new Kick((s != null && !s.isEmpty() ? PwnFormatter.legacyTextConverter(s) : defaultMessage));
     }
 
     static void setDefaultMessage(String s) {

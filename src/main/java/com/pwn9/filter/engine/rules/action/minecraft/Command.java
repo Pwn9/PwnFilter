@@ -36,7 +36,7 @@ import com.pwn9.filter.util.tag.TagRegistry;
 @SuppressWarnings("UnusedDeclaration")
 public class Command implements Action {
 
-    private String command;
+    private final String command;
 
     public Command(String s) {
         this.command = s;

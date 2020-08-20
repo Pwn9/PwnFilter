@@ -42,13 +42,11 @@ import org.bukkit.plugin.PluginManager;
  * @author Sage905
  * @version $Id: $Id
  */
-public class PwnFilterInvListener extends BaseListener {
+public class PwnFilterInvListener extends AbstractBukkitListener {
 
-    private final PwnFilterBukkitPlugin plugin;
 
     public PwnFilterInvListener(PwnFilterBukkitPlugin plugin) {
-        super(plugin.getFilterService());
-        this.plugin = plugin;
+        super(plugin);
     }
 
     @Override

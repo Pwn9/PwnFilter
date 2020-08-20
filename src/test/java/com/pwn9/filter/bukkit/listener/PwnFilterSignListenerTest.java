@@ -25,7 +25,6 @@ import com.pwn9.filter.MockPlugin;
 import com.pwn9.filter.bukkit.PwnFilterPlugin;
 import com.pwn9.filter.bukkit.config.BukkitConfig;
 import com.pwn9.filter.engine.FilterService;
-import com.pwn9.filter.engine.rules.TestAuthor;
 import com.pwn9.filter.engine.rules.action.minecraft.MinecraftAction;
 import com.pwn9.filter.engine.rules.action.targeted.TargetedAction;
 import org.bukkit.block.Block;
@@ -53,7 +52,7 @@ import static org.junit.Assert.assertEquals;
 public class PwnFilterSignListenerTest {
 
     private final File resourcesDir = new File(getClass().getResource("/config.yml").getFile()).getParentFile();
-    private Player mockPlayer = new MockPlayer();
+    private final Player mockPlayer = new MockPlayer();
     private Block mockBlock;
     private SignChangeEvent signChangeEvent;
     private PwnFilterSignListener signListener;
@@ -69,7 +68,7 @@ public class PwnFilterSignListenerTest {
         Configuration testConfig = YamlConfiguration.loadConfiguration(new File(getClass().getResource("/config.yml").getFile()));
         filterService.getActionFactory().addActionTokens(MinecraftAction.class);
         filterService.getActionFactory().addActionTokens(TargetedAction.class);
-        filterService.registerAuthorService(uuid -> new TestAuthor());
+        filterService.registerAuthorService(MockPlugin.getMockAuthorService());
         BukkitConfig.loadConfiguration(testConfig, resourcesDir, filterService);
         BukkitConfig.setGlobalMute(false); // To ensure it gets reset between tests.
     }

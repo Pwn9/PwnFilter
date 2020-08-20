@@ -26,7 +26,7 @@ import com.pwn9.filter.engine.api.MessageAuthor;
 import com.pwn9.filter.engine.rules.TestAuthor;
 import com.pwn9.filter.engine.rules.TestClient;
 import com.pwn9.filter.minecraft.tag.PlayerTag;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 

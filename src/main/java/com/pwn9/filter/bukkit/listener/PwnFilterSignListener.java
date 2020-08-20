@@ -43,12 +43,10 @@ import java.util.List;
  * @author Sage905
  * @version $Id: $Id
  */
-public class PwnFilterSignListener extends BaseListener {
-    private final PwnFilterPlugin plugin;
+public class PwnFilterSignListener extends AbstractBukkitListener {
 
     public PwnFilterSignListener(PwnFilterPlugin plugin) {
-        super(plugin.getFilterService());
-        this.plugin = plugin;
+        super(plugin);
     }
 
 

@@ -20,7 +20,7 @@
 
 package com.pwn9.filter.minecraft.command;
 
-/**
+/*
  * This executor is designed to handle commands which have sub-commands.
  * It provides command completion and help from sub-commands.
  * <p>
@@ -32,16 +32,16 @@ package com.pwn9.filter.minecraft.command;
  * @version $Id: $Id
  */
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabExecutor;
+
+import com.pwn9.filter.engine.api.CommandSender;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class BaseCommandExecutor implements TabExecutor {
+public abstract class BaseCommandExecutor implements PwnFilterCommandExecutor {
+
     private final Map<String, SubCommand> subCommands;
 
     /**
@@ -49,7 +49,6 @@ public class BaseCommandExecutor implements TabExecutor {
      */
     public BaseCommandExecutor() {
         subCommands = new HashMap<>();
-
     }
 
     /**
@@ -64,9 +63,7 @@ public class BaseCommandExecutor implements TabExecutor {
         subCommands.put(subCommand.getName(), subCommand);
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public boolean onCommand(final CommandSender sender, final Command command, String alias, final String[] args) {
+    public boolean onCommand(final CommandSender sender, final String command, String alias, final String[] args) {
         if (args.length < 1) {
             sendHelpMsg(sender, alias);
             return true;
@@ -77,7 +74,7 @@ public class BaseCommandExecutor implements TabExecutor {
             sendHelpMsg(sender, alias);
         } else {
             if (subCommand.getPermission() == null || sender.hasPermission(subCommand.getPermission())) {
-                subCommand.execute(sender, alias, args);
+                return subCommand.execute(sender, alias, args);
             } else {
                 sender.sendMessage("You don't have permission to do that.");
                 return true;
@@ -121,7 +118,7 @@ public class BaseCommandExecutor implements TabExecutor {
      * Requests a list of possible completions for a command argument.
      */
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+    public List<String> onTabComplete(CommandSender sender, String command, String alias, String[] args) {
         List<String> completions = new ArrayList<>();
 
         if (args.length == 1) {
@@ -136,7 +133,7 @@ public class BaseCommandExecutor implements TabExecutor {
         } else if (args.length > 1) {
             SubCommand subCommand = subCommands.get(args[0].toLowerCase());
             if (subCommand != null) {
-                return subCommand.tabComplete(sender, alias, args);
+                return subCommand.onTabComplete(sender, alias, args);
             }
         }
 

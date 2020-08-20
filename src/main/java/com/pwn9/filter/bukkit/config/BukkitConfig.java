@@ -26,7 +26,7 @@ import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.rules.action.ActionFactory;
 import com.pwn9.filter.engine.rules.action.InvalidActionException;
 import com.pwn9.filter.engine.rules.action.targeted.TargetedAction;
-import org.bukkit.ChatColor;
+import com.pwn9.filter.util.PwnFormatter;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -84,8 +84,7 @@ public class BukkitConfig {
         // Set up the default action messages
         TargetedAction.getActionsWithDefaults().
                 filter(targetedAction -> !(config.getString(targetedAction.getDefaultMsgConfigName()) == null)).
-                forEach(targetedAction -> targetedAction.setDefMsg(
-                        ChatColor.translateAlternateColorCodes('&',
+                forEach(targetedAction -> targetedAction.setDefMsg(PwnFormatter.legacyTextConverter(
                                 config.getString(targetedAction.getDefaultMsgConfigName())))
                 );
 

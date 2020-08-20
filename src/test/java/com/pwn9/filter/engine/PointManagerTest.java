@@ -20,6 +20,7 @@
 
 package com.pwn9.filter.engine;
 
+import com.pwn9.filter.MockPlugin;
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.AuthorService;
 import com.pwn9.filter.engine.api.FilterContext;
@@ -46,8 +47,8 @@ public class PointManagerTest {
     private FilterService filterService;
     private PointManager pm;
     private TestAction ascending1, descending1, ascending2, descending2;
-    private AuthorService authorService = TestAuthor::new;
-    private UUID authorId = UUID.randomUUID();
+    private final AuthorService authorService = MockPlugin.getMockAuthorService();
+    private final UUID authorId = UUID.randomUUID();
 
     @Before
     public void setup() {

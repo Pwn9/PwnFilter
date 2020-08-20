@@ -21,11 +21,10 @@
 package com.pwn9.filter.bukkit.listener;
 
 import com.pwn9.filter.minecraft.DeathMessages;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
 /**
@@ -39,18 +38,14 @@ public class PwnFilterEntityListener implements Listener {
     /**
      * <p>onEntityDeath.</p>
      *
-     * @param event a {@link org.bukkit.event.entity.EntityDeathEvent} object.
+     * @param event a {@link org.bukkit.event.entity.PlayerDeathEvent} object.
      */
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onEntityDeath(EntityDeathEvent event) {
-        if (!(event instanceof PlayerDeathEvent)) return;
-
-        PlayerDeathEvent e = (PlayerDeathEvent) event;
-
-        final Player player = (Player) event.getEntity();
+    public void onEntityDeath(PlayerDeathEvent event) {
+        final Entity player = event.getEntity();
 
         if (DeathMessages.killedPlayers.containsKey(player.getUniqueId())) {
-            e.setDeathMessage(DeathMessages.killedPlayers.remove(player.getUniqueId()));
+            event.setDeathMessage(DeathMessages.killedPlayers.remove(player.getUniqueId()));
         }
 
     }

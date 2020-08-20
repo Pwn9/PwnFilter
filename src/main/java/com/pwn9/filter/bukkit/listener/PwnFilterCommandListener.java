@@ -21,6 +21,7 @@
 package com.pwn9.filter.bukkit.listener;
 
 import com.pwn9.filter.bukkit.PwnFilterBukkitPlugin;
+import com.pwn9.filter.bukkit.PwnFilterPlugin;
 import com.pwn9.filter.bukkit.config.BukkitConfig;
 import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.api.MessageAuthor;
@@ -28,10 +29,10 @@ import com.pwn9.filter.engine.rules.chain.InvalidChainException;
 import com.pwn9.filter.engine.rules.chain.RuleChain;
 import com.pwn9.filter.minecraft.util.ColoredString;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.plugin.PluginManager;
+
 
 /**
  * Apply the filter to commands.
@@ -39,13 +40,11 @@ import org.bukkit.plugin.PluginManager;
  * @author Sage905
  * @version $Id: $Id
  */
-public class PwnFilterCommandListener extends BaseListener {
-    private final PwnFilterBukkitPlugin plugin;
+public class PwnFilterCommandListener extends AbstractBukkitListener {
     private RuleChain chatRuleChain;
 
-    public PwnFilterCommandListener(PwnFilterBukkitPlugin plugin) {
-        super(plugin.getFilterService());
-        this.plugin = plugin;
+    public PwnFilterCommandListener(PwnFilterPlugin plugin) {
+        super(plugin);
     }
 
     public String getShortName() {
@@ -118,14 +117,11 @@ public class PwnFilterCommandListener extends BaseListener {
             }
 
             // Simple Spam filter
-            if (BukkitConfig.commandspamfilterEnabled() && !minecraftPlayer.hasPermission("pwnfilter.bypass.spam")) {
+            if (BukkitConfig.commandspamfilterEnabled()
+                  && !minecraftPlayer.hasPermission("pwnfilter.bypass.spam")
+                  && checkIfSpam(minecraftPlayer,message,event)) {
                 // Keep a log of the last message sent by this player.  If it's the same as the current message, cancel.
-                if (PwnFilterBukkitPlugin.lastMessage.containsKey(minecraftPlayer.getId()) && PwnFilterBukkitPlugin.lastMessage.get(minecraftPlayer.getId()).equals(message)) {
-                    event.setCancelled(true);
-                    minecraftPlayer.sendMessage(ChatColor.DARK_RED + "[PwnFilter]" + ChatColor.RED + " Repeated command blocked by spam filter.");
-                    return;
-                }
-                PwnFilterBukkitPlugin.lastMessage.put(minecraftPlayer.getId(), message);
+                return;
             }
 
             chatRuleChain.execute(filterTask, filterService);

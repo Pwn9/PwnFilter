@@ -43,13 +43,11 @@ import java.util.List;
  * @author Sage905
  * @version $Id: $Id
  */
-public class PwnFilterBookListener extends BaseListener {
+public class PwnFilterBookListener extends AbstractBukkitListener {
 
-    private final PwnFilterPlugin plugin;
 
     public PwnFilterBookListener(PwnFilterPlugin plugin) {
-        super(plugin.getFilterService());
-        this.plugin = plugin;
+        super(plugin);
     }
 
     @Override

@@ -41,7 +41,7 @@ import java.util.List;
 
 class ConsoleChain implements Action {
 
-    private List<String> commands;
+    private final List<String> commands;
 
     private ConsoleChain(List<String> cmds) {
         this.commands = cmds;

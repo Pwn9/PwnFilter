@@ -20,6 +20,7 @@
 
 package com.pwn9.filter.engine.api;
 
+import net.kyori.adventure.text.TextComponent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -61,6 +62,11 @@ public final class UnknownAuthor implements MessageAuthor {
 
     @Override
     public void sendMessages(List<String> messages) {
+        // Silently do nothing, since we don't know who this is.
+    }
+
+    @Override
+    public void sendMessage(TextComponent message) {
         // Silently do nothing, since we don't know who this is.
     }
 }

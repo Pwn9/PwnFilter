@@ -29,7 +29,7 @@ import com.pwn9.filter.engine.rules.action.targeted.TargetedAction;
 import com.pwn9.filter.engine.rules.chain.ChainEntry;
 import com.pwn9.filter.engine.rules.chain.InvalidChainException;
 import com.pwn9.filter.engine.rules.chain.RuleChain;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -37,7 +37,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.*;
 
 /**
@@ -50,9 +50,9 @@ import static org.junit.Assert.*;
 public class ParserTest {
 
     private RuleChain rs;
-    private FilterService filterService = new FilterService();
-    private File testFile = new File(getClass().getResource("/testrules.txt").getFile());
-    private File parentDir = new File(testFile.getParent());
+    private final FilterService filterService = new FilterService();
+    private final File testFile = new File(getClass().getResource("/testrules.txt").getFile());
+    private final File parentDir = new File(testFile.getParent());
 
     @Before
     public void setUp() {

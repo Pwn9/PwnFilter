@@ -20,6 +20,8 @@
 
 package com.pwn9.filter.minecraft.api;
 
+import net.kyori.adventure.platform.AudienceProvider;
+import net.kyori.adventure.text.TextComponent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -32,6 +34,7 @@ import java.util.UUID;
  * Created by Sage905 on 15-09-11.
  */
 public interface MinecraftAPI {
+
     void reset();
 
     boolean burn(UUID uuid, final int duration, final String messageString);
@@ -60,12 +63,21 @@ public interface MinecraftAPI {
 
     void sendConsoleMessage(String message);
 
+    void sendConsoleMessage(TextComponent message);
+
     void sendConsoleMessages(List<String> messageList);
 
     void sendBroadcast(String message);
+
+    void sendBroadCast(TextComponent component);
 
     void sendBroadcast(List<String> messageList);
 
     void executeCommand(String command);
 
+    boolean globalMute();
+
+    void setMutStatus(boolean status);
+
+    AudienceProvider audiences();
 }

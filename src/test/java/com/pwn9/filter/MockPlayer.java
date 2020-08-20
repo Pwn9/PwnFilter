@@ -14,22 +14,42 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
  */
 
 package com.pwn9.filter;
 
-import org.bukkit.*;
+import org.bukkit.Achievement;
+import org.bukkit.Effect;
+import org.bukkit.EntityEffect;
+import org.bukkit.GameMode;
+import org.bukkit.Instrument;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Note;
+import org.bukkit.Particle;
+import org.bukkit.Server;
+import org.bukkit.Sound;
+import org.bukkit.Statistic;
+import org.bukkit.WeatherType;
+import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.block.Block;
 import org.bukkit.conversations.Conversation;
 import org.bukkit.conversations.ConversationAbandonedEvent;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
+import org.bukkit.entity.Villager;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.inventory.*;
+import org.bukkit.inventory.EntityEquipment;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.MainHand;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.map.MapView;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.permissions.Permission;
@@ -40,13 +60,18 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 
 import java.net.InetSocketAddress;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
-public class MockPlayer implements Player {
-
-    private final UUID randomID = UUID.randomUUID();
+public class MockPlayer extends PwnPlayer implements Player {
 
     @Override
     public String getDisplayName() {
@@ -110,7 +135,7 @@ public class MockPlayer implements Player {
 
     @Override
     public void sendRawMessage(String s) {
-
+        messages.add(s);
     }
 
     @Override
@@ -624,13 +649,8 @@ public class MockPlayer implements Player {
     }
 
     @Override
-    public void sendMessage(String s) {
-
-    }
-
-    @Override
     public void sendMessage(String[] strings) {
-
+        messages.addAll(Arrays.asList(strings));
     }
 
     @Override
@@ -680,7 +700,7 @@ public class MockPlayer implements Player {
 
     @Override
     public UUID getUniqueId() {
-        return randomID;
+        return getId();
     }
 
     @Override
@@ -917,7 +937,7 @@ public class MockPlayer implements Player {
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return "Pwn9";
     }
 
@@ -1415,4 +1435,10 @@ public class MockPlayer implements Player {
     public <T extends Projectile> T launchProjectile(Class<? extends T> aClass, Vector vector) {
         return null;
     }
+
+    @Override
+    public String getPlace() {
+        return getWorld().getName();
+    }
+
 }

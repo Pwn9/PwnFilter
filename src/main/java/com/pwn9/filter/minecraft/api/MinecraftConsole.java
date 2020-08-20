@@ -21,6 +21,7 @@
 package com.pwn9.filter.minecraft.api;
 
 import com.pwn9.filter.engine.api.MessageAuthor;
+import net.kyori.adventure.text.TextComponent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -63,6 +64,11 @@ public class MinecraftConsole implements MessageAuthor {
     @Override
     public void sendMessages(final List<String> messageList) {
         minecraftAPI.sendConsoleMessages(messageList);
+    }
+
+    @Override
+    public void sendMessage(TextComponent message) {
+        minecraftAPI.sendConsoleMessage(message);
     }
 
     public void sendBroadcast(final List<String> preparedMessages) {

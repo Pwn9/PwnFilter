@@ -25,8 +25,8 @@ import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.api.MessageAuthor;
+import com.pwn9.filter.util.PwnFormatter;
 import com.pwn9.filter.util.tag.TagRegistry;
-import org.bukkit.ChatColor;
 
 import java.util.ArrayList;
 
@@ -47,9 +47,7 @@ class Broadcast implements Action {
      * {@inheritDoc}
      */
     static Action getAction(String s) {
-        //TODO: Handle chatcolors outside of FilterService?
-
-        return new Broadcast(ChatColor.translateAlternateColorCodes('&', s).split("\n"));
+        return new Broadcast(PwnFormatter.legacyTextConverter(s).split("\n"));
     }
 
     /**

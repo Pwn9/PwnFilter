@@ -20,6 +20,7 @@
 
 package com.pwn9.filter.engine.api;
 
+import net.kyori.adventure.text.TextComponent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -37,4 +38,6 @@ public interface MessageAuthor {
     void sendMessage(final String message);
 
     void sendMessages(final List<String> messages);
+
+    void sendMessage(final TextComponent message);
 }

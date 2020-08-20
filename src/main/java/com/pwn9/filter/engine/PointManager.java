@@ -28,8 +28,17 @@ import com.pwn9.filter.engine.rules.chain.RuleChain;
 import com.pwn9.filter.util.SimpleString;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Mange the Points system of PwnFilter.
@@ -93,7 +102,7 @@ public class PointManager implements FilterClient {
     void leakTask(PointManager pointManager) {
         //Every interval, check point balances, and if they are > 0, subtract leakPoints
         // from the players balance.  If they reach 0, remove them from the list.
-        pointManager.getPointsMap().stream()
+        pointManager.getPointsMap()
                 .forEach((id) -> pointManager.subPoints(id, leakPoints));
     }
 
@@ -118,11 +127,11 @@ public class PointManager implements FilterClient {
     }
 
     Double getPoints(UUID uuid) {
-        return (pointsMap.containsKey(uuid)) ? pointsMap.get(uuid) : 0.0;
+        return pointsMap.getOrDefault(uuid, 0.0);
     }
 
     public Double getPoints(MessageAuthor author) {
-        return (pointsMap.containsKey(author.getId())) ? pointsMap.get(author.getId()) : 0.0;
+        return pointsMap.getOrDefault(author.getId(), 0.0);
     }
 
     void setPoints(UUID id, Double points) {
@@ -166,7 +175,7 @@ public class PointManager implements FilterClient {
     }
 
     void subPoints(UUID id, Double points) {
-        Double updated;
+        double updated;
         Double current = pointsMap.getOrDefault(id, 0d);
         updated = current - points;
         if (updated <= 0) {

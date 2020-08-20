@@ -32,8 +32,8 @@ import org.junit.Test;
 
 import java.io.File;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 
@@ -41,7 +41,7 @@ public class ActionTest {
 
     private final TestAuthor author = new TestAuthor();
     private RuleChain rs;
-    private FilterService filterService = new FilterService();
+    private final FilterService filterService = new FilterService();
 
     @Before
     public void setUp() {

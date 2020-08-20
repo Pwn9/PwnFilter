@@ -49,7 +49,7 @@ import java.util.regex.Pattern;
  * @version $Id: $Id
  */
 public final class ColoredString implements EnhancedString {
-
+    //todo recreate this class to filter {@link TextComponents}
     private final String[] codes; // The String array containing the color / formatting codes
     private final char[] plain; // the plain text
     private final String COLORCODES = "0123456789AaBbCcDdEeFfKkLlMmNnOoRrx";

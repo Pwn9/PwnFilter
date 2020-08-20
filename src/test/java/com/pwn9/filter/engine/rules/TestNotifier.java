@@ -27,7 +27,7 @@ import java.util.Map;
 
 class TestNotifier implements NotifyTarget {
 
-    private Map<String, String> notificationMap = new HashMap<>();
+    private final Map<String, String> notificationMap = new HashMap<>();
 
     @Override
     public void notifyWithPerm(String permissionString, String sendString) {

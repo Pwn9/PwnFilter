@@ -67,7 +67,7 @@ public class RuleChain implements Chain, ChainEntry {
         this.conditionGroups = ImmutableMultimap.copyOf(conditionGroups);
 
         // Count & Cache the number of rules.
-        Integer count = 0;
+        int count = 0;
         for (ChainEntry c : chain) {
             if (c instanceof RuleChain) {
                 count += ((RuleChain) c).ruleCount();

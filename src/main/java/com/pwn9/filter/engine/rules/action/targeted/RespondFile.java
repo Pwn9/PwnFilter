@@ -21,12 +21,9 @@
 package com.pwn9.filter.engine.rules.action.targeted;
 
 import com.google.common.collect.ImmutableList;
-import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.Action;
-import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.rules.action.InvalidActionException;
-import com.pwn9.filter.util.tag.TagRegistry;
-import org.bukkit.ChatColor;
+import com.pwn9.filter.util.PwnFormatter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -37,7 +34,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -47,11 +43,10 @@ import java.util.stream.Stream;
  * @version $Id: $Id
  */
 
-class RespondFile implements Action {
-    private final List<String> messageStrings;
+class RespondFile extends Respond {
 
     private RespondFile(List<String> messageStrings) {
-        this.messageStrings = messageStrings;
+        super(messageStrings);
     }
 
     public static Action getAction(String s, File sourceDir) throws InvalidActionException {
@@ -60,7 +55,7 @@ class RespondFile implements Action {
 
         try (Stream<String> sourceLines = Files.lines(filePath)) {
             sourceLines.forEach((String message) ->
-                    messageStrings.add(ChatColor.translateAlternateColorCodes('&', message)));
+                    messageStrings.add(PwnFormatter.legacyTextConverter(message)));
         } catch (FileNotFoundException ex) {
             throw new InvalidActionException("File not found while trying to add Action: " + ex.getMessage());
         } catch (IOException ex) {
@@ -72,18 +67,6 @@ class RespondFile implements Action {
         }
 
         return new RespondFile(ImmutableList.copyOf(messageStrings));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void execute(final FilterContext filterTask, FilterService filterService) {
-        final ArrayList<String> preparedMessages = messageStrings.stream().map(message -> TagRegistry.replaceTags(message, filterTask)).collect(Collectors.toCollection(ArrayList::new));
-
-        filterTask.getAuthor().sendMessages(preparedMessages);
-
-        filterTask.addLogMessage("Responded to " + filterTask.getAuthor().getName() + " with: " + preparedMessages.get(0) + "...");
-
     }
 }
 

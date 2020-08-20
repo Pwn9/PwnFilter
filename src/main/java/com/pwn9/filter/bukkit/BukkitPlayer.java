@@ -22,12 +22,14 @@ package com.pwn9.filter.bukkit;
 
 import com.google.common.base.Stopwatch;
 import com.google.common.base.Ticker;
-import com.pwn9.filter.engine.api.MessageAuthor;
+import com.pwn9.filter.engine.api.CommandSender;
+import com.pwn9.filter.engine.api.Player;
 import com.pwn9.filter.engine.rules.action.targeted.BurnTarget;
 import com.pwn9.filter.engine.rules.action.targeted.FineTarget;
 import com.pwn9.filter.engine.rules.action.targeted.KickTarget;
 import com.pwn9.filter.engine.rules.action.targeted.KillTarget;
 import com.pwn9.filter.minecraft.api.MinecraftAPI;
+import net.kyori.adventure.text.TextComponent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -41,7 +43,7 @@ import java.util.concurrent.TimeUnit;
  * <p>
  * Created by Sage905 on 15-08-31.
  */
-public class BukkitPlayer implements MessageAuthor, FineTarget, BurnTarget, KillTarget, KickTarget {
+public class BukkitPlayer implements Player, CommandSender, FineTarget, BurnTarget, KillTarget, KickTarget {
 
     static final int MAX_CACHE_AGE_SECS = 60; //
 
@@ -134,6 +136,11 @@ public class BukkitPlayer implements MessageAuthor, FineTarget, BurnTarget, Kill
         minecraftAPI.sendMessages(playerId, messages);
     }
 
+    @Override
+    public void sendMessage(TextComponent message) {
+        minecraftAPI.audiences().player(playerId).sendMessage(message);
+    }
+
     public void executeCommand(final String command) {
         minecraftAPI.executePlayerCommand(playerId, command);
     }
@@ -150,4 +157,8 @@ public class BukkitPlayer implements MessageAuthor, FineTarget, BurnTarget, Kill
         minecraftAPI.kill(playerId, messageString);
     }
 
+    @Override
+    public String getPlace() {
+        return minecraftAPI.getPlayerWorldName(playerId);
+    }
 }
