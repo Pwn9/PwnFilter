@@ -1,4 +1,4 @@
-/target
-PwnFilter.iml
+*.iml
 /.idea
 /dependency-reduced-pom.xml
+**/target
