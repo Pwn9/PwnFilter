@@ -20,8 +20,10 @@
 
 package com.pwn9.filter.engine.rules;
 
+import com.pwn9.filter.engine.FilterContext;
 import com.pwn9.filter.engine.FilterService;
-import com.pwn9.filter.engine.api.FilterContext;
+import com.pwn9.filter.engine.FilterServiceImpl;
+import com.pwn9.filter.engine.api.FilterContextImpl;
 import com.pwn9.filter.engine.rules.action.minecraft.MinecraftAction;
 import com.pwn9.filter.engine.rules.action.targeted.TargetedAction;
 import com.pwn9.filter.engine.rules.chain.InvalidChainException;
@@ -40,7 +42,7 @@ public class NotifyTest {
 
     private final TestAuthor author = new TestAuthor();
     private RuleChain rs;
-    private final FilterService filterService = new FilterService();
+    private final FilterService filterServiceImpl = new FilterServiceImpl();
 
     @BeforeClass
     public static void init() {
@@ -49,12 +51,12 @@ public class NotifyTest {
 
     @Before
     public void setUp() {
-        filterService.getActionFactory().addActionTokens(MinecraftAction.class);
-        filterService.getActionFactory().addActionTokens(TargetedAction.class);
+        filterServiceImpl.getActionFactory().addActionTokens(MinecraftAction.class);
+        filterServiceImpl.getActionFactory().addActionTokens(TargetedAction.class);
         File rulesDir = new File(getClass().getResource("/rules").getFile());
-        filterService.getConfig().setRulesDir(rulesDir);
+        filterServiceImpl.getConfig().setRulesDir(rulesDir);
         try {
-            rs = filterService.parseRules(new File(rulesDir, "notifyTests.txt"));
+            rs = filterServiceImpl.parseRules(new File(rulesDir, "notifyTests.txt"));
         } catch (InvalidChainException ex) {
             fail();
         }
@@ -62,24 +64,24 @@ public class NotifyTest {
 
     @Test
     public void testNotifyAddsMessage() {
-        FilterContext testState = new FilterContext("foo", author, new TestClient());
-        rs.execute(testState, filterService);
+        FilterContextImpl testState = new FilterContextImpl("foo", author, new TestClient());
+        rs.execute(testState, filterServiceImpl);
         assertEquals(testState.getNotifyMessages().get("pwnfilter.admins"),
                 "Player " + author.getName() + " has broken " + testState.getMatchedRules().get(0).getId());
     }
 
     @Test
     public void testNotifyOnlyKeepsLastMessage() {
-        FilterContext testState = new FilterContext("foo bar", author, new TestClient());
-        rs.execute(testState, filterService);
+        FilterContextImpl testState = new FilterContextImpl("foo bar", author, new TestClient());
+        rs.execute(testState, filterServiceImpl);
         assertEquals(testState.getNotifyMessages().get("pwnfilter.admins"),
                 "Player " + author.getName() + " has broken " + testState.getMatchedRules().get(1).getId());
     }
 
     @Test
     public void testNotifySendsOneMessagePerPerm() {
-        FilterContext testState = new FilterContext("foo bar baz", author, new TestClient());
-        rs.execute(testState, filterService);
+        FilterContextImpl testState = new FilterContextImpl("foo bar baz", author, new TestClient());
+        rs.execute(testState, filterServiceImpl);
         assertEquals(testState.getNotifyMessages().get("pwnfilter.admins"),
                 "Player " + author.getName() + " has broken " + testState.getMatchedRules().get(1).getId());
         assertEquals(testState.getNotifyMessages().get("pwnfilter.baz"),
@@ -89,10 +91,10 @@ public class NotifyTest {
 
     @Test
     public void testNotifySentAtEndOfProcessing() {
-        FilterContext testState = new FilterContext("foo bar baz", author, new TestClient());
+        FilterContext testState = new FilterContextImpl("foo bar baz", author, new TestClient());
         TestNotifier target = new TestNotifier();
-        filterService.registerNotifyTarget(target);
-        rs.execute(testState, filterService);
+        filterServiceImpl.registerNotifyTarget(target);
+        rs.execute(testState, filterServiceImpl);
         assertEquals(testState.getNotifyMessages().get("pwnfilter.admins"), target.getNotification("pwnfilter.admins"));
         assertEquals(testState.getNotifyMessages().get("pwnfilter.baz"), target.getNotification("pwnfilter.baz"));
 

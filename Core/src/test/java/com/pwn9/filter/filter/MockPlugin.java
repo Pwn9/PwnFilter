@@ -23,11 +23,13 @@ package com.pwn9.filter.filter;
 import com.google.common.collect.MapMaker;
 import com.pwn9.filter.PwnFilterPlugin;
 import com.pwn9.filter.engine.FilterService;
+import com.pwn9.filter.engine.FilterServiceImpl;
 import com.pwn9.filter.engine.api.AuthorService;
+import com.pwn9.filter.engine.api.Console;
 import com.pwn9.filter.engine.api.MessageAuthor;
 import com.pwn9.filter.engine.rules.TestAuthor;
 import com.pwn9.filter.minecraft.api.MinecraftAPI;
-import com.pwn9.filter.minecraft.api.MinecraftConsole;
+import com.pwn9.filter.minecraft.MinecraftConsole;
 
 
 import java.util.UUID;
@@ -37,7 +39,7 @@ import java.util.logging.Logger;
 public class MockPlugin implements PwnFilterPlugin {
 
     public static final ConcurrentMap<UUID, String> lastMessage = new MapMaker().concurrencyLevel(2).weakKeys().makeMap();
-    private final FilterService filterService = new FilterService();
+    private final FilterService filterServiceImpl = new FilterServiceImpl();
     private final MinecraftAPI minecraftAPI = new MockMinecraftAPI();
     private final static AuthorService authorService = new AuthorService() {
         final TestAuthor author = new TestAuthor();
@@ -54,11 +56,11 @@ public class MockPlugin implements PwnFilterPlugin {
 
     @Override
     public FilterService getFilterService() {
-        return filterService;
+        return filterServiceImpl;
     }
 
     @Override
-    public MinecraftConsole getConsole() {
+    public Console getConsole() {
         return new MinecraftConsole(minecraftAPI);
     }
 

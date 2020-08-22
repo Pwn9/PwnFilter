@@ -20,10 +20,10 @@
 
 package com.pwn9.filter.engine.rules.action.core;
 
+import com.pwn9.filter.engine.FilterContext;
 import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.EnhancedString;
-import com.pwn9.filter.engine.api.FilterContext;
 
 /**
  * Convert the matched text to lowercase.
@@ -42,7 +42,7 @@ enum Lower implements Action {
     /**
      * {@inheritDoc}
      */
-    public void execute(final FilterContext filterTask, FilterService filterService) {
+    public void execute(final FilterContext filterTask, FilterService filterServiceImpl) {
         EnhancedString cs = filterTask.getModifiedMessage();
         filterTask.addLogMessage("Converting to lowercase.");
         filterTask.setModifiedMessage(cs.patternToLower(filterTask.getPattern()));

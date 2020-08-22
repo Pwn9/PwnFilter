@@ -52,10 +52,10 @@ public final class ColoredString implements EnhancedString {
     //todo recreate this class to filter {@link TextComponents}
     private final String[] codes; // The String array containing the color / formatting codes
     private final char[] plain; // the plain text
-    private final String COLORCODES = "0123456789AaBbCcDdEeFfKkLlMmNnOoRrx";
+    private final static String COLOR_CODES = "0123456789AaBbCcDdEeFfKkLlMmNnOoRrx";
     private final char CR = '\r';
     private final char LF = '\n';
-    private final String FORMATPREFIXES = "§&";
+    private final static String FORMAT_PREFIXES = "§&";
 
     /**
      * <p>Constructor for ColoredString.</p>
@@ -70,8 +70,8 @@ public final class ColoredString implements EnhancedString {
         int textpos = 0;
 
         for (int i = 0; i < raw.length; i++) {
-            if (i != raw.length - 1 && FORMATPREFIXES.indexOf(raw[i]) > -1
-                    && COLORCODES.indexOf(raw[i + 1]) > -1) {
+            if (i != raw.length - 1 && FORMAT_PREFIXES.indexOf(raw[i]) > -1
+                    && COLOR_CODES.indexOf(raw[i + 1]) > -1) {
                 if (tmpCodes[textpos] == null) {
                     tmpCodes[textpos] = new String(raw, i, 2);
                 } else {

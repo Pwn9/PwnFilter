@@ -1,0 +1,25 @@
+#For RuleSetTest.testShortcuts()
+shortcuts testcuts.txt
+match <pat>
+then replace Replaced
+shortcuts
+
+match This is a test
+then replace This WAS a test
+
+match Respond
+then respond <<EOF
+&4This is a mult-line response.
+You can have as much text here as you want.
+NOTE: You MUST terminate a multiline response with a single line that reads: EOF
+EOF
+
+match notify
+then notify pwnfilter.notify %player% just said %rawstring%
+
+match repondfile
+then respondfile testfile.txt
+
+match [\[\{\(][\w\d ]+[\]\}\)]([\W_]+)?[\[\{\(][\w\d ]+[\]\}\)]
+then deny
+

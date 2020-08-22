@@ -20,13 +20,13 @@
 
 package com.pwn9.filter.engine.rules.action.core;
 
+import com.pwn9.filter.engine.FilterContext;
 import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.PointManager;
 import com.pwn9.filter.engine.api.Action;
-import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.api.MessageAuthor;
-import com.pwn9.filter.engine.rules.Rule;
 import com.pwn9.filter.engine.rules.action.InvalidActionException;
+import com.pwn9.filter.engine.rules.chain.Rule;
 import com.pwn9.filter.util.PwnFormatter;
 
 /**
@@ -62,15 +62,15 @@ class Points implements Action {
     }
 
     @Override
-    public void execute(final FilterContext filterTask, FilterService filterService) {
+    public void execute(final FilterContext filterTask, FilterService filterServiceImpl) {
         MessageAuthor a = filterTask.getAuthor();
 
         if (a == null) return;
 
-        PointManager pm = filterService.getPointManager();
-        if (!pm.isEnabled()) {
+        PointManager pm = filterServiceImpl.getPointManager();
+        if (!pm.isActive()) {
             Rule thisRule = filterTask.getRule();
-            filterService.getLogger().fine(String.format("Rule: %s has 'then points', but PointManager is disabled in config.yml",
+            filterServiceImpl.getLogger().fine(String.format("Rule: %s has 'then points', but PointManager is disabled in config.yml",
                     (thisRule != null) ? thisRule.getId() : "None"));
             return;
         }

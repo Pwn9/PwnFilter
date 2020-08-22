@@ -562,12 +562,12 @@ public class MockServer implements Server {
     }
 
     @Override
-    public CachedServerIcon loadServerIcon(File file) throws Exception {
+    public CachedServerIcon loadServerIcon(File file) {
         return null;
     }
 
     @Override
-    public CachedServerIcon loadServerIcon(BufferedImage image) throws Exception {
+    public CachedServerIcon loadServerIcon(BufferedImage image) {
         return null;
     }
 

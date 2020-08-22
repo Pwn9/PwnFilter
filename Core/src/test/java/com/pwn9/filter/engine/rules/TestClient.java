@@ -20,9 +20,9 @@
 
 package com.pwn9.filter.engine.rules;
 
-import com.pwn9.filter.engine.FilterService;
+import com.pwn9.filter.engine.FilterServiceImpl;
 import com.pwn9.filter.engine.api.FilterClient;
-import com.pwn9.filter.engine.rules.chain.RuleChain;
+import com.pwn9.filter.engine.rules.chain.RuleChainImpl;
 
 public class TestClient implements FilterClient {
 
@@ -43,12 +43,12 @@ public class TestClient implements FilterClient {
     }
 
     @Override
-    public FilterService getFilterService() {
+    public FilterServiceImpl getFilterService() {
         return null;
     }
 
     @Override
-    public RuleChain getRuleChain() {
+    public RuleChainImpl getRuleChain() {
         return null;
     }
 

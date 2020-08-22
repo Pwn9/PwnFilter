@@ -20,16 +20,16 @@
 
 package com.pwn9.filter.engine.rules;
 
+import com.pwn9.filter.engine.FilterContext;
 import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.Action;
-import com.pwn9.filter.engine.api.FilterContext;
 
 public class TestAction implements Action {
 
     private int counter = 0;
 
     @Override
-    public void execute(FilterContext task, FilterService filterService) {
+    public void execute(FilterContext task, FilterService filterServiceImpl) {
         counter++;
     }
 

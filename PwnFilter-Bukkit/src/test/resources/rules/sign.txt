@@ -1,0 +1,6 @@
+# This is a base file for you to configure.
+# Please refer to http://dev.bukkit.org/bukkit-plugins/pwnfilter
+# for more documentation on how to configure these files.
+
+# By default, use the chat filter.
+include chat.txt

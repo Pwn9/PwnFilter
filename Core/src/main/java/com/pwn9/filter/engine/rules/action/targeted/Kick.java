@@ -20,9 +20,9 @@
 
 package com.pwn9.filter.engine.rules.action.targeted;
 
+import com.pwn9.filter.engine.FilterContext;
 import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.Action;
-import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.util.PwnFormatter;
 
 import static com.pwn9.filter.util.tag.TagRegistry.replaceTags;
@@ -58,7 +58,7 @@ class Kick implements Action {
     /**
      * {@inheritDoc}
      */
-    public void execute(final FilterContext filterTask, FilterService filterService) {
+    public void execute(final FilterContext filterTask, FilterService filterServiceImpl) {
 
         if (filterTask.getAuthor() instanceof KickTarget) {
 

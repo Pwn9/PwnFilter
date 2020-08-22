@@ -20,8 +20,9 @@
 
 package com.pwn9.filter.engine.rules;
 
-import com.pwn9.filter.engine.FilterService;
-import com.pwn9.filter.engine.api.FilterContext;
+import com.pwn9.filter.engine.FilterContext;
+import com.pwn9.filter.engine.FilterServiceImpl;
+import com.pwn9.filter.engine.api.FilterContextImpl;
 import com.pwn9.filter.engine.api.MessageAuthor;
 import com.pwn9.filter.engine.rules.action.minecraft.MinecraftAction;
 import com.pwn9.filter.engine.rules.action.targeted.TargetedAction;
@@ -42,7 +43,7 @@ public class ConditionTest {
 
     private final MessageAuthor author = new TestAuthor();
     private RuleChain rs;
-    private final FilterService filterService = new FilterService();
+    private final FilterServiceImpl filterServiceImpl = new FilterServiceImpl();
     private final File testFile = new File(getClass().getResource("/conditionTests.txt").getFile());
     private final File parentDir = new File(testFile.getParent());
 
@@ -52,11 +53,11 @@ public class ConditionTest {
         // For debugging purposes
 //        filterService.setLogFileHandler(new File("/tmp/pwnfilter.log"));
 //        filterService.setLevel(Level.FINEST);
-        filterService.getActionFactory().addActionTokens(MinecraftAction.class);
-        filterService.getActionFactory().addActionTokens(TargetedAction.class);
-        filterService.getConfig().setRulesDir(parentDir);
+        filterServiceImpl.getActionFactory().addActionTokens(MinecraftAction.class);
+        filterServiceImpl.getActionFactory().addActionTokens(TargetedAction.class);
+        filterServiceImpl.getConfig().setRulesDir(parentDir);
         try {
-            rs = filterService.parseRules(testFile);
+            rs = filterServiceImpl.parseRules(testFile);
         } catch (InvalidChainException e) {
             fail();
         }
@@ -64,40 +65,40 @@ public class ConditionTest {
 
     @Test
     public void testIgnoreString() {
-        FilterContext testState = new FilterContext("Ignore string baseline test.", author, new TestClient());
-        rs.execute(testState, filterService);
+        FilterContext testState = new FilterContextImpl("Ignore string baseline test.", author, new TestClient());
+        rs.execute(testState, filterServiceImpl);
         assertEquals("Ignore replaced baseline test.", testState.getModifiedMessage().toString());
-        FilterContext state2 = new FilterContext("Ignore string qwerty test.", author, new TestClient());
-        rs.execute(state2, filterService);
+        FilterContext state2 = new FilterContextImpl("Ignore string qwerty test.", author, new TestClient());
+        rs.execute(state2, filterServiceImpl);
         assertEquals("Ignore string qwerty test.", state2.getModifiedMessage().toString());
 
     }
 
     @Test
     public void testIgnoreCommand() {
-        FilterContext testState1 = new FilterContext("Ignore baseline command test", author, new TestClient());
-        rs.execute(testState1, filterService);
+        FilterContextImpl testState1 = new FilterContextImpl("Ignore baseline command test", author, new TestClient());
+        rs.execute(testState1, filterServiceImpl);
         assertEquals("Ignore baseline replace command", testState1.getModifiedMessage().toString());
 
-        FilterContext testState2 = new FilterContext("/tell Ignore command test", author, new TestClient("COMMAND"));
-        rs.execute(testState2, filterService);
+        FilterContextImpl testState2 = new FilterContextImpl("/tell Ignore command test", author, new TestClient("COMMAND"));
+        rs.execute(testState2, filterServiceImpl);
         assertEquals("/tell Ignore command test", testState2.getModifiedMessage().toString());
     }
 
     @Test
     public void testIgnoreDoesntMatch() {
-        FilterContext testState2 = new FilterContext("testestest banned", author, new TestClient());
-        rs.execute(testState2, filterService);
+        FilterContextImpl testState2 = new FilterContextImpl("testestest banned", author, new TestClient());
+        rs.execute(testState2, filterServiceImpl);
         assertEquals("testestest matched", testState2.getModifiedMessage().toString());
     }
 
     @Test
     public void testComandConditionOnlyMatchesCommandHandler() {
-        FilterContext testState = new FilterContext("tell banned", author, new TestClient());
-        rs.execute(testState, filterService);
+        FilterContextImpl testState = new FilterContextImpl("tell banned", author, new TestClient());
+        rs.execute(testState, filterServiceImpl);
         assertEquals("tell matched", testState.getModifiedMessage().toString());
-        FilterContext testState2 = new FilterContext("tell banned", author, new TestClient("COMMAND"));
-        rs.execute(testState2, filterService);
+        FilterContextImpl testState2 = new FilterContextImpl("tell banned", author, new TestClient("COMMAND"));
+        rs.execute(testState2, filterServiceImpl);
         assertEquals("tell banned", testState2.getModifiedMessage().toString());
     }
 

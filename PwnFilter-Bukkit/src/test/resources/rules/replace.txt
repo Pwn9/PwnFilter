@@ -1,0 +1,3 @@
+match replaceme
+rule R1 replacetest
+then replace PASS

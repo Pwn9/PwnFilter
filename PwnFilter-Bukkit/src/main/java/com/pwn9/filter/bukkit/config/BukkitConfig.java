@@ -52,33 +52,33 @@ public class BukkitConfig {
 
     private static File dataFolder;
 
-    public static void loadConfiguration(Configuration configuration, File folder, FilterService filterService) throws InvalidConfigurationException {
+    public static void loadConfiguration(Configuration configuration, File folder, FilterService filterServiceImpl) throws InvalidConfigurationException {
 
         dataFolder = folder;
         config = configuration;
 
         if (config.getBoolean("logfile")) {
-            filterService.setLogFileHandler(new File(dataFolder, "pwnfilter.log"));
-            filterService.setDebugMode(config.getString("debug", "off"));
+            filterServiceImpl.setLogFileHandler(new File(dataFolder, "pwnfilter.log"));
+            filterServiceImpl.setDebugMode(config.getString("debug", "off"));
 
         } else { // Needed during configuration reload to turn off logging if the option changes
-            filterService.clearLogFileHandler();
+            filterServiceImpl.clearLogFileHandler();
         }
 
         // Set the directory containing rules files.
         File ruleDir = setupDirectory(config.getString("ruledirectory", "rules"),
-                filterService.getLogger());
+                filterServiceImpl.getLogger());
         if (ruleDir != null) {
-            filterService.getConfig().setRulesDir(ruleDir);
+            filterServiceImpl.getConfig().setRulesDir(ruleDir);
         } else {
             throw new InvalidConfigurationException(
                     "Unable to create or access rule directory.");
         }
 
         // Set the directory containing Text Files
-        filterService.getConfig().setTextDir(
+        filterServiceImpl.getConfig().setTextDir(
                 setupDirectory(config.getString("textdir", "textfiles"),
-                        filterService.getLogger())
+                        filterServiceImpl.getLogger())
         );
 
         // Set up the default action messages
@@ -95,31 +95,31 @@ public class BukkitConfig {
         } catch (IllegalArgumentException ex) {
             throw new InvalidConfigurationException("Could not parse loglevel.  Must be either 'info' or 'fine'.  Found: " + config.getString("loglevel"));
         }
-        filterService.getConfig().setLogLevel(logLevel);
+        filterServiceImpl.getConfig().setLogLevel(logLevel);
 
-        setupPoints(filterService);
+        setupPoints(filterServiceImpl);
 
     }
 
-    private static void setupPoints(FilterService filterService) {
-        PointManager pointManager = filterService.getPointManager();
+    private static void setupPoints(FilterService filterServiceImpl) {
+        PointManager pointManager = filterServiceImpl.getPointManager();
         ConfigurationSection pointsSection = config.getConfigurationSection("points");
         if (!pointsSection.getBoolean("enabled")) {
-            if (pointManager.isEnabled()) {
+            if (pointManager.isActive()) {
                 pointManager.shutdown();
             }
         } else {
-            if (!pointManager.isEnabled()) {
+            if (!pointManager.isActive()) {
                 pointManager.setLeakPoints(pointsSection.getDouble("leak.points", 1));
                 pointManager.setLeakInterval(pointsSection.getInt("leak.interval", 30));
 
                 try {
-                    parseThresholds(pointsSection.getConfigurationSection("thresholds"), pointManager, filterService.getActionFactory());
+                    parseThresholds(pointsSection.getConfigurationSection("thresholds"), pointManager, filterServiceImpl.getActionFactory());
                 } catch (InvalidActionException ex) {
-                    filterService.getLogger().warning("Invalid Action parsing Thresholds: " + ex.getMessage());
+                    filterServiceImpl.getLogger().warning("Invalid Action parsing Thresholds: " + ex.getMessage());
                     pointManager.shutdown();
                 }
-                pointManager.start();
+                pointManager.activate();
             }
         }
     }

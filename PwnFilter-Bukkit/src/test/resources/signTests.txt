@@ -1,0 +1,8 @@
+match Changeme
+then rewrite Changed
+
+match Replacelong
+then rewrite 1234567890123456789
+
+match d.e.r.p
+then rewrite foo

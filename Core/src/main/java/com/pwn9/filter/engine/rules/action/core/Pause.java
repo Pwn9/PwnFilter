@@ -20,9 +20,9 @@
 
 package com.pwn9.filter.engine.rules.action.core;
 
+import com.pwn9.filter.engine.FilterContext;
 import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.Action;
-import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.engine.rules.action.InvalidActionException;
 
 /**
@@ -57,14 +57,14 @@ class Pause implements Action {
     }
 
     @Override
-    public void execute(final FilterContext filterTask, FilterService filterService) {
+    public void execute(final FilterContext filterTask, FilterService filterServiceImpl) {
         try {
-            filterService.getLogger().fine("Paws (" + waitTime + " milliseconds)");
+            filterServiceImpl.getLogger().fine("Paws (" + waitTime + " milliseconds)");
             wait(waitTime);
-            filterService.getLogger().fine("Un-paws");
+            filterServiceImpl.getLogger().fine("Un-paws");
 
         } catch (InterruptedException ex) {
-            filterService.getLogger().info("Pause action was interrupted:" + ex.getMessage());
+            filterServiceImpl.getLogger().info("Pause action was interrupted:" + ex.getMessage());
         }
 
     }

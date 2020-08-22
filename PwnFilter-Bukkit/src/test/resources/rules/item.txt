@@ -1,0 +1,6 @@
+# This is a base file for you to configure.
+# Please refer to http://dev.bukkit.org/bukkit-plugins/pwnfilter
+# for more documentation on how to configure these files.
+
+# By default, there are no rules applied to items.
+# Why don't you make some! :)

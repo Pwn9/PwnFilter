@@ -21,9 +21,9 @@
 package com.pwn9.filter.engine.rules.action.targeted;
 
 import com.google.common.collect.ImmutableList;
+import com.pwn9.filter.engine.FilterContext;
 import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.Action;
-import com.pwn9.filter.engine.api.FilterContext;
 import com.pwn9.filter.util.PwnFormatter;
 import com.pwn9.filter.util.tag.TagRegistry;
 
@@ -60,7 +60,7 @@ public class Respond implements Action {
     /**
      * {@inheritDoc}
      */
-    public void execute(final FilterContext filterTask, FilterService filterService) {
+    public void execute(final FilterContext filterTask, FilterService filterServiceImpl) {
         if (filterTask.getAuthor() == null) return;
         final ArrayList<String> preparedMessages = messageStrings.stream().map(message -> TagRegistry.replaceTags(message, filterTask)).collect(Collectors.toCollection(ArrayList::new));
 

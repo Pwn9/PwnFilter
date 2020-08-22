@@ -23,7 +23,7 @@ package com.pwn9.filter.bukkit.listener;
 import com.pwn9.filter.bukkit.PwnFilterBukkitPlugin;
 import com.pwn9.filter.PwnFilterPlugin;
 import com.pwn9.filter.bukkit.config.BukkitConfig;
-import com.pwn9.filter.engine.api.FilterContext;
+import com.pwn9.filter.engine.api.FilterContextImpl;
 import com.pwn9.filter.engine.api.MessageAuthor;
 import com.pwn9.filter.engine.api.UnknownAuthor;
 import com.pwn9.filter.engine.rules.chain.InvalidChainException;
@@ -59,7 +59,7 @@ public class PwnFilterPlayerListener extends AbstractBukkitListener {
             plugin.getLogger().info("Filtering Aborted. Unable to lookup player in Chat Event.  PlayerUUID: "
                   + event.getPlayer().getUniqueId());
             plugin.getLogger().info("Message: " + event.getMessage());
-            plugin.getLogger().info("AuthorServices: " + filterService.getAuthorServices());
+            plugin.getLogger().info("AuthorServices: " + filterServiceImpl.getAuthorServices());
             plugin.getLogger().info("Bukkit player online: " + event.getPlayer().isOnline());
             return;
         }
@@ -85,7 +85,7 @@ public class PwnFilterPlayerListener extends AbstractBukkitListener {
 
         }
 
-        FilterContext state = new FilterContext(new ColoredString(message), minecraftPlayer, this);
+        FilterContextImpl state = new FilterContextImpl(new ColoredString(message), minecraftPlayer, this);
 
         // Global decolor
         if ((BukkitConfig.decolor()) && !(minecraftPlayer.hasPermission("pwnfilter.color"))) {
@@ -95,7 +95,7 @@ public class PwnFilterPlayerListener extends AbstractBukkitListener {
 
         // Take the message from the ChatEvent and send it through the filter.
         plugin.getLogger().finer("Applying '" + ruleChain.getConfigName() + "' to message: " + state.getModifiedMessage());
-        ruleChain.execute(state, filterService);
+        ruleChain.execute(state, filterServiceImpl);
 
         // Only update the message if it has been changed.
         if (state.messageChanged()) {
@@ -125,7 +125,7 @@ public class PwnFilterPlayerListener extends AbstractBukkitListener {
 
         try {
 
-            ruleChain = getCompiledChain(filterService.getConfig().getRuleFile("chat.txt"));
+            ruleChain = getCompiledChain(filterServiceImpl.getConfig().getRuleFile("chat.txt"));
 
             PluginManager pm = Bukkit.getServer().getPluginManager();
 

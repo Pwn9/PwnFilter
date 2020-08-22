@@ -20,7 +20,8 @@
 
 package com.pwn9.filter.util.tag;
 
-import com.pwn9.filter.engine.api.FilterContext;
+
+import com.pwn9.filter.engine.FilterContext;
 
 /**
  * Return the current (edited) Message text

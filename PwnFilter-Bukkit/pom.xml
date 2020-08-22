@@ -60,6 +60,12 @@
             <version>1.7</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>com.pwn9.PwnFilter</groupId>
+            <artifactId>PwnFilter-Mock</artifactId>
+            <version>3.9.3-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <profiles>
         <profile>
@@ -132,6 +138,7 @@
                         <includes>
                             <include>net.kyori:*</include>
                             <include>org.bstats:bstats-bukkit</include>
+                            <include>com.pwn9.PwnFilter:*</include>
                         </includes>
                     </artifactSet>
                     <relocations>

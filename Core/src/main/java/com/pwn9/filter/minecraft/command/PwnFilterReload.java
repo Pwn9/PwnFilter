@@ -1,7 +1,7 @@
 package com.pwn9.filter.minecraft.command;
 
 import com.pwn9.filter.PwnFilterPlugin;
-import com.pwn9.filter.engine.FilterService;
+import com.pwn9.filter.engine.FilterServiceImpl;
 import com.pwn9.filter.engine.api.CommandSender;
 
 import java.util.Collections;
@@ -13,27 +13,27 @@ import java.util.List;
  * on 19/08/2020.
  */
 public class PwnFilterReload implements PwnFilterCommandExecutor {
-    private final FilterService filterService;
+    private final FilterServiceImpl filterServiceImpl;
     private final PwnFilterPlugin plugin;
 
-    public PwnFilterReload(FilterService filterService, PwnFilterPlugin plugin) {
-        this.filterService = filterService;
+    public PwnFilterReload(FilterServiceImpl filterServiceImpl, PwnFilterPlugin plugin) {
+        this.filterServiceImpl = filterServiceImpl;
         this.plugin = plugin;
     }
 
     @Override
     public boolean onCommand(CommandSender sender, String command, String alias,String... args) {
 
-        filterService.getLogger().info("Disabling all listeners");
-        filterService.disableClients();
+        filterServiceImpl.getLogger().info("Disabling all listeners");
+        filterServiceImpl.disableClients();
 
         if (!plugin.configurePlugin()) return false;
-        filterService.getLogger().config("Reloaded config.yml as requested by " + sender.getName());
-        filterService.getLogger().config("All rules reloaded by " + sender.getName());
+        filterServiceImpl.getLogger().config("Reloaded config.yml as requested by " + sender.getName());
+        filterServiceImpl.getLogger().config("All rules reloaded by " + sender.getName());
 
         // Re-register our listeners
-        filterService.enableClients();
-        filterService.getLogger().info("All listeners re-enabled");
+        filterServiceImpl.enableClients();
+        filterServiceImpl.getLogger().info("All listeners re-enabled");
         return true;
     }
 

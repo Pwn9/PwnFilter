@@ -24,14 +24,21 @@ import com.pwn9.filter.engine.FilterConfig;
 import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.rules.Condition;
-import com.pwn9.filter.engine.rules.Rule;
+import com.pwn9.filter.engine.rules.ConditionImpl;
+import com.pwn9.filter.engine.rules.RuleImpl;
 import com.pwn9.filter.engine.rules.ShortCutManager;
 import com.pwn9.filter.engine.rules.action.ActionFactory;
 import com.pwn9.filter.engine.rules.action.InvalidActionException;
 import com.pwn9.filter.engine.rules.chain.InvalidChainException;
 import com.pwn9.filter.engine.rules.chain.RuleChain;
+import com.pwn9.filter.engine.rules.chain.RuleChainImpl;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.InvalidObjectException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,10 +66,10 @@ public class TextConfigParser implements FilterConfigParser {
     private final ActionFactory actionFactory;
     private final FilterConfig filterConfig;
 
-    public TextConfigParser(FilterService filterService) {
-        this.logger = filterService.getLogger();
-        this.actionFactory = filterService.getActionFactory();
-        this.filterConfig = filterService.getConfig();
+    public TextConfigParser(FilterService filterServiceImpl) {
+        this.logger = filterServiceImpl.getLogger();
+        this.actionFactory = filterServiceImpl.getActionFactory();
+        this.filterConfig = filterServiceImpl.getConfig();
     }
 
     public RuleChain parse(File source) throws InvalidChainException {
@@ -71,7 +78,7 @@ public class TextConfigParser implements FilterConfigParser {
     }
 
     public RuleChain parse(File source, List<File> parents) throws InvalidChainException {
-        RuleChain.Builder builder = new RuleChain.Builder();
+        RuleChainImpl.Builder builder = new RuleChainImpl.Builder();
         builder.setConfigName(source.getName());
         return parse(source, parents, builder);
     }
@@ -81,7 +88,7 @@ public class TextConfigParser implements FilterConfigParser {
      *
      * @return Chain containing new chain, or InvalidChainException on failure.
      */
-    private RuleChain parse(File source, List<File> parents, RuleChain.Builder builder) throws InvalidChainException {
+    private RuleChain parse(File source, List<File> parents, RuleChainImpl.Builder builder) throws InvalidChainException {
 
         RuleStreamReader reader;
         try {
@@ -155,13 +162,13 @@ public class TextConfigParser implements FilterConfigParser {
                     // Parse a rule starting with the pattern
                     else if (command.matches("match|catch|replace|rewrite")) {
                         String pattern = ShortCutManager.replace(logger, shortcuts, tokenString.getString());
-                        parseRule(new Rule(pattern), reader.readSection(), builder, actionFactory);
+                        parseRule(new RuleImpl(pattern), reader.readSection(), builder, actionFactory);
                     }
                     // Parse a rule starting with the ID/Description
                     else if (command.matches("rule")) {
                         String id = tokenString.popToken();
                         String descr = tokenString.getString();
-                        parseRule(new Rule(id, descr), reader.readSection(), builder, actionFactory);
+                        parseRule(new RuleImpl(id, descr), reader.readSection(), builder, actionFactory);
                     }
                 } catch (ParseException e) {
                     throw new InvalidChainException(parserError(e.getErrorOffset(), e.getMessage(), builder.getConfigName()));
@@ -182,9 +189,9 @@ public class TextConfigParser implements FilterConfigParser {
 
     /* Private Parser Methods */
 
-    private void parseRule(Rule rule,
+    private void parseRule(RuleImpl rule,
                            List<NumberedLine> lines,
-                           RuleChain.Builder builder,
+                           RuleChainImpl.Builder builder,
                            ActionFactory factory) throws ParseException {
 
         for (NumberedLine line : lines) {
@@ -223,9 +230,9 @@ public class TextConfigParser implements FilterConfigParser {
                 }
             }
             // condition <parameters>
-            else if (Condition.isCondition(command)) {
+            else if (ConditionImpl.isCondition(command)) {
                 // This is a condition.  Add a new condition to this rule.
-                Condition newCondition = Condition.newCondition(tokenString.getOriginalString());
+                Condition newCondition = ConditionImpl.newCondition(tokenString.getOriginalString());
                 if (!rule.addCondition(newCondition)) {
                     throw new ParseException("Could not parse condition: " + tokenString.getOriginalString(), line.number);
                 }
@@ -246,7 +253,7 @@ public class TextConfigParser implements FilterConfigParser {
      * @param groupName A String containing the name of the group
      * @param lines     A list of Strings containing the actions to parse.
      */
-    private void parseActionGroup(String groupName, List<NumberedLine> lines, RuleChain.Builder builder) throws ParseException {
+    private void parseActionGroup(String groupName, List<NumberedLine> lines, RuleChainImpl.Builder builder) throws ParseException {
 
         ArrayList<Action> actionGroup = new ArrayList<>();
 
@@ -282,7 +289,7 @@ public class TextConfigParser implements FilterConfigParser {
      * @param lines     A list of Strings containing the Conditions to parse.
      * @param builder   A RuleChain Builder object.
      */
-    private void parseConditionGroup(String groupName, List<NumberedLine> lines, RuleChain.Builder builder) throws ParseException {
+    private void parseConditionGroup(String groupName, List<NumberedLine> lines, RuleChainImpl.Builder builder) throws ParseException {
 
         ArrayList<Condition> conditionGroup = new ArrayList<>();
 
@@ -290,7 +297,7 @@ public class TextConfigParser implements FilterConfigParser {
             TokenString tString = new TokenString(line.string);
             String command = tString.popToken();
 
-            Condition thisCondition = Condition.newCondition(command, tString.getString());
+            Condition thisCondition = ConditionImpl.newCondition(command, tString.getString());
 
             if (thisCondition != null) {
                 conditionGroup.add(thisCondition);
@@ -312,7 +319,7 @@ public class TextConfigParser implements FilterConfigParser {
 
     }
 
-    private void processIncludedFile(String lineData, File parentDir, RuleChain.Builder parentBuilder, List<File> parents) throws InvalidChainException {
+    private void processIncludedFile(String lineData, File parentDir, RuleChainImpl.Builder parentBuilder, List<File> parents) throws InvalidChainException {
         // Major change to the way this is done.  It used to be its own chain, which was linked.
         // Now, we are going to import each statement into this chain.  We will apply this chain's
         // shortcuts, actiongroups, etc. to the chain.  This will allow different chains to include

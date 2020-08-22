@@ -23,7 +23,7 @@ package com.pwn9.filter.bukkit.listener;
 import com.pwn9.filter.bukkit.PwnFilterBukkitPlugin;
 import com.pwn9.filter.PwnFilterPlugin;
 import com.pwn9.filter.bukkit.config.BukkitConfig;
-import com.pwn9.filter.engine.api.FilterContext;
+import com.pwn9.filter.engine.api.FilterContextImpl;
 import com.pwn9.filter.engine.api.MessageAuthor;
 import com.pwn9.filter.engine.rules.chain.InvalidChainException;
 import com.pwn9.filter.engine.rules.chain.RuleChain;
@@ -59,8 +59,8 @@ public class PwnFilterCommandListener extends AbstractBukkitListener {
         EventPriority priority = BukkitConfig.getCmdpriority();
         if (BukkitConfig.cmdfilterEnabled()) {
             try {
-                ruleChain = getCompiledChain(filterService.getConfig().getRuleFile("command.txt"));
-                chatRuleChain = getCompiledChain(filterService.getConfig().getRuleFile("chat.txt"));
+                ruleChain = getCompiledChain(filterServiceImpl.getConfig().getRuleFile("command.txt"));
+                chatRuleChain = getCompiledChain(filterServiceImpl.getConfig().getRuleFile("chat.txt"));
 
                 pm.registerEvent(PlayerCommandPreprocessEvent.class, this, priority,
                         (l, e) -> eventProcessor((PlayerCommandPreprocessEvent) e),
@@ -106,7 +106,7 @@ public class PwnFilterCommandListener extends AbstractBukkitListener {
         String cmdmessage = message.substring(1).split(" ")[0];
 
 
-        FilterContext filterTask = new FilterContext(new ColoredString(message), minecraftPlayer, this);
+        FilterContextImpl filterTask = new FilterContextImpl(new ColoredString(message), minecraftPlayer, this);
 
         // Check to see if we should treat this command as chat (eg: /tell)
         if (BukkitConfig.getCmdchat().contains(cmdmessage)) {
@@ -124,7 +124,7 @@ public class PwnFilterCommandListener extends AbstractBukkitListener {
                 return;
             }
 
-            chatRuleChain.execute(filterTask, filterService);
+            chatRuleChain.execute(filterTask, filterServiceImpl);
 
         } else {
 
@@ -134,7 +134,7 @@ public class PwnFilterCommandListener extends AbstractBukkitListener {
 
             // Take the message from the Command Event and send it through the filter.
 
-            ruleChain.execute(filterTask, filterService);
+            ruleChain.execute(filterTask, filterServiceImpl);
 
         }
 

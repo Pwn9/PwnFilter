@@ -55,10 +55,10 @@ import static org.junit.Assert.assertTrue;
 public class PwnFilterPlayerListenerTest {
 
     private final File resourcesDir = new File(getClass().getResource("/config.yml").getFile()).getParentFile();
-    private final Player mockPlayer = new MockPlayer();
+    private Player mockPlayer;
     private AsyncPlayerChatEvent chatEvent;
     private Configuration testConfig;
-    private FilterService filterService;
+    private FilterService filterServiceImpl;
     private PwnFilterPlayerListener playerListener;
     private MinecraftAPI api;
 
@@ -67,14 +67,15 @@ public class PwnFilterPlayerListenerTest {
         File rulesDir = new File(getClass().getResource("/rules").getFile());
         PwnFilterPlugin testPlugin = new MockPlugin();
         api = testPlugin.getApi();
+        mockPlayer = new MockPlayer(testPlugin.getApi());
         playerListener = new PwnFilterPlayerListener(testPlugin);
-        filterService = testPlugin.getFilterService();
-        filterService.getConfig().setRulesDir(rulesDir);
+        filterServiceImpl = testPlugin.getFilterService();
+        filterServiceImpl.getConfig().setRulesDir(rulesDir);
         testConfig = YamlConfiguration.loadConfiguration(new File(getClass().getResource("/config.yml").getFile()));
-        filterService.getActionFactory().addActionTokens(MinecraftAction.class);
-        filterService.getActionFactory().addActionTokens(TargetedAction.class);
-        filterService.registerAuthorService(MockPlugin.getMockAuthorService());
-        BukkitConfig.loadConfiguration(testConfig, resourcesDir, filterService);
+        filterServiceImpl.getActionFactory().addActionTokens(MinecraftAction.class);
+        filterServiceImpl.getActionFactory().addActionTokens(TargetedAction.class);
+        filterServiceImpl.registerAuthorService(MockPlugin.getMockAuthorService());
+        BukkitConfig.loadConfiguration(testConfig, resourcesDir, filterServiceImpl);
         BukkitConfig.setGlobalMute(false); // To ensure it gets reset between tests.
     }
 
@@ -110,7 +111,7 @@ public class PwnFilterPlayerListenerTest {
     public void testDecolorMessage() throws Exception {
         String input = "Test&4 Message";
         testConfig.set("decolor", true);
-        BukkitConfig.loadConfiguration(testConfig, resourcesDir, filterService);
+        BukkitConfig.loadConfiguration(testConfig, resourcesDir, filterServiceImpl);
 
         chatEvent = new AsyncPlayerChatEvent(true, mockPlayer, input, new HashSet<>());
         playerListener.loadRuleChain("blank.txt");
@@ -123,7 +124,7 @@ public class PwnFilterPlayerListenerTest {
     @Test
     public void testLowerMessage() throws Exception {
         String input = "HEY! THIS SHOULD ALL GET LOWERED.";
-        BukkitConfig.loadConfiguration(testConfig, resourcesDir, filterService);
+        BukkitConfig.loadConfiguration(testConfig, resourcesDir, filterServiceImpl);
 
         chatEvent = new AsyncPlayerChatEvent(true, mockPlayer, input, new HashSet<>());
         playerListener.loadRuleChain("actionTests.txt");

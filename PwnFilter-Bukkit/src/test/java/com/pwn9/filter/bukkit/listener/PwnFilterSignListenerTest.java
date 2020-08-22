@@ -52,7 +52,7 @@ import static org.junit.Assert.assertEquals;
 public class PwnFilterSignListenerTest {
 
     private final File resourcesDir = new File(getClass().getResource("/config.yml").getFile()).getParentFile();
-    private final Player mockPlayer = new MockPlayer();
+    private Player mockPlayer;
     private Block mockBlock;
     private SignChangeEvent signChangeEvent;
     private PwnFilterSignListener signListener;
@@ -63,13 +63,14 @@ public class PwnFilterSignListenerTest {
         File rulesDir = new File(getClass().getResource("/rules").getFile());
         PwnFilterPlugin testPlugin = new MockPlugin();
         signListener = new PwnFilterSignListener(testPlugin);
-        FilterService filterService = testPlugin.getFilterService();
-        filterService.getConfig().setRulesDir(rulesDir);
+        mockPlayer = new MockPlayer(testPlugin.getApi());
+        FilterService filterServiceImpl = testPlugin.getFilterService();
+        filterServiceImpl.getConfig().setRulesDir(rulesDir);
         Configuration testConfig = YamlConfiguration.loadConfiguration(new File(getClass().getResource("/config.yml").getFile()));
-        filterService.getActionFactory().addActionTokens(MinecraftAction.class);
-        filterService.getActionFactory().addActionTokens(TargetedAction.class);
-        filterService.registerAuthorService(MockPlugin.getMockAuthorService());
-        BukkitConfig.loadConfiguration(testConfig, resourcesDir, filterService);
+        filterServiceImpl.getActionFactory().addActionTokens(MinecraftAction.class);
+        filterServiceImpl.getActionFactory().addActionTokens(TargetedAction.class);
+        filterServiceImpl.registerAuthorService(MockPlugin.getMockAuthorService());
+        BukkitConfig.loadConfiguration(testConfig, resourcesDir, filterServiceImpl);
         BukkitConfig.setGlobalMute(false); // To ensure it gets reset between tests.
     }
 

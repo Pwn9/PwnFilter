@@ -43,23 +43,23 @@ import java.io.File;
  * @version $Id: $Id
  */
 abstract class AbstractBukkitListener implements FilterClient, Listener {
-    protected final FilterService filterService;
+    protected final FilterService filterServiceImpl;
     volatile RuleChain ruleChain;
     private boolean active;
     protected final PwnFilterPlugin plugin;
 
     AbstractBukkitListener(PwnFilterPlugin plugin) {
-        this.filterService = plugin.getFilterService();
+        this.filterServiceImpl = plugin.getFilterService();
         this.plugin = plugin;
     }
 
     RuleChain getCompiledChain(File ruleFile) throws InvalidChainException {
-        return filterService.parseRules(ruleFile);
+        return filterServiceImpl.parseRules(ruleFile);
     }
 
     @Override
     public FilterService getFilterService() {
-        return filterService;
+        return filterServiceImpl;
     }
 
     @Override
@@ -74,7 +74,7 @@ abstract class AbstractBukkitListener implements FilterClient, Listener {
 // --Commented out by Inspection STOP (20/08/2020 2:38 am)
 
     void loadRuleChain(String name) throws InvalidChainException {
-        ruleChain = getCompiledChain(filterService.getConfig().getRuleFile(name));
+        ruleChain = getCompiledChain(filterServiceImpl.getConfig().getRuleFile(name));
     }
 
 

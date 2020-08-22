@@ -26,11 +26,11 @@ import com.pwn9.filter.TemplateProvider;
 import com.pwn9.filter.bukkit.commands.PwnFilterCommands;
 import com.pwn9.filter.bukkit.config.BukkitConfig;
 import com.pwn9.filter.bukkit.listener.*;
-import com.pwn9.filter.engine.FilterService;
+import com.pwn9.filter.engine.FilterServiceImpl;
 import com.pwn9.filter.engine.api.FilterClient;
 import com.pwn9.filter.engine.rules.action.minecraft.MinecraftAction;
 import com.pwn9.filter.engine.rules.action.targeted.TargetedAction;
-import com.pwn9.filter.minecraft.api.MinecraftConsole;
+import com.pwn9.filter.minecraft.MinecraftConsole;
 import com.pwn9.filter.minecraft.command.PwnClearScreen;
 import com.pwn9.filter.minecraft.command.PwnFilterMute;
 import com.pwn9.filter.minecraft.command.PwnFilterReload;
@@ -65,7 +65,7 @@ public class PwnFilterBukkitPlugin extends JavaPlugin implements PwnFilterPlugin
     private static PwnFilterBukkitPlugin _instance;
     private final BukkitAPI minecraftAPI;
     private final MinecraftConsole console;
-    private final FilterService filterService;
+    private final FilterServiceImpl filterServiceImpl;
     private final Map<String, Integer > eventRules = new HashMap<>();
 
 
@@ -81,10 +81,10 @@ public class PwnFilterBukkitPlugin extends JavaPlugin implements PwnFilterPlugin
         }
         minecraftAPI = new BukkitAPI(this);
         console = new MinecraftConsole(minecraftAPI);
-        filterService = new FilterService(getLogger());
-        filterService.getActionFactory().addActionTokens(MinecraftAction.class);
-        filterService.getActionFactory().addActionTokens(TargetedAction.class);
-        filterService.getConfig().setTemplateProvider(this);
+        filterServiceImpl = new FilterServiceImpl(getLogger());
+        filterServiceImpl.getActionFactory().addActionTokens(MinecraftAction.class);
+        filterServiceImpl.getActionFactory().addActionTokens(TargetedAction.class);
+        filterServiceImpl.getConfig().setTemplateProvider(this);
         RegisterTags.all();
     }
 
@@ -118,18 +118,18 @@ public class PwnFilterBukkitPlugin extends JavaPlugin implements PwnFilterPlugin
         // Now get our configuration
         if (!configurePlugin()) return;
 
-        filterService.registerAuthorService(minecraftAPI);
-        filterService.registerNotifyTarget(minecraftAPI);
+        filterServiceImpl.registerAuthorService(minecraftAPI);
+        filterServiceImpl.registerNotifyTarget(minecraftAPI);
 
         //Load up our listeners
         //        BaseListener.setAPI(minecraftAPI);
 
-        filterService.registerClient(new PwnFilterCommandListener(this));
-        filterService.registerClient(new PwnFilterInvListener(this));
-        filterService.registerClient(new PwnFilterPlayerListener(this));
-        filterService.registerClient(new PwnFilterServerCommandListener(this));
-        filterService.registerClient(new PwnFilterSignListener(this));
-        filterService.registerClient(new PwnFilterBookListener(this));
+        filterServiceImpl.registerClient(new PwnFilterCommandListener(this));
+        filterServiceImpl.registerClient(new PwnFilterInvListener(this));
+        filterServiceImpl.registerClient(new PwnFilterPlayerListener(this));
+        filterServiceImpl.registerClient(new PwnFilterServerCommandListener(this));
+        filterServiceImpl.registerClient(new PwnFilterSignListener(this));
+        filterServiceImpl.registerClient(new PwnFilterBookListener(this));
 
 
         // The Entity Death handler, for custom death messages.
@@ -138,14 +138,14 @@ public class PwnFilterBukkitPlugin extends JavaPlugin implements PwnFilterPlugin
         getServer().getPluginManager().registerEvents(new PlayerCacheListener(), this);
 
         // Enable the listeners
-        filterService.enableClients();
+        filterServiceImpl.enableClients();
 
         // Set up Command Handlers
         PwnFilterCommands commands = new PwnFilterCommands(this);
-        commands.registerCommands("pfreload",new PwnFilterReload(filterService,this));
+        commands.registerCommands("pfreload",new PwnFilterReload(filterServiceImpl,this));
         commands.registerCommands("pfcls",new PwnClearScreen(this));
         commands.registerCommands("pfmute",new PwnFilterMute(this));
-        for (final FilterClient f : filterService.getActiveClients()) {
+        for (final FilterClient f : filterServiceImpl.getActiveClients()) {
             final String eventName = f.getShortName();
             int value = f.getRuleChain().ruleCount();
             eventRules.put(eventName,value);
@@ -160,8 +160,8 @@ public class PwnFilterBukkitPlugin extends JavaPlugin implements PwnFilterPlugin
      */
     public void onDisable() {
         HandlerList.unregisterAll(this); // Unregister all Bukkit Event handlers.
-        filterService.shutdown();
-        filterService.deregisterAuthorService(minecraftAPI);
+        filterServiceImpl.shutdown();
+        filterServiceImpl.deregisterAuthorService(minecraftAPI);
     }
 
     public boolean configurePlugin() {
@@ -172,11 +172,11 @@ public class PwnFilterBukkitPlugin extends JavaPlugin implements PwnFilterPlugin
             config.load(new File(getDataFolder(), "config.yml"));
 
             reloadConfig();
-            BukkitConfig.loadConfiguration(getConfig(), getDataFolder(), filterService);
+            BukkitConfig.loadConfiguration(getConfig(), getDataFolder(), filterServiceImpl);
             return true;
         } catch (InvalidConfigurationException | IOException ex) {
-            filterService.getLogger().severe("Fatal configuration failure: " + ex.getMessage());
-            filterService.getLogger().severe("PwnFilter disabled.");
+            filterServiceImpl.getLogger().severe("Fatal configuration failure: " + ex.getMessage());
+            filterServiceImpl.getLogger().severe("PwnFilter disabled.");
             getPluginLoader().disablePlugin(this);
         }
         return false;
@@ -198,16 +198,16 @@ public class PwnFilterBukkitPlugin extends JavaPlugin implements PwnFilterPlugin
             RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
             if (rsp != null) {
                 economy = rsp.getProvider();
-                filterService.getLogger().info("Vault found. Enabling actions requiring Vault");
+                filterServiceImpl.getLogger().info("Vault found. Enabling actions requiring Vault");
                 return;
             }
         }
-        filterService.getLogger().info("Vault dependency not found.  Disabling actions requiring Vault");
+        filterServiceImpl.getLogger().info("Vault dependency not found.  Disabling actions requiring Vault");
     }
 
     @Override
-    public FilterService getFilterService() {
-        return filterService;
+    public FilterServiceImpl getFilterService() {
+        return filterServiceImpl;
     }
 
     @Override

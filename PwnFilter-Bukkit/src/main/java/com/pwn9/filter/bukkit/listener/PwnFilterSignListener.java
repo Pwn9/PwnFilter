@@ -23,7 +23,7 @@ package com.pwn9.filter.bukkit.listener;
 import com.pwn9.filter.bukkit.PwnFilterBukkitPlugin;
 import com.pwn9.filter.PwnFilterPlugin;
 import com.pwn9.filter.bukkit.config.BukkitConfig;
-import com.pwn9.filter.engine.api.FilterContext;
+import com.pwn9.filter.engine.api.FilterContextImpl;
 import com.pwn9.filter.engine.api.MessageAuthor;
 import com.pwn9.filter.engine.rules.chain.InvalidChainException;
 import com.pwn9.filter.minecraft.util.ColoredString;
@@ -80,10 +80,10 @@ public class PwnFilterSignListener extends AbstractBukkitListener {
         }
         String signLines = builder.toString().trim();
 
-        FilterContext filterTask = new FilterContext(new ColoredString(signLines),
+        FilterContextImpl filterTask = new FilterContextImpl(new ColoredString(signLines),
                 signAuthor, this);
 
-        ruleChain.execute(filterTask, filterService);
+        ruleChain.execute(filterTask, filterServiceImpl);
 
         if (filterTask.messageChanged()) {
             // TODO: Can colors be placed on signs?  Wasn't working. Find out why.
@@ -147,7 +147,7 @@ public class PwnFilterSignListener extends AbstractBukkitListener {
             EventPriority priority = BukkitConfig.getSignpriority();
 
             if (BukkitConfig.signfilterEnabled()) {
-                ruleChain = getCompiledChain(filterService.getConfig().getRuleFile("sign.txt"));
+                ruleChain = getCompiledChain(filterServiceImpl.getConfig().getRuleFile("sign.txt"));
                 // Now register the listener with the appropriate priority
                 pm.registerEvent(SignChangeEvent.class, this, priority,
                         (l, e) -> onSignChange((SignChangeEvent) e),

@@ -22,7 +22,7 @@ package com.pwn9.filter.bukkit.listener;
 
 import com.pwn9.filter.bukkit.PwnFilterBukkitPlugin;
 import com.pwn9.filter.bukkit.config.BukkitConfig;
-import com.pwn9.filter.engine.api.FilterContext;
+import com.pwn9.filter.engine.api.FilterContextImpl;
 import com.pwn9.filter.engine.rules.chain.InvalidChainException;
 import com.pwn9.filter.minecraft.util.ColoredString;
 import org.bukkit.Bukkit;
@@ -79,9 +79,9 @@ public class PwnFilterInvListener extends AbstractBukkitListener {
         if (itemMeta != null && itemMeta.hasDisplayName()) {
             message = itemMeta.getDisplayName();
 
-            FilterContext filterTask = new FilterContext(new ColoredString(message), filterService.getAuthor(player.getUniqueId()), this);
+            FilterContextImpl filterTask = new FilterContextImpl(new ColoredString(message), filterServiceImpl.getAuthor(player.getUniqueId()), this);
 
-            ruleChain.execute(filterTask, filterService);
+            ruleChain.execute(filterTask, filterServiceImpl);
             if (filterTask.isCancelled()) event.setCancelled(true);
 
             // Only update the message if it has been changed.
@@ -116,7 +116,7 @@ public class PwnFilterInvListener extends AbstractBukkitListener {
 
         if (BukkitConfig.itemFilterEnabled()) {
             try {
-                ruleChain = getCompiledChain(filterService.getConfig().getRuleFile("item.txt"));
+                ruleChain = getCompiledChain(filterServiceImpl.getConfig().getRuleFile("item.txt"));
                 // Now register the listener with the appropriate priority
                 pm.registerEvent(InventoryClickEvent.class, this, priority,
                         (l, e) -> onInventoryEvent((InventoryClickEvent) e),

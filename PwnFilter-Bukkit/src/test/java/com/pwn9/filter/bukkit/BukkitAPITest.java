@@ -53,11 +53,11 @@ public class BukkitAPITest {
             Bukkit.setServer(new MockServer());
         }
         server = (MockServer) Bukkit.getServer();
-        testPlayer = new MockPlayer();
         api = new BukkitAPI(testPlugin);
+        testPlayer = new MockPlayer(api);
 
-        FilterService filterService = testPlugin.getFilterService();
-        filterService.registerAuthorService(MockPlugin.getMockAuthorService());
+        FilterService filterServiceImpl = testPlugin.getFilterService();
+        filterServiceImpl.registerAuthorService(MockPlugin.getMockAuthorService());
     }
 
     @Test

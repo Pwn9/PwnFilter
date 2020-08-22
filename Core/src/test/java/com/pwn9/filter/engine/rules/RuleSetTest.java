@@ -21,7 +21,8 @@
 package com.pwn9.filter.engine.rules;
 
 import com.pwn9.filter.engine.FilterService;
-import com.pwn9.filter.engine.api.FilterContext;
+import com.pwn9.filter.engine.FilterServiceImpl;
+import com.pwn9.filter.engine.api.FilterContextImpl;
 import com.pwn9.filter.engine.api.MessageAuthor;
 import com.pwn9.filter.engine.rules.action.minecraft.MinecraftAction;
 import com.pwn9.filter.engine.rules.action.targeted.TargetedAction;
@@ -48,19 +49,19 @@ public class RuleSetTest {
 
     private final MessageAuthor author = new TestAuthor();
     private RuleChain rs, sc;
-    private final FilterService filterService = new FilterService();
+    private final FilterService filterServiceImpl = new FilterServiceImpl();
 
     @Before
     public void setUp() {
-        filterService.getActionFactory().addActionTokens(MinecraftAction.class);
-        filterService.getActionFactory().addActionTokens(TargetedAction.class);
+        filterServiceImpl.getActionFactory().addActionTokens(MinecraftAction.class);
+        filterServiceImpl.getActionFactory().addActionTokens(TargetedAction.class);
         File testRules = new File(getClass().getResource("/testrules.txt").getFile());
         File parentDir = testRules.getParentFile();
-        filterService.getConfig().setRulesDir(parentDir);
-        filterService.getConfig().setTextDir(parentDir);
+        filterServiceImpl.getConfig().setRulesDir(parentDir);
+        filterServiceImpl.getConfig().setTextDir(parentDir);
         try {
-            rs = filterService.parseRules(testRules);
-            sc = filterService.parseRules(new File(parentDir, "shortcutTest.txt"));
+            rs = filterServiceImpl.parseRules(testRules);
+            sc = filterServiceImpl.parseRules(new File(parentDir, "shortcutTest.txt"));
         } catch (InvalidChainException ex) {
             fail();
         }
@@ -68,23 +69,23 @@ public class RuleSetTest {
 
     @Test
     public void testApplyRules() throws IOException {
-        FilterContext testState = new FilterContext("This is a test", author, new TestClient());
-        rs.execute(testState, filterService);
+        FilterContextImpl testState = new FilterContextImpl("This is a test", author, new TestClient());
+        rs.execute(testState, filterServiceImpl);
         assertEquals("This WAS a test", testState.getModifiedMessage().toString());
     }
 
     @Test
     public void testDollarSignInMessage() {
-        FilterContext testState = new FilterContext("notATestPerson {test] $ (test 2}", author, new TestClient());
-        rs.execute(testState, filterService);
+        FilterContextImpl testState = new FilterContextImpl("notATestPerson {test] $ (test 2}", author, new TestClient());
+        rs.execute(testState, filterServiceImpl);
     }
 
     // DBO Ticket # 13
     @Test
     public void testBackslashAtEndOfLine() {
         try {
-            FilterContext testState = new FilterContext("Message that ends with \\", author, new TestClient());
-            rs.execute(testState, filterService);
+            FilterContextImpl testState = new FilterContextImpl("Message that ends with \\", author, new TestClient());
+            rs.execute(testState, filterServiceImpl);
         } catch (StringIndexOutOfBoundsException ex) {
             Assert.fail(ex.getMessage());
         }
@@ -92,8 +93,8 @@ public class RuleSetTest {
 
     @Test
     public void testShortcuts() {
-        FilterContext testState = new FilterContext("ShortCutPattern", author, new TestClient());
-        sc.execute(testState, filterService);
+        FilterContextImpl testState = new FilterContextImpl("ShortCutPattern", author, new TestClient());
+        sc.execute(testState, filterServiceImpl);
         Assert.assertEquals("Replaced", testState.getModifiedMessage().toString());
     }
 

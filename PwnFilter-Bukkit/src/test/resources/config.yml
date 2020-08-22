@@ -1,0 +1,217 @@
+# PwnFilter ${pwnfilter.version} Default Configuration File
+# This file is now arranged so that the things that are most important to
+# configure are near the top.  You can, of course, re-arrange this how you
+# like.
+## NOTE: If you have a text string that has a ':' in it, followed by a '%', you need
+## to put single quotes (') around the text, to prevent the parser from having a fit.
+
+##########################
+## Basic Filter Options ##
+##########################
+
+# Set to 'true' to strip color codes from chat.
+# Players with pwnfilter.color or pwnfilter.bypass permissions will still be
+# able to use colors.
+decolor: false
+
+# The following options enable / disable filtering features
+# The 'chat' filter is always enabled.
+
+# Filter text applied to signs
+signfilter: false
+
+# Activate item filter (Naming items with Anvil)
+itemfilter: false
+
+# Console Filter -- Filter commands entered on console (EXPERIMENTAL)
+consolefilter: false
+
+# Filter commands as well as chat true/false
+commandfilter: true
+
+# Filter Book Titles and Pages
+bookfilter: false
+
+# The "spamfilter" will enable/disable a basic filter that
+# prevents a player from entering the same line 2x in a row.
+
+spamfilter: false  # For chat messages
+commandspamfilter: false # For /commands
+
+
+
+# The Command Whitelist/Blacklist are used to prevent PwnFilter from
+# processing some /commands.  For example, you may not want to filter
+# a complex worldedit command like: //set 25%Stone,50%ironore,25%coalore
+# In this case, you could either add just the desired command to the whitelist
+# or you could add /set to the blacklist. (Note, you don't include the first
+# '/').
+# Command Black List: Commands in this list will not be processed by PwnFilter
+cmdblist: []
+
+# Command White List: Commands to filter, if empty, will filter
+# ALL (except blacklist)
+cmdlist: []
+
+# Commands to treat as "chat" events.  These will be processed by the chat.txt
+# filter, not the commands.txt filter.  Also, they will be subject to the
+# chatspam and decolor options
+cmdchat:
+- me
+- nick
+- m
+- mail
+- msg
+- nick
+- r
+- t
+- tell
+- whisper
+
+
+# If you want to specify an arbitrary directory on your server to store rules
+# you can specify it here. (Default is to use plugins/PwnFilter/rules)
+#ruledirectory: /path/to/rules
+
+
+# Specify the location to find text files, for the "then respondfile" action.
+# By default, PwnFilter will look in the plugins/PwnFilter/textfiles directory.
+# You can either specify a directory relative to the plugins/PwnFilter dir
+# (no leading /):
+# textdir: textfiles
+# or you can use the full path:
+# textdir: /home/minecraft/server/textfiles
+# eg: If you do: "then respondfile colors.txt", example 1 would look for:
+# {serverdir}/plugins/PwnFilter/textfiles/colors.txt
+# example 2:
+# /home/minecraft/server/textfiles/colors.txt
+#textdir: textfiles
+
+
+
+###################
+## Points System ##
+###################
+
+# The points system allows you to specify a "point value" for some rules.
+# Every time a player matches a rule with a points value, that player will
+# be given the number of points in "then points x".
+# If a player reaches one of the configured thresholds below, the actions
+# at that level will be taken.  In the example below, if a player accumulates
+# 10 points, they will be warned.  If they get 20 points, they will get kicked
+# and players with the pwnfilter.admin permission will be notified.  At 30
+# points, the player will be given a ban, and admins will be notified.  After
+# the points have fallen back below each threshold, the descending actions will
+# be executed. (eg: unban).
+
+# The points are handled in a "leaky bucket" style.  Points "leak" out of the
+# bucket at the configured rate.  In the example below, a player who has points
+# in their bucket will have them drained at a rate of 1 point per 10s.
+points:
+  enabled: false # Set to 'true' to enable the points system
+  leak:
+    points: 1.0 # How many points to remove each interval
+    interval: 30 # How often to remove points (seconds)
+  thresholds:
+    threshold1:
+      name: Warn
+      points: 10.0
+      actions:
+        ascending:  # Actions to execute when the player crosses from below.
+         - respond You have hit our warning threshold for bad language!
+        descending: # Actions to execute when player crosses from above.
+         - respond You are now back in our good books.  Remember to keep it clean!
+
+    threshold2:
+      name: Kick
+      points: 20.0
+      actions:
+        ascending:
+         - kick You need to tone down your language!
+         - notify pwnfilter.admins %player% was kicked for hitting the kick threshold.
+
+    threshold3:
+      name: Tempban
+      points: 30.0
+      actions:
+        ascending:
+         - console ban %player% Your language is not acceptable.  Take 15m to cool off!
+         - notify pwnfilter.admins %player% was given a temporary ban for bad language.
+         - notify console &4%player% was given a temporary ban for bad language. Points %points%
+        descending:
+         - console pardon %player%
+         - notify pwnfilter.admins %player% points have fallen below Tempban threshold. %player% was unbanned
+         - notify console &4%player% points have fallen below Tempban threshold. %player% was unbanned
+
+
+
+######################
+## Default Messages ##
+######################
+
+# Default message setups, can be overridden in rules.txt per match.
+# DO NOT remove quotes around messages!
+warnmsg: '&4[&6PwnFilter&4] &4Warned by PwnFilter!'
+kickmsg: '&4[&6PwnFilter&4] &4Kicked by PwnFilter!'
+burnmsg: '&4[&6PwnFilter&4] &4Burned by PwnFilter!'
+killmsg: '&4[&6PwnFilter&4] &4Killed by PwnFilter!'
+finemsg: '&4[&6PwnFilter&4] &4Fined by PwnFilter!'
+
+
+#################################
+## LOGGING and TROUBLESHOOTING ##
+#################################
+
+# By default, minimal information is sent to the bukkit console, and
+# match information is written to the PwnFilter/pwnfilter.log file.  If you
+# want different behaviour, configure the options below.
+
+# Set the level for MATCH/SEND messages
+# Set to 'fine' if you don't want MATCH/SEND events in your main server log
+# NOTE: If you have the "then log" action set for a rule, it will log
+# at level INFO, regardless of the setting here.
+loglevel: fine
+
+# Create a PwnFilter.log file in the plugins/PwnFilter directory
+# This file will contain all PwnFilter log messages, regardless of level.
+logfile: false
+
+# Debug mode (high is VERY verbose) (Enable logfile above)
+# NOTE: Changed in 3.0.1.  Now options are:
+# off, low, medium, high
+# off = No debugging will be written to pwnfilter.log
+# low = Matches will be written
+# medium = low + detailed rule parsing info
+# high = medium + detailed debugging of the rule engine.
+
+debug: off
+
+###################
+#### ADVANCED #####
+###################
+# You can also change the priority of event handlers with:
+# priority, cmdpriority, signpriority and itempriority
+
+# Changing priority can allow the event handlers to process messages before or after other
+# plugins.  This can sometimes help with plugin conflicts.  You really should understand
+# how bukkit handler priority works before changing these.
+
+# By default, PwnFilters handlers try to run before all other plugins.
+
+# Change priority of PlayerListener (chat)
+# chatpriority: lowest #(default)
+
+# Change priority of CommandListener
+# cmdpriority: lowest #(default)
+
+# Change priority of SignListener
+# signpriority: lowest #(default)
+
+# Change priority of ItemListener
+# itempriority: lowest #(default)
+
+# Change priority of BookListener
+# bookpriority: lowest #(default)
+
+
+

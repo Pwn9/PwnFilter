@@ -20,8 +20,8 @@
 
 package com.pwn9.filter.util.tag;
 
+import com.pwn9.filter.engine.FilterContext;
 import com.pwn9.filter.engine.PointManager;
-import com.pwn9.filter.engine.api.FilterContext;
 
 import java.text.DecimalFormat;
 
@@ -37,7 +37,7 @@ class PointsTag implements Tag {
     @Override
     public String getValue(FilterContext filterTask) {
         PointManager pointManager = filterTask.getFilterClient().getFilterService().getPointManager();
-        return (pointManager.isEnabled()) ?
+        return (pointManager.isActive()) ?
                 df.format(pointManager.getPoints(filterTask.getAuthor())) :
                 "-";
     }

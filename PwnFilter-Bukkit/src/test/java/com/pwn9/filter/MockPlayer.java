@@ -18,6 +18,7 @@
 
 package com.pwn9.filter;
 
+import com.pwn9.filter.minecraft.api.MinecraftAPI;
 import org.bukkit.Achievement;
 import org.bukkit.Effect;
 import org.bukkit.EntityEffect;
@@ -72,6 +73,10 @@ import java.util.Set;
 import java.util.UUID;
 
 public class MockPlayer extends PwnPlayer implements Player {
+
+    public MockPlayer(MinecraftAPI api) {
+        super(api);
+    }
 
     @Override
     public String getDisplayName() {

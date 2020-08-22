@@ -20,10 +20,10 @@
 
 package com.pwn9.filter.engine.rules.action.core;
 
+import com.pwn9.filter.engine.FilterContext;
 import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.EnhancedString;
-import com.pwn9.filter.engine.api.FilterContext;
 
 /**
  * Convert the matched text to uppercase.
@@ -36,7 +36,7 @@ enum Upper implements Action {
     INSTANCE;
 
     @Override
-    public void execute(final FilterContext filterTask, FilterService filterService) {
+    public void execute(final FilterContext filterTask, FilterService filterServiceImpl) {
         EnhancedString cs = filterTask.getModifiedMessage();
         filterTask.addLogMessage("Converting to uppercase.");
         filterTask.setModifiedMessage(cs.patternToUpper(filterTask.getPattern()));

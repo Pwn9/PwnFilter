@@ -20,7 +20,7 @@
 
 package com.pwn9.filter.util.tag;
 
-import com.pwn9.filter.engine.api.FilterContext;
+import com.pwn9.filter.engine.FilterContext;
 
 /**
  * During message processing, a rule can specify a %tag%, which will be replaced

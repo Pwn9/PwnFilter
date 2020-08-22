@@ -20,9 +20,9 @@
 
 package com.pwn9.filter.engine.rules.action.core;
 
+import com.pwn9.filter.engine.FilterContext;
 import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.api.Action;
-import com.pwn9.filter.engine.api.FilterContext;
 
 /**
  * Deny this event from propagating by cancelling it (i.e.: throw the message
@@ -39,7 +39,7 @@ public enum Deny implements Action {
     INSTANCE;
 
     @Override
-    public void execute(final FilterContext filterTask, FilterService filterService) {
+    public void execute(final FilterContext filterTask, FilterService filterServiceImpl) {
         filterTask.setCancelled();
     }
 }

@@ -22,7 +22,7 @@ package com.pwn9.filter.engine;
 
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.api.AuthorService;
-import com.pwn9.filter.engine.api.FilterContext;
+import com.pwn9.filter.engine.api.FilterContextImpl;
 import com.pwn9.filter.engine.api.MessageAuthor;
 import com.pwn9.filter.engine.rules.TestAction;
 import com.pwn9.filter.engine.rules.TestAuthor;
@@ -44,18 +44,18 @@ import static org.junit.Assert.assertFalse;
  */
 public class PointManagerTest {
 
-    private FilterService filterService;
-    private PointManager pm;
+    private FilterServiceImpl filterServiceImpl;
+    private PointManagerImpl pm;
     private TestAction ascending1, descending1, ascending2, descending2;
     private final AuthorService authorService = MockPlugin.getMockAuthorService();
     private final UUID authorId = UUID.randomUUID();
 
     @Before
     public void setup() {
-        filterService = new FilterService();
-        pm = filterService.getPointManager();
-        pm.start();
-        filterService.registerAuthorService(authorService);
+        filterServiceImpl = new FilterServiceImpl();
+        pm = filterServiceImpl.getPointManager();
+        pm.activate();
+        filterServiceImpl.registerAuthorService(authorService);
         ascending1 = new TestAction();
         List<Action> ascendingList1 = Collections.singletonList(ascending1);
         descending1 = new TestAction();
@@ -70,7 +70,7 @@ public class PointManagerTest {
     }
 
     @Test
-    public void testPointsLeakEachInterval() throws Exception {
+    public void testPointsLeakEachInterval() {
         pm.setLeakPoints(4d);
         pm.setPoints(authorId, 6d);
         assertEquals(pm.getPoints(authorId), new Double(6));
@@ -81,7 +81,7 @@ public class PointManagerTest {
     }
 
     @Test
-    public void testPointsExecutesAscending() throws Exception {
+    public void testPointsExecutesAscending() {
         pm.setPoints(authorId, 0d);
 
         // Don't trigger a threshold
@@ -108,7 +108,7 @@ public class PointManagerTest {
     }
 
     @Test
-    public void testPointsExecutesDescending() throws Exception {
+    public void testPointsExecutesDescending() {
         pm.setPoints(authorId, 29d);
 
         // Don't trigger a threshold
@@ -138,8 +138,8 @@ public class PointManagerTest {
     public void testPointsAction() throws Exception {
         MessageAuthor messageAuthor = new TestAuthor();
         assertEquals(pm.getPoints(messageAuthor), new Double(0));
-        Action pointsAction = filterService.getActionFactory().getAction("points", "7.0 Test");
-        pointsAction.execute(new FilterContext("test", messageAuthor, new TestClient("Test")), filterService);
+        Action pointsAction = filterServiceImpl.getActionFactory().getAction("points", "7.0 Test");
+        pointsAction.execute(new FilterContextImpl("test", messageAuthor, new TestClient("Test")), filterServiceImpl);
         assertEquals(pm.getPoints(messageAuthor), new Double(7));
     }
 }

@@ -2,6 +2,7 @@ package com.pwn9.filter;
 
 import com.pwn9.filter.engine.api.CommandSender;
 import com.pwn9.filter.engine.api.Player;
+import com.pwn9.filter.minecraft.api.MinecraftAPI;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.jetbrains.annotations.NotNull;
@@ -19,10 +20,25 @@ public class PwnPlayer implements Player, CommandSender {
 
     private final UUID randomID = UUID.randomUUID();
     protected final Queue<String> messages = new LinkedList<>();
+    private final MinecraftAPI api;
+
+    public PwnPlayer(MinecraftAPI api) {
+        this.api = api;
+    }
 
     @Override
     public String getPlace() {
         return null;
+    }
+
+    @Override
+    public MinecraftAPI getMineCraftApi() {
+        return api;
+    }
+
+    @Override
+    public void executeCommand(String cmd) {
+
     }
 
     @Override

@@ -23,7 +23,7 @@ package com.pwn9.filter.bukkit.listener;
 import com.pwn9.filter.bukkit.PwnFilterBukkitPlugin;
 import com.pwn9.filter.PwnFilterPlugin;
 import com.pwn9.filter.bukkit.config.BukkitConfig;
-import com.pwn9.filter.engine.api.FilterContext;
+import com.pwn9.filter.engine.api.FilterContextImpl;
 import com.pwn9.filter.engine.rules.chain.InvalidChainException;
 import com.pwn9.filter.minecraft.util.ColoredString;
 import org.bukkit.Bukkit;
@@ -64,11 +64,11 @@ public class PwnFilterServerCommandListener extends AbstractBukkitListener {
             return;
         if (BukkitConfig.getCmdblist().contains(cmdmessage)) return;
 
-        FilterContext state = new FilterContext(new ColoredString(command), plugin.getConsole(), this);
+        FilterContextImpl state = new FilterContextImpl(new ColoredString(command), plugin.getConsole(), this);
 
         // Take the message from the Command Event and send it through the filter.
 
-        ruleChain.execute(state, filterService);
+        ruleChain.execute(state, filterServiceImpl);
 
         // Only update the message if it has been changed.
         if (state.messageChanged()) {
@@ -98,7 +98,7 @@ public class PwnFilterServerCommandListener extends AbstractBukkitListener {
 
             if (BukkitConfig.consolefilterEnabled()) {
 
-                ruleChain = getCompiledChain(filterService.getConfig().getRuleFile("console.txt"));
+                ruleChain = getCompiledChain(filterServiceImpl.getConfig().getRuleFile("console.txt"));
                 PluginManager pm = Bukkit.getPluginManager();
                 EventPriority priority = BukkitConfig.getCmdpriority();
 

@@ -1,0 +1,10 @@
+# Used in ParserTest.testConditionGroupParser()
+
+conditiongroup cGroupTest
+require permission pwnfilter.test
+ignore user Sage905
+ignore string derp
+ignore command me
+
+match cGroup
+conditions cGroupTest

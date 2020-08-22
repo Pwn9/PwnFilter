@@ -60,7 +60,7 @@ public class PwnFilterBookListenerTest {
             "This is the second page",
             "This is the third page",
             "This is the final page"};
-    private final Player mockPlayer = new MockPlayer();
+    private Player mockPlayer;
     private PlayerEditBookEvent event;
     private PwnFilterBookListener bookListener;
 
@@ -71,14 +71,15 @@ public class PwnFilterBookListenerTest {
         }
         File rulesDir = new File(getClass().getResource("/rules").getFile());
         PwnFilterPlugin testPlugin = new MockPlugin();
+        mockPlayer = new MockPlayer(testPlugin.getApi());
         bookListener = new PwnFilterBookListener(testPlugin);
-        FilterService filterService = testPlugin.getFilterService();
-        filterService.getConfig().setRulesDir(rulesDir);
+        FilterService filterServiceImpl = testPlugin.getFilterService();
+        filterServiceImpl.getConfig().setRulesDir(rulesDir);
         Configuration testConfig = YamlConfiguration.loadConfiguration(new File(getClass().getResource("/config.yml").getFile()));
-        filterService.getActionFactory().addActionTokens(MinecraftAction.class);
-        filterService.getActionFactory().addActionTokens(TargetedAction.class);
-        filterService.registerAuthorService(MockPlugin.getMockAuthorService());
-        BukkitConfig.loadConfiguration(testConfig, resourcesDir, filterService);
+        filterServiceImpl.getActionFactory().addActionTokens(MinecraftAction.class);
+        filterServiceImpl.getActionFactory().addActionTokens(TargetedAction.class);
+        filterServiceImpl.registerAuthorService(MockPlugin.getMockAuthorService());
+        BukkitConfig.loadConfiguration(testConfig, resourcesDir, filterServiceImpl);
         BukkitConfig.setGlobalMute(false); // To ensure it gets reset between tests.
     }
 

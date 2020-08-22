@@ -21,7 +21,7 @@
 package com.pwn9.filter.util.tag;
 
 import com.pwn9.filter.engine.api.FilterClient;
-import com.pwn9.filter.engine.api.FilterContext;
+import com.pwn9.filter.engine.api.FilterContextImpl;
 import com.pwn9.filter.engine.api.MessageAuthor;
 import com.pwn9.filter.engine.rules.TestAuthor;
 import com.pwn9.filter.engine.rules.TestClient;
@@ -39,15 +39,15 @@ public class TagTest {
     private MessageAuthor testAuthor;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         testClient = new TestClient();
         testAuthor = new TestAuthor();
     }
 
     @Test
-    public void testBuiltinTags() throws Exception {
+    public void testBuiltinTags() {
         String input = "Test %player% tag";
-        FilterContext testState = new FilterContext(input, testAuthor, testClient);
+        FilterContextImpl testState = new FilterContextImpl(input, testAuthor, testClient);
         TagRegistry.addTag("player", new PlayerTag());
         Assert.assertEquals(TagRegistry.replaceTags(input, testState), "Test Sage905 tag");
 

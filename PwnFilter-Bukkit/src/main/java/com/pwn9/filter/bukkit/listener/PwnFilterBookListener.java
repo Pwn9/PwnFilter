@@ -23,7 +23,7 @@ package com.pwn9.filter.bukkit.listener;
 import com.pwn9.filter.bukkit.PwnFilterBukkitPlugin;
 import com.pwn9.filter.PwnFilterPlugin;
 import com.pwn9.filter.bukkit.config.BukkitConfig;
-import com.pwn9.filter.engine.api.FilterContext;
+import com.pwn9.filter.engine.api.FilterContextImpl;
 import com.pwn9.filter.engine.rules.chain.InvalidChainException;
 import com.pwn9.filter.minecraft.util.ColoredString;
 import org.bukkit.Bukkit;
@@ -73,9 +73,9 @@ public class PwnFilterBookListener extends AbstractBukkitListener {
         if (bookMeta.hasTitle()) {
             // Run title through filter.
             message = bookMeta.getTitle();
-            FilterContext filterTask = new FilterContext(new ColoredString(message),
-                    filterService.getAuthor(player.getUniqueId()), this);
-            ruleChain.execute(filterTask, filterService);
+            FilterContextImpl filterTask = new FilterContextImpl(new ColoredString(message),
+                    filterServiceImpl.getAuthor(player.getUniqueId()), this);
+            ruleChain.execute(filterTask, filterServiceImpl);
             if (filterTask.isCancelled()) event.setCancelled(true);
             if (filterTask.messageChanged()) {
                 bookMeta.setTitle(filterTask.getModifiedMessage().getRaw());
@@ -88,9 +88,9 @@ public class PwnFilterBookListener extends AbstractBukkitListener {
             List<String> newPages = new ArrayList<>();
             boolean modified = false;
             for (String page : bookMeta.getPages()) {
-                FilterContext state = new FilterContext(new ColoredString(page),
-                        filterService.getAuthor(player.getUniqueId()), this);
-                ruleChain.execute(state, filterService);
+                FilterContextImpl state = new FilterContextImpl(new ColoredString(page),
+                        filterServiceImpl.getAuthor(player.getUniqueId()), this);
+                ruleChain.execute(state, filterServiceImpl);
                 if (state.isCancelled()) {
                     event.setCancelled(true);
                 }
@@ -126,7 +126,7 @@ public class PwnFilterBookListener extends AbstractBukkitListener {
 
         if (BukkitConfig.bookfilterEnabled()) {
             try {
-                ruleChain = getCompiledChain(filterService.getConfig().getRuleFile("book.txt"));
+                ruleChain = getCompiledChain(filterServiceImpl.getConfig().getRuleFile("book.txt"));
                 pm.registerEvent(PlayerEditBookEvent.class, this, priority,
                         (l, e) -> onBookEdit((PlayerEditBookEvent) e),
                         PwnFilterBukkitPlugin.getInstance());

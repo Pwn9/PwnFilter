@@ -30,6 +30,8 @@
     <packaging>pom</packaging>
     <version>3.9.3-SNAPSHOT</version>
     <modules>
+        <module>Api</module>
+        <module>Mock</module>
         <module>Core</module>
         <module>PwnFilter-Bukkit</module>
     </modules>

@@ -31,4 +31,4 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 PwnFilter -- Regex-based User Filter Plugin for Bukkit-based Minecraft servers.
-Copyright (c) 2020 Pwn9.com. [Tremor77](mailto:admin@pwn9.com) & [Sage905](sage905@takeflight.ca)
+Copyright (c) 2020 Pwn9.com. [Tremor77](mailto://admin@pwn9.com) & [Sage905](mailto://sage905@takeflight.ca)

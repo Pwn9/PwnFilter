@@ -21,7 +21,7 @@
 package com.pwn9.filter.util.tag;
 
 import com.pwn9.filter.engine.api.FilterClient;
-import com.pwn9.filter.engine.api.FilterContext;
+import com.pwn9.filter.engine.api.FilterContextImpl;
 import com.pwn9.filter.engine.api.MessageAuthor;
 import com.pwn9.filter.engine.rules.TestAuthor;
 import com.pwn9.filter.engine.rules.TestClient;
@@ -47,9 +47,9 @@ public class TagRegistryTest {
     }
 
     @Test
-    public void testUntaggedStringIsUnmodified() throws Exception {
+    public void testUntaggedStringIsUnmodified() {
 
-        FilterContext testState = new FilterContext("TestString", testAuthor, testClient);
+        FilterContextImpl testState = new FilterContextImpl("TestString", testAuthor, testClient);
 
         String input = "This is a test";
         String result = TagRegistry.replaceTags(input, testState);
@@ -57,8 +57,8 @@ public class TagRegistryTest {
     }
 
     @Test
-    public void testUnmatchedTagIsUnmodified() throws Exception {
-        FilterContext testState = new FilterContext("TestString", testAuthor, testClient);
+    public void testUnmatchedTagIsUnmodified() {
+        FilterContextImpl testState = new FilterContextImpl("TestString", testAuthor, testClient);
 
         String input = "This is a %nonexistenttag%";
         String result = TagRegistry.replaceTags(input, testState);
@@ -66,8 +66,8 @@ public class TagRegistryTest {
     }
 
     @Test
-    public void testStaticTagIsReplaced() throws Exception {
-        FilterContext testState = new FilterContext("TestString", testAuthor, testClient);
+    public void testStaticTagIsReplaced() {
+        FilterContextImpl testState = new FilterContextImpl("TestString", testAuthor, testClient);
 
         TagRegistry.addTag("test", filterTask -> "foo");
 

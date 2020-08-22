@@ -26,10 +26,10 @@ import com.pwn9.filter.PwnFilterPlugin;
 import com.pwn9.filter.bukkit.config.BukkitConfig;
 import com.pwn9.filter.engine.api.AuthorService;
 import com.pwn9.filter.engine.api.CommandSender;
+import com.pwn9.filter.engine.api.Console;
 import com.pwn9.filter.engine.api.NotifyTarget;
 import com.pwn9.filter.minecraft.DeathMessages;
 import com.pwn9.filter.minecraft.api.MinecraftAPI;
-import com.pwn9.filter.minecraft.api.MinecraftConsole;
 import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.TextComponent;
@@ -112,7 +112,7 @@ public class BukkitAPI implements MinecraftAPI, AuthorService, NotifyTarget {
         return getAuthorById(uuid);
     }
 
-    public MinecraftConsole getConsole() {
+    public Console getConsole() {
         return plugin.getConsole();
     }
 

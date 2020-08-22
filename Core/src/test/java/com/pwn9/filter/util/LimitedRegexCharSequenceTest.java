@@ -42,7 +42,7 @@ public class LimitedRegexCharSequenceTest {
 
 
     @Test
-    public void testCharAt() throws Exception {
+    public void testCharAt() {
         LimitedRegexCharSequence lrcs = new LimitedRegexCharSequence(simpleString, 1000);
         Assert.assertEquals(lrcs.charAt(18), 'i');
         Assert.assertEquals(lrcs.charAt(3), 's');
@@ -71,7 +71,7 @@ public class LimitedRegexCharSequenceTest {
     }
 
     @Test(expected = LimitedRegexCharSequence.RegexTimeoutException.class)
-    public void testTimeout() throws Exception {
+    public void testTimeout() {
         // demonstrates behavior for regular expression running into catastrophic backtracking for given input
         LimitedRegexCharSequence timedString = new LimitedRegexCharSequence("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", 100);
         Pattern pattern = Pattern.compile("(x+x+)+y");

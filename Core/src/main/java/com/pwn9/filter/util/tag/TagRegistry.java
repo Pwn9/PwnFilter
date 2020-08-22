@@ -20,7 +20,8 @@
 
 package com.pwn9.filter.util.tag;
 
-import com.pwn9.filter.engine.api.FilterContext;
+import com.pwn9.filter.engine.FilterContext;
+import com.pwn9.filter.engine.api.FilterContextImpl;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -60,7 +61,7 @@ public class TagRegistry {
      * <p>replaceTags.</p>
      *
      * @param line       a {@link StringTag} object.
-     * @param filterTask a {@link FilterContext} object.
+     * @param filterTask a {@link FilterContextImpl} object.
      * @return a {@link StringTag} object.
      */
     public static String replaceTags(String line, FilterContext filterTask) {

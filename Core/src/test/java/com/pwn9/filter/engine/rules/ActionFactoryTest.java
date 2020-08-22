@@ -20,9 +20,10 @@
 
 package com.pwn9.filter.engine.rules;
 
-import com.pwn9.filter.engine.FilterService;
+import com.pwn9.filter.engine.FilterServiceImpl;
 import com.pwn9.filter.engine.api.Action;
 import com.pwn9.filter.engine.rules.action.ActionFactory;
+import com.pwn9.filter.engine.rules.action.ActionFactoryImpl;
 import com.pwn9.filter.engine.rules.action.core.Abort;
 import org.junit.Test;
 
@@ -33,7 +34,7 @@ public class ActionFactoryTest {
 
     @Test
     public void testActionFactoryReturnsAction() {
-        ActionFactory actionFactory = new ActionFactory(new FilterService());
+        ActionFactory actionFactory = new ActionFactoryImpl(new FilterServiceImpl());
         try {
             Action result = actionFactory.getActionFromString("abort");
             assertEquals(result, Abort.INSTANCE);
