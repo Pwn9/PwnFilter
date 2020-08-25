@@ -34,6 +34,8 @@ import java.util.UUID;
  */
 public class MinecraftConsole implements Console {
 
+    final static UUID uuid = UUID.randomUUID();
+
     private final MinecraftAPI minecraftAPI;
 
     public MinecraftConsole(MinecraftAPI minecraftAPI) {
@@ -54,7 +56,7 @@ public class MinecraftConsole implements Console {
     @NotNull
     @Override
     public UUID getId() {
-        return java.util.UUID.fromString("CONSOLE");
+        return uuid;
     }
 
     @Override
