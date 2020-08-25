@@ -1,11 +1,12 @@
 PwnFilter uses the power of regular expressions to filter unwanted messages from chat. 
 
-####Current Development Status
+#### Current Development Status
 
 | Development Build | Jenkins | Codacy |
 | --- | --- | --- |
 |[Development Build](https://jenkins.addstar.com.au/job/PwnFilter/lastBuild/)| [![Build Status](https://jenkins.addstar.com.au/buildStatus/icon?job=PwnFilter)](https://jenkins.addstar.com.au/job/PwnFilter/)|[![Codacy Badge](https://app.codacy.com/project/badge/Grade/d6b5134ccc764180a38b1781d6cd10cf)](https://www.codacy.com/gh/AddstarMC/PwnFilter?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=AddstarMC/PwnFilter&amp;utm_campaign=Badge_Grade) [![Codacy Badge](https://app.codacy.com/project/badge/Coverage/d6b5134ccc764180a38b1781d6cd10cf)](https://www.codacy.com/gh/AddstarMC/PwnFilter?utm_source=github.com&utm_medium=referral&utm_content=AddstarMC/PwnFilter&utm_campaign=Badge_Coverage)
-####History
+
+#### History
 This is a continuation of the original RegexFilter by FloydATC.
 
 Continued development by: tREMor
