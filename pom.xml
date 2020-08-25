@@ -34,6 +34,7 @@
         <module>Mock</module>
         <module>Core</module>
         <module>PwnFilter-Bukkit</module>
+        <module>Sponge</module>
     </modules>
     <name>PwnFilter</name>
     <description>Complete chat control with the power of regex.</description>
@@ -96,7 +97,7 @@
     <properties>
         <siteUrlSuffix>${project.version}</siteUrlSuffix>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <ghUser>AddstarMC</ghUser>
+        <ghUser>Pwn9</ghUser>
         <ghRepo>PwnFilter</ghRepo>
         <ghProject>${ghUser}/${ghRepo}</ghProject>
         <github.global.server>github</github.global.server>
@@ -119,10 +120,6 @@
             <id>central</id>
             <name>Central Repository</name>
             <url>https://repo.maven.apache.org/maven2</url>
-        </repository>
-        <repository>
-            <id>Plugin Metrics</id>
-            <url>http://repo.mcstats.org/content/repositories/public</url>
         </repository>
         <repository>
             <id>CodeMC</id>
