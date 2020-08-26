@@ -1,0 +1,1902 @@
+# EpicATrain's Language Filter
+# Severe Word List
+# Version 10.0.1
+# Built 10-18-2013 4:03 PM
+#
+# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+# This Is The NEW Version Of EpicATrain's Language Filter! Yay! This Version
+# Hopes To Make Bad Language The Thing Of The Past! It Filters Everything!
+# This Is The Severe Version Of My Filter And Is Part Of A Package Of Other
+# Filters.  Please Make Sure You Download And Use The Other Parts As Well!
+# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+#
+#
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# This Language Filter Requires Version 3.2 Or Greater Of Pwnfilter And WILL
+# NOT Work With Older Versions! If You Try, You Will Crash Your Server! You
+# Have Been Warned!
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+#
+#
+# Thank you for supporting my work.  Please consider donating to help
+#	further support family safe gaming!
+#		http://fnd.us/c/0QtL4
+# All donations will go towards the support and continuation of this
+#	language filter and the advancement of server & client side
+#	family safe game development.
+#
+# > > > > > Please Do NOT Remove or Edit Any Donation Lines < < < < <
+# > > > > > If you wish to remove these, please donate. Thanks! < < < < <
+#
+# ---------- Important Information ----------
+# This scripting code has no warranty or remedies, whether expressed or
+#	 implied, and is provided "as is".
+# The following scripting code is designed for the following servers:
+#	Minecraft -> Bukkit -> Pwnfilter Plugin
+# There is a goal to make this code universal for cross-platforms
+# 	on many other game servers. Support for other games is currently
+#	in development.  If you wish to participate and help develop this
+#	code, please contact EpicATrain at the email below.
+# THIS WORK IS COPYRIGHTED WITH THE UNITED STATES LIBRARY OF CONGRESS.
+#   YOU MUST CONTACT ADDAM 'EPICATRAIN' WAITKUS FOR COPYRIGHT PERMISSION.
+#   YOU MAY CONTACT ADDAM 'EPICATRAIN' WAITKUS AT ATRAINONLINE (AT) GMAIL
+#   (DOT.) COM
+# This work may be distributed in current format free of charge as
+# 	long as this work remains free of charge and used only on the
+#	game servers listed above.
+# Server administrators may modify this work to their preference for
+#	their server only, if so desired, as long as such work remains property
+# 	of Addam Waitkus with approperiate asknowledgements and remains
+#   distributed freely of charge.
+# Addam Waitkus: atrain(nothinghere)online [at] gmail (dot) com
+# ---------- End Important Information ----------
+#
+# ---------- Read Me ----------
+# This entire script is written so that any admin can edit out most
+# 	parts of this filter to his or her liking.  To stop a word from
+# 	being filtered, simply put a pound sign (#) next to the lines of
+# 	code you want to turn off.
+# It's highly NOT recommended to delete lines of code in case you
+# 	want to turn it back on at a later date.
+#
+# ---------- End Read Me ---------- 
+
+shortcuts letters.vars
+
+actiongroup severeactions
+then replace
+then warn &a%player%, &cYou Have Violate Rule: &a%ruleid%
+then notify pwnfilter.notify %player% just said %rawstring%
+#then points 5
+then log
+
+match (?<!'|\w)<a>+<_>*<h>+<_>*<o>+<_>*<l>(?!\w)
+rule S1 [ahol]
+actions severeactions
+
+match (?<!'|\w)<a>+<h>+<_>*<o>+<_>*<l>+<_>*<e>(?!\w)
+rule S2 [ahole]
+actions severeactions
+
+match (?<!'|\w)<a>+<_>*<h>+<_>*<u>+<_>*<l>(?!\w)
+rule S3 [ahul]
+actions severeactions
+
+match (?<!'|\w)<a>+<_>*<h>+<_>*<u>+<_>*<l>+<_>*<e>(?!\w)
+rule S4 [ahule]
+actions severeactions
+
+match (?<!'|\w)<A>+<_>*<l>+<_>*<t>+<_>*<e>+<_>*<r>+<_>*<B>+<_>*<o>+<_>*<y>(?!\w)
+rule S5 [AlterBoy]
+actions severeactions
+
+match (?<!'|\w)<a>+<_>*<n>+<_>*<a>+<_>*<l>(?!\w)
+rule S6 [anal]
+actions severeactions
+
+match (?<!'|\w)<a>+<_>*<n>+<_>*<e>+<_>*<l>(?!\w)
+rule S7 [anel]
+actions severeactions
+
+match (?<!'|\w)<a>+<_>*<n>+<_>*<e>+<_>*<s>(?!\w)
+rule S8 [anes]
+actions severeactions
+
+match (?<!'|\w)<a>+<_>*<n>+<_>*<i>+<_>*<l>+<_>*<i>+<_>*<n>+<_>*<g>+<_>*<u>+<_>*<s>(?!\w)
+rule S9 [anilingus]
+actions severeactions
+
+match (?<!'|\w)<a>+<_>*<n>+<_>*<i>+<_>*<s>(?!\w)
+rule S10 [anis]
+actions severeactions
+
+match (?<!'|\w)<a>+<_>*<n>+<_>*<o>+<_>*<l>(?!\w)
+rule S11 [anol]
+actions severeactions
+
+match (?<!'|\w)<a>+<_>*<n>+<_>*<u>+<_>*<s>(?!\w)
+rule S12 [anus]
+actions severeactions
+
+match (?<!'|\w)<a>+<_>*<r>+<_>*<s>+<_>*<c>+<_>*<h>+<_>*<l>+<_>*<o>+<_>*<c>+<_>*<h>(?!\w)
+rule S13 [arschloch]
+actions severeactions
+
+match (?<!'|\w)<a>+<_>*<r>+<_>*<s>+<_>*<e>(?!\w)
+rule S14 [arse]
+actions severeactions
+
+match (?<!'|\w)<a>+<_>*<s>+<_>*<h>+<_>*<e>+<_>*<l>(?!\w)
+rule S15 [ashel]
+actions severeactions
+
+match (?<!'|\w)<a>+<_>*<s>+<_>*<h>+<_>*<e>+<_>*<l>+<_>*<e>(?!\w)
+rule S16 [ashele]
+actions severeactions
+
+match (?<!'|\w)<a>+<_>*<s>+<_>*<h>+<_>*<o>+<_>*<l>(?!\w)
+rule S17 [ashol]
+actions severeactions
+
+match (?<!'|\w)<a>+<_>*<s>+<_>*<h>+<_>*<o>+<_>*<l>+<_>*<e>(?!\w)
+rule S18 [ashole]
+actions severeactions
+
+match (?<!'|\w)<a>+<_>*<s>+<_>*<h>+<_>*<u>+<_>*<l>(?!\w)
+rule S19 [ashul]
+actions severeactions
+
+match (?<!'|\w)<a>+<_>*<s>+<_>*<h>+<_>*<u>+<_>*<l>+<_>*<e>(?!\w)
+rule S20 [ashule]
+actions severeactions
+
+match (?<!'|\w)<a>+<_>*<s>+<_>*<s>(?!\w)
+rule S21 [ass]
+actions severeactions
+
+match <B>+<_>*<a>+<_>*<l>+<_>*<l>+<_>*<S>+<_>*<a>+<_>*<c>+<_>*<k>
+rule S22 [BallSack]
+actions severeactions
+
+match (?<!'|\w)<B>+<_>*<a>+<_>*<l>+<_>*<l>+<_>*<s>+<_>*<a>+<_>*<c>+<_>*<k>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule S23 [Ballsacking]
+actions severeactions
+
+match <b>+<_>*<a>+<_>*<r>+<_>*<e>+<_>*<b>+<_>*<a>+<_>*<c>+<_>*<k>
+rule S24 [bareback]
+actions severeactions
+
+match <b>+<_>*<a>+<_>*<s>+<_>*<t>+<_>*<a>+<_>*<r>+<_>*<d>
+rule S25 [bastard]
+actions severeactions
+
+match <b>+<_>*<a>+<_>*<s>+<_>*<t>+<_>*<e>+<_>*<r>+<_>*<d>
+rule S26 [basterd]
+actions severeactions
+
+match (?<!'|\w)<b>+<_>*<a>+<_>*<s>+<_>*<t>+<_>*<u>+<_>*<r>+<_>*<d>(?!\w)
+rule S27 [basturd]
+actions severeactions
+
+match (?<!'|\w)<B>+<_>*<D>+<_>*<S>+<_>*<M>(?!\w)
+rule S28 [BDSM]
+actions severeactions
+
+match (?<!'|\w)<b>+<_>*<e>+<_>*<a>+<_>*<r>+<_>*<d>+<_>*<e>+<_>*<d>+<_>*<c>+<_>*<l>+<_>*<a>+<_>*<m>(?!\w)
+rule S29 [beardedclam]
+actions severeactions
+
+match (?<!'|\w)<b>+<_>*<e>+<_>*<a>+<_>*<t>+<_>*<i>+<_>*<n>+<_>*<g>+<_>*<o>+<_>*<f>+<_>*<f>(?!\w)
+rule S30 [beatingoff]
+actions severeactions
+
+match (?<!'|\w)<b>+<_>*<e>+<_>*<a>+<_>*<t>+<_>*<i>+<_>*<n>+<_>*<g>+<_>*<o>+<_>*<n>+<_>*<e>+<_>*<s>+<_>*<m>+<_>*<e>+<_>*<a>+<_>*<t>(?!\w)
+rule S31 [beatingonesmeat]
+actions severeactions
+
+match (?<!'|\w)<B>+<_>*<e>+<_>*<e>+<_>*<f>+<_>*<C>+<_>*<u>+<_>*<r>+<_>*<t>+<_>*<a>+<_>*<i>+<_>*<n>(?!\w)
+rule S32 [BeefCurtain]
+actions severeactions
+
+match (?<!'|\w)<b>+<_>*<e>+<_>*<l>+<_>*<l>+<_>*<e>+<_>*<n>+<_>*<d>(?!\w)
+rule S33 [bellend]
+actions severeactions
+
+match (?<!'|\w)<b>+<_>*<e>+<_>*<o>+<_>*<c>+<_>*<h>(?!\w)
+rule S34 [beoch]
+actions severeactions
+
+match (?<!'|\w)<b>+<_>*<e>+<_>*<o>+<_>*<t>+<_>*<c>+<_>*<h>(?!\w)
+rule S35 [beotch]
+actions severeactions
+
+match (?<!'|\w)<b>+<_>*<f>+<_>*<d>(?!\w)
+rule S36 [bfd]
+actions severeactions
+
+match (?<!'|\w)<b>+<_>*<i>+<_>*<a>+<_>*<c>+<_>*<h>(?!\w)
+rule S37 [biach]
+actions severeactions
+
+match (?<!'|\w)<b>+<_>*<i>+<_>*<a>+<_>*<c>+<_>*<h>+<_>*<e>+<_>*<s>(?!\w)
+rule S38 [biaches]
+actions severeactions
+
+match (?<!'|\w)<b>+<_>*<i>+<_>*<c>+<_>*<h>(?!\w)
+rule S39 [bich]
+actions severeactions
+
+match (?<!'|\w)<b>+<_>*<i>+<_>*<c>+<_>*<t>+<_>*<h>(?!\w)
+rule S40 [bicth]
+actions severeactions
+
+match (?<!'|\w)<b>+<_>*<i>+<_>*<o>+<_>*<c>+<_>*<h>(?!\w)
+rule S41 [bioch]
+actions severeactions
+
+match <b>+<_>*<i>+<_>*<o>+<_>*<t>+<_>*<c>+<_>*<h>
+rule S42 [biotch]
+actions severeactions
+
+match <b>+<_>*<i>+<_>*<t>+<_>*<c>+<_>*<h>
+rule S43 [bitch]
+actions severeactions
+
+match <b>+<_>*<l>+<_>*<o>+<_>*<w>+<_>*<j>+<_>*<o>+<_>*<b>
+rule S44 [blowjob]
+actions severeactions
+
+match (?<!'|\w)<b>+<_>*<o>+<_>*<f>+<_>*<f>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule S45 [boffing]
+actions severeactions
+
+match (?<!'|\w)<b>+<_>*<o>+<_>*<i>+<_>*<o>+<_>*<l>+<_>*<a>+<_>*<s>(?!\w)
+rule S45 [boiolas]
+actions severeactions
+
+match (?<!'|\w)<b>+<_>*<o>+<_>*<l>+<_>*<l>+<_>*<o>+<_>*<c>+<_>*<k>+<_>*<s>(?!\w)
+rule S47 [bollocks]
+actions severeactions
+
+match (?<!'|\w)<b>+<_>*<o>+<_>*<l>+<_>*<l>+<_>*<o>+<_>*<x>(?!\w)
+rule S48 [bollox]
+actions severeactions
+
+match (?<!'|\w)<b>+<_>*<o>+<_>*<n>+<_>*<e>+<_>*<r>(?!\w)
+rule S49 [boner]
+actions severeactions
+
+match (?<!'|\w)<b>+<_>*<r>+<_>*<o>+<_>*<t>+<_>*<h>+<_>*<e>+<_>*<l>
+rule S50 [brothel]
+actions severeactions
+
+match (?<!'|\w)<B>+<_>*<r>+<_>*<o>+<_>*<w>+<_>*<n>+<_>*<B>+<_>*<a>+<_>*<g>+<_>*<g>+<_>*<i>+<_>*<n>+<_>*<g>+<_>*<I>+<_>*<t>(?!\w)
+rule S51 [BrownBaggingIt]
+actions severeactions
+
+match (?<!'|\w)<B>+<_>*<r>+<_>*<o>+<_>*<w>+<_>*<n>+<_>*<N>+<_>*<e>+<_>*<c>+<_>*<k>+<_>*<t>+<_>*<i>+<_>*<e>(?!\w)
+rule S52 [BrownNecktie]
+actions severeactions
+
+match (?<!'|\w)<B>+<_>*<r>+<_>*<u>+<_>*<n>+<_>*<s>+<_>*<k>+<_>*<i>(?!\w)
+rule S53 [Brunski]
+actions severeactions
+
+match (?<!'|\w)<b>+<_>*<s>+<_>*<t>+<_>*<a>+<_>*<r>+<_>*<d>(?!\w)
+rule S54 [bstard]
+actions severeactions
+
+match (?<!'|\w)<b>+<_>*<s>+<_>*<t>+<_>*<e>+<_>*<r>+<_>*<d>(?!\w)
+rule S55 [bsterd]
+actions severeactions
+
+match (?<!'|\w)<b>+<_>*<s>+<_>*<t>+<_>*<u>+<_>*<r>+<_>*<d>(?!\w)
+rule S56 [bsturd]
+actions severeactions
+
+match (?<!'|\w)<b>+<_>*<u>+<_>*<c>+<_>*<e>+<_>*<t>+<_>*<a>(?!\w)
+rule S57 [buceta]
+actions severeactions
+
+match (?<!'|\w)<b>+<_>*<u>+<_>*<k>+<_>*<a>+<_>*<k>+<_>*<e>(?!\w)
+rule S58 [bukake]
+actions severeactions
+
+match <b>+<_>*<u>+<_>*<l>+<_>*<l>+<_>*<s>+<_>*<h>+<_>*<i>+<_>*<t>
+rule S59 [bullshit]
+actions severeactions
+
+match (?<!'|\w)<b>+<_>*<u>+<_>*<t>+<_>*<c>+<_>*<h>(?!\w)
+rule S60 [butch]
+actions severeactions
+
+match (?<!'|\w)<c>+<_>*<a>+<_>*<m>+<_>*<e>+<_>*<l>+<_>*<t>+<_>*<o>+<_>*<e>
+rule S61 [cameltoe]
+actions severeactions
+
+match (?<!'|\w)<C>+<_>*<a>+<_>*<n>+<_>*<i>+<_>*<n>+<_>*<e>+<_>*<S>+<_>*<p>+<_>*<e>+<_>*<c>+<_>*<i>+<_>*<a>+<_>*<l>(?!\w)
+rule S62 [CanineSpecial]
+actions severeactions
+
+match (?<!'|\w)<C>+<_>*<a>+<_>*<r>+<_>*<p>+<_>*<e>+<_>*<t>+<_>*<E>+<_>*<a>+<_>*<t>+<_>*<e>+<_>*<r>(?!\w)
+rule S63 [CarpetEater]
+actions severeactions
+
+match (?<!'|\w)<C>+<_>*<a>+<_>*<r>+<_>*<p>+<_>*<e>+<_>*<t>+<_>*<M>+<_>*<u>+<_>*<n>+<_>*<c>+<_>*<h>+<_>*<e>+<_>*<r>(?!\w)
+rule S64 [CarpetMuncher]
+actions severeactions
+
+match (?<!'|\w)<C>+<_>*<a>+<_>*<w>+<_>*<e>+<_>*<e>+<_>*<f>(?!\w)
+rule S65 [Caweef]
+actions severeactions
+
+match (?<!'|\w)<c>+<_>*<a>+<_>*<w>+<_>*<k>(?!\w)
+rule S66 [cawk]
+actions severeactions
+
+match (?<!'|\w)<c>+<_>*<h>+<_>*<i>+<_>*<n>+<_>*<r>+<_>*<e>+<_>*<s>+<_>*<t>(?!\w)
+rule S67 [chinrest]
+actions severeactions
+
+match (?<!'|\w)<c>+<_>*<i>+<_>*<p>+<_>*<a>(?!\w)
+rule S68 [cipa]
+actions severeactions
+
+match (?<!'|\w)<C>+<_>*<l>+<_>*<e>+<_>*<v>+<_>*<e>+<_>*<l>+<_>*<a>+<_>*<n>+<_>*<d>+<_>*<S>+<_>*<t>+<_>*<e>+<_>*<a>+<_>*<m>+<_>*<e>+<_>*<r>(?!\w)
+rule S69 [ClevelandSteamer]
+actions severeactions
+
+match (?<!'|\w)<c>+<_>*<l>+<_>*<i>+<_>*<t>(?!\w)
+rule S70 [clit]
+actions severeactions
+
+match (?<!'|\w)<c>+<_>*<l>+<_>*<i>+<_>*<t>+<_>*<o>+<_>*<r>+<_>*<e>+<_>*<s>(?!\w)
+rule S71 [clitores]
+actions severeactions
+
+match (?<!'|\w)<c>+<_>*<l>+<_>*<i>+<_>*<t>+<_>*<o>+<_>*<r>+<_>*<i>(?!\w)
+rule S72 [clitori]
+actions severeactions
+
+match (?<!'|\w)<c>+<_>*<l>+<_>*<i>+<_>*<t>+<_>*<o>+<_>*<r>+<_>*<i>+<_>*<s>(?!\w)
+rule S73 [clitoris]
+actions severeactions
+
+match (?<!'|\w)<c>+<_>*<l>+<_>*<i>+<_>*<t>+<_>*<o>+<_>*<r>+<_>*<y>(?!\w)
+rule S74 [clitory]
+actions severeactions
+
+match (?<!'|\w)<c>+<_>*<n>+<_>*<t>+<_>*<s>(?!\w)
+rule S75 [cnts]
+actions severeactions
+
+match (?<!'|\w)<c>+<_>*<o>+<_>*<c>+<_>*<k>(?!\w)
+rule S76 [cock]
+actions severeactions
+
+match (?<!'|\w)<c>+<_>*<o>+<_>*<c>+<_>*<k>+<_>*<s>+<_>*<u>+<_>*<c>+<_>*<k>+<_>*<e>+<_>*<r>(?!\w)
+rule S77 [cocksucker]
+actions severeactions
+
+match (?<!'|\w)<c>+<_>*<o>+<_>*<c>+<_>*<k>+<_>*<s>+<_>*<u>+<_>*<c>+<_>*<k>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule S78 [cocksucking]
+actions severeactions
+
+match (?<!'|\w)<c>+<_>*<o>+<_>*<r>+<_>*<n>+<_>*<h>+<_>*<o>+<_>*<l>+<_>*<e>(?!\w)
+rule S79 [cornhole]
+actions severeactions
+
+match (?<!'|\w)<c>+<_>*<r>+<_>*<e>+<_>*<a>+<_>*<m>+<_>*<p>+<_>*<i>+<_>*<e>
+rule S80 [creampie]
+actions severeactions
+
+match (?<!'|\w)<c>+<_>*<u>+<_>*<m>
+rule S81 [cum]
+actions severeactions
+
+match <c>+<_>*<u>+<_>*<m>+<_>*<d>+<_>*<u>+<_>*<m>+<_>*<p>
+rule S82 [cumdump]
+actions severeactions
+
+match (?<!'|\w)<c>+<_>*<u>+<_>*<m>+<_>*<e>+<_>*<r>(?!\w)
+rule S83 [cumer]
+actions severeactions
+
+match (?<!'|\w)<c>+<_>*<u>+<_>*<m>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule S84 [cuming]
+actions severeactions
+
+match (?<!'|\w)<c>+<_>*<u>+<_>*<n>+<_>*<n>+<_>*<i>+<_>*<l>+<_>*<i>+<_>*<n>+<_>*<g>+<_>*<u>+<_>*<s>(?!\w)
+rule S85 [cunnilingus]
+actions severeactions
+
+match (?<!'|\w)<c>+<_>*<u>+<_>*<n>+<_>*<t>(?!\w)
+rule S86 [cunt]
+actions severeactions
+
+match (?<!'|\w)<c>+<_>*<u>+<_>*<w>+<_>*<e>+<_>*<e>+<_>*<f>(?!\w)
+rule S87 [cuweef]
+actions severeactions
+
+match (?<!'|\w)<C>+<_>*<w>+<_>*<e>+<_>*<e>+<_>*<f>(?!\w)
+rule S88 [Cweef]
+actions severeactions
+
+match <d>+<_>*<a>+<_>*<f>+<_>*<a>+<_>*<q>
+rule S89 [dafaq]
+actions severeactions
+
+match <d>+<_>*<a>+<_>*<f>+<_>*<a>+<_>*<u>+<_>*<q>
+rule S90 [dafauq]
+actions severeactions
+
+match (?<!'|\w)<d>+<_>*<e>+<_>*<n>+<_>*<t>+<_>*<a>+<_>*<l>+<_>*<d>+<_>*<a>+<_>*<m>(?!\w)
+rule S91 [dentaldam]
+actions severeactions
+
+match (?<!'|\w)<d>+<_>*<i>+<_>*<c>+<_>*<k>(?!\w)
+rule S92 [dick]
+actions severeactions
+
+match (?<!'|\w)<d>+<_>*<i>+<_>*<k>(?!\w)
+rule S93 [dik]
+actions severeactions
+
+match (?<!'|\w)<d>+<_>*<i>+<_>*<k>+<_>*<e>(?!\w)
+rule S93 [dike]
+actions severeactions
+
+match (?<!'|\w)<d>+<_>*<i>+<_>*<l>+<_>*<d>+<_>*<o>(?!\w)
+rule S95 [dildo]
+actions severeactions
+
+match (?<!'|\w)<d>+<_>*<i>+<_>*<r>+<_>*<s>+<_>*<a>(?!\w)
+rule S96 [dirsa]
+actions severeactions
+
+match (?<!'|\w)<D>+<_>*<i>+<_>*<r>+<_>*<t>+<_>*<y>+<_>*<S>+<_>*<a>+<_>*<n>+<_>*<c>+<_>*<h>+<_>*<e>+<_>*<z>(?!\w)
+rule S97 [DirtySanchez]
+actions severeactions
+
+match (?<!'|\w)<D>+<_>*<i>+<_>*<r>+<_>*<t>+<_>*<y>+<_>*<S>+<_>*<w>+<_>*<i>+<_>*<r>+<_>*<l>+<_>*<y>(?!\w)
+rule S98 [DirtySwirly]
+actions severeactions
+
+match (?<!'|\w)<d>+<_>*<o>+<_>*<c>+<_>*<h>(?!\w)
+rule S99 [doch]
+actions severeactions
+
+match (?<!'|\w)<d>+<_>*<o>+<_>*<m>+<_>*<i>+<_>*<n>+<_>*<a>+<_>*<t>+<_>*<r>+<_>*<i>+<_>*<c>+<_>*<k>+<_>*<s>(?!\w)
+rule S100 [dominatricks]
+actions severeactions
+
+match (?<!'|\w)<d>+<_>*<o>+<_>*<n>+<_>*<g>(?!\w)
+rule S101 [dong]
+actions severeactions
+
+match (?<!'|\w)<d>+<_>*<o>+<_>*<s>+<_>*<h>(?!\w)
+rule S102 [dosh]
+actions severeactions
+
+match (?<!'|\w)<d>+<_>*<o>+<_>*<u>+<_>*<c>+<_>*<h>(?!\w)
+rule S103 [douch]
+actions severeactions
+
+match (?<!'|\w)<d>+<_>*<o>+<_>*<u>+<_>*<c>+<_>*<h>+<_>*<e>(?!\w)
+rule S104 [douche]
+actions severeactions
+
+match (?<!'|\w)<d>+<_>*<o>+<_>*<u>+<_>*<s>+<_>*<h>(?!\w)
+rule S105 [doush]
+actions severeactions
+
+match (?<!'|\w)<d>+<_>*<u>+<_>*<n>+<_>*<g>(?!\w)
+rule S106 [dung]
+actions severeactions
+
+match (?<!'|\w)<D>+<_>*<V>+<_>*<D>+<_>*<A>(?!\w)
+rule S107 [DVDA]
+actions severeactions
+
+match (?<!'|\w)<e>+<_>*<d>+<_>*<g>+<_>*<e>+<_>*<p>+<_>*<l>+<_>*<a>+<_>*<y>(?!\w)
+rule S108 [edgeplay]
+actions severeactions
+
+match (?<!'|\w)<e>+<_>*<d>+<_>*<g>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule S109 [edging]
+actions severeactions
+
+match (?<!'|\w)<e>+<_>*<g>+<_>*<a>+<_>*<c>+<_>*<u>+<_>*<l>+<_>*<a>+<_>*<t>(?!\w)
+rule S110 [egaculat]
+actions severeactions
+
+match (?<!'|\w)<e>+<_>*<g>+<_>*<a>+<_>*<c>+<_>*<u>+<_>*<l>+<_>*<a>+<_>*<t>+<_>*<e>(?!\w)
+rule S111 [egaculate]
+actions severeactions
+
+match (?<!'|\w)<e>+<_>*<g>+<_>*<a>+<_>*<c>+<_>*<u>+<_>*<l>+<_>*<a>+<_>*<t>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule S112 [egaculating]
+actions severeactions
+
+match (?<!'|\w)<e>+<_>*<j>+<_>*<a>+<_>*<c>+<_>*<u>+<_>*<l>+<_>*<a>+<_>*<t>(?!\w)
+rule S113 [ejaculat]
+actions severeactions
+
+match (?<!'|\w)<e>+<_>*<j>+<_>*<a>+<_>*<c>+<_>*<u>+<_>*<l>+<_>*<a>+<_>*<t>+<_>*<e>(?!\w)
+rule S114 [ejaculate]
+actions severeactions
+
+match (?<!'|\w)<e>+<_>*<j>+<_>*<a>+<_>*<c>+<_>*<u>+<_>*<l>+<_>*<a>+<_>*<t>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule S115 [ejaculating]
+actions severeactions
+
+match (?<!'|\w)<e>+<_>*<n>+<_>*<e>+<_>*<m>+<_>*<a>(?!\w)
+rule S116 [enema]
+actions severeactions
+
+match (?<!'|\w)<e>+<_>*<n>+<_>*<e>+<_>*<m>+<_>*<a>+<_>*<h>(?!\w)
+rule S117 [enemah]
+actions severeactions
+
+match (?<!'|\w)<E>+<_>*<p>+<_>*<h>+<_>*<e>+<_>*<b>+<_>*<o>+<_>*<p>+<_>*<h>+<_>*<i>+<_>*<l>+<_>*<i>+<_>*<a>(?!\w)
+rule S118 [Ephebophilia]
+actions severeactions
+
+match (?<!'|\w)<e>+<_>*<r>+<_>*<e>+<_>*<c>+<_>*<s>+<_>*<h>+<_>*<i>+<_>*<o>+<_>*<n>(?!\w)
+rule S119 [erecshion]
+actions severeactions
+
+match (?<!'|\w)<e>+<_>*<r>+<_>*<e>+<_>*<c>+<_>*<s>+<_>*<h>+<_>*<o>+<_>*<n>(?!\w)
+rule S120 [erecshon]
+actions severeactions
+
+match (?<!'|\w)<e>+<_>*<r>+<_>*<e>+<_>*<c>+<_>*<t>+<_>*<i>+<_>*<o>+<_>*<n>(?!\w)
+rule S121 [erection]
+actions severeactions
+
+match (?<!'|\w)<e>+<_>*<r>+<_>*<e>+<_>*<c>+<_>*<t>+<_>*<s>+<_>*<h>+<_>*<i>+<_>*<o>+<_>*<n>(?!\w)
+rule S122 [erectshion]
+actions severeactions
+
+match (?<!'|\w)<e>+<_>*<r>+<_>*<e>+<_>*<c>+<_>*<t>+<_>*<s>+<_>*<h>+<_>*<o>+<_>*<n>(?!\w)
+rule S123 [erectshon]
+actions severeactions
+
+match (?<!'|\w)<e>+<_>*<r>+<_>*<e>+<_>*<s>+<_>*<h>+<_>*<o>+<_>*<n>(?!\w)
+rule S124 [ereshon]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<m>+<_>*<e>(?!\w)
+rule S125 [fme]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<y>+<_>*<o>+<_>*<u>(?!\w)
+rule S126 [fyou]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<a>+<_>*<c>+<_>*<k>(?!\w)
+rule S127 [fack]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<a>+<_>*<c>+<_>*<k>+<_>*<e>+<_>*<r>(?!\w)
+rule S128 [facker]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<a>+<_>*<c>+<_>*<k>+<_>*<i>+<_>*<n>(?!\w)
+rule S129 [fackin]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<a>+<_>*<c>+<_>*<k>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule S130 [facking]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<a>+<_>*<g>
+ignore string leafage|of a
+rule S131 [fag]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<a>+<_>*<g>+<_>*<e>+<_>*<t>(?!\w)
+rule S132 [faget]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<a>+<_>*<g>+<_>*<i>+<_>*<t>(?!\w)
+rule S133 [fagit]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<a>+<_>*<g>+<_>*<o>+<_>*<t>(?!\w)
+rule S134 [fagot]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<a>+<_>*<k>(?!\w)
+rule S135 [fak]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<a>+<_>*<k>+<_>*<e>+<_>*<r>(?!\w)
+rule S136 [faker]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<a>+<_>*<n>+<_>*<y>(?!\w)
+rule S137 [fany]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<a>+<_>*<p>(?!\w)
+rule S138 [fap]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<a>+<_>*<p>+<_>*<e>+<_>*<r>(?!\w)
+rule S139 [faper]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<a>+<_>*<p>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule S140 [faping]
+actions severeactions
+
+#match (?<!'|\w)<f>+<_>*<a>+<_>*<q>(?!\w)
+#rule S141 [faq]
+#actions severeactions
+
+match (?<!'|\w)<f>+<_>*<a>+<_>*<q>+<_>*<e>+<_>*<r>(?!\w)
+rule S142 [faqer]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<a>+<_>*<q>+<_>*<i>+<_>*<n>(?!\w)
+rule S143 [faqin]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<a>+<_>*<q>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule S144 [faqing]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<a>+<_>*<q>+<_>*<u>+<_>*<e>+<_>*<r>(?!\w)
+rule S145 [faquer]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<a>+<_>*<q>+<_>*<u>+<_>*<r>(?!\w)
+rule S146 [faqur]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<a>+<_>*<u>+<_>*<c>+<_>*<k>(?!\w)
+rule S147 [fauck]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<a>+<_>*<u>+<_>*<c>+<_>*<k>+<_>*<e>+<_>*<r>(?!\w)
+rule S148 [faucker]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<a>+<_>*<u>+<_>*<c>+<_>*<k>+<_>*<i>+<_>*<n>(?!\w)
+rule S149 [fauckin]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<a>+<_>*<u>+<_>*<c>+<_>*<k>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule S150 [faucking]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<a>+<_>*<u>+<_>*<k>(?!\w)
+rule S151 [fauk]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<a>+<_>*<u>+<_>*<k>+<_>*<e>+<_>*<r>(?!\w)
+rule S152 [fauker]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<a>+<_>*<u>+<_>*<k>+<_>*<i>+<_>*<n>(?!\w)
+rule S153 [faukin]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<a>+<_>*<u>+<_>*<k>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule S154 [fauking]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<a>+<_>*<u>+<_>*<q>(?!\w)
+rule S155 [fauq]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<a>+<_>*<u>+<_>*<q>+<_>*<e>+<_>*<r>(?!\w)
+rule S156 [fauqer]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<a>+<_>*<u>+<_>*<q>+<_>*<i>+<_>*<n>(?!\w)
+rule S157 [fauqin]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<a>+<_>*<u>+<_>*<q>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule S158 [fauqing]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<a>+<_>*<u>+<_>*<q>+<_>*<u>+<_>*<e>+<_>*<r>(?!\w)
+rule S159 [fauquer]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<a>+<_>*<u>+<_>*<q>+<_>*<u>+<_>*<r>(?!\w)
+rule S160 [fauqur]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<a>+<_>*<w>+<_>*<k>(?!\w)
+rule S161 [fawk]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<a>+<_>*<w>+<_>*<k>+<_>*<e>+<_>*<r>(?!\w)
+rule S162 [fawker]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<a>+<_>*<w>+<_>*<k>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule S163 [fawking]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<c>+<_>*<k>(?!\w)
+rule S164 [fck]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<c>+<_>*<k>+<_>*<e>+<_>*<r>(?!\w)
+rule S165 [fcker]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<c>+<_>*<k>+<_>*<i>+<_>*<n>(?!\w)
+rule S166 [fckin]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<c>+<_>*<k>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule S167 [fcking]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<c>+<_>*<u>+<_>*<k>(?!\w)
+rule S168 [fcuk]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<c>+<_>*<u>+<_>*<k>+<_>*<e>+<_>*<r>(?!\w)
+rule S169 [fcuker]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<c>+<_>*<u>+<_>*<k>+<_>*<i>+<_>*<n>(?!\w)
+rule S170 [fcukin]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<c>+<_>*<u>+<_>*<k>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule S171 [fcuking]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<e>+<_>*<c>+<_>*<e>+<_>*<s>(?!\w)
+rule S172 [feces]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<e>+<_>*<l>+<_>*<c>+<_>*<h>(?!\w)
+rule S173 [felch]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<e>+<_>*<l>+<_>*<l>+<_>*<a>+<_>*<t>+<_>*<i>+<_>*<o>(?!\w)
+rule S174 [fellatio]
+actions severeactions
+
+match (?<!'|\w)<F>+<_>*<F>+<_>*<S>(?!\w)
+rule S175 [FFS]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<h>+<_>*<u>+<_>*<j>+<_>*<c>+<_>*<k>(?!\w)
+rule S176 [fhujck]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<h>+<_>*<u>+<_>*<j>+<_>*<c>+<_>*<k>+<_>*<e>+<_>*<r>(?!\w)
+rule S177 [fhujcker]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<h>+<_>*<u>+<_>*<j>+<_>*<c>+<_>*<k>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule S178 [fhujcking]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<h>+<_>*<u>+<_>*<j>+<_>*<k>+<_>*<e>+<_>*<r>(?!\w)
+rule S179 [fhujker]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<h>+<_>*<u>+<_>*<j>+<_>*<k>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule S180 [fhujking]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<k>(?!\w)
+ignore string afk
+rule S181 [fk]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<k>+<_>*<e>+<_>*<r>(?!\w)
+rule S182 [fker]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<k>+<_>*<i>+<_>*<n>(?!\w)
+rule S183 [fkin]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<k>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule S183 [fking]
+actions severeactions
+
+match (?<!'|\w)<F>+<_>*<l>+<_>*<o>+<_>*<o>+<_>*<d>+<_>*<i>+<_>*<n>+<_>*<g>+<_>*<t>+<_>*<h>+<_>*<e>+<_>*<c>+<_>*<a>+<_>*<v>+<_>*<e>(?!\w)
+rule S185 [Floodingthecave]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<m>+<_>*<l>(?!\w)
+rule S186 [fml]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<o>+<_>*<c>+<_>*<k>(?!\w)
+rule S187 [fock]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<o>+<_>*<c>+<_>*<k>+<_>*<e>+<_>*<r>(?!\w)
+rule S188 [focker]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<o>+<_>*<c>+<_>*<k>+<_>*<i>+<_>*<n>(?!\w)
+rule S189 [fockin]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<o>+<_>*<c>+<_>*<k>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule S190 [focking]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<o>+<_>*<r>+<_>*<e>+<_>*<s>+<_>*<k>+<_>*<i>+<_>*<n>(?!\w)
+rule S191 [foreskin]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<r>+<_>*<o>+<_>*<t>(?!\w)
+rule S192 [frot]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<r>+<_>*<o>+<_>*<t>+<_>*<t>+<_>*<a>+<_>*<g>+<_>*<e>(?!\w)
+rule S193 [frottage]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<r>+<_>*<o>+<_>*<t>+<_>*<t>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule S194 [frotting]
+actions severeactions
+
+match \w*<f>+<_>*<u>+<_>*<c>+<_>*<k>\w*
+ignore string afk
+rule S195 [fuck]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<u>+<_>*<c>+<_>*<k>+<_>*<e>+<_>*<r>(?!\w)
+rule S196 [fucker]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<u>+<_>*<c>+<_>*<k>+<_>*<i>+<_>*<n>(?!\w)
+rule S197 [fuckin]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<u>+<_>*<c>+<_>*<k>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule S198 [fucking]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<u>+<_>*<q>(?!\w)
+rule S199 [fuq]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<u>+<_>*<y>+<_>*<c>+<_>*<k>(?!\w)
+rule S200 [fuyck]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<u>+<_>*<y>+<_>*<c>+<_>*<k>+<_>*<e>+<_>*<r>(?!\w)
+rule S201 [fuycker]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<u>+<_>*<y>+<_>*<c>+<_>*<k>+<_>*<i>+<_>*<n>(?!\w)
+rule S202 [fuyckin]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<u>+<_>*<y>+<_>*<c>+<_>*<k>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule S203 [fuycking]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<u>+<_>*<y>+<_>*<k>+<_>*<i>+<_>*<n>(?!\w)
+rule S204 [fuykin]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<y>+<_>*<c>+<_>*<k>(?!\w)
+rule S205 [fyck]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<y>+<_>*<c>+<_>*<k>+<_>*<e>+<_>*<r>(?!\w)
+rule S206 [fycker]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<y>+<_>*<c>+<_>*<k>+<_>*<i>+<_>*<n>(?!\w)
+rule S207 [fyckin]
+actions severeactions
+
+match (?<!'|\w)<f>+<_>*<y>+<_>*<c>+<_>*<k>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule S208 [fycking]
+actions severeactions
+
+match (?<!'|\w)<g>+<_>*<a>+<_>*<g>+<_>*<f>(?!\w)
+rule S209 [gagf]
+actions severeactions
+
+match (?<!'|\w)<G>+<_>*<a>+<_>*<n>+<_>*<g>+<_>*<B>+<_>*<a>+<_>*<n>+<_>*<g>(?!\w)
+rule S210 [GangBang]
+actions severeactions
+
+match (?<!'|\w)<g>+<_>*<a>+<_>*<y>
+rule S211 [gay]
+actions severeactions
+
+match (?<!'|\w)<g>+<_>*<e>+<_>*<t>+<_>*<l>+<_>*<a>+<_>*<i>+<_>*<d>(?!\w)
+rule S212 [getlaid]
+actions severeactions
+
+match (?<!'|\w)<g>+<_>*<h>+<_>*<e>+<_>*<y>(?!\w)
+rule S213 [ghey]
+actions severeactions
+
+match (?<!'|\w)<g>+<_>*<i>+<_>*<g>+<_>*<o>+<_>*<l>+<_>*<o>(?!\w)
+rule S214 [gigolo]
+actions severeactions
+
+match (?<!'|\w)<g>+<_>*<l>+<_>*<e>+<_>*<e>+<_>*<t>(?!\w)
+rule S215 [gleet]
+actions severeactions
+
+match (?<!'|\w)<G>+<_>*<o>+<_>*<b>+<_>*<s>+<_>*<t>+<_>*<o>+<_>*<p>+<_>*<p>+<_>*<e>+<_>*<r>(?!\w)
+rule S216 [Gobstopper]
+actions severeactions
+
+match (?<!'|\w)<G>+<_>*<o>+<_>*<l>+<_>*<d>+<_>*<e>+<_>*<n>+<_>*<S>+<_>*<h>+<_>*<o>+<_>*<w>+<_>*<e>+<_>*<r>(?!\w)
+rule S217 [GoldenShower]
+actions severeactions
+
+match (?<!'|\w)<g>+<_>*<o>+<_>*<n>+<_>*<o>+<_>*<r>+<_>*<r>+<_>*<h>+<_>*<e>+<_>*<a>(?!\w)
+rule S218 [gonorrhea]
+actions severeactions
+
+match (?<!'|\w)<g>+<_>*<o>+<_>*<o>+<_>*<c>+<_>*<h>(?!\w)
+rule S219 [gooch]
+actions severeactions
+
+match (?<!'|\w)<g>+<_>*<t>+<_>*<f>+<_>*<o>(?!\w)
+rule S220 [gtfo]
+actions severeactions
+
+match (?<!'|\w)<h>+<_>*<a>+<_>*<n>+<_>*<d>+<_>*<j>+<_>*<o>+<_>*<b>(?!\w)
+rule S221 [handjob]
+actions severeactions
+
+match (?<!'|\w)<h>+<_>*<a>+<_>*<n>+<_>*<d>+<_>*<j>+<_>*<o>+<_>*<b>+<_>*<s>(?!\w)
+rule S222 [handjobs]
+actions severeactions
+
+match (?<!'|\w)<h>+<_>*<a>+<_>*<r>+<_>*<d>+<_>*<o>+<_>*<n>(?!\w)
+rule S223 [hardon]
+actions severeactions
+
+match (?<!'|\w)<h>+<_>*<a>+<_>*<r>+<_>*<d>+<_>*<o>+<_>*<n>+<_>*<s>(?!\w)
+rule S224 [hardons]
+actions severeactions
+
+match (?<!'|\w)<H>+<_>*<e>+<_>*<r>+<_>*<s>+<_>*<h>+<_>*<e>+<_>*<y>+<_>*<H>+<_>*<i>+<_>*<g>+<_>*<h>+<_>*<w>+<_>*<a>+<_>*<y>(?!\w)
+rule S225 [HersheyHighway]
+actions severeactions
+
+match (?<!'|\w)<h>+<_>*<o>+<_>*<a>+<_>*<r>(?!\w)
+rule S226 [hoar]
+actions severeactions
+
+match (?<!'|\w)<h>+<_>*<o>+<_>*<c>+<_>*<k>+<_>*<e>+<_>*<r>(?!\w)
+rule S227 [hocker]
+actions severeactions
+
+match (?<!'|\w)<h>+<_>*<o>+<_>*<e>+<_>*<r>(?!\w)
+rule S228 [hoer]
+actions severeactions
+
+match (?<!'|\w)<h>+<_>*<o>+<_>*<k>+<_>*<e>+<_>*<r>(?!\w)
+rule S229 [hoker]
+actions severeactions
+
+match (?<!'|\w)<h>+<_>*<o>+<_>*<k>+<_>*<r>(?!\w)
+rule S230 [hokr]
+actions severeactions
+
+match (?<!'|\w)<h>+<_>*<o>+<_>*<m>+<_>*<o>(?!\w)
+rule S231 [homo]
+actions severeactions
+
+match (?<!'|\w)<h>+<_>*<o>+<_>*<n>+<_>*<e>+<_>*<y>+<_>*<p>+<_>*<o>+<_>*<t>(?!\w)
+rule S232 [honeypot]
+actions severeactions
+
+match (?<!'|\w)<H>+<_>*<o>+<_>*<n>+<_>*<k>+<_>*<e>+<_>*<y>(?!\w)
+rule S233 [Honkey]
+actions severeactions
+
+match (?<!'|\w)<h>+<_>*<o>+<_>*<r>(?!\w)
+rule S234 [hor]
+actions severeactions
+
+match (?<!'|\w)<h>+<_>*<o>+<_>*<r>+<_>*<e>(?!\w)
+rule S235 [hore]
+actions severeactions
+
+match (?<!'|\w)<h>+<_>*<o>+<_>*<r>+<_>*<n>+<_>*<e>(?!\w)
+rule S236 [horne]
+actions severeactions
+
+match (?<!'|\w)<h>+<_>*<o>+<_>*<r>+<_>*<n>+<_>*<e>+<_>*<i>(?!\w)
+rule S237 [hornei]
+actions severeactions
+
+match (?<!'|\w)<h>+<_>*<o>+<_>*<r>+<_>*<n>+<_>*<e>+<_>*<y>(?!\w)
+rule S238 [horney]
+actions severeactions
+
+match (?<!'|\w)<h>+<_>*<o>+<_>*<r>+<_>*<n>+<_>*<i>+<_>*<e>(?!\w)
+rule S239 [hornie]
+actions severeactions
+
+match (?<!'|\w)<h>+<_>*<o>+<_>*<r>+<_>*<n>+<_>*<y>(?!\w)
+rule S240 [horny]
+actions severeactions
+
+match (?<!'|\w)<H>+<_>*<o>+<_>*<t>+<_>*<K>+<_>*<a>+<_>*<r>+<_>*<l>(?!\w)
+rule S241 [HotKarl]
+actions severeactions
+
+match (?<!'|\w)<i>+<_>*<n>+<_>*<c>+<_>*<e>+<_>*<s>+<_>*<t>(?!\w)
+rule S242 [incest]
+actions severeactions
+
+match (?<!'|\w)<i>+<_>*<n>+<_>*<t>+<_>*<e>+<_>*<r>+<_>*<c>+<_>*<o>+<_>*<u>+<_>*<r>+<_>*<s>+<_>*<e>(?!\w)
+rule S243 [intercourse]
+actions severeactions
+
+match (?<!'|\w)<j>+<_>*<a>+<_>*<c>+<_>*<k>+<_>*<o>+<_>*<f>+<_>*<f>
+rule S244 [jackoff]
+actions severeactions
+
+match <J>+<_>*<a>+<_>*<c>+<_>*<k>+<_>*<i>+<_>*<n>+<_>*<g>|<j>+<_>*<e>+<_>*<r>+<_>*<k>+<_>*<i>+<_>*<n>+<_>*<g>
+rule S245 [Jacking jerking]
+actions severeactions
+
+match (?<!'|\w)<j>+<_>*<e>+<_>*<r>+<_>*<k>+<_>*<o>+<_>*<f>+<_>*<f>
+rule S246 [jerkoff]
+actions severeactions
+
+match (?<!'|\w)<j>+<_>*<i>+<_>*<s>+<_>*<i>+<_>*<m>(?!\w)
+rule S247 [jisim]
+actions severeactions
+
+match (?<!'|\w)<j>+<_>*<i>+<_>*<s>+<_>*<m>(?!\w)
+rule S248 [jism]
+actions severeactions
+
+match (?<!'|\w)<j>+<_>*<i>+<_>*<s>+<_>*<s>(?!\w)
+rule S249 [jiss]
+actions severeactions
+
+match (?<!'|\w)<j>+<_>*<i>+<_>*<z>+<_>*<z>(?!\w)
+rule S250 [jizz]
+actions severeactions
+
+match (?<!'|\w)<K>+<_>*<a>+<_>*<w>+<_>*<e>+<_>*<e>+<_>*<f>(?!\w)
+rule S251 [Kaweef]
+actions severeactions
+
+match (?<!'|\w)<k>+<_>*<i>+<_>*<k>+<_>*<e>(?!\w)
+rule S252 [kike]
+actions severeactions
+
+match (?<!'|\w)<k>+<_>*<n>+<_>*<u>+<_>*<c>+<_>*<k>+<_>*<l>+<_>*<e>+<_>*<d>+<_>*<r>+<_>*<a>+<_>*<g>+<_>*<g>+<_>*<e>+<_>*<r>(?!\w)
+rule S253 [knuckledragger]
+actions severeactions
+
+match (?<!'|\w)<k>+<_>*<o>+<_>*<c>+<_>*<k>(?!\w)
+rule S254 [kock]
+actions severeactions
+
+match (?<!'|\w)<k>+<_>*<o>+<_>*<o>+<_>*<c>+<_>*<h>(?!\w)
+rule S255 [kooch]
+actions severeactions
+
+match (?<!'|\w)<k>+<_>*<r>+<_>*<a>+<_>*<u>+<_>*<t>(?!\w)
+rule S256 [kraut]
+actions severeactions
+
+match (?<!'|\w)<k>+<_>*<u>+<_>*<k>(?!\w)
+rule S257 [kuk]
+actions severeactions
+
+match (?<!'|\w)<k>+<_>*<u>+<_>*<n>+<_>*<t>+<_>*<s>(?!\w)
+rule S258 [kunts]
+actions severeactions
+
+match (?<!'|\w)<K>+<_>*<w>+<_>*<e>+<_>*<e>+<_>*<f>(?!\w)
+rule S259 [Kweef]
+actions severeactions
+
+match (?<!'|\w)<l>+<_>*<e>+<_>*<s>+<_>*<b>+<_>*<i>+<_>*<a>+<_>*<n>(?!\w)
+rule S260 [lesbian]
+actions severeactions
+
+match (?<!'|\w)<l>+<_>*<e>+<_>*<s>+<_>*<b>+<_>*<o>(?!\w)
+rule S261 [lesbo]
+actions severeactions
+
+match (?<!'|\w)<l>+<_>*<e>+<_>*<s>+<_>*<s>+<_>*<i>+<_>*<e>(?!\w)
+rule S262 [lessie]
+actions severeactions
+
+match (?<!'|\w)<l>+<_>*<e>+<_>*<z>(?!\w)
+rule S263 [lez]
+actions severeactions
+
+match (?<!'|\w)<l>+<_>*<e>+<_>*<z>+<_>*<b>+<_>*<o>(?!\w)
+rule S264 [lezbo]
+actions severeactions
+
+match (?<!'|\w)<l>+<_>*<e>+<_>*<z>+<_>*<z>+<_>*<i>+<_>*<a>+<_>*<n>(?!\w)
+rule S265 [lezzian]
+actions severeactions
+
+match (?<!'|\w)<l>+<_>*<e>+<_>*<z>+<_>*<z>+<_>*<i>+<_>*<e>(?!\w)
+rule S266 [lezzie]
+actions severeactions
+
+match (?<!'|\w)<l>+<_>*<i>+<_>*<p>+<_>*<c>+<_>*<h>+<_>*<i>+<_>*<t>+<_>*<s>(?!\w)
+rule S267 [lipchits]
+actions severeactions
+
+match (?<!'|\w)<l>+<_>*<i>+<_>*<p>+<_>*<s>+<_>*<h>+<_>*<i>+<_>*<t>+<_>*<s>(?!\w)
+rule S268 [lipshits]
+actions severeactions
+
+match (?<!'|\w)<l>+<_>*<u>+<_>*<b>+<_>*<e>(?!\w)
+rule S269 [lube]
+actions severeactions
+
+match (?<!'|\w)<m>+<_>*<a>+<_>*<s>+<_>*<o>+<_>*<c>+<_>*<h>+<_>*<i>+<_>*<s>+<_>*<t>(?!\w)
+rule S270 [masochist]
+actions severeactions
+
+match (?<!'|\w)<m>+<_>*<a>+<_>*<s>+<_>*<o>+<_>*<k>+<_>*<i>+<_>*<s>+<_>*<t>(?!\w)
+rule S271 [masokist]
+actions severeactions
+
+match (?<!'|\w)<m>+<_>*<a>+<_>*<s>+<_>*<t>+<_>*<a>+<_>*<r>+<_>*<b>+<_>*<a>+<_>*<i>+<_>*<t>
+rule S271 [mastarbait]
+actions severeactions
+
+match (?<!'|\w)<m>+<_>*<a>+<_>*<s>+<_>*<t>+<_>*<e>+<_>*<r>+<_>*<b>+<_>*<a>+<_>*<i>+<_>*<t>
+rule S273 [masterbait]
+actions severeactions
+
+match (?<!'|\w)<m>+<_>*<a>+<_>*<s>+<_>*<t>+<_>*<r>+<_>*<b>+<_>*<a>+<_>*<t>
+rule S274 [mastrbat]
+actions severeactions
+
+match (?<!'|\w)<m>+<_>*<a>+<_>*<s>+<_>*<t>+<_>*<r>+<_>*<b>+<_>*<a>+<_>*<t>+<_>*<e>*
+rule S275 [mastrbate]
+actions severeactions
+
+match (?<!'|\w)<m>+<_>*<a>+<_>*<s>+<_>*<t>+<_>*<u>+<_>*<r>+<_>*<b>+<_>*<a>+<_>*<i>+<_>*<t>
+rule S276 [masturbait]
+actions severeactions
+
+match (?<!'|\w)<m>+<_>*<a>+<_>*<s>+<_>*<t>+<_>*<u>+<_>*<r>+<_>*<b>+<_>*<a>+<_>*<t>
+rule S277 [masturbat]
+actions severeactions
+
+match (?<!'|\w)<m>+<_>*<a>+<_>*<s>+<_>*<t>+<_>*<u>+<_>*<r>+<_>*<b>+<_>*<a>+<_>*<t>+<_>*<e>*
+rule S278 [masturbate]
+actions severeactions
+
+match (?<!'|\w)<M>+<_>*<e>+<_>*<l>+<_>*<l>+<_>*<o>+<_>*<n>+<_>*<D>+<_>*<i>+<_>*<v>+<_>*<e>(?!\w)
+rule S279 [MellonDive]
+actions severeactions
+
+match (?<!'|\w)<m>+<_>*<i>+<_>*<l>+<_>*<f>(?!\w)
+rule S280 [milf]
+actions severeactions
+
+match (?<!'|\w)<m>+<_>*<i>+<_>*<n>+<_>*<g>+<_>*<e>(?!\w)
+rule S281 [minge]
+actions severeactions
+
+match (?<!'|\w)<m>+<_>*<o>+<_>*<f>+<_>*<o>
+rule S282 [mofo]
+actions severeactions
+
+match (?<!'|\w)<M>+<_>*<o>+<_>*<l>+<_>*<e>+<_>*<s>+<_>*<t>+<_>*<d>(?!\w)
+rule S283 [Molestd]
+actions severeactions
+
+match (?<!'|\w)<M>+<_>*<o>+<_>*<l>+<_>*<e>+<_>*<s>+<_>*<t>+<_>*<e>+<_>*<d>(?!\w)
+rule S283 [Molested]
+actions severeactions
+
+match (?<!'|\w)<M>+<_>*<o>+<_>*<n>+<_>*<r>+<_>*<o>+<_>*<e>+<_>*<T>+<_>*<r>+<_>*<a>+<_>*<n>+<_>*<s>+<_>*<f>+<_>*<e>+<_>*<r>(?!\w)
+rule S285 [MonroeTransfer]
+actions severeactions
+
+match (?<!'|\w)<M>+<_>*<o>+<_>*<r>+<_>*<k>(?!\w)
+rule S286 [Mork]
+actions severeactions
+
+match (?<!'|\w)<M>+<_>*<o>+<_>*<t>+<_>*<o>+<_>*<r>+<_>*<b>+<_>*<o>+<_>*<a>+<_>*<t>(?!\w)
+rule S287 [Motorboat]
+actions severeactions
+
+match (?<!'|\w)<m>+<_>*<u>+<_>*<f>+<_>*<f>(?!\w)
+rule S288 [muff]
+actions severeactions
+
+match (?<!'|\w)<m>+<_>*<u>+<_>*<f>+<_>*<f>+<_>*<d>+<_>*<i>+<_>*<v>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule S289 [muffdiving]
+actions severeactions
+
+match (?<!'|\w)<M>+<_>*<u>+<_>*<f>+<_>*<f>+<_>*<T>+<_>*<e>+<_>*<a>+<_>*<s>+<_>*<e>+<_>*<r>(?!\w)
+rule S290 [MuffTeaser]
+actions severeactions
+
+match (?<!'|\w)<n>+<_>*<a>+<_>*<s>+<_>*<i>(?!\w)
+rule S291 [nasi]
+actions severeactions
+
+match (?<!'|\w)<n>+<_>*<a>+<_>*<s>+<_>*<i>+<_>*<s>(?!\w)
+rule S292 [nasis]
+actions severeactions
+
+match (?<!'|\w)<n>+<_>*<a>+<_>*<z>+<_>*<i>(?!\w)
+rule S293 [nazi]
+actions severeactions
+
+match (?<!'|\w)<n>+<_>*<a>+<_>*<z>+<_>*<i>+<_>*<s>(?!\w)
+rule S294 [nazis]
+actions severeactions
+
+match (?<!'|\w)<n>+<_>*<u>+<_>*<t>+<_>*<s>+<_>*<a>+<_>*<c>+<_>*<k>(?!\w)
+rule S295 [nutsack]
+actions severeactions
+
+match (?<!'|\w)<n>+<_>*<y>+<_>*<m>+<_>*<p>+<_>*<h>(?!\w)
+rule S296 [nymph]
+actions severeactions
+
+match (?<!'|\w)<o>+<_>*<m>+<_>*<f>+<_>*<l>(?!\w)
+rule S297 [omfl]
+actions severeactions
+
+match (?<!'|\w)<o>+<_>*<r>+<_>*<g>+<_>*<a>+<_>*<s>+<_>*<m>(?!\w)
+rule S298 [orgasm]
+actions severeactions
+
+match (?<!'|\w)<o>+<_>*<r>+<_>*<g>+<_>*(<y>|ies)
+rule S299 [orgy]
+actions severeactions
+
+match (?<!'|\w)<P>+<_>*<a>+<_>*<s>+<_>*<a>+<_>*<d>+<_>*<e>+<_>*<n>+<_>*<a>+<_>*<M>+<_>*<u>+<_>*<d>+<_>*<s>+<_>*<l>+<_>*<i>+<_>*<d>+<_>*<e>(?!\w)
+rule S300 [PasadenaMudslide]
+actions severeactions
+
+match (?<!'|\w)<p>+<_>*<e>+<_>*<d>+<_>*<o>\w*
+ignore string pedocal|pedocals|pedology|pedocalic|pedogenic|pedologic|pedometer|pedologies|pedologist|pedometers|pedogeneses|pedogenesis|pedogenetic|pedological|pedologists
+rule S301 [pedo]
+actions severeactions
+
+match (?<!'|\w)<p>+<_>*<e>+<_>*<d>+<_>*<o>+<_>*<f>+<_>*<i>+<_>*<l>+<_>*<e>
+rule S302 [pedofile]
+actions severeactions
+
+match (?<!'|\w)<p>+<_>*<e>+<_>*<d>+<_>*<o>+<_>*<p>+<_>*<h>+<_>*<i>+<_>*<l>+<_>*<e>
+rule S303 [pedophile]
+actions severeactions
+
+match (?<!'|\w)<p>+<_>*<e>+<_>*<n>+<_>*<a>+<_>*<s>(?!\w)
+rule S304 [penas]
+actions severeactions
+
+match (?<!'|\w)<p>+<_>*<e>+<_>*<n>+<_>*<i>+<_>*<s>
+ignore string pen is
+rule S305 [penis]
+actions severeactions
+
+match (?<!'|\w)<p>+<_>*<e>+<_>*<n>+<_>*<u>+<_>*<s>(?!\w)
+rule S306 [penus]
+actions severeactions
+
+match (?<!'|\w)<p>+<_>*<f>+<_>*<o>(?!\w)
+rule S307 [pfo]
+actions severeactions
+
+match (?<!'|\w)<p>+<_>*<i>+<_>*<s>+<_>*<s>
+rule S308 [piss]
+actions severeactions
+
+match (?<!'|\w)<p>+<_>*<i>+<_>*<t>+<_>*<a>(?!\w)
+rule S309 [pita]
+actions severeactions
+
+match (?<!'|\w)<P>+<_>*<l>+<_>*<a>+<_>*<c>+<_>*<e>+<_>*<n>+<_>*<t>+<_>*<a>(?!\w)
+rule S310 [Placenta]
+actions severeactions
+
+match (?<!'|\w)<p>+<_>*<o>+<_>*<o>+<_>*<n>(?!\w)
+rule S311 [poon]
+actions severeactions
+
+match (?<!'|\w)<p>+<_>*<o>+<_>*<o>+<_>*<n>+<_>*<a>+<_>*<n>+<_>*<i>(?!\w)
+rule S312 [poonani]
+actions severeactions
+
+match (?<!'|\w)<p>+<_>*<o>+<_>*<r>+<_>*<n>(?!\w)
+rule S313 [porn]
+actions severeactions
+
+match (?<!'|\w)<p>+<_>*<o>+<_>*<z>(?!\w)
+rule S314 [poz]
+actions severeactions
+
+match (?<!'|\w)<p>+<_>*<r>+<_>*<i>+<_>*<c>+<_>*<k>(?!\w)
+rule S315 [prick]
+actions severeactions
+
+match (?<!'|\w)<p>+<_>*<r>+<_>*<i>+<_>*<k>(?!\w)
+rule S316 [prik]
+actions severeactions
+
+match (?<!'|\w)<p>+<_>*<r>+<_>*<n>+<_>*<o>(?!\w)
+rule S317 [prno]
+actions severeactions
+
+match (?<!'|\w)<p>+<_>*<r>+<_>*<o>+<_>*<n>(?!\w)
+rule S318 [pron]
+actions severeactions
+
+match (?<!'|\w)<p>+<_>*<u>+<_>*<b>+<_>*<e>(?!\w)
+rule S319 [pube]
+actions severeactions
+
+match (?<!'|\w)<P>+<_>*<u>+<_>*<d>+<_>*<e>+<_>*<n>+<_>*<d>+<_>*<a>(?!\w)
+rule S320 [Pudenda]
+actions severeactions
+
+match (?<!'|\w)<P>+<_>*<u>+<_>*<d>+<_>*<e>+<_>*<n>+<_>*<d>+<_>*<u>+<_>*<m>(?!\w)
+rule S321 [Pudendum]
+actions severeactions
+
+match (?<!'|\w)<P>+<_>*<u>+<_>*<r>+<_>*<p>+<_>*<l>+<_>*<e>+<_>*<M>+<_>*<u>+<_>*<s>+<_>*<h>+<_>*<r>+<_>*<o>+<_>*<o>+<_>*<m>(?!\w)
+rule S322 [PurpleMushroom]
+actions severeactions
+
+match (?<!'|\w)<p>+<_>*<u>+<_>*<s>+<_>*<e>(?!\w)
+rule S323 [puse]
+actions severeactions
+
+match (?<!'|\w)<p>+<_>*<u>+<_>*<s>+<_>*<i>+<_>*<e>(?!\w)
+rule S324 [pusie]
+actions severeactions
+
+match (?<!'|\w)<p>+<_>*<u>+<_>*<s>+<_>*<y>(?!\w)
+rule S325 [pusy]
+actions severeactions
+
+match (?<!'|\w)<Q>+<_>*<u>+<_>*<e>+<_>*<f>(?!\w)
+rule S326 [Quef]
+actions severeactions
+
+match (?<!'|\w)<q>+<_>*<u>+<_>*<e>+<_>*<r>(?!\w)
+rule S327 [quer]
+actions severeactions
+
+match (?<!'|\w)<q>+<_>*<u>+<_>*<i>+<_>*<m>(?!\w)
+rule S328 [quim]
+actions severeactions
+
+match (?<!'|\w)<Q>+<_>*<w>+<_>*<e>+<_>*<f>(?!\w)
+rule S329 [Qwef]
+actions severeactions
+
+match (?<!'|\w)<R>+<_>*<a>+<_>*<p>+<_>*<e>
+rule S330 [Rape]
+actions severeactions
+
+match (?<!'|\w)<r>+<_>*<a>+<_>*<p>+<_>*<i>+<_>*<s>+<_>*<t>
+rule S331 [rapist]
+actions severeactions
+
+match (?<!'|\w)<R>+<_>*<e>+<_>*<a>+<_>*<c>+<_>*<h>+<_>*<a>+<_>*<r>+<_>*<o>+<_>*<u>+<_>*<n>+<_>*<d>(?!\w)
+rule S332 [Reacharound]
+actions severeactions
+
+match (?<!'|\w)<r>+<_>*<e>+<_>*<a>+<_>*<m>+<_>*<j>+<_>*<o>+<_>*<b>(?!\w)
+rule S333 [reamjob]
+actions severeactions
+
+match (?<!'|\w)<r>+<_>*<e>+<_>*<a>+<_>*<m>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule S334 [reaming]
+actions severeactions
+
+match (?<!'|\w)<R>+<_>*<e>+<_>*<a>+<_>*<r>+<_>*<A>+<_>*<d>+<_>*<m>+<_>*<i>+<_>*<r>+<_>*<a>+<_>*<l>(?!\w)
+rule S335 [RearAdmiral]
+actions severeactions
+
+match (?<!'|\w)<r>+<_>*<e>+<_>*<c>+<_>*<t>+<_>*<u>+<_>*<m>(?!\w)
+rule S336 [rectum]
+actions severeactions
+
+match (?<!'|\w)<r>+<_>*<e>+<_>*<l>+<_>*<i>+<_>*<g>+<_>*<i>+<_>*<t>+<_>*<a>+<_>*<r>+<_>*<d>(?!\w)
+rule S337 [religitard]
+actions severeactions
+
+match (?<!'|\w)<r>+<_>*<e>+<_>*<l>+<_>*<i>+<_>*<g>+<_>*<i>+<_>*<t>+<_>*<u>+<_>*<r>+<_>*<d>(?!\w)
+rule S338 [religiturd]
+actions severeactions
+
+match (?<!'|\w)<r>+<_>*<i>+<_>*<m>+<_>*<j>+<_>*<o>+<_>*<b>(?!\w)
+rule S339 [rimjob]
+actions severeactions
+
+match (?<!'|\w)<r>+<_>*<i>+<_>*<m>+<_>*<j>+<_>*<o>+<_>*<b>+<_>*<s>(?!\w)
+rule S340 [rimjobs]
+actions severeactions
+
+match (?<!'|\w)<r>+<_>*<i>+<_>*<m>+<_>*<m>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule S341 [rimming]
+actions severeactions
+
+match (?<!'|\w)<R>+<_>*<T>+<_>*<F>(?!\w)
+rule S342 [RTF]
+actions severeactions
+
+match (?<!'|\w)<r>+<_>*<u>+<_>*<b>+<_>*<o>+<_>*<n>+<_>*<e>+<_>*<o>+<_>*<f>+<_>*<f>(?!\w)
+rule S343 [ruboneoff]
+actions severeactions
+
+match (?<!'|\w)<r>+<_>*<u>+<_>*<b>+<_>*<o>+<_>*<n>+<_>*<e>+<_>*<o>+<_>*<u>+<_>*<t>(?!\w)
+rule S344 [ruboneout]
+actions severeactions
+
+match (?<!'|\w)<r>+<_>*<u>+<_>*<b>+<_>*<b>+<_>*<i>+<_>*<n>+<_>*<g>+<_>*<o>+<_>*<n>+<_>*<e>+<_>*<o>+<_>*<u>+<_>*<t>(?!\w)
+rule S345 [rubbingoneout]
+actions severeactions
+
+match (?<!'|\w)<r>+<_>*<u>+<_>*<b>+<_>*<s>+<_>*<o>+<_>*<n>+<_>*<e>+<_>*<o>+<_>*<u>+<_>*<t>(?!\w)
+rule S346 [rubsoneout]
+actions severeactions
+
+match (?<!'|\w)<R>+<_>*<u>+<_>*<s>+<_>*<t>+<_>*<y>+<_>*<T>+<_>*<r>+<_>*<o>+<_>*<m>+<_>*<b>+<_>*<o>+<_>*<n>+<_>*<e>(?!\w)
+rule S347 [RustyTrombone]
+actions severeactions
+
+match (?<!'|\w)<s>+<_>*<a>+<_>*<d>+<_>*<i>+<_>*<s>+<_>*<m>(?!\w)
+rule S348 [sadism]
+actions severeactions
+
+match (?<!'|\w)<s>+<_>*<c>+<_>*<h>+<_>*<l>+<_>*<o>+<_>*<n>+<_>*<g>(?!\w)
+rule S349 [schlong]
+actions severeactions
+
+match (?<!'|\w)<S>+<_>*<c>+<_>*<r>+<_>*<e>+<_>*<w>+<_>*<i>+<_>*<c>+<_>*<o>+<_>*<r>+<_>*<n>(?!\w)
+rule S350 [Screwicorn]
+actions severeactions
+
+match (?<!'|\w)<S>+<_>*<c>+<_>*<r>+<_>*<e>+<_>*<w>+<_>*<n>+<_>*<i>+<_>*<c>+<_>*<o>+<_>*<r>+<_>*<n>(?!\w)
+rule S351 [Screwnicorn]
+actions severeactions
+
+match (?<!'|\w)<s>+<_>*<c>+<_>*<r>+<_>*<o>+<_>*<t>+<_>*<u>+<_>*<m>(?!\w)
+rule S352 [scrotum]
+actions severeactions
+
+match (?<!'|\w)<s>+<_>*<e>+<_>*<m>+<_>*<e>+<_>*<n>(?!\w)
+rule S353 [semen]
+actions severeactions
+
+match (?<!'|\w)<s>+<_>*<e>+<_>*<x>\w*
+ignore string see XD|see! XD|see. XD|see? XD
+rule S354 [sex]
+actions severeactions
+
+match (?<!'|\w)<s>+<_>*<e>+<_>*<x>+<_>*<e>+<_>*<s>(?!\w)
+rule S355 [sexes]
+actions severeactions
+
+match (?<!'|\w)<s>+<_>*<e>+<_>*<x>+<_>*<i>+<_>*<e>(?!\w)
+rule S356 [sexie]
+actions severeactions
+
+match (?<!'|\w)<s>+<_>*<e>+<_>*<x>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule S357 [sexing]
+actions severeactions
+
+match (?<!'|\w)<s>+<_>*<e>+<_>*<x>+<_>*<t>+<_>*<e>+<_>*<d>(?!\w)
+rule S358 [sexted]
+actions severeactions
+
+match (?<!'|\w)<s>+<_>*<e>+<_>*<x>+<_>*<t>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule S359 [sexting]
+actions severeactions
+
+match (?<!'|\w)<s>+<_>*<e>+<_>*<x>+<_>*<u>+<_>*<a>+<_>*<l>(?!\w)
+rule S360 [sexual]
+actions severeactions
+
+match (?<!'|\w)<s>+<_>*<e>+<_>*<x>+<_>*<y>(?!\w)
+rule S361 [sexy]
+actions severeactions
+
+match (?<!'|\w)<s>+<_>*<h>+<_>*<e>+<_>*<t>(?!\w)
+rule S362 [shet]
+actions severeactions
+
+match (?<!'|\w)<s>+<_>*<h>+<_>*<e>+<_>*<t>+<_>*<e>+<_>*<r>(?!\w)
+rule S363 [sheter]
+actions severeactions
+
+match (?<!'|\w)<s>+<_>*<h>+<_>*<e>+<_>*<t>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule S364 [sheting]
+actions severeactions
+
+match (?<!'|\w)<s>+<_>*<h>+<_>*<i>+<_>*<a>+<_>*<t>(?!\w)
+rule S365 [shiat]
+actions severeactions
+
+match (?<!'|\w)<s>+<_>*<h>+<_>*<i>+<_>*<a>+<_>*<t>+<_>*<e>+<_>*<r>(?!\w)
+rule S366 [shiater]
+actions severeactions
+
+match (?<!'|\w)<s>+<_>*<h>+<_>*<i>+<_>*<a>+<_>*<t>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule S367 [shiating]
+actions severeactions
+
+match (?<!'|\w)<S>+<_>*<h>+<_>*<i>+<_>*<r>+<_>*<l>+<_>*<e>+<_>*<y>+<_>*<T>+<_>*<e>+<_>*<m>+<_>*<p>+<_>*<l>+<_>*<e>(?!\w)
+rule S368 [ShirleyTemple]
+actions severeactions
+
+match (?<!'|\w)<s>+<_>*<h>+<_>*<i>+<_>*<t>\w*
+rule S369 [shit]
+actions severeactions
+
+match (?<!'|\w)<s>+<_>*<h>+<_>*<i>+<_>*<t>+<_>*<e>+<_>*<r>(?!\w)
+rule S370 [shiter]
+actions severeactions
+
+match (?<!'|\w)<s>+<_>*<h>+<_>*<i>+<_>*<t>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule S371 [shiting]
+actions severeactions
+
+match (?<!'|\w)<s>+<_>*<h>+<_>*<l>+<_>*<o>+<_>*<n>+<_>*<g>(?!\w)
+rule S372 [shlong]
+actions severeactions
+
+match (?<!'|\w)<s>+<_>*<h>+<_>*<y>+<_>*<t>(?!\w)
+rule S373 [shyt]
+actions severeactions
+
+match (?<!'|\w)<s>+<_>*<h>+<_>*<y>+<_>*<t>+<_>*<e>+<_>*<r>(?!\w)
+rule S374 [shyter]
+actions severeactions
+
+match (?<!'|\w)<s>+<_>*<h>+<_>*<y>+<_>*<t>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule S375 [shyting]
+actions severeactions
+
+match (?<!'|\w)<s>+<_>*<k>+<_>*<a>+<_>*<n>+<_>*<k>(?!\w)
+rule S376 [skank]
+actions severeactions
+
+match (?<!'|\w)<s>+<_>*<l>+<_>*<u>+<_>*<m>+<_>*<p>+<_>*<b>+<_>*<u>+<_>*<s>+<_>*<t>+<_>*<e>+<_>*<r>(?!\w)
+rule S377 [slumpbuster]
+actions severeactions
+
+match (?<!'|\w)<s>+<_>*<l>+<_>*<u>+<_>*<t>
+rule S378 [slut]
+actions severeactions
+
+match (?<!'|\w)<s>+<_>*<l>+<_>*<u>+<_>*<t>+<_>*<s>(?!\w)
+rule S379 [sluts]
+actions severeactions
+
+match (?<!'|\w)<s>+<_>*<m>+<_>*<e>+<_>*<g>+<_>*<m>+<_>*<a>(?!\w)
+rule S380 [smegma]
+actions severeactions
+
+match (?<!'|\w)<S>+<_>*<n>+<_>*<o>+<_>*<o>+<_>*<d>+<_>*<e>+<_>*<l>(?!\w)
+rule S381 [Snoodel]
+actions severeactions
+
+match (?<!'|\w)<S>+<_>*<n>+<_>*<o>+<_>*<o>+<_>*<d>+<_>*<l>+<_>*<e>(?!\w)
+rule S382 [Snoodle]
+actions severeactions
+
+match (?<!'|\w)<S>+<_>*<n>+<_>*<o>+<_>*<o>+<_>*<d>+<_>*<l>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule S383 [Snoodling]
+actions severeactions
+
+match (?<!'|\w)<s>+<_>*<n>+<_>*<o>+<_>*<w>+<_>*<b>+<_>*<a>+<_>*<l>+<_>*<l>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule S384 [snowballing]
+actions severeactions
+
+match (?<!'|\w)<S>+<_>*<n>+<_>*<u>+<_>*<f>+<_>*<f>(?!\w)
+rule S385 [Snuff]
+actions severeactions
+
+match (?<!'|\w)<s>+<_>*<o>+<_>*<a>+<_>*<b>(?!\w)
+rule S386 [soab]
+actions severeactions
+
+match (?<!'|\w)<S>+<_>*<p>+<_>*<e>+<_>*<r>+<_>*<m>(?!\w)
+rule S387 [Sperm]
+actions severeactions
+
+match (?<!'|\w)<s>+<_>*<p>+<_>*<l>+<_>*<o>+<_>*<g>+<_>*<e>(?!\w)
+rule S388 [sploge]
+actions severeactions
+
+match (?<!'|\w)<s>+<_>*<p>+<_>*<o>+<_>*<g>+<_>*<e>(?!\w)
+rule S389 [spoge]
+actions severeactions
+
+match (?<!'|\w)<s>+<_>*<p>+<_>*<u>+<_>*<r>+<_>*<m>(?!\w)
+rule S390 [spurm]
+actions severeactions
+
+match <s>+<_>*<t>+<_>*<f>+<_>*<u>
+rule S391 [stfu]
+actions severeactions
+
+match (?<!'|\w)<S>+<_>*<t>+<_>*<i>+<_>*<n>+<_>*<g>+<_>*<y>+<_>*<N>+<_>*<u>+<_>*<t>(?!\w)
+rule S392 [StingyNut]
+actions severeactions
+
+match (?<!'|\w)<S>+<_>*<t>+<_>*<r>+<_>*<a>+<_>*<n>+<_>*<g>+<_>*<e>+<_>*<r>+<_>*<o>+<_>*<n>+<_>*<t>+<_>*<h>+<_>*<e>+<_>*<r>+<_>*<o>+<_>*<c>+<_>*<k>+<_>*<s>(?!\w)
+rule S393 [Strangerontherocks]
+actions severeactions
+
+match (?<!'|\w)<s>+<_>*<t>+<_>*<r>+<_>*<e>+<_>*<e>+<_>*<t>+<_>*<w>+<_>*<a>+<_>*<l>+<_>*<k>+<_>*<e>+<_>*<r>(?!\w)
+rule S394 [streetwalker]
+actions severeactions
+
+match (?<!'|\w)<s>+<_>*<u>+<_>*<c>+<_>*<k>+<_>*<m>+<_>*<a>(?!\w)
+rule S395 [suckma]
+actions severeactions
+
+match (?<!'|\w)<s>+<_>*<u>+<_>*<c>+<_>*<k>+<_>*<m>+<_>*<a>+<_>*<i>(?!\w)
+rule S396 [suckmai]
+actions severeactions
+
+match (?<!'|\w)<s>+<_>*<u>+<_>*<c>+<_>*<k>+<_>*<m>+<_>*<y>(?!\w)
+rule S397 [suckmy]
+actions severeactions
+
+match (?<!'|\w)<s>+<_>*<u>+<_>*<c>+<_>*<k>+<_>*<o>+<_>*<n>+<_>*<m>+<_>*<y>(?!\w)
+rule S398 [suckonmy]
+actions severeactions
+
+match (?<!'|\w)<s>+<_>*<u>+<_>*<c>+<_>*<k>+<_>*<s>+<_>*<m>+<_>*<a>(?!\w)
+rule S399 [sucksma]
+actions severeactions
+
+match (?<!'|\w)<s>+<_>*<u>+<_>*<c>+<_>*<k>+<_>*<s>+<_>*<m>+<_>*<a>+<_>*<i>(?!\w)
+rule S400 [sucksmai]
+actions severeactions
+
+match (?<!'|\w)<s>+<_>*<u>+<_>*<c>+<_>*<k>+<_>*<s>+<_>*<m>+<_>*<y>(?!\w)
+rule S401 [sucksmy]
+actions severeactions
+
+match (?<!'|\w)<S>+<_>*<u>+<_>*<d>+<_>*<n>+<_>*<f>+<_>*<u>+<_>*<d>(?!\w)
+rule S402 [Sudnfud]
+actions severeactions
+
+match (?<!'|\w)<s>+<_>*<u>+<_>*<g>+<_>*<a>+<_>*<r>+<_>*<d>+<_>*<a>+<_>*<d>+<_>*<d>+<_>*<y>(?!\w)
+rule S403 [sugardaddy]
+actions severeactions
+
+match (?<!'|\w)<s>+<_>*<w>+<_>*<i>+<_>*<n>+<_>*<g>+<_>*<e>+<_>*<r>(?!\w)
+rule S404 [swinger]
+actions severeactions
+
+match (?<!'|\w)<s>+<_>*<y>+<_>*<p>+<_>*<h>+<_>*<i>+<_>*<l>+<_>*<i>+<_>*<s>(?!\w)
+rule S405 [syphilis]
+actions severeactions
+
+match (?<!'|\w)<t>+<_>*<b>+<_>*<a>+<_>*<g>(?!\w)
+rule S406 [tbag]
+actions severeactions
+
+match (?<!'|\w)<t>+<_>*<e>+<_>*<s>+<_>*<t>+<_>*<a>+<_>*<c>+<_>*<a>+<_>*<l>(?!\w)
+rule S407 [testacal]
+actions severeactions
+
+match (?<!'|\w)<t>+<_>*<e>+<_>*<s>+<_>*<t>+<_>*<a>+<_>*<c>+<_>*<e>+<_>*<l>(?!\w)
+rule S408 [testacel]
+actions severeactions
+
+match (?<!'|\w)<t>+<_>*<e>+<_>*<s>+<_>*<t>+<_>*<a>+<_>*<c>+<_>*<l>+<_>*<e>(?!\w)
+rule S409 [testacle]
+actions severeactions
+
+match (?<!'|\w)<t>+<_>*<e>+<_>*<s>+<_>*<t>+<_>*<a>+<_>*<c>+<_>*<u>+<_>*<l>(?!\w)
+rule S410 [testacul]
+actions severeactions
+
+match (?<!'|\w)<t>+<_>*<e>+<_>*<s>+<_>*<t>+<_>*<i>+<_>*<c>+<_>*<a>+<_>*<l>(?!\w)
+rule S411 [testical]
+actions severeactions
+
+match (?<!'|\w)<t>+<_>*<e>+<_>*<s>+<_>*<t>+<_>*<i>+<_>*<c>+<_>*<e>+<_>*<l>(?!\w)
+rule S412 [testicel]
+actions severeactions
+
+match (?<!'|\w)<t>+<_>*<e>+<_>*<s>+<_>*<t>+<_>*<i>+<_>*<c>+<_>*<l>+<_>*<e>(?!\w)
+rule S413 [testicle]
+actions severeactions
+
+match (?<!'|\w)<t>+<_>*<e>+<_>*<s>+<_>*<t>+<_>*<i>+<_>*<c>+<_>*<u>+<_>*<l>(?!\w)
+rule S414 [testicul]
+actions severeactions
+
+match (?<!'|\w)<t>+<_>*<f>(?!\w)
+rule S415 [tf]
+actions severeactions
+
+match (?<!'|\w)<T>+<_>*<h>+<_>*<e>+<_>*<B>+<_>*<r>+<_>*<o>+<_>*<n>+<_>*<c>+<_>*<o>(?!\w)
+rule S416 [TheBronco]
+actions severeactions
+
+match (?<!'|\w)<t>+<_>*<h>+<_>*<e>+<_>*<c>+<_>*<l>+<_>*<a>+<_>*<p>(?!\w)
+rule S417 [theclap]
+actions severeactions
+
+match (?<!'|\w)<t>+<_>*<h>+<_>*<e>+<_>*<d>+<_>*<r>+<_>*<i>+<_>*<p>(?!\w)
+rule S418 [thedrip]
+actions severeactions
+
+match (?<!'|\w)<t>+<_>*<r>+<_>*<e>+<_>*<n>+<_>*<c>+<_>*<h>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule S419 [trenching]
+actions severeactions
+
+match (?<!'|\w)<T>+<_>*<S>(?!\w)
+rule S420 [TS]
+actions severeactions
+
+match (?<!'|\w)<t>+<_>*<w>+<_>*<a>+<_>*<e>+<_>*<r>+<_>*<k>(?!\w)
+rule S421 [twaerk]
+actions severeactions
+
+match (?<!'|\w)<t>+<_>*<w>+<_>*<a>+<_>*<e>+<_>*<r>+<_>*<k>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule S422 [twaerking]
+actions severeactions
+
+match (?<!'|\w)<t>+<_>*<w>+<_>*<a>+<_>*<r>+<_>*<k>(?!\w)
+rule S423 [twark]
+actions severeactions
+
+match (?<!'|\w)<t>+<_>*<w>+<_>*<a>+<_>*<r>+<_>*<k>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule S424 [twarking]
+actions severeactions
+
+match (?<!'|\w)<t>+<_>*<w>+<_>*<a>+<_>*<t>(?!\w)
+rule S425 [twat]
+actions severeactions
+
+match (?<!'|\w)<t>+<_>*<w>+<_>*<e>+<_>*<a>+<_>*<r>+<_>*<k>(?!\w)
+rule S426 [tweark]
+actions severeactions
+
+match (?<!'|\w)<t>+<_>*<w>+<_>*<e>+<_>*<a>+<_>*<r>+<_>*<k>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule S427 [twearking]
+actions severeactions
+
+match (?<!'|\w)<t>+<_>*<w>+<_>*<e>+<_>*<r>+<_>*<a>+<_>*<k>(?!\w)
+rule S428 [twerak]
+actions severeactions
+
+match (?<!'|\w)<t>+<_>*<w>+<_>*<e>+<_>*<r>+<_>*<a>+<_>*<k>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule S429 [tweraking]
+actions severeactions
+
+match (?<!'|\w)<t>+<_>*<w>+<_>*<e>+<_>*<r>+<_>*<k>(?!\w)
+rule S430 [twerk]
+actions severeactions
+
+match (?<!'|\w)<t>+<_>*<w>+<_>*<e>+<_>*<r>+<_>*<k>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule S431 [twerking]
+actions severeactions
+
+match (?<!'|\w)<v>+<_>*<a>+<_>*<g>(?!\w)
+rule S432 [vag]
+actions severeactions
+
+match (?<!'|\w)<v>+<_>*<a>+<_>*<g>+<_>*<i>+<_>*<n>+<_>*<a>(?!\w)
+rule S433 [vagina]
+actions severeactions
+
+match (?<!'|\w)<v>+<_>*<a>+<_>*<g>+<_>*<i>+<_>*<n>+<_>*<e>+<_>*<h>(?!\w)
+rule S434 [vagineh]
+actions severeactions
+
+match (?<!'|\w)<V>+<_>*<D>(?!\w)
+rule S435 [VD]
+actions severeactions
+
+match (?<!'|\w)<v>+<_>*<e>+<_>*<n>+<_>*<e>+<_>*<r>+<_>*<e>+<_>*<a>+<_>*<l>+<_>*<d>+<_>*<i>+<_>*<s>+<_>*<e>+<_>*<a>+<_>*<s>+<_>*<e>(?!\w)
+rule S436 [venerealdisease]
+actions severeactions
+
+match (?<!'|\w)<v>+<_>*<j>+<_>*<j>(?!\w)
+rule S437 [vjj]
+actions severeactions
+
+match (?<!'|\w)<v>+<_>*<u>+<_>*<l>+<_>*<v>+<_>*<a>(?!\w)
+rule S438 [vulva]
+actions severeactions
+
+match (?<!'|\w)<w>+<_>*<a>+<_>*<c>+<_>*<k>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule S439 [wacking]
+actions severeactions
+
+match (?<!'|\w)<w>+<_>*<a>+<_>*<n>+<_>*<k>(?!\w)
+rule S440 [wank]
+actions severeactions
+
+match (?<!'|\w)<w>+<_>*<a>+<_>*<n>+<_>*<k>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule S441 [wanking]
+actions severeactions
+
+match (?<!'|\w)<w>+<_>*<a>+<_>*<n>+<_>*<k>+<_>*<s>+<_>*<t>+<_>*<a>(?!\w)
+rule S442 [wanksta]
+actions severeactions
+
+match (?<!'|\w)<w>+<_>*<a>+<_>*<s>+<_>*<p>+<_>*<y>(?!\w)
+rule S443 [waspy]
+actions severeactions
+
+match (?<!'|\w)<w>+<_>*<e>+<_>*<t>+<_>*<d>+<_>*<r>+<_>*<e>+<_>*<a>+<_>*<m>(?!\w)
+rule S444 [wetdream]
+actions severeactions
+
+match (?<!'|\w)<w>+<_>*<e>+<_>*<t>+<_>*<b>+<_>*<a>+<_>*<c>+<_>*<k>(?!\w)
+rule S445 [wetback]
+actions severeactions
+
+match (?<!'|\w)<w>+<_>*<h>+<_>*<a>+<_>*<c>+<_>*<k>(?!\w)
+rule S446 [whack]
+actions severeactions
+
+match (?<!'|\w)<w>+<_>*<h>+<_>*<a>+<_>*<c>+<_>*<k>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule S447 [whacking]
+actions severeactions
+
+match (?<!'|\w)<w>+<_>*<h>+<_>*<o>+<_>*<r>(?!\w)
+rule S448 [whor]
+actions severeactions
+
+match (?<!'|\w)<w>+<_>*<h>+<_>*<o>+<_>*<r>+<_>*<e>(?!\w)
+rule S449 [whore]
+actions severeactions
+
+match (?<!'|\w)<w>+<_>*<i>+<_>*<l>+<_>*<l>+<_>*<y>(?!\w)
+ignore string well i
+rule S450 [willy]
+actions severeactions
+
+match (?<!'|\w)<w>+<_>*<t>(?!\w)
+rule S451 [wt]
+actions severeactions
+
+match \w*<a>+<_>*<s>+<_>*<s>(?!\w)
+ignore string bass|lass|mass|pass|sass|tass|amass|brass|class|crass|glass|grass|kvass|quass|trass|admass|bagass|bypass|camass|harass|kavass|megass|morass|repass|strass|biomass|canvass|carcass|compass|cuirass|cutlass|declass|jiveass|matrass|outpass|subbass|surpass|wiseass|zebrass|cutgrass|eelgrass|eyeglass|galleass|galliass|landmass|mattrass|misclass|nonclass|nutgrass|outclass|overpass|pingrass|raygrass|ribgrass|ryegrass|spyglass|subclass|sunglass|trespass|windlass|bluegrass|cordgrass|crabgrass|embarrass|encompass|hourglass|isinglass|knotgrass|sandglass|underpass|wineglass|bromegrass|bunchgrass|contrabass|fiberglass|fibreglass|goosegrass|groundmass|interclass|lemongrass|plateglass|superclass|underclass|witchgrass|gallowglass|gyrocompass|peppergrass|switchgrass|disembarrass|hardinggrass|johnsongrass|thoroughbass|weatherglass
+rule S452 [Advanced Match Ass End]
+actions severeactions
+
+match (?<!'|\w)<a>+<_>*<s>+<_>*<s>\w*
+ignore string as |assai|assay|asset|assail|assais|assays|assent|assert|assess|assets|assign|assist|assize|assoil|assort|assume|assure|assagai|assails|assault|assayed|assayer|assegai|assents|asserts|assigns|assists|assizes|assoils|assorts|assuage|assumed|assumer|assumes|assured|assurer|assures|assuror|assagais|assailed|assailer|assassin|assaults|assayers|assaying|assegais|assemble|assembly|assented|assenter|assentor|asserted|asserter|assertor|assessed|assesses|assessor|assignat|assigned|assignee|assigner|assignor|assisted|assister|assistor|assoiled|assonant|assorted|assorter|assuaged|assuages|assumers|assuming|assureds|assurers|assuring|assurors|assagaied|assailant|assailers|assailing|assassins|assaulted|assaulter|assegaied|assembled|assembler|assembles|assenters|assenting|assentors|asserters|asserting|assertion|assertive|assertors|assessing|assessors|assiduity|assiduous|assignats|assignees|assigners|assigning|assignors|assistant|assisters|assisting|assistors|associate|assoiling|assonance|assonants|assorters|assorting|assuaging|assuasive|assumable|assumably|assumpsit|assurance|assuredly|assurgent|assagaiing|assailable|assailants|assaulters|assaulting|assaultive|assegaiing|assemblage|assemblers|assemblies|assembling|assertedly|assertions|assessable|assessment|asseverate|assignable|assignment|assimilate|assistance|assistants|associated|associates|assoilment|assonances|assonantal|assortment|assumpsits|assumption|assumptive|assurancesassassinate|assemblages|assemblyman|assemblymen|assentation|assertively|assessments|asseverated|asseverates|assiduities|assiduously|assignation|assignments|assimilable|assimilated|assimilates|assimilator|assistances|associating|association|associative|assoilments|assortative|assortments|assuagement|assumptions|assuredness|assassinated|assassinates|assassinator|assaultively|assemblagist|assentations|asseverating|asseveration|asseverative|assignations|assimilating|assimilation|assimilative|assimilators|assimilatory|associations|assuagements|assumability|assassinating|assassination|assassinators|assemblagists|assemblywoman|assemblywomen|assertiveness|asseverations|assiduousness|assignability|assimilations|assistantship|associateship|associational|associatively|associativity|assortatively|assurednesses|assassinations|assaultiveness|assimilability|assistantships|associateships|associationism|associationist|assumabilities|assertivenesses|assiduousnesses|assignabilities|assimilationism|assimilationist|associationisms|associationists|associativities|assaultivenesses|assimilabilities|assimilationisms|assimilationists|associationistic|as soon as
+rule S453 [Advanced Match Ass Begin]
+actions severeactions
+
+match \w*<d>+<_>*<i>+<_>*<c>+<_>*<k>\w*
+ignore string dicky|dicker|dickey|dickie|medick|dickens|dickers|dickeys|dickier|dickies|medicks|zaddick|benedick|dickered|benedicks|dickenses|dickering|dickcissel|dickcissels
+rule S454 [Advanced Match Dick]
+actions severeactions
+
+# If you have any suggestions, please let me know!   Thank you!
+# Please add EpicATrain to your VIP list on your server!
+# Severe Words Compiled and Written By Addam 'EpicATrain' Waitkus.
+# ©2012-2013 Addam 'EpicATrain' Waitkus. All rights reserved.

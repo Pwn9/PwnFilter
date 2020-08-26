@@ -1,0 +1,9 @@
+# This is a base file for you to configure.
+# To maintain backward compatibility with PwnFilter 3.1.x
+# This file just includes the rules.txt
+include English/Utilities.txt
+include English/Racial.txt
+include English/Severe.txt
+include English/Moderate.txt
+include English/Light.txt
+include English/Addons.txt

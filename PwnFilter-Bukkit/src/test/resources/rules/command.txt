@@ -1,0 +1,50 @@
+# This is a base file for you to configure.
+# Please refer to http://dev.bukkit.org/bukkit-plugins/pwnfilter
+# for more documentation on how to configure these files.
+
+# Sample Command aliases / overrides
+# Prevent /give
+match ^/give
+rule A1 /give
+ignore permission pwnfilter.admin
+then deny
+then kick [%ruleid%] You are not allowed to use TooManyItems mod.
+then log
+
+# Prevent /op
+match ^/op
+rule A2 /op
+ignore permission pwnfilter.admin
+then deny
+then burn &aNow that's just stupid, why would you even try that?
+then notify pwnfilter.admin [%ruleid%] %player% wants op.
+then log
+
+match ^/pl\b
+rule A3 /pl
+ignore permission pwnfilter.admin
+then deny
+then warn &aPlugins (1): AwesomeSauce.
+
+match ^/\?
+rule A4
+require command ?
+then deny
+
+match ^/seed
+rule A5 /seed
+ignore permission pwnfilter.admin
+then deny
+then warn &aSeed: 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679
+
+match ^/gm
+rule A6 /gm
+ignore permission pwnfilter.admin
+then deny
+then warn &aWouldn't that be nice? Well, too bad.
+
+match ^/gamemode
+rule A7 /gamemode
+ignore permission pwnfilter.admin
+then deny
+then warn &aYa, umm no, don't try that.

@@ -1,0 +1,298 @@
+# EpicATrain's Language Filter
+# Addons List
+# Version 10.0.1
+# Built 10-28-2013 4:11 PM
+#
+# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+# This Is The NEW Version Of EpicATrain's Language Filter! Yay! This Version
+# Hopes To Make Bad Language The Thing Of The Past! It Filters Everything!
+# This Is The Addons Version Of My Filter And Is Part Of A Package Of Other
+# Filters.  Please Make Sure You Download And Use The Other Parts As Well!
+# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+#
+#
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# This Language Filter Requires Version 3.2 Or Greater Of Pwnfilter And WILL
+# NOT Work With Older Versions! If You Try, You Will Crash Your Server! You
+# Have Been Warned!
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+#
+#
+# Thank you for supporting my work.  Please consider donating to help
+#	further support family safe gaming!
+#		http://fnd.us/c/0QtL4
+# All donations will go towards the support and continuation of this
+#	language filter and the advancement of server & client side
+#	family safe game development.
+#
+# > > > > > Please Do NOT Remove or Edit Any Donation Lines < < < < <
+# > > > > > If you wish to remove these, please donate. Thanks! < < < < <
+#
+# ---------- Important Information ----------
+# This scripting code has no warranty or remedies, whether expressed or
+#	 implied, and is provided "as is".
+# The following scripting code is designed for the following servers:
+#	Minecraft -> Bukkit -> Pwnfilter Plugin
+# There is a goal to make this code universal for cross-platforms
+# 	on many other game servers. Support for other games is currently
+#	in development.  If you wish to participate and help develop this
+#	code, please contact EpicATrain at the email below.
+# THIS WORK IS COPYRIGHTED WITH THE UNITED STATES LIBRARY OF CONGRESS.
+#   YOU MUST CONTACT ADDAM 'EPICATRAIN' WAITKUS FOR COPYRIGHT PERMISSION.
+#   YOU MAY CONTACT ADDAM 'EPICATRAIN' WAITKUS AT ATRAINONLINE (AT) GMAIL
+#   (DOT.) COM
+# This work may be distributed in current format free of charge as
+# 	long as this work remains free of charge and used only on the
+#	game servers listed above.
+# Server administrators may modify this work to their preference for
+#	their server only, if so desired, as long as such work remains property
+# 	of Addam Waitkus with approperiate asknowledgements and remains
+#   distributed freely of charge.
+# Addam Waitkus: atrain(nothinghere)online [at] gmail (dot) com
+# ---------- End Important Information ----------
+#
+# ---------- Read Me ----------
+# This entire script is written so that any admin can edit out most
+# 	parts of this filter to his or her liking.  To stop a word from
+# 	being filtered, simply put a pound sign (#) next to the lines of
+# 	code you want to turn off.
+# It's highly NOT recommended to delete lines of code in case you
+# 	want to turn it back on at a later date.
+#
+# ---------- End Read Me ---------- 
+
+shortcuts letters.vars
+
+actiongroup addons
+then replace
+then warn &a%player%, &cYou Have Violate Rule: &a%ruleid%
+then notify pwnfilter.notify %player% just said %rawstring%
+#then points 5
+then log
+
+match (?<!'|\w)da(?!\w)
+rule A1 [da]
+then rewrite the
+
+match (?<!'|\w)asap(?!\w)
+rule A2 [asap]
+then rewrite as soon as possible
+
+match (?<!'|\w)bbl(?!\w)
+rule A3 [bbl]
+then rewrite be back later
+
+match (?<!'|\w)bbs(?!\w)
+rule A4 [bbs]
+then rewrite be back soon
+
+match (?<!'|\w)btw(?!\w)
+rule A5 [btw]
+then rewrite by the way
+
+# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+# Please Do Not Disable Or Delete This Rule! This Rule Is Required
+#   To Prevent Players From Swearing As Fuck Since FAQ Has Been
+#   Disabled In The Severe Word List: Rule S141
+# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+match (?<!'|\w)FAQ(?!\w)
+rule A6 [FAQ]
+then rewrite Frequently Asked Questions
+# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+
+match (?<!'|\w)fyi(?!\w)
+rule A7 [fyi]
+then rewrite for your information
+
+match (?<!'|\w)g2g(?!\w)|(?<!'|\w)gtg(?!\w)
+rule A8 [g2g]
+then rewrite got to go
+
+match (?<!'|\w)gfy(?!\w)
+rule A9 [gfy]
+then rewrite good for you
+
+match (?<!'|\w)gg(?!\w)
+rule A10 [gg]
+then rewrite good game
+
+match (?<!'|\w)gj(?!\w)
+rule A11 [gj]
+then rewrite good job
+
+match (?<!'|\w)hth(?!\w)
+rule A12 [hth]
+then rewrite hope this helps
+
+match (?<!'|\w)ic(?!\w)
+rule A13 [ic]
+then rewrite I see
+
+match (?<!'|\w)(imo)(?!\w)|(?<!'|\w)(imho)(?!\w)
+rule A14 [imo imho]
+then rewrite in my honest opinion
+
+match (?<!'|\w)irl(?!\w)
+rule A15 [irl]
+then rewrite in real life
+
+match (?<!'|\w)jk(?!\w)
+rule A16 [jk]
+then rewrite just kidding
+
+match (?<!'|\w)yew(?!\w)|(?<!'|\w)joo(?!\w)
+rule A17 [yew joo]
+then rewrite you
+
+match (?<!'|\w)myob(?!\w)
+rule A18 [myob]
+then rewrite mind your own business
+
+match (?<!'|\w)np(?!\w)
+rule A19 [np]
+then rewrite no problem
+
+match (?<!'|\w)noyb(?!\w)
+rule A20 [noyb]
+then rewrite none of your business
+
+match (?<!'|\w)otoh(?!\w)
+rule A21 [otoh]
+then rewrite on the other hand
+
+match (?<!'|\w)pvp(?!\w)
+rule A22 [pvp]
+then rewrite player versus player
+
+match (?<!'|\w)ru(?!\w)
+rule A23 [ru]
+then rewrite are you
+
+match (?<!'|\w)tbh(?!\w)
+rule A24 [tbh]
+then rewrite to be honest
+
+match (?<!'|\w)thx(?!\w)|(?<!'|\w)thnx(?!\w)
+rule A25 [thx thnx]
+then rewrite thanks
+
+match (?<!'|\w)ttyl(?!\w)
+rule A26 [ttyl]
+then rewrite talk to you later
+
+match (?<!'|\w)w8(?!\w)
+rule A27 [w8]
+then rewrite wait
+
+match (?<!'|\w)k(?!\w)
+rule A28 [k]
+then rewrite ok
+
+#match (?<!'|\w)o(?!\w)
+#rule A29 [o]
+#then rewrite oh
+
+match (?<!'|\w)wt(?!\w)
+rule A30 [wt]
+then rewrite what
+
+match (?<!'|\w)u(?!\w)
+rule A31 [u]
+then rewrite you
+
+match (?<!'|\w)r(?!\w)
+rule A32 [r]
+then rewrite are
+
+match (?<!'|\w)ur(?!\w)
+rule A33 [ur]
+then rewrite you're
+
+match (?<!'|\w)urs(?!\w)
+rule A34 [urs]
+then rewrite yours
+
+match (?<!'|\w)brb(?!\w)
+rule A35 [brb]
+then rewrite be right back
+
+match (?<!'|\w)afk(?!\w)
+rule A36 [afk]
+then rewrite away from keyboard
+
+match (?<!'|\w)2morrow(?!\w)
+rule A37 [2morrow]
+then rewrite tomorrow
+
+match (?<!'|\w)i(?!\w)
+rule A38 [i]
+then rewrite I
+
+match (?<!'|\w)plz(?!\w)
+rule A39 [plz]
+then rewrite please
+
+match (?<!'|\w)bc(?!\w)
+rule A40 [bc]
+then rewrite because
+
+match (?<!'|\w)c(?!\w)
+rule A41 [c]
+then rewrite see
+
+match (?<!'|\w)g(?!\w)
+rule A42 [g]
+then rewrite gee
+
+match (?<!'|\w)y(?!\w)
+rule A43 [y]
+then rewrite why
+
+#match (?<!'|\w)x(?!\w)
+#rule A44 [x]
+#then rewrite ex
+
+match (?<!'|\w)<y>+<_>*<o>+<_>*<l>+<_>*<o>\w*
+rule A45 [yolo]
+actions addons
+
+match (?<!'|\w)<s>+<_>*<w>+<_>*<a>+<_>*<g>(?!\w)
+rule A46 [swag]
+actions addons
+
+match (?<!'|\w)<T>+<_>*<V>(?!\w)
+rule A47 [TV]
+then replace television
+
+match (?<!'|\w)<F>+<_>*<N>(?!\w)
+rule A48 [FN]
+then replace fun
+
+match (?<!'|\w)<F>+<_>*<I>+<_>*<N>(?!\w)
+rule A49 [FIN]
+then replace fun
+
+match (?<!'|\w)8+<_>*=+<_>*d+(?!\w)|(?<!'|\w)d+<_>*=+<_>*8+(?!\w)
+rule A50 [8=D]
+actions addons
+
+match (?<!'|\w)<B>+<_>*(and|&)+<_>*<D>(?!\w)
+rule A51 [B&D]
+actions addons
+
+match (?<!'|\w)\(\s*\.\s*\)(?!\w)
+rule A52 [( . )]
+actions addons
+
+match (?<!'|\w)<h>+<_>*8(?!\w)
+rule A53 [h8]
+then replace love
+
+match ^(\!version)$
+rule A54 [version]
+then rewrite &aVersion: 1.6.4-3.2.0-v10.0.1 10-28-2013 3:39 PM
+
+# If you have any suggestions, please let me know!   Thank you!
+# Please add EpicATrain to your VIP list on your server!
+# Addons Compiled and Written By Addam 'EpicATrain' Waitkus.
+# ©2012-2013 Addam 'EpicATrain' Waitkus. All rights reserved.

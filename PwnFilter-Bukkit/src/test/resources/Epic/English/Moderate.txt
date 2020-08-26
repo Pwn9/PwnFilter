@@ -1,0 +1,558 @@
+# EpicATrain's Language Filter
+# Moderate Word List
+# Version 10.0.1
+# Built 10-19-2013 6:22 PM
+#
+# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+# This Is The NEW Version Of EpicATrain's Language Filter! Yay! This Version
+# Hopes To Make Bad Language The Thing Of The Past! It Filters Everything!
+# This Is The Moderate Version Of My Filter And Is Part Of A Package Of Other
+# Filters.  Please Make Sure You Download And Use The Other Parts As Well!
+# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+#
+#
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# This Language Filter Requires Version 3.2 Or Greater Of Pwnfilter And WILL
+# NOT Work With Older Versions! If You Try, You Will Crash Your Server! You
+# Have Been Warned!
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+#
+#
+# Thank you for supporting my work.  Please consider donating to help
+#	further support family safe gaming!
+#		http://fnd.us/c/0QtL4
+# All donations will go towards the support and continuation of this
+#	language filter and the advancement of server & client side
+#	family safe game development.
+#
+# > > > > > Please Do NOT Remove or Edit Any Donation Lines < < < < <
+# > > > > > If you wish to remove these, please donate. Thanks! < < < < <
+#
+# ---------- Important Information ----------
+# This scripting code has no warranty or remedies, whether expressed or
+#	 implied, and is provided "as is".
+# The following scripting code is designed for the following servers:
+#	Minecraft -> Bukkit -> Pwnfilter Plugin
+# There is a goal to make this code universal for cross-platforms
+# 	on many other game servers. Support for other games is currently
+#	in development.  If you wish to participate and help develop this
+#	code, please contact EpicATrain at the email below.
+# THIS WORK IS COPYRIGHTED WITH THE UNITED STATES LIBRARY OF CONGRESS.
+#   YOU MUST CONTACT ADDAM 'EPICATRAIN' WAITKUS FOR COPYRIGHT PERMISSION.
+#   YOU MAY CONTACT ADDAM 'EPICATRAIN' WAITKUS AT ATRAINONLINE (AT) GMAIL
+#   (DOT.) COM
+# This work may be distributed in current format free of charge as
+# 	long as this work remains free of charge and used only on the
+#	game servers listed above.
+# Server administrators may modify this work to their preference for
+#	their server only, if so desired, as long as such work remains property
+# 	of Addam Waitkus with approperiate asknowledgements and remains
+#   distributed freely of charge.
+# Addam Waitkus: atrain(nothinghere)online [at] gmail (dot) com
+# ---------- End Important Information ----------
+#
+# ---------- Read Me ----------
+# This entire script is written so that any admin can edit out most
+# 	parts of this filter to his or her liking.  To stop a word from
+# 	being filtered, simply put a pound sign (#) next to the lines of
+# 	code you want to turn off.
+# It's highly NOT recommended to delete lines of code in case you
+# 	want to turn it back on at a later date.
+#
+# ---------- End Read Me ---------- 
+
+shortcuts letters.vars
+
+actiongroup Moderateactions
+then replace
+then warn &a%player%, &cYou Have Violate Rule: &a%ruleid%
+then notify pwnfilter.notify %player% just said %rawstring%
+#then points 5
+then log
+
+match (?<!'|\w)<b>+<_>*<i>+<_>*<d>+<_>*<d>+<_>*<y>(?!\w)
+rule M1 [biddy]
+actions Moderateactions
+
+match (?<!'|\w)<b>+<_>*<o>+<_>*<o>+<_>*<b>(?!\w)
+rule M2 [boob]
+actions Moderateactions
+
+match (?<!'|\w)<b>+<_>*<o>+<_>*<o>+<_>*<b>+<_>*<i>+<_>*<e>(?!\w)
+rule M3 [boobie]
+actions Moderateactions
+
+match (?<!'|\w)<b>+<_>*<o>+<_>*<o>+<_>*<b>+<_>*<i>+<_>*<e>+<_>*<s>(?!\w)
+rule M4 [boobies]
+actions Moderateactions
+
+match (?<!'|\w)<b>+<_>*<o>+<_>*<o>+<_>*<b>+<_>*<y>(?!\w)
+rule M5 [booby]
+actions Moderateactions
+
+match (?<!'|\w)<b>+<_>*<o>+<_>*<o>+<_>*<b>+<_>*<y>+<_>*<e>(?!\w)
+rule M6 [boobye]
+actions Moderateactions
+
+match (?<!'|\w)<b>+<_>*<o>+<_>*<o>+<_>*<b>+<_>*<y>+<_>*<e>+<_>*<s>(?!\w)
+rule M7 [boobyes]
+actions Moderateactions
+
+match (?<!'|\w)<b>+<_>*<o>+<_>*<o>+<_>*<b>+<_>*<y>+<_>*<i>(?!\w)
+rule M8 [boobyi]
+actions Moderateactions
+
+match (?<!'|\w)<b>+<_>*<o>+<_>*<o>+<_>*<b>+<_>*<y>+<_>*<i>+<_>*<e>+<_>*<s>(?!\w)
+rule M9 [boobyies]
+actions Moderateactions
+
+match (?<!'|\w)<b>+<_>*<u>+<_>*<g>+<_>*<l>+<_>*<e>(?!\w)
+rule M10 [bugle]
+actions Moderateactions
+
+match (?<!'|\w)<b>+<_>*<u>+<_>*<g>+<_>*<l>+<_>*<i>+<_>*<e>(?!\w)
+rule M11 [buglie]
+actions Moderateactions
+
+match (?<!'|\w)<b>+<_>*<u>+<_>*<g>+<_>*<l>+<_>*<y>(?!\w)
+rule M12 [bugly]
+actions Moderateactions
+
+match (?<!'|\w)<b>+<_>*<u>+<_>*<g>+<_>*<l>+<_>*<y>+<_>*<e>(?!\w)
+rule M13 [buglye]
+actions Moderateactions
+
+match (?<!'|\w)<b>+<_>*<u>+<_>*<g>+<_>*<l>+<_>*<y>+<_>*<i>(?!\w)
+rule M14 [buglyi]
+actions Moderateactions
+
+match (?<!'|\w)<b>+<_>*<u>+<_>*<g>+<_>*<l>+<_>*<y>+<_>*<i>+<_>*<e>(?!\w)
+rule M15 [buglyie]
+actions Moderateactions
+
+match (?<!'|\w)<c>+<_>*<h>+<_>*<i>+<_>*<z>(?!\w)
+rule M16 [chiz]
+actions Moderateactions
+
+match <c>+<_>*<o>+<_>*<n>+<_>*<d>+<_>*<o>+<_>*<m>
+rule M17 [condom]
+actions Moderateactions
+
+match (?<!'|\w)<c>+<_>*<o>+<_>*<p>+<_>*<a>+<_>*<f>+<_>*<e>+<_>*<e>+<_>*<l>(?!\w)
+rule M18 [cop a feel]
+actions Moderateactions
+
+match (?<!'|\w)<c>+<_>*<o>+<_>*<p>+<_>*<i>+<_>*<n>+<_>*<g>+<_>*<a>+<_>*<f>+<_>*<e>+<_>*<e>+<_>*<l>(?!\w)
+rule M19 [coping a feel]
+actions Moderateactions
+
+match (?<!'|\w)<d>+<_>*<a>+<_>*<m>(?!\w)
+rule M20 [dam]
+actions Moderateactions
+
+match (?<!'|\w)<d>+<_>*<a>+<_>*<m>+<_>*<i>+<_>*<t>(?!\w)
+rule M21 [damit]
+actions Moderateactions
+
+match .*<d>+<_>*<a>+<_>*<m>+<_>*<n>.*
+rule M22 [damn]
+actions Moderateactions
+
+match (?<!'|\w)<d>+<_>*<a>+<_>*<m>+<_>*<n>+<_>*<i>+<_>*<t>(?!\w)
+rule M23 [damnit]
+actions Moderateactions
+
+match .*<d>+<_>*<a>+<_>*<n>+<_>*<m>.*
+rule M24 [danm]
+actions Moderateactions
+
+match (?<!'|\w)<d>+<_>*<a>+<_>*<n>+<_>*<m>+<_>*<i>+<_>*<t>(?!\w)
+rule M25 [danmit]
+actions Moderateactions
+
+match (?<!'|\w)<d>+<_>*<o>+<_>*<g>+<_>*<g>+<_>*<i>+<_>*<e>+<_>*<s>+<_>*<t>+<_>*<y>+<_>*<l>+<_>*<e>(?!\w)
+rule M26 [doggie style]
+actions Moderateactions
+
+match (?<!'|\w)<d>+<_>*<o>+<_>*<g>+<_>*<g>+<_>*<y>+<_>*<s>+<_>*<t>+<_>*<y>+<_>*<l>+<_>*<e>(?!\w)
+rule M27 [doggy style]
+actions Moderateactions
+
+match (?<!'|\w)<d>+<_>*<r>+<_>*<a>+<_>*<g>+<_>*<q>+<_>*<u>+<_>*<e>+<_>*<e>+<_>*<n>(?!\w)
+rule M28 [drag queen]
+actions Moderateactions
+
+match (?<!'|\w)<E>+<_>*<a>+<_>*<s>+<_>*<i>+<_>*<s>+<_>*<t>+<_>*<L>+<_>*<a>+<_>*<y>(?!\w)
+rule M29 [Easist Lay]
+actions Moderateactions
+
+match (?<!'|\w)<E>+<_>*<a>+<_>*<s>+<_>*<y>+<_>*<L>+<_>*<a>+<_>*<y>(?!\w)
+rule M30 [Easy Lay]
+actions Moderateactions
+
+match (?<!'|\w)<f>+<_>*<a>+<_>*<i>+<_>*<r>+<_>*<y>(?!\w)
+rule M31 [fairy]
+actions Moderateactions
+
+match (?<!'|\w)<f>+<_>*<l>+<_>*<i>+<_>*<p>+<_>*<p>+<_>*<i>+<_>*<n>+<_>*<g>+<_>*<t>+<_>*<h>+<_>*<e>+<_>*<b>+<_>*<i>+<_>*<r>+<_>*<d>(?!\w)
+rule M32 [flipping the bird]
+actions Moderateactions
+
+match (?<!'|\w)<f>+<_>*<l>+<_>*<o>+<_>*<o>+<_>*<z>+<_>*<y>(?!\w)
+rule M33 [floozy]
+actions Moderateactions
+
+match (?<!'|\w)<F>+<_>*<r>+<_>*<e>+<_>*<n>+<_>*<c>+<_>*<h>+<_>*<l>+<_>*<e>+<_>*<t>+<_>*<t>+<_>*<e>+<_>*<r>(?!\w)
+rule M34 [French letter]
+actions Moderateactions
+
+match (?<!'|\w)<f>+<_>*<u>+<_>*<d>+<_>*<g>+<_>*<e>+<_>*<p>+<_>*<a>+<_>*<c>+<_>*<k>+<_>*<e>+<_>*<r>(?!\w)
+rule M35 [fudge packer]
+actions Moderateactions
+
+match (?<!'|\w)<g>+<_>*<a>+<_>*<w>+<_>*<d>(?!\w)
+rule M36 [gawd]
+actions Moderateactions
+
+match (?<!'|\w)<g>+<_>*<a>+<_>*<w>+<_>*<d>+<_>*<d>+<_>*<a>+<_>*<n>(?!\w)
+rule M37 [gawd dan]
+actions Moderateactions
+
+match (?<!'|\w)<g>+<_>*<o>+<_>*<d>+<_>*<d>+<_>*<a>+<_>*<m>(?!\w)
+rule M38 [god dam]
+actions Moderateactions
+
+match (?<!'|\w)<g>+<_>*<o>+<_>*<d>+<_>*<d>+<_>*<a>+<_>*<n>(?!\w)
+rule M39 [god dan]
+actions Moderateactions
+
+match (?<!'|\w)<g>+<_>*<o>+<_>*<n>+<_>*<a>+<_>*<d>+<_>*<s>(?!\w)
+rule M40 [gonads]
+actions Moderateactions
+
+match (?<!'|\w)<g>+<_>*<o>+<_>*<n>+<_>*<e>+<_>*<s>(?!\w)
+rule M41 [gones]
+actions Moderateactions
+
+match (?<!'|\w)<g>+<_>*<r>+<_>*<o>+<_>*<p>+<_>*<e>(?!\w)
+rule M42 [grope]
+actions Moderateactions
+
+match (?<!'|\w)<g>+<_>*<r>+<_>*<o>+<_>*<p>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule M43 [groping]
+actions Moderateactions
+
+match (?<!'|\w)<h>+<_>*<e>+<_>*<l>+<_>*<l>(?!\w)
+ignore string he'll
+rule M44 [hell]
+actions Moderateactions
+
+match (?<!'|\w)<h>+<_>*<e>+<_>*<t>+<_>*<r>+<_>*<o>
+rule M45 [hetro]
+actions Moderateactions
+
+match (?<!'|\w)<h>+<_>*<i>+<_>*<c>+<_>*<k>(?!\w)
+rule M46 [hick]
+actions Moderateactions
+
+match (?<!'|\w)<h>+<_>*<o>+<_>*<n>+<_>*<k>+<_>*<y>(?!\w)
+rule M47 [honky]
+actions Moderateactions
+
+match (?<!'|\w)<h>+<_>*<u>+<_>*<s>+<_>*<s>+<_>*<y>(?!\w)
+rule M48 [hussy]
+actions Moderateactions
+
+match (?<!'|\w)<l>+<_>*<m>+<_>*<a>+<_>*<o>(?!\w)
+rule M49 [lmao]
+actions Moderateactions
+
+match (?<!'|\w)<l>+<_>*<m>+<_>*<f>+<_>*<a>+<_>*<o>(?!\w)
+rule M50 [lmfao]
+actions Moderateactions
+
+match (?<!'|\w)<l>+<_>*<m>+<_>*<f>+<_>*<g>+<_>*<d>+<_>*<a>+<_>*<o>(?!\w)
+rule M51 [lmfgdao]
+actions Moderateactions
+
+match (?<!'|\w)<l>+<_>*<o>+<_>*<v>+<_>*<e>+<_>*<j>+<_>*<u>+<_>*<i>+<_>*<c>+<_>*<e>(?!\w)
+rule M52 [love juice]
+actions Moderateactions
+
+match (?<!'|\w)<m>+<_>*<a>+<_>*<i>+<_>*<g>+<_>*<a>+<_>*<w>+<_>*<d>
+rule M53 [mai gawd]
+actions Moderateactions
+
+match (?<!'|\w)<m>+<_>*<e>+<_>*<n>+<_>*<s>+<_>*<t>+<_>*<r>+<_>*<u>+<_>*<a>+<_>*<t>+<_>*<i>+<_>*<o>+<_>*<n>(?!\w)
+rule M54 [menstruation]
+actions Moderateactions
+
+match (?<!'|\w)<m>+<_>*<y>+<_>*<g>+<_>*<a>+<_>*<w>+<_>*<d>
+rule M55 [my gawd]
+actions Moderateactions
+
+match (?<!'|\w)<m>+<_>*<y>+<_>*<g>+<_>*<o>+<_>*<d>(?!\w)
+rule M56 [my god]
+actions Moderateactions
+
+match (?<!'|\w)<n>+<_>*<i>+<_>*<p>+<_>*<p>+<_>*<l>+<_>*<e>
+rule M57 [nipples]
+actions Moderateactions
+
+match (?<!'|\w)<N>+<_>*<o>+<_>*<G>+<_>*<l>+<_>*<o>+<_>*<v>+<_>*<e>+<_>*<N>+<_>*<o>+<_>*<L>+<_>*<o>+<_>*<v>+<_>*<e>(?!\w)
+rule M58 [No Glove No Love]
+actions Moderateactions
+
+match (?<!'|\w)<N>+<_>*<o>+<_>*<L>+<_>*<o>+<_>*<v>+<_>*<e>+<_>*<N>+<_>*<o>+<_>*<G>+<_>*<l>+<_>*<o>+<_>*<v>+<_>*<e>(?!\w)
+rule M59 [No Love No Glove]
+actions Moderateactions
+
+match (?<!'|\w)<o>+<_>*<h>+<_>*<m>+<_>*<a>+<_>*<i>+<_>*<f>+<_>*<u>+<_>*<c>+<_>*<k>+<_>*<i>+<_>*<n>+<_>*<g>+<_>*<g>+<_>*<a>+<_>*<w>+<_>*<d>
+rule M60 [oh mai fucking gawd]
+actions Moderateactions
+
+match (?<!'|\w)<o>+<_>*<h>+<_>*<m>+<_>*<a>+<_>*<i>+<_>*<f>+<_>*<u>+<_>*<c>+<_>*<k>+<_>*<i>+<_>*<n>+<_>*<g>+<_>*<g>+<_>*<o>+<_>*<d>
+rule M61 [oh mai fucking god]
+actions Moderateactions
+
+match (?<!'|\w)<o>+<_>*<h>+<_>*<m>+<_>*<a>+<_>*<i>+<_>*<g>+<_>*<a>+<_>*<w>+<_>*<d>
+rule M62 [oh mai gawd]
+actions Moderateactions
+
+match (?<!'|\w)<o>+<_>*<h>+<_>*<m>+<_>*<a>+<_>*<i>+<_>*<g>+<_>*<o>+<_>*<d>
+rule M63 [oh mai god]
+actions Moderateactions
+
+match (?<!'|\w)<o>+<_>*<h>+<_>*<m>+<_>*<y>+<_>*<f>+<_>*<u>+<_>*<c>+<_>*<k>+<_>*<i>+<_>*<n>+<_>*<g>+<_>*<g>+<_>*<a>+<_>*<w>+<_>*<d>
+rule M64 [oh my fucking gawd]
+actions Moderateactions
+
+match (?<!'|\w)<o>+<_>*<h>+<_>*<m>+<_>*<y>+<_>*<f>+<_>*<u>+<_>*<c>+<_>*<k>+<_>*<i>+<_>*<n>+<_>*<g>+<_>*<g>+<_>*<o>+<_>*<d>
+rule M65 [oh my fucking god]
+actions Moderateactions
+
+match (?<!'|\w)<o>+<_>*<h>+<_>*<m>+<_>*<y>+<_>*<g>+<_>*<a>+<_>*<w>+<_>*<d>
+rule M66 [oh my gawd]
+actions Moderateactions
+
+match (?<!'|\w)<o>+<_>*<h>+<_>*<m>+<_>*<y>+<_>*<g>+<_>*<o>+<_>*<d>
+rule M67 [oh my god]
+actions Moderateactions
+
+match (?<!'|\w)<o>+<_>*<m>+<_>*<f>+<_>*<g>
+rule M68 [omfg]
+actions Moderateactions
+
+match (?<!'|\w)<o>+<_>*<m>+<_>*<g>
+ignore string omgosh
+rule M69 [omg]
+actions Moderateactions
+
+match (?<!'|\w)<o>+<_>*<r>+<_>*<a>+<_>*<f>+<_>*<a>+<_>*<c>+<_>*<e>(?!\w)
+rule M70 [oraface]
+actions Moderateactions
+
+match (?<!'|\w)<O>+<_>*<r>+<_>*<a>+<_>*<f>+<_>*<i>+<_>*<c>+<_>*<e>(?!\w)
+rule M71 [Orafice]
+actions Moderateactions
+
+match (?<!'|\w)<O>+<_>*<r>+<_>*<a>+<_>*<f>+<_>*<i>+<_>*<s>(?!\w)
+rule M72 [Orafis]
+actions Moderateactions
+
+match (?<!'|\w)<O>+<_>*<r>+<_>*<i>+<_>*<f>+<_>*<a>+<_>*<c>+<_>*<e>(?!\w)
+rule M73 [Oriface]
+actions Moderateactions
+
+match (?<!'|\w)<O>+<_>*<r>+<_>*<i>+<_>*<f>+<_>*<i>+<_>*<c>+<_>*<e>(?!\w)
+rule M74 [Orifice]
+actions Moderateactions
+
+match (?<!'|\w)<O>+<_>*<r>+<_>*<i>+<_>*<f>+<_>*<i>+<_>*<s>(?!\w)
+rule M75 [Orifis]
+actions Moderateactions
+
+match (?<!'|\w)<p>+<_>*<i>+<_>*<m>+<_>*<p>(?!\w)
+rule M76 [pimp]
+actions Moderateactions
+
+match (?<!'|\w)<p>+<_>*<o>+<_>*<c>+<_>*<k>+<_>*<e>+<_>*<t>+<_>*<p>+<_>*<o>+<_>*<o>+<_>*<l>(?!\w)
+rule M77 [pocket pool]
+actions Moderateactions
+
+match (?<!'|\w)<r>+<_>*<e>+<_>*<d>+<_>*<n>+<_>*<e>+<_>*<c>+<_>*<k>(?!\w)
+rule M78 [redneck]
+actions Moderateactions
+
+match (?<!'|\w)<r>+<_>*<e>+<_>*<t>+<_>*<a>+<_>*<r>+<_>*<d>(?!\w)
+rule M79 [retard]
+actions Moderateactions
+
+match (?<!'|\w)<r>+<_>*<u>+<_>*<b>+<_>*<b>+<_>*<e>+<_>*<r>(?!\w)
+rule M80 [rubber]
+actions Moderateactions
+
+match (?<!'|\w)<s>+<_>*<h>+<_>*<a>+<_>*<r>+<_>*<t>(?!\w)
+rule M81 [shart]
+actions Moderateactions
+
+match (?<!'|\w)<s>+<_>*<h>+<_>*<a>+<_>*<r>+<_>*<t>+<_>*<e>+<_>*<d>(?!\w)
+rule M82 [sharted]
+actions Moderateactions
+
+match (?<!'|\w)<s>+<_>*<h>+<_>*<a>+<_>*<r>+<_>*<t>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule M83 [sharting]
+actions Moderateactions
+
+match (?<!'|\w)<s>+<_>*<h>+<_>*<e>+<_>*<m>+<_>*<a>+<_>*<l>+<_>*<e>(?!\w)
+rule M84 [she male]
+actions Moderateactions
+
+match (?<!'|\w)<s>+<_>*<h>+<_>*<i>+<_>*<t>(?!\w)
+rule M85 [shit]
+actions Moderateactions
+
+match (?<!'|\w)<s>+<_>*<h>+<_>*<i>+<_>*<t>+<_>*<i>+<_>*<n>(?!\w)
+rule M86 [shitin]
+actions Moderateactions
+
+match (?<!'|\w)<s>+<_>*<h>+<_>*<i>+<_>*<t>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule M87 [shiting]
+actions Moderateactions
+
+match (?<!'|\w)<s>+<_>*<h>+<_>*<i>+<_>*<t>+<_>*<s>(?!\w)
+rule M88 [shits]
+actions Moderateactions
+
+match (?<!'|\w)<s>+<_>*<h>+<_>*<i>+<_>*<z>(?!\w)
+rule M89 [shiz]
+actions Moderateactions
+
+match (?<!'|\w)<s>+<_>*<h>+<_>*<y>+<_>*<t>+<_>*<e>(?!\w)
+rule M90 [shyte]
+actions Moderateactions
+
+match (?<!'|\w)<s>+<_>*<k>+<_>*<a>+<_>*<n>+<_>*<k>(?!\w)
+rule M91 [skank]
+actions Moderateactions
+
+match (?<!'|\w)<S>+<_>*<k>+<_>*<a>+<_>*<n>+<_>*<k>+<_>*<e>+<_>*<e>(?!\w)
+rule M92 [Skankee]
+actions Moderateactions
+
+match (?<!'|\w)<S>+<_>*<k>+<_>*<a>+<_>*<n>+<_>*<k>+<_>*<e>+<_>*<y>(?!\w)
+rule M93 [Skankey]
+actions Moderateactions
+
+match (?<!'|\w)<S>+<_>*<k>+<_>*<a>+<_>*<n>+<_>*<k>+<_>*<y>(?!\w)
+rule M94 [Skanky]
+actions Moderateactions
+
+match (?<!'|\w)<s>+<_>*<m>+<_>*<a>+<_>*<r>+<_>*<t>+<_>*<a>+<_>*<s>+<_>*<s>(?!\w)
+rule M95 [smartass]
+actions Moderateactions
+
+match (?<!'|\w)<s>+<_>*<o>+<_>*<n>+<_>*<o>+<_>*<f>+<_>*<a>(?!\w)
+rule M96 [son of a]
+actions Moderateactions
+
+match (?<!'|\w)<s>+<_>*<t>+<_>*<r>+<_>*<u>+<_>*<m>+<_>*<p>+<_>*<e>+<_>*<t>(?!\w)
+rule M97 [strumpet]
+actions Moderateactions
+
+match (?<!'|\w)<s>+<_>*<u>+<_>*<c>+<_>*<k>+<_>*<b>+<_>*<a>+<_>*<l>+<_>*<l>+<_>*<s>(?!\w)
+rule M98 [suck balls]
+actions Moderateactions
+
+match (?<!'|\w)<s>+<_>*<u>+<_>*<c>+<_>*<k>+<_>*<s>+<_>*<b>+<_>*<a>+<_>*<l>+<_>*<l>+<_>*<s>(?!\w)
+rule M99 [sucks balls]
+actions Moderateactions
+
+match (?<!'|\w)<t>+<_>*<e>+<_>*<a>+<_>*<t>(?!\w)
+rule M100 [teat]
+actions Moderateactions
+
+match (?<!'|\w)<t>+<_>*<e>+<_>*<e>+<_>*<t>(?!\w)
+rule M101 [teet]
+actions Moderateactions
+
+match (?<!'|\w)<t>+<_>*<i>+<_>*<t>(?!\w)
+rule M102 [tit]
+actions Moderateactions
+
+match (?<!'|\w)<t>+<_>*<r>+<_>*<a>+<_>*<m>+<_>*<p>(?!\w)
+rule M103 [tramp]
+actions Moderateactions
+
+match (?<!'|\w)<t>+<_>*<r>+<_>*<o>+<_>*<l>+<_>*<l>+<_>*<o>+<_>*<p>(?!\w)
+rule M104 [trollop]
+actions Moderateactions
+
+match (?<!'|\w)<t>+<_>*<w>+<_>*<i>+<_>*<n>+<_>*<k>(?!\w)
+rule M105 [twink]
+actions Moderateactions
+
+match (?<!'|\w)<t>+<_>*<w>+<_>*<i>+<_>*<t>(?!\w)
+rule M106 [twit]
+actions Moderateactions
+
+match (?<!'|\w)<v>+<_>*<o>+<_>*<y>+<_>*<e>+<_>*<u>+<_>*<r>(?!\w)
+rule M107 [voyeur]
+actions Moderateactions
+
+match (?<!'|\w)<w>+<_>*<e>+<_>*<a>+<_>*<r>+<_>*<t>+<_>*<h>+<_>*<e>+<_>*<r>+<_>*<a>+<_>*<g>(?!\w)
+rule M108 [wear the rag]
+actions Moderateactions
+
+match (?<!'|\w)<w>+<_>*<e>+<_>*<a>+<_>*<r>+<_>*<i>+<_>*<n>+<_>*<g>+<_>*<t>+<_>*<h>+<_>*<e>+<_>*<r>+<_>*<a>+<_>*<g>(?!\w)
+rule M109 [wearing the rag]
+actions Moderateactions
+
+match (?<!'|\w)<w>+<_>*<e>+<_>*<e>+<_>*<d>(?!\w)
+rule M110 [weed]
+actions Moderateactions
+
+match (?<!'|\w)<w>+<_>*<e>+<_>*<n>+<_>*<c>+<_>*<h>(?!\w)
+rule M111 [wench]
+actions Moderateactions
+
+match (?<!'|\w)<w>+<_>*<h>+<_>*<i>+<_>*<t>+<_>*<e>+<_>*<t>+<_>*<r>+<_>*<a>+<_>*<s>+<_>*<h>(?!\w)
+rule M112 [white trash]
+actions Moderateactions
+
+match (?<!'|\w)<w>+<_>*<t>+<_>*<f>
+rule M113 [wtf]
+actions Moderateactions
+
+match (?<!'|\w)<w>+<_>*<t>+<_>*<h>
+ignore string wtheck
+rule M114 [wth]
+actions Moderateactions
+
+match (?<!'|\w)<x>+<_>*<r>+<_>*<a>+<_>*<t>+<_>*<e>+<_>*<d>(?!\w)
+rule M115 [xrated]
+actions Moderateactions
+
+match (?<!'|\w)<X>+<_>*<X>+<_>*<X>(?!\w)
+rule M116 [XXX]
+actions Moderateactions
+
+match (?<!'|\w)<d>+<_>*<a>+<_>*<m>\w*
+ignore string dame|damp|dams|daman|damar|dames|damns|damps|damage|damans|damars|damask|dammar|dammer|damned|damner|damped|dampen|damper|damply|damsel|damson|damaged|damager|damages|damasks|dammars|dammers|damners|damnify|damning|damosel|damozel|dampens|dampers|dampest|damping|dampish|damsels|damsons|damagers|damaging|damasked|damewort|damnably|damneder|damosels|damozels|dampened|dampener|dampings|dampness|damascene|damasking|dameworts|damnation|damnatory|damndests|damnified|damnifies|damningly|dampeners|dampening|damselfly|damagingly|damascened|damascenes|damnations|damnedests|damnifying|dampnesses|damselfish|damascening|damselflies|damnableness|damselfishes|damageability|damnablenesses|damageabilities|
+rule M117 [dam]
+actions Moderateactions
+
+match (?<!'|\w)<s>+<_>*<h>+<_>*<i>+<_>*<t>
+rule M118 [shit]
+ignore string mishit|mishits|shittah|shittim|shittahs|shittims|mishitting|shittimwood|shittimwoods
+actions Moderateactions
+
+match <s>+<_>*<h>+<_>*<i>+<_>*<t>(?!\w)
+ignore string mishit|mishits|shittah|shittim|shittahs|shittims|mishitting|shittimwood|shittimwoods
+rule M119 [shit]
+actions Moderateactions
+
+# If you have any suggestions, please let me know!   Thank you!
+# Please add EpicATrain to your VIP list on your server!
+# Moderate Words Compiled and Written By Addam 'EpicATrain' Waitkus.
+# ©2012-2013 Addam 'EpicATrain' Waitkus. All rights reserved.

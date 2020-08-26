@@ -1,0 +1,618 @@
+# EpicATrain's Language Filter
+# Light Word List
+# Version 10.0.1
+# Built 10-19-2013 5:44 PM
+#
+# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+# This Is The NEW Version Of EpicATrain's Language Filter! Yay! This Version
+# Hopes To Make Bad Language The Thing Of The Past! It Filters Everything!
+# This Is The Light Version Of My Filter And Is Part Of A Package Of Other
+# Filters.  Please Make Sure You Download And Use The Other Parts As Well!
+# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+#
+#
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# This Language Filter Requires Version 3.2 Or Greater Of Pwnfilter And WILL
+# NOT Work With Older Versions! If You Try, You Will Crash Your Server! You
+# Have Been Warned!
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+#
+#
+# Thank you for supporting my work.  Please consider donating to help
+#	further support family safe gaming!
+#		http://fnd.us/c/0QtL4
+# All donations will go towards the support and continuation of this
+#	language filter and the advancement of server & client side
+#	family safe game development.
+#
+# > > > > > Please Do NOT Remove or Edit Any Donation Lines < < < < <
+# > > > > > If you wish to remove these, please donate. Thanks! < < < < <
+#
+# ---------- Important Information ----------
+# This scripting code has no warranty or remedies, whether expressed or
+#	 implied, and is provided "as is".
+# The following scripting code is designed for the following servers:
+#	Minecraft -> Bukkit -> Pwnfilter Plugin
+# There is a goal to make this code universal for cross-platforms
+# 	on many other game servers. Support for other games is currently
+#	in development.  If you wish to participate and help develop this
+#	code, please contact EpicATrain at the email below.
+# THIS WORK IS COPYRIGHTED WITH THE UNITED STATES LIBRARY OF CONGRESS.
+#   YOU MUST CONTACT ADDAM 'EPICATRAIN' WAITKUS FOR COPYRIGHT PERMISSION.
+#   YOU MAY CONTACT ADDAM 'EPICATRAIN' WAITKUS AT ATRAINONLINE (AT) GMAIL
+#   (DOT.) COM
+# This work may be distributed in current format free of charge as
+# 	long as this work remains free of charge and used only on the
+#	game servers listed above.
+# Server administrators may modify this work to their preference for
+#	their server only, if so desired, as long as such work remains property
+# 	of Addam Waitkus with approperiate asknowledgements and remains
+#   distributed freely of charge.
+# Addam Waitkus: atrain(nothinghere)online [at] gmail (dot) com
+# ---------- End Important Information ----------
+#
+# ---------- Read Me ----------
+# This entire script is written so that any admin can edit out most
+# 	parts of this filter to his or her liking.  To stop a word from
+# 	being filtered, simply put a pound sign (#) next to the lines of
+# 	code you want to turn off.
+# It's highly NOT recommended to delete lines of code in case you
+# 	want to turn it back on at a later date.
+#
+# ---------- End Read Me ---------- 
+
+shortcuts letters.vars
+
+actiongroup lightactions
+then replace
+then warn &a%player%, &cYou Have Violate Rule: &a%ruleid%
+then notify pwnfilter.notify %player% just said %rawstring%
+#then points 5
+then log
+
+match (?<!'|\w)<A>+<_>*<I>+<_>*<D>+<_>*<S>(?!\w)
+rule L1 [AIDS]
+actions lightactions
+
+match (?<!'|\w)<B>+<_>*<a>+<_>*<c>+<_>*<t>+<_>*<e>+<_>*<r>+<_>*<i>+<_>*<a>+<_>*<l>+<_>*<V>+<_>*<a>+<_>*<g>+<_>*<i>+<_>*<n>+<_>*<o>+<_>*<s>+<_>*<i>+<_>*<s>(?!\w)
+rule L2 [Bacterial Vaginosis]
+actions lightactions
+
+match (?<!'|\w)<b>+<_>*<a>+<_>*<f>+<_>*<o>+<_>*<o>+<_>*<n>(?!\w)
+rule L3 [bafoon]
+actions lightactions
+
+match (?<!'|\w)<b>+<_>*<i>+<_>*<m>+<_>*<b>+<_>*<o>(?!\w)
+rule L4 [bimbo]
+actions lightactions
+
+match (?<!'|\w)<b>+<_>*<i>+<_>*<t>+<_>*<e>+<_>*<m>+<_>*<e>(?!\w)
+rule L5 [bite me]
+actions lightactions
+
+match (?<!'|\w)<b>+<_>*<i>+<_>*<t>+<_>*<e>+<_>*<m>+<_>*<y>(?!\w)
+rule L6 [bite my]
+actions lightactions
+
+match (?<!'|\w)<b>+<_>*<u>+<_>*<n>+<_>*<g>
+rule L7 [bung]
+actions lightactions
+
+match (?<!'|\w)<b>+<_>*<u>+<_>*<t>+<_>*<t>(?!\w)
+rule L8 [butt]
+actions lightactions
+
+match (?<!'|\w)<b>+<_>*<u>+<_>*<t>+<_>*<t>+<_>*<e>+<_>*<r>(?!\w)
+rule L9 [butter]
+actions lightactions
+
+match (?<!'|\w)<C>+<_>*<h>+<_>*<a>+<_>*<n>+<_>*<c>+<_>*<r>+<_>*<o>+<_>*<i>+<_>*<d>(?!\w)
+rule L10 [Chancroid]
+actions lightactions
+
+match (?<!'|\w)<c>+<_>*<h>+<_>*<i>+<_>*<p>+<_>*<p>+<_>*<y>(?!\w)
+rule L11 [chippy]
+actions lightactions
+
+match (?<!'|\w)<C>+<_>*<h>+<_>*<l>+<_>*<a>+<_>*<m>+<_>*<y>+<_>*<d>+<_>*<i>+<_>*<a>(?!\w)
+rule L12 [Chlamydia]
+actions lightactions
+
+match (?<!'|\w)<C>+<_>*<l>+<_>*<i>+<_>*<m>+<_>*<a>+<_>*<t>+<_>*<i>+<_>*<c>+<_>*<b>+<_>*<u>+<_>*<b>+<_>*<o>(?!\w)
+rule L13 [Climatic bubo]
+actions lightactions
+
+match (?<!'|\w)<c>+<_>*<r>+<_>*<a>+<_>*<p>(?!\w)
+rule L14 [crap]
+actions lightactions
+
+match (?<!'|\w)<c>+<_>*<r>+<_>*<a>+<_>*<p>+<_>*<p>+<_>*<e>+<_>*<d>(?!\w)
+rule L15 [crapped]
+actions lightactions
+
+match (?<!'|\w)<c>+<_>*<r>+<_>*<a>+<_>*<p>+<_>*<p>+<_>*<y>(?!\w)
+rule L16 [crappy]
+actions lightactions
+
+match (?<!'|\w)<d>+<_>*<o>+<_>*<r>+<_>*<k>(?!\w)
+rule L17 [dork]
+actions lightactions
+
+match (?<!'|\w)<d>+<_>*<u>+<_>*<m>+<_>*<b>(?!\w)
+rule L18 [dumb]
+actions lightactions
+
+match (?<!'|\w)<D>+<_>*<u>+<_>*<m>+<_>*<m>+<_>*<y>(?!\w)
+rule L19 [Dummy]
+actions lightactions
+
+match (?<!'|\w)<D>+<_>*<u>+<_>*<r>+<_>*<a>+<_>*<n>+<_>*<d>+<_>*<N>+<_>*<i>+<_>*<c>+<_>*<o>+<_>*<l>+<_>*<a>+<_>*<s>+<_>*<F>+<_>*<a>+<_>*<v>+<_>*<r>+<_>*<e>+<_>*<d>+<_>*<i>+<_>*<s>+<_>*<e>+<_>*<a>+<_>*<s>+<_>*<e>(?!\w)
+rule L20 [Durand Nicolas Favre disease]
+actions lightactions
+
+match (?<!'|\w)<f>+<_>*<a>+<_>*<r>+<_>*<t>+<_>*<f>+<_>*<a>+<_>*<c>+<_>*<e>(?!\w)
+rule L21 [fart face]
+actions lightactions
+
+match (?<!'|\w)<f>+<_>*<l>+<_>*<a>+<_>*<m>+<_>*<e>+<_>*<r>(?!\w)
+rule L22 [flamer]
+actions lightactions
+
+match (?<!'|\w)<f>+<_>*<r>+<_>*<e>+<_>*<n>+<_>*<c>+<_>*<h>+<_>*<k>+<_>*<i>+<_>*<s>+<_>*<s>(?!\w)
+rule L23 [french kiss]
+actions lightactions
+
+match (?<!'|\w)<f>+<_>*<r>+<_>*<e>+<_>*<n>+<_>*<c>+<_>*<h>+<_>*<k>+<_>*<i>+<_>*<s>+<_>*<s>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule L24 [french kissing]
+actions lightactions
+
+match (?<!'|\w)<f>+<_>*<u>+<_>*<g>+<_>*<l>+<_>*<e>(?!\w)
+rule L25 [fugle]
+actions lightactions
+
+match (?<!'|\w)<f>+<_>*<u>+<_>*<g>+<_>*<l>+<_>*<i>(?!\w)
+rule L26 [fugli]
+actions lightactions
+
+match (?<!'|\w)<f>+<_>*<u>+<_>*<g>+<_>*<l>+<_>*<i>+<_>*<e>(?!\w)
+rule L27 [fuglie]
+actions lightactions
+
+match (?<!'|\w)<f>+<_>*<u>+<_>*<g>+<_>*<l>+<_>*<y>(?!\w)
+rule L28 [fugly]
+actions lightactions
+
+match (?<!'|\w)<g>+<_>*<e>+<_>*<t>+<_>*<a>+<_>*<l>+<_>*<i>+<_>*<f>+<_>*<e>(?!\w)
+rule L29 [get a life]
+actions lightactions
+
+match (?<!'|\w)<g>+<_>*<e>+<_>*<t>+<_>*<b>+<_>*<e>+<_>*<n>+<_>*<t>(?!\w)
+rule L30 [get bent]
+actions lightactions
+
+match (?<!'|\w)<G>+<_>*<o>+<_>*<n>+<_>*<o>+<_>*<r>+<_>*<r>+<_>*<h>+<_>*<e>+<_>*<a>(?!\w)
+rule L31 [Gonorrhea]
+actions lightactions
+
+match (?<!'|\w)<h>+<_>*<a>+<_>*<c>+<_>*<k>+<_>*<e>+<_>*<r>(?!\w)
+rule L32 [hacker]
+actions lightactions
+
+match (?<!'|\w)<h>+<_>*<a>+<_>*<c>+<_>*<k>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule L33 [hacking]
+actions lightactions
+
+match (?<!'|\w)<h>+<_>*<a>+<_>*<c>+<_>*<k>+<_>*<o>+<_>*<r>(?!\w)
+rule L34 [hackor]
+actions lightactions
+
+match (?<!'|\w)<h>+<_>*<a>+<_>*<x>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule L35 [haxing]
+actions lightactions
+
+match (?<!'|\w)<h>+<_>*<a>+<_>*<x>+<_>*<o>+<_>*<r>(?!\w)
+rule L36 [haxor]
+actions lightactions
+
+match (?<!'|\w)<h>+<_>*<a>+<_>*<x>+<_>*<z>+<_>*<o>+<_>*<r>(?!\w)
+rule L37 [haxzor]
+actions lightactions
+
+match (?<!'|\w)<h>+<_>*<e>+<_>*<l>+<_>*<l>+<_>*<y>+<_>*<a>(?!\w)
+rule L38 [hell ya]
+actions lightactions
+
+match (?<!'|\w)<h>+<_>*<e>+<_>*<l>+<_>*<l>+<_>*<s>+<_>*<y>+<_>*<a>(?!\w)
+rule L39 [hells ya]
+actions lightactions
+
+match (?<!'|\w)<h>+<_>*<e>+<_>*<l>+<_>*<l>+<_>*<z>+<_>*<y>+<_>*<a>(?!\w)
+rule L40 [hellz ya]
+actions lightactions
+
+match (?<!'|\w)<H>+<_>*<e>+<_>*<p>+<_>*<a>+<_>*<t>+<_>*<i>+<_>*<t>+<_>*<i>+<_>*<s>(?!\w)
+rule L41 [Hepatitis]
+actions lightactions
+
+match (?<!'|\w)<H>+<_>*<e>+<_>*<p>+<_>*<e>+<_>*<t>+<_>*<i>+<_>*<t>+<_>*<i>+<_>*<s>(?!\w)
+rule L42 [Hepetitis]
+actions lightactions
+
+match (?<!'|\w)<H>+<_>*<e>+<_>*<r>+<_>*<p>+<_>*<e>+<_>*<s>(?!\w)
+rule L43 [Herpes]
+actions lightactions
+
+match (?<!'|\w)<H>+<_>*<I>+<_>*<V>(?!\w)
+rule L44 [HIV]
+actions lightactions
+
+match (?<!'|\w)<H>+<_>*<u>+<_>*<m>+<_>*<a>+<_>*<n>+<_>*<P>+<_>*<a>+<_>*<p>+<_>*<i>+<_>*<l>+<_>*<l>+<_>*<o>+<_>*<m>+<_>*<a>+<_>*<v>+<_>*<i>+<_>*<r>+<_>*<u>+<_>*<s>(?!\w)
+rule L45 [Human Papillomavirus]
+actions lightactions
+
+match (?<!'|\w)<h>+<_>*<u>+<_>*<m>+<_>*<p>(?!\w)
+rule L46 [hump]
+actions lightactions
+
+match (?<!'|\w)<h>+<_>*<u>+<_>*<m>+<_>*<p>+<_>*<i>+<_>*<n>+<_>*<g>(?!\w)
+rule L47 [humping]
+actions lightactions
+
+match (?<!'|\w)<h>+<_>*<u>+<_>*<n>+<_>*<g>(?!\w)
+rule L48 [hung]
+actions lightactions
+
+match (?<!'|\w)<I>+<_>*<h>+<_>*<a>+<_>*<t>+<_>*<e>+<_>*<y>+<_>*<o>+<_>*<u>(?!\w)
+rule L49 [I hate you]
+actions lightactions
+
+match (?<!'|\w)<i>+<_>*<h>+<_>*<a>+<_>*<t>+<_>*<e>+<_>*<s>+<_>*<y>+<_>*<o>+<_>*<u>(?!\w)
+rule L50 [i hates you]
+actions lightactions
+
+match (?<!'|\w)<I>+<_>*<s>+<_>*<w>+<_>*<e>+<_>*<a>+<_>*<r>(?!\w)
+rule L51 [I swear]
+actions lightactions
+
+match (?<!'|\w)<i>+<_>*<d>+<_>*<i>+<_>*<o>+<_>*<t>(?!\w)
+rule L52 [idiot]
+actions lightactions
+
+match (?<!'|\w)<i>+<_>*<d>+<_>*<i>+<_>*<o>+<_>*<t>+<_>*<s>(?!\w)
+rule L53 [idiots]
+actions lightactions
+
+match (?<!'|\w)<I>+<_>*<g>+<_>*<n>+<_>*<o>+<_>*<r>+<_>*<a>+<_>*<n>+<_>*<t>(?!\w)
+rule L54 [Ignorant]
+actions lightactions
+
+match (?<!'|\w)<I>+<_>*<m>+<_>*<b>+<_>*<e>+<_>*<c>+<_>*<i>+<_>*<l>+<_>*<e>(?!\w)
+rule L55 [Imbecile]
+actions lightactions
+
+match (?<!'|\w)<i>+<_>*<n>+<_>*<c>+<_>*<o>+<_>*<m>+<_>*<p>+<_>*<e>+<_>*<t>+<_>*<a>+<_>*<n>+<_>*<c>+<_>*<e>(?!\w)
+rule L56 [incompetance]
+actions lightactions
+
+match (?<!'|\w)<i>+<_>*<n>+<_>*<c>+<_>*<o>+<_>*<m>+<_>*<p>+<_>*<e>+<_>*<t>+<_>*<e>+<_>*<n>+<_>*<c>+<_>*<e>(?!\w)
+rule L57 [incompetence]
+actions lightactions
+
+match (?<!'|\w)<i>+<_>*<n>+<_>*<c>+<_>*<o>+<_>*<m>+<_>*<p>+<_>*<e>+<_>*<t>+<_>*<e>+<_>*<n>+<_>*<t>(?!\w)
+rule L58 [incompetent]
+actions lightactions
+
+match (?<!'|\w)<j>+<_>*<e>+<_>*<r>+<_>*<k>
+rule L59 [jerk]
+actions lightactions
+
+match (?<!'|\w)<j>+<_>*<e>+<_>*<r>+<_>*<k>+<_>*<s>(?!\w)
+rule L60 [jerks]
+actions lightactions
+
+match (?<!'|\w)<k>+<_>*<i>+<_>*<s>+<_>*<s>+<_>*<m>+<_>*<y>(?!\w)
+rule L61 [kiss my]
+actions lightactions
+
+match (?<!'|\w)<k>+<_>*<n>+<_>*<o>+<_>*<c>+<_>*<k>+<_>*<u>+<_>*<p>(?!\w)
+rule L62 [knock up]
+actions lightactions
+
+match (?<!'|\w)<k>+<_>*<n>+<_>*<o>+<_>*<c>+<_>*<k>+<_>*<e>+<_>*<d>+<_>*<u>+<_>*<p>(?!\w)
+rule L63 [knocked up]
+actions lightactions
+
+match (?<!'|\w)<k>+<_>*<n>+<_>*<o>+<_>*<c>+<_>*<k>+<_>*<e>+<_>*<r>+<_>*<s>(?!\w)
+rule L64 [knockers]
+actions lightactions
+
+match (?<!'|\w)<l>+<_>*<a>+<_>*<r>+<_>*<d>+<_>*<o>(?!\w)
+rule L65 [lardo]
+actions lightactions
+
+match (?<!'|\w)<L>+<_>*<G>+<_>*<V>(?!\w)
+rule L66 [LGV]
+actions lightactions
+
+match (?<!'|\w)<L>+<_>*<i>+<_>*<c>+<_>*<e>(?!\w)
+rule L67 [Lice]
+actions lightactions
+
+match (?<!'|\w)<l>+<_>*<o>+<_>*<s>+<_>*<e>+<_>*<r>(?!\w)
+rule L68 [loser]
+actions lightactions
+
+match (?<!'|\w)<l>+<_>*<o>+<_>*<s>+<_>*<e>+<_>*<r>+<_>*<s>(?!\w)
+rule L69 [losers]
+actions lightactions
+
+match (?<!'|\w)<L>+<_>*<y>+<_>*<m>+<_>*<p>+<_>*<h>+<_>*<o>+<_>*<g>+<_>*<r>+<_>*<a>+<_>*<n>+<_>*<u>+<_>*<l>+<_>*<o>+<_>*<m>+<_>*<a>+<_>*<V>+<_>*<e>+<_>*<n>+<_>*<e>+<_>*<r>+<_>*<e>+<_>*<u>+<_>*<m>(?!\w)
+rule L70 [Lymphogranuloma Venereum]
+actions lightactions
+
+match (?<!'|\w)<m>+<_>*<a>+<_>*<k>+<_>*<e>+<_>*<o>+<_>*<u>+<_>*<t>(?!\w)
+rule L71 [make out]
+actions lightactions
+
+match (?<!'|\w)<m>+<_>*<a>+<_>*<k>+<_>*<i>+<_>*<n>+<_>*<g>+<_>*<o>+<_>*<u>+<_>*<t>(?!\w)
+rule L72 [making out]
+actions lightactions
+
+match (?<!'|\w)<m>+<_>*<i>+<_>*<n>+<_>*<x>(?!\w)
+rule L73 [minx]
+actions lightactions
+
+match (?<!'|\w)<M>+<_>*<o>+<_>*<l>+<_>*<l>+<_>*<u>+<_>*<s>+<_>*<c>+<_>*<u>+<_>*<m>+<_>*<C>+<_>*<o>+<_>*<n>+<_>*<t>+<_>*<a>+<_>*<g>+<_>*<i>+<_>*<o>+<_>*<s>+<_>*<u>+<_>*<m>(?!\w)
+rule L74 [Molluscum Contagiosum]
+actions lightactions
+
+match (?<!'|\w)<M>+<_>*<o>+<_>*<r>+<_>*<o>+<_>*<n>(?!\w)
+rule L75 [Moron]
+actions lightactions
+
+match (?<!'|\w)<M>+<_>*<o>+<_>*<r>+<_>*<o>+<_>*<n>+<_>*<s>(?!\w)
+rule L76 [Morons]
+actions lightactions
+
+match (?<!'|\w)<M>+<_>*<u>+<_>*<c>+<_>*<o>+<_>*<p>+<_>*<u>+<_>*<r>+<_>*<u>+<_>*<l>+<_>*<e>+<_>*<n>+<_>*<t>+<_>*<C>+<_>*<e>+<_>*<r>+<_>*<v>+<_>*<i>+<_>*<c>+<_>*<i>+<_>*<t>+<_>*<i>+<_>*<s>(?!\w)
+rule L77 [Mucopurulent Cervicitis]
+actions lightactions
+
+match (?<!'|\w)<M>+<_>*<u>+<_>*<f>+<_>*<f>+<_>*<i>+<_>*<n>+<_>*<t>+<_>*<o>+<_>*<p>(?!\w)
+rule L78 [Muffin top]
+actions lightactions
+
+match (?<!'|\w)<n>+<_>*<e>+<_>*<w>+<_>*<b>(?!\w)
+rule L79 [newb]
+actions lightactions
+
+match (?<!'|\w)<n>+<_>*<e>+<_>*<w>+<_>*<b>+<_>*<i>+<_>*<e>(?!\w)
+rule L80 [newbie]
+actions lightactions
+
+match (?<!'|\w)<n>+<_>*<e>+<_>*<w>+<_>*<b>+<_>*<i>+<_>*<e>+<_>*<s>(?!\w)
+rule L81 [newbies]
+actions lightactions
+
+match (?<!'|\w)<N>+<_>*<i>+<_>*<p>+<_>*<p>+<_>*<l>+<_>*<e>(?!\w)
+rule L82 [Nipple]
+actions lightactions
+
+match (?<!'|\w)<n>+<_>*<o>+<_>*<o>+<_>*<b>(?!\w)
+rule L83 [noob]
+actions lightactions
+
+match (?<!'|\w)<n>+<_>*<o>+<_>*<o>+<_>*<b>+<_>*<i>+<_>*<e>(?!\w)
+rule L84 [noobie]
+actions lightactions
+
+match (?<!'|\w)<n>+<_>*<o>+<_>*<o>+<_>*<b>+<_>*<s>(?!\w)
+rule L85 [noobs]
+actions lightactions
+
+match (?<!'|\w)<n>+<_>*<o>+<_>*<o>+<_>*<b>+<_>*<y>(?!\w)
+rule L86 [nooby]
+actions lightactions
+
+match (?<!'|\w)<N>+<_>*<u>+<_>*<t>(?!\w)
+rule L87 [Nut]
+actions lightactions
+
+match (?<!'|\w)<n>+<_>*<u>+<_>*<t>+<_>*<s>(?!\w)
+rule L88 [nuts]
+actions lightactions
+
+match (?<!'|\w)<o>+<_>*<m>+<_>*<i>+<_>*<g>+<_>*<o>+<_>*<d>(?!\w)
+rule L89 [omigod]
+actions lightactions
+
+match (?<!'|\w)<o>+<_>*<m>+<_>*<i>+<_>*<g>+<_>*<o>+<_>*<d>+<_>*<s>(?!\w)
+rule L90 [omigods]
+actions lightactions
+
+match (?<!'|\w)<o>+<_>*<m>+<_>*<i>+<_>*<g>+<_>*<o>+<_>*<d>+<_>*<z>(?!\w)
+rule L91 [omigodz]
+actions lightactions
+
+match (?<!'|\w)<p>+<_>*<a>+<_>*<n>+<_>*<s>+<_>*<e>+<_>*<s>(?!\w)
+rule L92 [panses]
+actions lightactions
+
+match (?<!'|\w)<p>+<_>*<a>+<_>*<n>+<_>*<s>+<_>*<i>+<_>*<e>+<_>*<s>(?!\w)
+rule L93 [pansies]
+actions lightactions
+
+match (?<!'|\w)<p>+<_>*<a>+<_>*<n>+<_>*<s>+<_>*<y>(?!\w)
+rule L94 [pansy]
+actions lightactions
+
+match (?<!'|\w)<p>+<_>*<a>+<_>*<n>+<_>*<s>+<_>*<y>+<_>*<e>+<_>*<s>(?!\w)
+rule L95 [pansyes]
+actions lightactions
+
+match (?<!'|\w)<p>+<_>*<a>+<_>*<n>+<_>*<s>+<_>*<y>+<_>*<i>+<_>*<e>+<_>*<s>(?!\w)
+rule L96 [pansyies]
+actions lightactions
+
+match (?<!'|\w)<p>+<_>*<a>+<_>*<n>+<_>*<s>+<_>*<y>+<_>*<s>(?!\w)
+rule L97 [pansys]
+actions lightactions
+
+match (?<!'|\w)<p>+<_>*<e>+<_>*<c>+<_>*<k>+<_>*<e>+<_>*<r>(?!\w)
+rule L98 [pecker]
+actions lightactions
+
+match (?<!'|\w)<P>+<_>*<e>+<_>*<l>+<_>*<v>+<_>*<i>+<_>*<c>+<_>*<I>+<_>*<n>+<_>*<f>+<_>*<l>+<_>*<a>+<_>*<m>+<_>*<m>+<_>*<a>+<_>*<t>+<_>*<o>+<_>*<r>+<_>*<y>+<_>*<D>+<_>*<i>+<_>*<s>+<_>*<e>+<_>*<a>+<_>*<s>+<_>*<e>(?!\w)
+rule L99 [Pelvic Inflammatory Disease]
+actions lightactions
+
+match (?<!'|\w)<P>+<_>*<o>+<_>*<r>+<_>*<a>+<_>*<d>+<_>*<e>+<_>*<n>+<_>*<i>+<_>*<t>+<_>*<i>+<_>*<s>+<_>*<i>+<_>*<n>+<_>*<g>+<_>*<u>+<_>*<i>+<_>*<n>+<_>*<a>+<_>*<l>+<_>*<e>(?!\w)
+rule L100 [Poradenitis inguinale]
+actions lightactions
+
+match (?<!'|\w)<P>+<_>*<u>+<_>*<b>+<_>*<i>+<_>*<c>(?!\w)
+rule L101 [Pubic]
+actions lightactions
+
+match (?<!'|\w)<S>+<_>*<c>+<_>*<a>+<_>*<b>+<_>*<i>+<_>*<e>+<_>*<s>(?!\w)
+rule L102 [Scabies]
+actions lightactions
+
+match (?<!'|\w)<s>+<_>*<c>+<_>*<h>+<_>*<l>+<_>*<u>+<_>*<b>(?!\w)
+rule L103 [schlub]
+actions lightactions
+
+match (?<!'|\w)<s>+<_>*<c>+<_>*<r>+<_>*<e>+<_>*<w>(?!\w)
+rule L104 [screw]
+actions lightactions
+
+match (?<!'|\w)<s>+<_>*<c>+<_>*<u>+<_>*<m>(?!\w)
+rule L105 [scum]
+actions lightactions
+
+match (?<!'|\w)<s>+<_>*<h>+<_>*<u>+<_>*<t>+<_>*<u>+<_>*<p>(?!\w)
+rule L106 [shut up]
+actions lightactions
+
+match (?<!'|\w)<s>+<_>*<n>+<_>*<a>+<_>*<t>+<_>*<c>+<_>*<h>(?!\w)
+rule L107 [snatch]
+actions lightactions
+
+match (?<!'|\w)<S>+<_>*<T>+<_>*<D>
+rule L108 [STD]
+actions lightactions
+
+match (?<!'|\w)<S>+<_>*<t>+<_>*<r>+<_>*<u>+<_>*<m>+<_>*<o>+<_>*<u>+<_>*<s>+<_>*<b>+<_>*<u>+<_>*<b>+<_>*<o>(?!\w)
+rule L109 [Strumous bubo]
+actions lightactions
+
+match (?<!'|\w)<s>+<_>*<u>+<_>*<c>+<_>*<k>+<_>*<i>+<_>*<t>(?!\w)
+rule L110 [suck it]
+actions lightactions
+
+match (?<!'|\w)<s>+<_>*<u>+<_>*<c>+<_>*<k>+<_>*<u>+<_>*<p>(?!\w)
+rule L111 [suck up]
+actions lightactions
+
+match (?<!'|\w)<S>+<_>*<y>+<_>*<p>+<_>*<h>+<_>*<i>+<_>*<l>+<_>*<i>+<_>*<s>(?!\w)
+rule L112 [Syphilis]
+actions lightactions
+
+match (?<!'|\w)<t>+<_>*<b>+<_>*<a>+<_>*<g>
+rule L113 [t bag]
+actions lightactions
+
+match (?<!'|\w)<t>+<_>*<a>+<_>*<r>+<_>*<d>(?!\w)
+rule L114 [tard]
+actions lightactions
+
+match (?<!'|\w)<t>+<_>*<e>+<_>*<a>+<_>*<b>+<_>*<a>+<_>*<g>
+rule L115 [tea bag]
+actions lightactions
+
+match (?<!'|\w)<t>+<_>*<e>+<_>*<r>+<_>*<d>
+rule L116 [terd]
+actions lightactions
+
+match (?<!'|\w)<t>+<_>*<i>+<_>*<g>+<_>*<r>+<_>*<e>+<_>*<s>+<_>*<s>(?!\w)
+rule L117 [tigress]
+actions lightactions
+
+match (?<!'|\w)<T>+<_>*<r>+<_>*<i>+<_>*<c>+<_>*<h>+<_>*<o>+<_>*<m>+<_>*<o>+<_>*<n>+<_>*<i>+<_>*<a>+<_>*<s>+<_>*<i>+<_>*<s>(?!\w)
+rule L118 [Trichomoniasis]
+actions lightactions
+
+match (?<!'|\w)<t>+<_>*<u>+<_>*<r>+<_>*<d>(?!\w)
+rule L119 [turd]
+actions lightactions
+
+match (?<!'|\w)<u>+<_>*<g>+<_>*<l>+<_>*<e>(?!\w)
+rule L120 [ugle]
+actions lightactions
+
+match (?<!'|\w)<u>+<_>*<g>+<_>*<l>+<_>*<i>(?!\w)
+rule L121 [ugli]
+actions lightactions
+
+match (?<!'|\w)<u>+<_>*<g>+<_>*<l>+<_>*<i>+<_>*<e>(?!\w)
+rule L122 [uglie]
+actions lightactions
+
+match (?<!'|\w)<u>+<_>*<g>+<_>*<l>+<_>*<y>(?!\w)
+rule L123 [ugly]
+actions lightactions
+
+match (?<!'|\w)<v>+<_>*<i>+<_>*<x>+<_>*<e>+<_>*<n>(?!\w)
+rule L124 [vixen]
+actions lightactions
+
+match (?<!'|\w)<w>+<_>*<a>+<_>*<n>+<_>*<g>(?!\w)
+rule L125 [wang]
+actions lightactions
+
+match (?<!'|\w)<w>+<_>*<e>+<_>*<e>+<_>*<n>+<_>*<e>+<_>*<r>(?!\w)
+rule L126 [weener]
+actions lightactions
+
+match (?<!'|\w)<w>+<_>*<e>+<_>*<e>+<_>*<n>+<_>*<i>+<_>*<e>(?!\w)
+rule L127 [weenie]
+actions lightactions
+
+match (?<!'|\w)<w>+<_>*<e>+<_>*<e>+<_>*<n>+<_>*<y>(?!\w)
+rule L128 [weeny]
+actions lightactions
+
+match (?<!'|\w)<w>+<_>*<i>+<_>*<m>+<_>*<p>(?!\w)
+rule L129 [wimp]
+actions lightactions
+
+match (?<!'|\w)<y>+<_>*<o>+<_>*<m>+<_>*<a>+<_>*<m>+<_>*<m>+<_>*<a>(?!\w)
+rule L130 [yo mamma]
+actions lightactions
+
+match (?<!'|\w)<y>+<_>*<o>+<_>*<m>+<_>*<o>+<_>*<m>+<_>*<m>+<_>*<a>(?!\w)
+rule L131 [yo momma]
+actions lightactions
+
+match (?<!'|\w)<y>+<_>*<o>+<_>*<u>+<_>*<r>+<_>*<m>+<_>*<a>+<_>*<m>+<_>*<a>(?!\w)
+rule L132 [your mama]
+actions lightactions
+
+match (?<!'|\w)<b>+<_>*<u>+<_>*<t>+<_>*<t>
+rule L133 [butt]
+ignore string buts|butch|buteo|butle|butte|butty|butut|butyl|butane|butene|buteos|butled|butler|butles|butted|butter|buttes|button|bututs|butyls|butanes|butanol|butcher|butches|butenes|butlers|butlery|butling|buttals|butters|buttery|butting|buttons|buttony|butyral|butyric|butyrin|butyryl|butanols|butanone|butchers|butchery|buttered|buttoned|buttoner|buttress|butylate|butylene|butyrals|butyrate|butyrins|butyrous|butyryls|butadiene|butanones|butchered|butcherly|butleries|buttercup|butterfat|butterfly|butterier|butteries|buttering|butternut|buttinski|buttinsky|buttoners|buttoning|buttstock|butylated|butylates|butylenes|butyrates|butadienes|butcheries|butchering|butterball|buttercups|butterfats|butterfish|butteriest|butterless|buttermilk|butternuts|butterweed|butterwort|buttonball|buttonbush|buttonhole|buttonhook|buttonless|buttonwood|buttressed|buttresses|buttstocks|butylating|butylation|butterballs|butterflied|butterflies|butterflyer|buttermilks|butterweeds|butterworts|buttinskies|buttonballs|buttonholed|buttonholer|buttonholes|buttonhooks|buttonwoods|buttressing|butylations|butterfishes|butterflyers|butterflying|butterscotch|buttonbushes|buttonholers|buttonholing|buttonhooked|butterfingers|buttonhooking|butyraldehyde|butyrophenone|butterfingered|butterscotches|butyraldehydes|butyrophenones
+then replace but
+
+match <b>+<_>*<u>+<_>*<t>+<_>*<t>(?!\w)
+rule L134 [butt]
+then replace but
+
+match (?<!'|\w)<w>+<_>*<e>+<_>*<e>+<_>*<n>+\w*
+ignore string weens|weened|weensy|weening|weeniest|weensier|weensiest
+rule L135 [weenie]
+actions lightactions
+
+# If you have any suggestions, please let me know!   Thank you!
+# Please add EpicATrain to your VIP list on your server!
+# Light Words Compiled and Written By Addam 'EpicATrain' Waitkus.
+# ©2012-2013 Addam 'EpicATrain' Waitkus. All rights reserved.

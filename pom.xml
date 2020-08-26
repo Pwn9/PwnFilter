@@ -27,11 +27,30 @@
 
     <groupId>com.pwn9.PwnFilter</groupId>
     <artifactId>PwnFilter</artifactId>
-    <version>3.9.2-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <version>3.9.3-SNAPSHOT</version>
+    <modules>
+        <module>Api</module>
+        <module>Mock</module>
+        <module>Core</module>
+        <module>PwnFilter-Bukkit</module>
+        <module>Sponge</module>
+    </modules>
     <name>PwnFilter</name>
     <description>Complete chat control with the power of regex.</description>
-    <url>http://pwn9.github.io/PwnFilter/</url>
-
+    <url>https://pwn9.github.io/PwnFilter/</url>
+    <organization>
+        <name>Pwn9</name>
+        <url>https://www.github.com/Pwn9</url>
+    </organization>
+    <licenses>
+        <license>
+            <name>GPLv3</name>
+            <url>https://github.com/AddstarMC/PwnFilter/blob/master/LICENSE</url>
+            <distribution>manual</distribution>
+            <comments>Nobody should be restricted by the software they use.</comments>
+        </license>
+    </licenses>
     <contributors>
         <contributor>
             <name>tremor77</name>
@@ -51,86 +70,92 @@
             </roles>
             <timezone>America/Toronto</timezone>
         </contributor>
+        <contributor>
+            <name>Narimm</name>
+            <organization>AddstarMC</organization>
+            <organizationUrl>https://addstarmc.com.au</organizationUrl>
+            <roles>
+                <role>contributor</role>
+            </roles>
+            <timezone>+10</timezone>
+        </contributor>
     </contributors>
-
+    <scm>
+        <connection>scm:git:ssh://github.com/${ghProject}.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/${ghProject}.git</developerConnection>
+        <url>https://github.com/${ghProject}</url>
+        <tag>HEAD</tag>
+    </scm>
+    <ciManagement>
+        <system>jenkins</system>
+        <url>https://jenkins.addstar.com.au/jobs/PwnFilter</url>
+    </ciManagement>
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/Pwn9/PwnFilter/issues</url>
+    </issueManagement>
+    <properties>
+        <siteUrlSuffix>${project.version}</siteUrlSuffix>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <ghUser>Pwn9</ghUser>
+        <ghRepo>PwnFilter</ghRepo>
+        <ghProject>${ghUser}/${ghRepo}</ghProject>
+        <github.global.server>github</github.global.server>
+        <pwnfilter.version>${project.version}</pwnfilter.version>
+        <timestamp>${maven.build.timestamp}</timestamp>
+        <maven.build.timestamp.format>yyyyMMddHHmm
+        </maven.build.timestamp.format>
+        <pwnfilter.version>${project.version}-${timestamp}</pwnfilter.version>
+    </properties>
     <repositories>
         <repository>
-            <id>sponge</id>
-            <url>http://repo.spongepowered.org/maven</url>
+            <id>engine</id>
+            <url>https://maven.enginehub.org/artifactory/repo/</url>
         </repository>
         <repository>
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
         </repository>
         <repository>
-            <id>vault-repo</id>
-            <url>
-                http://nexus.theyeticave.net/content/repositories/pub_releases/
-            </url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        <repository>
             <id>central</id>
             <name>Central Repository</name>
-            <url>http://repo.maven.apache.org/maven2</url>
+            <url>https://repo.maven.apache.org/maven2</url>
         </repository>
         <repository>
-            <id>Plugin Metrics</id>
-            <url>http://repo.mcstats.org/content/repositories/public</url>
+            <id>CodeMC</id>
+            <url>https://repo.codemc.org/repository/maven-public</url>
         </repository>
-
     </repositories>
-
-
     <dependencies>
-        <dependency>
-            <groupId>org.spongepowered</groupId>
-            <artifactId>spongeapi</artifactId>
-            <version>4.0.3</version>
-            <scope>provided</scope>
-        </dependency>
         <dependency>
             <groupId>commons-chain</groupId>
             <artifactId>commons-chain</artifactId>
             <version>1.2</version>
         </dependency>
         <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>bukkit</artifactId>
-            <version>1.9.2-R0.1-SNAPSHOT</version>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>28.0-jre</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>net.milkbowl.vault</groupId>
-            <artifactId>VaultAPI</artifactId>
-            <version>1.5</version>
-        </dependency>
-        <dependency>
-            <groupId>com.intellij</groupId>
+            <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>5.1</version>
+            <version>19.0.0</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.8.1</version>
+            <version>4.13</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mcstats.bukkit</groupId>
-            <artifactId>metrics</artifactId>
-            <version>R8-SNAPSHOT</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>net.jodah</groupId>
             <artifactId>concurrentunit</artifactId>
             <version>0.4.2</version>
+            <scope>test</scope>
         </dependency>
-
     </dependencies>
-
     <profiles>
         <profile>
             <id>jenkins</id>
@@ -139,22 +164,37 @@
                     <name>env.BUILD_NUMBER</name>
                 </property>
             </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.gavinmogan</groupId>
+                        <artifactId>codacy-maven-plugin</artifactId>
+                        <version>1.2.0</version>
+                        <configuration>
+                            <!--suppress UnresolvedMavenProperty -->
+                            <apiToken>${env.CODACY_API_TOKEN}</apiToken>
+                            <!--suppress UnresolvedMavenProperty -->
+                            <projectToken>${env.CODACY_PROJECT_TOKEN}</projectToken>
+                            <coverageReportFile>target/site/jacoco/jacoco.xml</coverageReportFile>
+                            <!--suppress UnresolvedMavenProperty -->
+                            <commit>${env.TRAVIS_COMMIT}</commit>
+                            <codacyApiBaseUrl>https://api.codacy.com</codacyApiBaseUrl>
+                            <failOnMissingReportFile>false</failOnMissingReportFile>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>post-test</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>coverage</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
             <properties>
-                <pwnfilter.version>${project.version}-b${env.BUILD_NUMBER}
-                </pwnfilter.version>
-            </properties>
-        </profile>
-        <profile>
-            <id>default</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <timestamp>${maven.build.timestamp}</timestamp>
-                <maven.build.timestamp.format>yyyyMMddHHmm
-                </maven.build.timestamp.format>
-                <pwnfilter.version>${project.version}-${timestamp}
-                </pwnfilter.version>
+                <pwnfilter.version>${project.version}-${env.BUILD_NUMBER}</pwnfilter.version>
             </properties>
         </profile>
         <profile>
@@ -207,22 +247,11 @@
                 <pwnfilter.version>${project.version}</pwnfilter.version>
             </properties>
         </profile>
-
     </profiles>
 
     <build>
-        <finalName>${project.name}</finalName>
         <sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
-        <testSourceDirectory>${project.basedir}/src/test/java
-        </testSourceDirectory>
-        <extensions>
-            <extension>
-                <groupId>org.apache.maven.wagon</groupId>
-                <artifactId>wagon-ssh-external</artifactId>
-                <version>2.10</version>
-            </extension>
-        </extensions>
-
+        <testSourceDirectory>${project.basedir}/src/test/java</testSourceDirectory>
         <resources>
             <resource>
                 <directory>${project.basedir}/src/main/resources</directory>
@@ -235,6 +264,7 @@
         <testResources>
             <testResource>
                 <directory>${project.basedir}/src/test/resources</directory>
+                <filtering>true</filtering>
                 <includes>
                     <include>*</include>
                     <include>*/*</include>
@@ -246,12 +276,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.14</version>
+                <version>3.0.0-M3</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
-                <version>2.6</version>
+                <version>3.1.0</version>
                 <configuration>
                     <encoding>UTF-8</encoding>
                 </configuration>
@@ -259,19 +289,16 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>2.4</version>
-                <configuration>
-                    <outputDirectory>jars</outputDirectory>
-                </configuration>
+                <version>3.2.0</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.3</version>
+                <version>3.0.0-M1</version>
                 <configuration>
                     <tagNameFormat>v@{project.version}</tagNameFormat>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
-                    <scmCommentPrefix xml:space="preserve">[RELEASE] </scmCommentPrefix>
+                    <scmCommentPrefix xml:space="preserve">[RELEASE]</scmCommentPrefix>
                     <goals>install deploy site-deploy
                     </goals> <!-- install is here to fix javadoc generation in multi-module projects -->
                     <releaseProfiles>release</releaseProfiles>
@@ -280,12 +307,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-scm-plugin</artifactId>
-                <version>1.9</version>
+                <version>1.11.2</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.2</version>
+                <version>3.8.1</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
@@ -293,53 +320,12 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>templating-maven-plugin</artifactId>
-                <version>1.0-alpha-3</version>
-                <executions>
-                    <execution>
-                        <id>filter-src</id>
-                        <goals>
-                            <goal>filter-sources</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>2.4.3</version>
-                <configuration>
-                    <minimizeJar>true</minimizeJar>
-                    <artifactSet>
-                        <includes>
-                            <include>org.mcstats.bukkit:metrics</include>
-                        </includes>
-                    </artifactSet>
-                    <relocations>
-                        <relocation>
-                            <pattern>org.mcstats</pattern>
-                            <shadedPattern>com.pwn9.filter.mcstats
-                            </shadedPattern>
-                        </relocation>
-                    </relocations>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>com.github.github</groupId>
                 <artifactId>site-maven-plugin</artifactId>
-                <version>0.13-SNAPSHOT</version>
+                <version>0.12</version>
                 <configuration>
                     <message>Official ${project.name} build</message>
-                    <server>github</server>
+                    <server>githubOAuth</server>
                     <repositoryName>${ghRepo}</repositoryName>
                     <repositoryOwner>${ghUser}</repositoryOwner>
                 </configuration>
@@ -352,98 +338,140 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--<plugin>-->
-            <!--<groupId>com.github.github</groupId>-->
-            <!--<artifactId>downloads-maven-plugin</artifactId>-->
-            <!--<version>0.6</version>-->
-            <!--<configuration>-->
-            <!--<description>${project.version} release of ${project.name}</description>-->
-            <!--<override>true</override>-->
-            <!--<includeAttached>true</includeAttached>-->
-            <!--<server>github</server>-->
-            <!--</configuration>-->
-            <!--<executions>-->
-            <!--<execution>-->
-            <!--<goals>-->
-            <!--<goal>upload</goal>-->
-            <!--</goals>-->
-            <!--<phase>deploy</phase>-->
-            <!--</execution>-->
-            <!--</executions>-->
-            <!--</plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
-                <version>3.5</version>
+                <version>3.7.1</version>
                 <configuration>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.1.2</version>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>2.7</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>3.0.0-M1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>3.0.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <version>3.0.0-M1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.0.0-M2</version>
+                <executions>
+                    <execution>
+                        <id>enforce-versions</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <bannedPlugins>
+                                    <!-- will only display a warning but does not fail the build. -->
+                                    <level>WARN</level>
+                                    <excludes>
+                                        <exclude>org.apache.maven.plugins:maven-verifier-plugin</exclude>
+                                    </excludes>
+                                    <message>Please consider using the maven-invoker-plugin
+                                        (http://maven.apache.org/plugins/maven-invoker-plugin/)!
+                                    </message>
+                                </bannedPlugins>
+                                <requireMavenVersion>
+                                    <version>3.3.9</version>
+                                </requireMavenVersion>
+                                <requireJavaVersion>
+                                    <version>1.8</version>
+                                </requireJavaVersion>
+                                <!--<requireOS>
+                                    <family>unix</family>
+                                </requireOS>-->
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.5</version>
+                <executions>
+                    <execution>
+                        <id>coverage-initialize</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>coverage-report</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                    <!-- Threshold -->
+                    <execution>
+                        <id>coverage-check</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <includes>
+                                <include>com.pwn9.*</include>
+                            </includes>
+                            <rules>
+                                <rule>
+                                    <element>CLASS</element>
+                                    <limits>
+                                        <limit>
+                                            <counter>LINE</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0%</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
-
-    <scm>
-        <connection>scm:git:ssh://github.com/${ghProject}.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/${ghProject}.git
-        </developerConnection>
-        <url>https://github.com/${ghProject}</url>
-        <tag>v3.9.0</tag>
-    </scm>
-
-    <ciManagement>
-        <system>jenkins</system>
-        <url>https://ci.sagely.ca</url>
-    </ciManagement>
-
-    <issueManagement>
-        <system>GitHub</system>
-        <url>https://github.com/Pwn9/PwnFilter/issues</url>
-    </issueManagement>
-
-    <distributionManagement>
-        <downloadUrl>https://repo.sagely.ca/com/pwn9/PwnFilter/PwnFilter/
-        </downloadUrl>
-        <repository>
-            <id>repo-sagely</id>
-            <name>PwnFilter Release</name>
-            <url>scpexe://repo.sagely.ca/home/ci/public_html/</url>
-        </repository>
-        <snapshotRepository>
-            <id>repo-sagely</id>
-            <name>PwnFilter Snapshot</name>
-            <url>scpexe://repo.sagely.ca/home/ci/public_html/snapshots</url>
-        </snapshotRepository>
-        <site>
-            <id>github</id>
-            <name>GitHub Pages</name>
-            <url>github:http://${ghUser}.github.io/${ghRepo}/${siteUrlSuffix}/
-            </url>
-        </site>
-    </distributionManagement>
-
-    <prerequisites>
-        <maven>3.0.3</maven>
-    </prerequisites>
-
-    <properties>
-        <siteUrlSuffix>${project.version}</siteUrlSuffix>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <ghUser>Pwn9</ghUser>
-        <ghRepo>PwnFilter</ghRepo>
-        <ghProject>${ghUser}/${ghRepo}</ghProject>
-        <github.global.server>github</github.global.server>
-    </properties>
-
     <reporting>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.10.3</version>
+                <version>3.2.0</version>
+                <reportSets>
+                    <reportSet><!-- by default, id = "default" -->
+                        <reports><!-- select non-aggregate reports -->
+                            <report>javadoc</report>
+                            <report>test-javadoc</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>2.9</version>
+                <version>3.1.0</version>
                 <reportSets>
                     <reportSet>
                         <reports>
@@ -458,5 +486,4 @@
             </plugin>
         </plugins>
     </reporting>
-
 </project>
