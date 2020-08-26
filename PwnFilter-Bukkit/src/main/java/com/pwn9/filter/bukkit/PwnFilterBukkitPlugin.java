@@ -26,11 +26,14 @@ import com.pwn9.filter.TemplateProvider;
 import com.pwn9.filter.bukkit.commands.PwnFilterCommands;
 import com.pwn9.filter.bukkit.config.BukkitConfig;
 import com.pwn9.filter.bukkit.listener.*;
+import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.FilterServiceImpl;
+import com.pwn9.filter.engine.api.Console;
 import com.pwn9.filter.engine.api.FilterClient;
 import com.pwn9.filter.engine.rules.action.minecraft.MinecraftAction;
 import com.pwn9.filter.engine.rules.action.targeted.TargetedAction;
 import com.pwn9.filter.minecraft.MinecraftConsole;
+import com.pwn9.filter.minecraft.api.MinecraftAPI;
 import com.pwn9.filter.minecraft.command.PwnClearScreen;
 import com.pwn9.filter.minecraft.command.PwnFilterMute;
 import com.pwn9.filter.minecraft.command.PwnFilterReload;
@@ -63,29 +66,21 @@ public class PwnFilterBukkitPlugin extends JavaPlugin implements PwnFilterPlugin
     public static final ConcurrentMap<UUID, String> lastMessage = new MapMaker().concurrencyLevel(2).weakKeys().makeMap();
     static Economy economy = null;
     private static PwnFilterBukkitPlugin _instance;
-    private final BukkitAPI minecraftAPI;
-    private final MinecraftConsole console;
-    private final FilterServiceImpl filterServiceImpl;
-    private final Map<String, Integer > eventRules = new HashMap<>();
+    private  BukkitAPI minecraftAPI;
+    private  MinecraftConsole console;
+    private FilterService filterServiceImpl;
+    private  Map<String, Integer > eventRules = new HashMap<>();
 
 
     /**
      * <p>Constructor for PwnFilter.</p>
      */
     public PwnFilterBukkitPlugin() {
-
         if (_instance == null) {
             _instance = this;
         } else {
             throw new IllegalStateException("Only one instance of PwnFilter can be run per server");
         }
-        minecraftAPI = new BukkitAPI(this);
-        console = new MinecraftConsole(minecraftAPI);
-        filterServiceImpl = new FilterServiceImpl(getLogger());
-        filterServiceImpl.getActionFactory().addActionTokens(MinecraftAction.class);
-        filterServiceImpl.getActionFactory().addActionTokens(TargetedAction.class);
-        filterServiceImpl.getConfig().setTemplateProvider(this);
-        RegisterTags.all();
     }
 
     /**
@@ -111,7 +106,13 @@ public class PwnFilterBukkitPlugin extends JavaPlugin implements PwnFilterPlugin
     public void onEnable() {
         // Initialize Configuration
         saveDefaultConfig();
-
+        minecraftAPI = new BukkitAPI(this);
+        console = new MinecraftConsole(minecraftAPI);
+        filterServiceImpl = new FilterServiceImpl(getLogger());
+        filterServiceImpl.getActionFactory().addActionTokens(MinecraftAction.class);
+        filterServiceImpl.getActionFactory().addActionTokens(TargetedAction.class);
+        filterServiceImpl.getConfig().setTemplateProvider(this);
+        RegisterTags.all();
         // Set up a Vault economy for actions like "fine" (optional)
         setupEconomy();
 
@@ -206,12 +207,12 @@ public class PwnFilterBukkitPlugin extends JavaPlugin implements PwnFilterPlugin
     }
 
     @Override
-    public FilterServiceImpl getFilterService() {
+    public final FilterService getFilterService() {
         return filterServiceImpl;
     }
 
     @Override
-    public MinecraftConsole getConsole() {
+    public final Console getConsole() {
         return console;
     }
 
