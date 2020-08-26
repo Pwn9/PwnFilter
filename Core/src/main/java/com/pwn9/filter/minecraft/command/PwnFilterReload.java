@@ -1,6 +1,7 @@
 package com.pwn9.filter.minecraft.command;
 
 import com.pwn9.filter.PwnFilterPlugin;
+import com.pwn9.filter.engine.FilterService;
 import com.pwn9.filter.engine.FilterServiceImpl;
 import com.pwn9.filter.engine.api.CommandSender;
 
@@ -13,10 +14,10 @@ import java.util.List;
  * on 19/08/2020.
  */
 public class PwnFilterReload implements PwnFilterCommandExecutor {
-    private final FilterServiceImpl filterServiceImpl;
+    private final FilterService filterServiceImpl;
     private final PwnFilterPlugin plugin;
 
-    public PwnFilterReload(FilterServiceImpl filterServiceImpl, PwnFilterPlugin plugin) {
+    public PwnFilterReload(FilterService filterServiceImpl, PwnFilterPlugin plugin) {
         this.filterServiceImpl = filterServiceImpl;
         this.plugin = plugin;
     }
